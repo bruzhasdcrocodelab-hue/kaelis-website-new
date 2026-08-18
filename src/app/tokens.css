@@ -38,18 +38,20 @@
   --color-gold: #f5d0b0;
 
   /* ---- Gradients ---- */
-  --gradient-pink: linear-gradient(90deg, #ffb6d0 0%, #f69cd1 50.481%, #e56de5 100%);
-  --gradient-pink-purple: linear-gradient(90deg, #f3a3ff 0%, #f69cd1 50.481%, #c38cff 100%);
+  --gradient-pink:
+    linear-gradient(180deg, #d3aced 0.16%, rgba(216, 168, 233, 0) 64.63%),
+    linear-gradient(270deg, #e78fe3 0%, #ffbdd0 100%);
+  --gradient-pink-purple: linear-gradient(90deg, #f3a3ff 0%, #f69cd1 50.48%, #c38cff 100%);
   --gradient-pink-to-transparent: linear-gradient(
     180deg,
-    rgba(255, 250, 182, 0) 31.755%,
-    rgba(255, 182, 208, 0.5) 68.174%,
+    rgba(255, 250, 182, 0) 31.76%,
+    rgba(255, 182, 208, 0.5) 68.17%,
     #e595e4 100%
   );
   --gradient-gold: linear-gradient(
     180deg,
-    var(--color-gold) 31.755%,
-    rgba(245, 208, 176, 0) 59.053%
+    var(--color-gold) 31.76%,
+    rgba(245, 208, 176, 0) 59.05%
   );
 
   /* ---- Effects: shadows (layered, shallow -> deep) ---- */
