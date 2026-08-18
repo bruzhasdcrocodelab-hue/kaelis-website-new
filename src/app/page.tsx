@@ -20,6 +20,30 @@ export default function Home() {
         className={styles.backgroundImage}
         priority
       />
+      <Image
+        src="/images/backgrounds/patterns-center.svg"
+        alt=""
+        width={996}
+        height={491}
+        className={styles.patternCenter}
+        priority
+      />
+      <Image
+        src="/images/backgrounds/patterns-left.svg"
+        alt=""
+        width={340}
+        height={750}
+        className={styles.patternLeft}
+        priority
+      />
+      <Image
+        src="/images/backgrounds/patterns-right.svg"
+        alt=""
+        width={340}
+        height={750}
+        className={styles.patternRight}
+        priority
+      />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} />
         <HeroSection dictionary={dictionary.hero} />

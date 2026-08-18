@@ -4,13 +4,13 @@
   gap: 32px;
   align-items: flex-start;
   justify-content: center;
-  width: 100%;
+  width: 92.5%;
   height: 360px;
   padding: 40px;
-  margin-top: -174px;
+  margin-top: -165px;
   border-radius: var(--radius-panel);
   overflow: clip;
-  box-shadow: var(--shadow-light);
+  box-shadow: var(--shadow-default);
   z-index: 2;
 }
 
@@ -57,10 +57,12 @@
 
 .heading {
   color: var(--color-black);
+  line-height: normal;
 }
 
 .description {
   color: var(--color-black-75);
+  line-height: normal;
 }
 
 .spacer {

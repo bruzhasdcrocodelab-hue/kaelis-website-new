@@ -14,7 +14,7 @@ const en = {
     titleToThe: "to the",
     titleHighlight: "Esoteric",
     titleWorld: "World",
-    description: "AI-powered tarot readings crafted for clarity, guidance, and self-discovery.",
+    description: "AI-powered tarot readings crafted for clarity,\nguidance, and self-discovery.",
     cta: "Pick a Card to Start Your Reading",
   },
   cards: {
