@@ -73,8 +73,8 @@
     -42px 103px 31px 0px rgba(145, 145, 145, 0);
 
   /* ---- Effects: blur ---- */
-  --blur-default: 20.5px;
-  --blur-shadow: 25px;
+  --blur-default: 10.25px;
+  --blur-shadow: 12.5px;
 
   /* ---- Typography: font families ---- */
   --font-bona-nova-sc: "Bona Nova SC", serif;
@@ -149,13 +149,35 @@
   --text-xs: var(--text-xs);
   --text-xxs: var(--text-xxs);
   --text-xxxs: var(--text-xxxs);
+}
 
-  --shadow-default: var(--shadow-default);
-  --shadow-medium: var(--shadow-medium);
-  --shadow-light: var(--shadow-light);
+/* ---- Shadow utilities ----
+ * Composite of the Figma effect styles' DROP_SHADOW layers plus their
+ * BACKGROUND_BLUR layer (applied on the same element in the design), so
+ * `shadow-default`/`shadow-medium`/`shadow-light` are drop-in classes.
+ * Not exposed via @theme since Tailwind's shadow-* utility only sets
+ * box-shadow, not backdrop-filter.
+ */
+.shadow-default {
+  box-shadow: var(--shadow-default);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+.shadow-medium {
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+.shadow-light {
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
 
-  --blur-default: var(--blur-default);
-  --blur-shadow: var(--blur-shadow);
+/* ---- Standalone blur effect (no box-shadow) ---- */
+.effect-blur {
+  backdrop-filter: blur(var(--blur-default));
+  -webkit-backdrop-filter: blur(var(--blur-default));
 }
 
 /* ---- Gradient utilities (Tailwind v4 has no gradient-value theme namespace) ---- */
