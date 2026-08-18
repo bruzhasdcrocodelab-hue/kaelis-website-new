@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
-import HeroSection from "@/components/main-page/HeroSection";
-import CardsFan from "@/components/main-page/CardsFan";
+import HeroCardsSection from "@/components/main-page/HeroCardsSection";
 import TopBlockSection from "@/components/main-page/TopBlockSection";
 import { dictionaries, defaultLocale } from "@/lang";
 import styles from "./page.module.css";
@@ -46,8 +45,7 @@ export default function Home() {
       />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} />
-        <HeroSection dictionary={dictionary.hero} />
-        <CardsFan dictionary={dictionary.cards} />
+        <HeroCardsSection heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards} />
         <TopBlockSection dictionary={dictionary.topBlock} />
         <Footer dictionary={dictionary.footer} />
       </div>

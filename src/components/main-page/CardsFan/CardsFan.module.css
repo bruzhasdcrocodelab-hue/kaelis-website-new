@@ -25,12 +25,23 @@
   position: relative;
   width: 165px;
   height: 300px;
+}
+
+.cardFace {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cardSideInner {
+  position: absolute;
+  inset: 0;
   border-radius: var(--radius-card);
   overflow: hidden;
   box-shadow: var(--shadow-default);
 }
 
-.card img {
+.cardSideInner img {
   object-fit: cover;
   pointer-events: none;
 }

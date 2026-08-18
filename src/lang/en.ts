@@ -16,6 +16,7 @@ const en = {
     titleWorld: "World",
     description: "AI-powered tarot readings crafted for clarity,\nguidance, and self-discovery.",
     cta: "Pick a Card to Start Your Reading",
+    ctaHover: "Get Your Readings",
   },
   cards: {
     love: "Love",

@@ -1,13 +1,21 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
 import styles from "./CardsFan.module.css";
 
 export interface CardsFanProps {
   dictionary: Dictionary["cards"];
+  hoveredIndex: number | null;
+  onCardHoverChange: (index: number | null) => void;
 }
 
 interface CardSpec {
-  src: string;
+  key: string;
+  srcBack: string;
+  srcFront: string;
   alt: string;
   left: number;
   top: number;
@@ -19,7 +27,9 @@ interface CardSpec {
 function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
   return [
     {
-      src: "/images/cards-turned/LoveTurned.png",
+      key: "love",
+      srcBack: "/images/cards-turned/LoveTurned.png",
+      srcFront: "/images/cards/Love.png",
       alt: dictionary.love,
       left: 36,
       top: 71.24,
@@ -28,7 +38,9 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
       rotate: -16.61,
     },
     {
-      src: "/images/cards-turned/YesNoTurned.png",
+      key: "yesNo",
+      srcBack: "/images/cards-turned/YesNoTurned.png",
+      srcFront: "/images/cards/YesNo.png",
       alt: dictionary.yesNo,
       left: 206.06,
       top: 38.95,
@@ -37,7 +49,9 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
       rotate: -10.67,
     },
     {
-      src: "/images/cards-turned/OneCardTurned.png",
+      key: "oneCard",
+      srcBack: "/images/cards-turned/OneCardTurned.png",
+      srcFront: "/images/cards/OneCard.png",
       alt: dictionary.oneCard,
       left: 383.12,
       top: 20.31,
@@ -46,7 +60,9 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
       rotate: -5.42,
     },
     {
-      src: "/images/cards-turned/ThreeCardsTurned.png",
+      key: "threeCards",
+      srcBack: "/images/cards-turned/ThreeCardsTurned.png",
+      srcFront: "/images/cards/ThreeCards.png",
       alt: dictionary.threeCards,
       left: 563.51,
       top: 20.34,
@@ -55,7 +71,9 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
       rotate: 0.17,
     },
     {
-      src: "/images/cards-turned/WorkTurned.png",
+      key: "work",
+      srcBack: "/images/cards-turned/WorkTurned.png",
+      srcFront: "/images/cards/Work.png",
       alt: dictionary.work,
       left: 715.93,
       top: 21.19,
@@ -64,7 +82,9 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
       rotate: 5.52,
     },
     {
-      src: "/images/cards-turned/FamilyTurned.png",
+      key: "family",
+      srcBack: "/images/cards-turned/FamilyTurned.png",
+      srcFront: "/images/cards/Family.png",
       alt: dictionary.family,
       left: 866.09,
       top: 38.81,
@@ -73,7 +93,9 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
       rotate: 11.57,
     },
     {
-      src: "/images/cards-turned/MoneyTurned.png",
+      key: "money",
+      srcBack: "/images/cards-turned/MoneyTurned.png",
+      srcFront: "/images/cards/Money.png",
       alt: dictionary.money,
       left: 1013.06,
       top: 76.43,
@@ -84,27 +106,80 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
   ];
 }
 
-export default function CardsFan({ dictionary }: CardsFanProps) {
+const CARD_LIFT = 40;
+const FLIP_DURATION = 0.5;
+
+interface FlippableCardProps {
+  card: CardSpec;
+  isHovered: boolean;
+  zIndex: number;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
+}
+
+function FlippableCard({ card, isHovered, zIndex, onHoverStart, onHoverEnd }: FlippableCardProps) {
+  const [showFront, setShowFront] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(
+      () => setShowFront(isHovered),
+      (FLIP_DURATION * 1000) / 2,
+    );
+    return () => clearTimeout(timeoutRef.current);
+  }, [isHovered]);
+
+  return (
+    <div
+      className={styles.cardWrap}
+      style={{
+        left: card.left,
+        top: card.top,
+        width: card.width,
+        height: card.height,
+        zIndex,
+      }}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+    >
+      <motion.div
+        className={styles.card}
+        animate={{
+          rotate: card.rotate,
+          y: isHovered ? -CARD_LIFT : 0,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 24 }}
+      >
+        <motion.div
+          className={styles.cardFace}
+          animate={{ scaleX: isHovered === showFront ? 1 : 0 }}
+          transition={{ duration: FLIP_DURATION / 2, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <div className={styles.cardSideInner}>
+            <Image src={showFront ? card.srcFront : card.srcBack} alt={card.alt} fill sizes="165px" />
+          </div>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
+export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
   const cards = buildCards(dictionary);
 
   return (
     <div className={styles.cardsFan}>
       <div className={styles.inner}>
-        {cards.map((card) => (
-          <div
-            key={card.alt}
-            className={styles.cardWrap}
-            style={{
-              left: card.left,
-              top: card.top,
-              width: card.width,
-              height: card.height,
-            }}
-          >
-            <div className={styles.card} style={{ transform: `rotate(${card.rotate}deg)` }}>
-              <Image src={card.src} alt={card.alt} fill sizes="165px" />
-            </div>
-          </div>
+        {cards.map((card, index) => (
+          <FlippableCard
+            key={card.key}
+            card={card}
+            isHovered={hoveredIndex === index}
+            zIndex={hoveredIndex === index ? 10 : index}
+            onHoverStart={() => onCardHoverChange(index)}
+            onHoverEnd={() => onCardHoverChange(null)}
+          />
         ))}
       </div>
     </div>
