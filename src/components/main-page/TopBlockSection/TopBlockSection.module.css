@@ -1,0 +1,115 @@
+.topBlock {
+  position: relative;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  height: 360px;
+  padding: 40px;
+  margin-top: -174px;
+  border-radius: var(--radius-panel);
+  overflow: clip;
+  box-shadow: var(--shadow-light);
+  z-index: 2;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.backgroundTint {
+  position: absolute;
+  inset: 0;
+  background: var(--color-white-75);
+}
+
+.backgroundImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.textPanel {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 32px 24px;
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.eyebrow {
+  color: var(--color-black-40);
+}
+
+.heading {
+  color: var(--color-black);
+}
+
+.description {
+  color: var(--color-black-75);
+}
+
+.spacer {
+  flex: 1 0 0;
+  height: 100%;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  flex: 1 0 0;
+  gap: 8px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  height: 100%;
+  min-width: 0;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 6px;
+  border-radius: 30px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+  transition: opacity 0.2s ease;
+}
+
+.actionButton:hover {
+  opacity: 0.85;
+}
+
+.actionIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  width: 32px;
+  height: 32px;
+}
+
+.actionIconWrapWide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  height: 32px;
+}

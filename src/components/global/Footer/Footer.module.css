@@ -1,0 +1,65 @@
+.footer {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 60px;
+  position: relative;
+}
+
+.social {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  gap: 10px;
+  align-items: center;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 30px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+  transition: opacity 0.2s ease;
+}
+
+.socialLink:hover {
+  opacity: 0.85;
+}
+
+.socialIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.links {
+  display: flex;
+  gap: 42px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-black-75);
+  white-space: nowrap;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--color-black);
+}
+
+.logo {
+  flex: 1 0 0;
+  min-width: 0;
+  color: var(--color-black-75);
+  text-align: right;
+}

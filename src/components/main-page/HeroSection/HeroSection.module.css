@@ -1,0 +1,106 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 160px 60px 60px;
+  position: relative;
+  overflow: clip;
+}
+
+.patternCenter {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1010px;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.patternLeft {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 215px;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.patternRight {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 215px;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.titleTop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titleLine1 {
+  color: var(--color-white);
+  margin-bottom: -30px;
+}
+
+.titleRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.titleWord {
+  color: var(--color-white);
+}
+
+.titleHighlight {
+  background-image: var(--gradient-pink-purple);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.description {
+  color: var(--color-white);
+  text-align: center;
+}
+
+.star {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 429px;
+  width: 50px;
+  height: 62px;
+  pointer-events: none;
+}
