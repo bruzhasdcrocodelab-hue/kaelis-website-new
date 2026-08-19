@@ -3,27 +3,70 @@
   display: inline-flex;
 }
 
-.trigger {
+.shell {
+  position: relative;
+  z-index: 20;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
   width: 180px;
-  height: 44px;
-  padding: 6px 8px 6px 24px;
-  border-radius: 30px;
+  padding: 8px;
+  border: 1px solid var(--color-greyish-blue);
   background: var(--color-white);
   box-shadow: var(--shadow-default);
   backdrop-filter: blur(var(--blur-shadow));
   -webkit-backdrop-filter: blur(var(--blur-shadow));
-  border: none;
-  cursor: pointer;
-  appearance: none;
+  overflow: hidden;
 }
 
-.triggerLabel {
+.shell:has(.itemTrigger) {
+  padding: 6px 8px 6px 24px;
+  border-color: transparent;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  text-align: left;
+}
+
+.itemTrigger {
+  justify-content: space-between;
+  height: 32px;
+}
+
+.itemOption {
+  justify-content: flex-start;
+  height: 32px;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.itemActive {
+  background: var(--color-greyish-blue);
+}
+
+.itemLabel {
   color: var(--color-black);
   white-space: nowrap;
+}
+
+.itemOption .itemLabel {
+  color: var(--color-black-75);
+}
+
+.itemLabelActive {
+  background-image: var(--gradient-pink-purple);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 .iconWrap {
@@ -54,60 +97,3 @@
   background-color: transparent;
 }
 
-.panelPositioner {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  z-index: 20;
-  overflow: hidden;
-}
-
-.panel {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 4px;
-  width: 180px;
-  padding: 8px;
-  border-radius: var(--radius-card);
-  background: var(--color-white);
-  border: 1px solid var(--color-greyish-blue);
-  box-shadow: var(--shadow-default);
-  backdrop-filter: blur(var(--blur-shadow));
-  -webkit-backdrop-filter: blur(var(--blur-shadow));
-}
-
-.menuItem {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 4px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  appearance: none;
-  text-align: left;
-}
-
-.menuItemActive {
-  background: var(--color-greyish-blue);
-}
-
-.menuItemContent {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.menuItemLabel {
-  color: var(--color-black-75);
-  white-space: nowrap;
-}
-
-.menuItemLabelActive {
-  background-image: var(--gradient-pink-purple);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}

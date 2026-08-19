@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
 import styles from "./TriggerButton.module.css";
 
@@ -21,6 +21,8 @@ const GUIDE_ICON: Record<GuideId, string> = {
   psychologist: "/icons/psychologist.svg",
   friend: "/icons/friend.svg",
 };
+
+const TRANSITION = { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const };
 
 export default function TriggerButton({ dictionary, value, onChange }: TriggerButtonProps) {
   const [open, setOpen] = useState(false);
@@ -58,77 +60,58 @@ export default function TriggerButton({ dictionary, value, onChange }: TriggerBu
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <button
-        type="button"
-        className={styles.trigger}
-        onClick={() => setOpen((prev) => !prev)}
-        aria-haspopup="listbox"
-        aria-expanded={open}
+      <motion.div
+        className={styles.shell}
+        layout
+        initial={false}
+        animate={{ borderRadius: open ? 12 : 30 }}
+        transition={TRANSITION}
+        role={open ? "listbox" : undefined}
       >
-        <span className={`font-instrument-sm-emphasized ${styles.triggerLabel}`}>
-          {dictionary[selected]}
-        </span>
-        <span className={styles.iconWrap}>
-          <span
-            className={styles.icon}
-            style={{ maskImage: `url(${GUIDE_ICON[selected]})`, WebkitMaskImage: `url(${GUIDE_ICON[selected]})` }}
-          />
-        </span>
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className={styles.panelPositioner}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-          >
-            <motion.div
-              className={styles.panel}
-              role="listbox"
-              initial={{ y: -8 }}
-              animate={{ y: 0 }}
-              exit={{ y: -8 }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+        {(open ? GUIDE_ORDER : [selected]).map((guide) => {
+          const isActive = guide === selected;
+          const isTrigger = !open;
+          return (
+            <motion.button
+              key={guide}
+              layout
+              type="button"
+              role={isTrigger ? undefined : "option"}
+              aria-haspopup={isTrigger ? "listbox" : undefined}
+              aria-expanded={isTrigger ? open : undefined}
+              aria-selected={isTrigger ? undefined : isActive}
+              className={`${styles.item} ${isTrigger ? styles.itemTrigger : styles.itemOption} ${
+                !isTrigger && isActive ? styles.itemActive : ""
+              }`}
+              onClick={() => (isTrigger ? setOpen(true) : handleSelect(guide))}
             >
-              {GUIDE_ORDER.map((guide) => {
-                const isActive = guide === selected;
-                return (
-                  <button
-                    key={guide}
-                    type="button"
-                    role="option"
-                    aria-selected={isActive}
-                    className={`${styles.menuItem} ${isActive ? styles.menuItemActive : ""}`}
-                    onClick={() => handleSelect(guide)}
-                  >
-                    <span className={styles.menuItemContent}>
-                      <span className={styles.iconWrap}>
-                        <span
-                          className={`${styles.icon} ${isActive ? styles.iconGradient : ""}`}
-                          style={{
-                            maskImage: `url(${GUIDE_ICON[guide]})`,
-                            WebkitMaskImage: `url(${GUIDE_ICON[guide]})`,
-                          }}
-                        />
-                      </span>
-                      <span
-                        className={`font-instrument-sm-emphasized ${styles.menuItemLabel} ${
-                          isActive ? styles.menuItemLabelActive : ""
-                        }`}
-                      >
-                        {dictionary[guide]}
-                      </span>
-                    </span>
-                  </button>
-                );
-              })}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              {isTrigger && (
+                <span className={`font-instrument-sm-emphasized ${styles.itemLabel}`}>
+                  {dictionary[guide]}
+                </span>
+              )}
+              <span className={styles.iconWrap}>
+                <span
+                  className={`${styles.icon} ${!isTrigger && isActive ? styles.iconGradient : ""}`}
+                  style={{
+                    maskImage: `url(${GUIDE_ICON[guide]})`,
+                    WebkitMaskImage: `url(${GUIDE_ICON[guide]})`,
+                  }}
+                />
+              </span>
+              {!isTrigger && (
+                <span
+                  className={`font-instrument-sm-emphasized ${styles.itemLabel} ${
+                    isActive ? styles.itemLabelActive : ""
+                  }`}
+                >
+                  {dictionary[guide]}
+                </span>
+              )}
+            </motion.button>
+          );
+        })}
+      </motion.div>
     </div>
   );
 }
