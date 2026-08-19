@@ -1,7 +1,13 @@
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary } from "@/lang";
-import { cardFan, FAN_CONTAINER_HEIGHT, FAN_CONTAINER_WIDTH } from "./cardFan";
+import {
+  cardFan,
+  CARD_TRUE_HEIGHT,
+  CARD_TRUE_WIDTH,
+  FAN_CONTAINER_HEIGHT,
+  FAN_CONTAINER_WIDTH,
+} from "./cardFan";
 import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {
@@ -18,16 +24,24 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
           {cardFan.map((card) => (
             <div
               key={card.id}
-              className={styles.fanCard}
+              className={styles.fanCardBox}
               style={{
                 left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
                 top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
-                width: card.width,
-                height: card.height,
-                transform: `rotate(${card.rotate}deg)`,
+                width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
+                height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
               }}
             >
-              <Image src="/images/cards/default-card.png" alt="" fill sizes="200px" />
+              <div
+                className={styles.fanCard}
+                style={{
+                  width: CARD_TRUE_WIDTH,
+                  height: CARD_TRUE_HEIGHT,
+                  transform: `rotate(${card.rotate}deg)`,
+                }}
+              >
+                <Image src="/images/cards/default-card.png" alt="" fill sizes="200px" />
+              </div>
             </div>
           ))}
         </div>

@@ -2,22 +2,33 @@
  * Positions subcategory tiles along the "subcategory reference line" from the
  * Figma design (KAELIS design file, node-id=1464-3086 for the reference guide).
  *
- * The tiles are NOT evenly distributed on a fixed-radius arc. Cross-referencing
- * the exact tile coordinates from the Family (4 subs, node 1464-1491), Forecast
- * (3 subs, node 1464-2931), Dreams (1 sub, node 1464-2341) and Love (13 subs,
- * node 1464-2479) frames shows a fixed, indexed slot table: tiles fill
- * alternately right/left starting from the innermost slot on the right, and
- * each side's slots grow in both angle (from vertical) and radial distance as
- * they move outward. All coordinates below were derived from Love's 13 tiles
- * (7 right + 6 left, which fully populate the observed slot table) with a
- * pivot at (720, 156) in a 1440px-wide design frame; Family/Forecast/Dreams
- * tile positions match these same slots to within ~1px.
+ * The tiles are NOT evenly distributed on a fixed-radius arc, and cross-referencing
+ * the exact tile coordinates across references with different counts (Dreams: 1,
+ * Forecast: 3, Family: 4, Love: 13, nodes 1464-2341/2931/1491/2479) shows the
+ * per-tile placement isn't a single closed-form function of index — it reads as
+ * hand-placed per screen. What IS consistent is the outer envelope: a maximum
+ * per-side slot table (angle from vertical + radial distance from a pivot) that
+ * spans from close-to-center/high up to far-from-center/low, derived from Love's
+ * 13 tiles (7 right + 6 left, the densest reference, which fully populates the
+ * table) with a pivot at (720, 156) in the 1440px-wide "Categories" page frame.
+ *
+ * To reproduce the "fewer items -> more spread out" behavior visible across
+ * references (e.g. Family's 2-per-side tiles sit much farther apart than two
+ * consecutive Love tiles would), each side's N tiles are sampled at evenly
+ * spaced indices across the FULL slot table for that count, rather than taking
+ * the first N (densely-packed) slots — this is an approximation the max-density
+ * table doesn't fully pin down analytically, but it matches the observed trend.
+ *
+ * The pivot is expressed here relative to the hero section (`CategoryHeroSection`),
+ * not the page: Figma's page-absolute pivot y=156 sits 124px below the page's
+ * Top Bar (the "section" frame that holds the reference line starts at
+ * page y=124), so the section-relative pivot y is 156 - 124 = 32.
  *
  * Slots beyond the last known one are extrapolated by continuing the average
  * angle/distance step of the last few known slots on that side.
  */
 
-export const SLOT_PIVOT = { x: 720, y: 156 };
+export const SLOT_PIVOT = { x: 720, y: 32 };
 export const DESIGN_WIDTH = 1440;
 
 interface Slot {
@@ -67,6 +78,32 @@ function extrapolateSlots(slots: Slot[], count: number): Slot[] {
   return extended;
 }
 
+/**
+ * Picks `count` slots out of `slots` (the max-density table for one side),
+ * evenly spaced across a fractional window of the index range that widens
+ * as `count` approaches the table's full size — so a small count spreads out
+ * across a moderate middle portion of the range (matching the "fewer items
+ * sit farther apart" trend observed across references) while a count near
+ * the table's max density uses the full range (matching Love's 13-tile case).
+ */
+function sampleEvenly(slots: Slot[], count: number): Slot[] {
+  if (count <= 0) return [];
+
+  const density = Math.min(count / slots.length, 1);
+  const lo = 0.15 * (1 - density);
+  const hi = 0.7 + 0.3 * density;
+  const lastIndex = slots.length - 1;
+
+  if (count === 1) return [slots[Math.round(((lo + hi) / 2) * lastIndex)]];
+
+  const picked: Slot[] = [];
+  for (let i = 0; i < count; i++) {
+    const t = lo + ((hi - lo) * i) / (count - 1);
+    picked.push(slots[Math.round(t * lastIndex)]);
+  }
+  return picked;
+}
+
 function slotToPoint(slot: Slot): { xPct: number; yPx: number } {
   const rad = (slot.angle * Math.PI) / 180;
   const x = SLOT_PIVOT.x + Math.sin(rad) * slot.distance;
@@ -83,16 +120,20 @@ export interface SubcategoryPosition {
 }
 
 /**
- * Computes tile positions for `count` subcategories, filling alternately
- * right/left from the innermost slot outward (right gets the extra slot when
- * count is odd), matching the fill order observed across every reference.
+ * Computes tile positions for `count` subcategories, alternating right/left
+ * (right gets the extra tile when count is odd) for visual balance. Each
+ * side's tiles are spread evenly across that side's full slot range so a
+ * small count doesn't cluster near the center.
  */
 export function computeSubcategoryPositions(count: number): SubcategoryPosition[] {
   const rightCount = Math.ceil(count / 2);
   const leftCount = Math.floor(count / 2);
 
-  const rightSlots = extrapolateSlots(RIGHT_SLOTS, rightCount);
-  const leftSlots = extrapolateSlots(LEFT_SLOTS, leftCount);
+  const rightTable = extrapolateSlots(RIGHT_SLOTS, Math.max(rightCount, RIGHT_SLOTS.length));
+  const leftTable = extrapolateSlots(LEFT_SLOTS, Math.max(leftCount, LEFT_SLOTS.length));
+
+  const rightSlots = sampleEvenly(rightTable, rightCount);
+  const leftSlots = sampleEvenly(leftTable, leftCount);
 
   const positions: SubcategoryPosition[] = [];
   for (let i = 0; i < count; i++) {

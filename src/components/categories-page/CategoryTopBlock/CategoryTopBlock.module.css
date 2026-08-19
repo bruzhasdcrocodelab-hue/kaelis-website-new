@@ -23,6 +23,7 @@
   box-shadow: var(--shadow-medium);
   backdrop-filter: blur(var(--blur-shadow));
   -webkit-backdrop-filter: blur(var(--blur-shadow));
+  z-index: 10;
 }
 
 .panel::before {
@@ -36,18 +37,22 @@
 
 .fan {
   position: absolute;
-  left: 50%;
-  bottom: 33px;
-  width: 1400px;
-  height: 415.4px;
-  transform: translateX(-50%);
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
 }
 
-.fanCard {
+.fanCardBox {
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fanCard {
+  position: relative;
+  flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
 }

@@ -1,9 +1,17 @@
 /**
  * Decorative 21-card fan behind the TopBlock panel (KAELIS design file,
- * node-id=1464-1491, "Mask group" under TopBlock). Positions are relative to
- * the fan's own 1400x415.4px container, which sits centered at the bottom of
- * the TopBlock panel. Every card renders the same shared image per the task
- * (`/images/cards/default-card.png`) — only position/size/rotation differ.
+ * node-id=1464-1491, "Mask group" under TopBlock). The cards' wrapping divs
+ * (`Mask group` / `Group 2`) use `display: contents` in the Figma dump, so
+ * they don't establish a containing block — each card's left/top/width/height
+ * is effectively relative to the TopBlock panel itself (1320x440, clipped by
+ * the panel's own `overflow: clip`), not to a smaller sub-container.
+ *
+ * Per card, the dump nests a `flex items-center justify-center` box sized to
+ * the ROTATED bounding box (left/top/width/height below) around an inner
+ * element at the card's TRUE unrotated size (CARD_TRUE_WIDTH/HEIGHT,
+ * constant across all 21 cards) that carries the `rotate(...)` transform.
+ * Every card renders the same shared image per the task
+ * (`/images/cards/default-card.png`) — only position/rotation differ.
  */
 export interface FanCardSpec {
   id: string;
@@ -14,29 +22,32 @@ export interface FanCardSpec {
   rotate: number;
 }
 
-export const FAN_CONTAINER_WIDTH = 1400;
-export const FAN_CONTAINER_HEIGHT = 415.4;
+export const FAN_CONTAINER_WIDTH = 1320;
+export const FAN_CONTAINER_HEIGHT = 440;
+
+export const CARD_TRUE_WIDTH = 96.749;
+export const CARD_TRUE_HEIGHT = 175.908;
 
 export const cardFan: FanCardSpec[] = [
-  { id: "1", left: 1379.6, top: -334.2, width: 179.1, height: 102.7, rotate: 91.95 },
-  { id: "22", left: 1374.8, top: -223.2, width: 191.3, height: 129.0, rotate: 101.18 },
-  { id: "21", left: 1352.6, top: -116.1, width: 198.0, height: 149.6, rotate: 109.35 },
-  { id: "20", left: 1314.3, top: -12.3, width: 200.8, height: 168.5, rotate: 118.29 },
-  { id: "19", left: 1260.6, top: 84.2, width: 198.7, height: 183.3, rotate: 127.09 },
-  { id: "18", left: 1192.9, top: 171.3, width: 192.0, height: 193.6, rotate: 135.84 },
-  { id: "17", left: 1112.6, top: 247.1, width: 180.7, height: 199.4, rotate: 144.62 },
-  { id: "16", left: 1021.7, top: 309.9, width: 165.1, height: 200.6, rotate: 153.51 },
-  { id: "15", left: 922.0, top: 358.2, width: 145.1, height: 196.8, rotate: 162.55 },
-  { id: "14", left: 815.7, top: 390.7, width: 121.0, height: 188.0, rotate: 171.75 },
-  { id: "13", left: 610.6, top: 229.8, width: 97.0, height: 176.1, rotate: 0.1 },
-  { id: "12", left: 597.3, top: 404.4, width: 121.5, height: 188.2, rotate: -171.58 },
-  { id: "10", left: 487.9, top: 386.6, width: 145.3, height: 196.9, rotate: -162.45 },
-  { id: "9", left: 382.7, top: 352.1, width: 165.1, height: 200.6, rotate: -153.49 },
-  { id: "8", left: 284.3, top: 301.8, width: 180.7, height: 199.5, rotate: -144.66 },
-  { id: "7", left: 194.9, top: 237.2, width: 191.9, height: 193.7, rotate: -135.91 },
-  { id: "6", left: 116.3, top: 159.6, width: 198.6, height: 183.3, rotate: -127.15 },
-  { id: "5", left: 50.3, top: 71.0, width: 200.8, height: 168.5, rotate: -118.29 },
-  { id: "4", left: -1.6, top: -27.0, width: 198.0, height: 149.4, rotate: -109.27 },
-  { id: "3", left: -36.8, top: -130.7, width: 191.2, height: 128.6, rotate: -101.03 },
-  { id: "2", left: -55.8, top: -235.9, width: 180.3, height: 104.9, rotate: -92.69 },
+  // { id: "1", left: 1379.6, top: -334.2, width: 97.0, height: 176.0, rotate: 91.95 },
+  // { id: "22", left: 1374.8, top: -223.2, width: 97.0, height: 176.0, rotate: 101.18 },
+  // { id: "21", left: 1352.6, top: -116.1, width: 97.0, height: 176.0, rotate: 109.35 },
+  { id: "20", left: 1170.3, top: -112.3, width: 97.0, height: 176.0, rotate: 118.29 },
+  { id: "19", left: 1119.6, top: -27, width: 97.0, height: 176.0, rotate: 127.09 },
+  { id: "18", left: 1053.9, top: 46.3, width: 97.0, height: 176.0, rotate: 135.84 },
+  { id: "17", left: 977.6, top: 109.1, width: 97.0, height: 176.0, rotate: 144.62 },
+  { id: "16", left: 892.7, top: 159.7, width: 97.0, height: 176.0, rotate: 153.51 },
+  { id: "15", left: 803.0, top: 196, width: 97.0, height: 176.0, rotate: 162.55 },
+  { id: "14", left: 707.7, top: 218.4, width: 97.0, height: 176.0, rotate: 171.75 },
+  { id: "13", left: 611, top: 225.8, width: 97.0, height: 176.0, rotate: 180 },
+  { id: "12", left: 514.3, top: 218.4, width: 97.0, height: 176.0, rotate: -171.58 },
+  { id: "10", left: 419.3, top: 195, width: 97.0, height: 176.0, rotate: -162.45 },
+  { id: "9", left: 328.7, top: 157.7, width: 97.0, height: 176.0, rotate: -153.49 },
+  { id: "8", left: 245.6, top: 106.8, width: 97.0, height: 176.0, rotate: -144.66 },
+  { id: "7", left: 169.5, top: 44.2, width: 97.0, height: 176.0, rotate: -135.91 },
+  { id: "6", left: 105.3, top: -30, width: 97.0, height: 176.0, rotate: -127.15 },
+  { id: "5", left: 52.3, top: -110.0, width: 97.0, height: 176.0, rotate: -118.29 },
+  // { id: "4", left: -1.6, top: -27.0, width: 97.0, height: 176.0, rotate: -109.27 },
+  // { id: "3", left: -36.8, top: -130.7, width: 97.0, height: 176.0, rotate: -101.03 },
+  // { id: "2", left: -55.8, top: -235.9, width: 97.0, height: 176.0, rotate: -92.69 },
 ];
