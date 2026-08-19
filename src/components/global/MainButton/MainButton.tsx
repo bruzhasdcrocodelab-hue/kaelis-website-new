@@ -6,7 +6,8 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
  *
  * variant "gradient" / "gradient-black" share the same pink gradient fill and
  * differ only in label/icon color (white vs black) — matching the Figma naming.
- * variant "stroke" has a transparent fill and a solid border/label/icon color.
+ * variant "stroke" has a transparent fill, a solid `#d3aced` border, and a
+ * pink-purple gradient label/icon (Figma's "pink-gradient" token).
  *
  * The icon is provided as a path to a single-color SVG (e.g. "/icons/edit.svg")
  * and recolored via CSS mask-image to always match the label color, since the
@@ -24,6 +25,8 @@ export interface MainButtonProps
   children?: ReactNode;
   /** Path to a single-color SVG icon, e.g. "/icons/edit.svg". */
   icon?: string;
+  /** Rotation applied to the icon, in degrees (e.g. 90/180/-90 for directional arrows). */
+  iconRotation?: number;
 }
 
 const TEXT_ONLY_PADDING: Record<MainButtonSize, string> = {
@@ -63,10 +66,18 @@ const ICON_FILL_CLASS: Record<MainButtonVariant, string> = {
   default: "bg-black",
   gradient: "bg-white",
   "gradient-black": "bg-black",
-  stroke: "bg-[#e78fe3]",
+  stroke: "bg-gradient-pink-purple",
 };
 
-function Icon({ src, variant }: { src: string; variant: MainButtonVariant }) {
+function Icon({
+  src,
+  variant,
+  rotation,
+}: {
+  src: string;
+  variant: MainButtonVariant;
+  rotation?: number;
+}) {
   return (
     <span
       className={`${ICON_BOX} ${ICON_FILL_CLASS[variant]}`}
@@ -79,6 +90,7 @@ function Icon({ src, variant }: { src: string; variant: MainButtonVariant }) {
         WebkitMaskRepeat: "no-repeat",
         WebkitMaskPosition: "center",
         WebkitMaskSize: "24px 24px",
+        transform: rotation ? `rotate(${rotation}deg)` : undefined,
       }}
     />
   );
@@ -88,6 +100,7 @@ export default function MainButton({
   variant = "default",
   size = "large",
   icon,
+  iconRotation,
   children,
   className,
   type = "button",
@@ -98,7 +111,7 @@ export default function MainButton({
   const isStroke = variant === "stroke";
 
   const labelColorClasses = isStroke
-    ? "text-[#e78fe3]"
+    ? "bg-gradient-pink-purple bg-clip-text text-transparent"
     : variant === "gradient"
       ? "text-white"
       : "text-black";
@@ -114,7 +127,7 @@ export default function MainButton({
     "rounded-full font-instrument-base-emphasized whitespace-nowrap transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50",
     layoutClasses,
     isStroke
-      ? `bg-transparent border-solid border-[#e78fe3] ${STROKE_BORDER_WIDTH[size]}`
+      ? `bg-transparent border-solid border-[#d3aced] ${STROKE_BORDER_WIDTH[size]}`
       : variant === "default"
         ? "bg-white"
         : "bg-gradient-pink",
@@ -126,7 +139,7 @@ export default function MainButton({
   return (
     <button type={type} className={buttonClasses} {...rest}>
       {hasLabel && <span className={`${TEXT_SIZE[size]} ${labelColorClasses}`}>{children}</span>}
-      {hasIcon && icon && <Icon src={icon} variant={variant} />}
+      {hasIcon && icon && <Icon src={icon} variant={variant} rotation={iconRotation} />}
     </button>
   );
 }

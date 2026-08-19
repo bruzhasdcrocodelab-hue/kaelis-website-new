@@ -76,6 +76,11 @@
   --blur-default: 10.25px;
   --blur-shadow: 12.5px;
 
+  /* ---- Radii ---- */
+  --radius-page: 50px;
+  --radius-panel: 30px;
+  --radius-card: 16px;
+
   /* ---- Typography: font families ---- */
   --font-bona-nova-sc: "Bona Nova SC", serif;
   --font-instrument-sans: "Instrument Sans", sans-serif;
@@ -91,6 +96,12 @@
   --text-xs: 13px;
   --text-xxs: 12px;
   --text-xxxs: 10px;
+
+  /* ---- Typography: hero display sizes (one-off, larger than shared scale) ---- */
+  --text-hero: 48px;
+  --text-hero-emphasized: 116px;
+  --tracking-hero: -2.88px;
+  --tracking-hero-emphasized: -11.6px;
 
   /* All type styles use 100% line-height and 400 weight unless noted. */
 
@@ -198,6 +209,22 @@
  * Named after the Figma type scale: font-{family}-{size}[-emphasized]
  * e.g. `font-bona-4xl`, `font-bona-4xl-emphasized`, `font-instrument-base-emphasized`
  */
+.font-bona-hero {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-hero);
+  line-height: 1;
+  letter-spacing: var(--tracking-hero);
+}
+.font-bona-hero-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-hero-emphasized);
+  line-height: 1;
+  letter-spacing: var(--tracking-hero-emphasized);
+}
 .font-bona-4xl {
   font-family: var(--font-bona-nova-sc);
   font-weight: 400;
