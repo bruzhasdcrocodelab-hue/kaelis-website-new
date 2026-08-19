@@ -34,6 +34,21 @@ const en = {
     description:
       "Understand your thoughts, emotions, and patterns with AI-guided reflections, personalized readings, and mindful tools designed for self-discovery",
   },
+  categoryPage: {
+    categoryLabel: "Category",
+    returnToMain: "Return to Main",
+    returnToPrefix: "Return to",
+    getYourReadings: "Get Your Readings",
+    topBlock: {
+      changeQuestion: "Change Question",
+      categoryPrefix: "Category:",
+      askTitle: "Ask a Question",
+      askDescription: "The cards hold the answers you seek. Let the wisdom of Tarot guide your path",
+      placeholder: "Describe your question…",
+      continue: "Continue",
+      analyst: "Analyst",
+    },
+  },
   footer: {
     logo: "Kaelis AI",
     links: {

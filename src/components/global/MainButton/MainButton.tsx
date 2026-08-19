@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
+import Link from "next/link";
 
 /**
  * Synced from Figma (KAELIS design file), node-id=1362-3145.
@@ -27,6 +28,8 @@ export interface MainButtonProps
   icon?: string;
   /** Rotation applied to the icon, in degrees (e.g. 90/180/-90 for directional arrows). */
   iconRotation?: number;
+  /** When set, renders as a `next/link` with the same styling instead of a `<button>`. */
+  href?: string;
 }
 
 const TEXT_ONLY_PADDING: Record<MainButtonSize, string> = {
@@ -101,6 +104,7 @@ export default function MainButton({
   size = "large",
   icon,
   iconRotation,
+  href,
   children,
   className,
   type = "button",
@@ -136,10 +140,24 @@ export default function MainButton({
     .filter(Boolean)
     .join(" ");
 
-  return (
-    <button type={type} className={buttonClasses} {...rest}>
+  const content = (
+    <>
       {hasLabel && <span className={`${TEXT_SIZE[size]} ${labelColorClasses}`}>{children}</span>}
       {hasIcon && icon && <Icon src={icon} variant={variant} rotation={iconRotation} />}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={buttonClasses}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type={type} className={buttonClasses} {...rest}>
+      {content}
     </button>
   );
 }

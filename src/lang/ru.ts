@@ -36,6 +36,21 @@ const ru: Dictionary = {
     description:
       "Понимайте свои мысли, эмоции и паттерны с помощью ИИ-рефлексий, персонализированных раскладов и инструментов для самопознания",
   },
+  categoryPage: {
+    categoryLabel: "Категория",
+    returnToMain: "Вернуться на главную",
+    returnToPrefix: "Вернуться к",
+    getYourReadings: "Получить расклад",
+    topBlock: {
+      changeQuestion: "Изменить вопрос",
+      categoryPrefix: "Категория:",
+      askTitle: "Задайте вопрос",
+      askDescription: "Карты хранят ответы, которые вы ищете. Пусть мудрость Таро направит ваш путь",
+      placeholder: "Опишите свой вопрос…",
+      continue: "Продолжить",
+      analyst: "Аналитик",
+    },
+  },
   footer: {
     logo: "Kaelis AI",
     links: {

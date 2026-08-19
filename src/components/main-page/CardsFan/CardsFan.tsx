@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
 import styles from "./CardsFan.module.css";
@@ -14,6 +15,7 @@ export interface CardsFanProps {
 
 interface CardSpec {
   key: string;
+  slug: string;
   srcBack: string;
   srcFront: string;
   alt: string;
@@ -28,6 +30,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
   return [
     {
       key: "love",
+      slug: "love",
       srcBack: "/images/cards-turned/LoveTurned.png",
       srcFront: "/images/cards/Love.png",
       alt: dictionary.love,
@@ -39,6 +42,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     },
     {
       key: "yesNo",
+      slug: "yes-no",
       srcBack: "/images/cards-turned/YesNoTurned.png",
       srcFront: "/images/cards/YesNo.png",
       alt: dictionary.yesNo,
@@ -50,6 +54,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     },
     {
       key: "oneCard",
+      slug: "one-card",
       srcBack: "/images/cards-turned/OneCardTurned.png",
       srcFront: "/images/cards/OneCard.png",
       alt: dictionary.oneCard,
@@ -61,6 +66,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     },
     {
       key: "threeCards",
+      slug: "three-cards",
       srcBack: "/images/cards-turned/ThreeCardsTurned.png",
       srcFront: "/images/cards/ThreeCards.png",
       alt: dictionary.threeCards,
@@ -72,6 +78,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     },
     {
       key: "work",
+      slug: "work",
       srcBack: "/images/cards-turned/WorkTurned.png",
       srcFront: "/images/cards/Work.png",
       alt: dictionary.work,
@@ -83,6 +90,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     },
     {
       key: "family",
+      slug: "family",
       srcBack: "/images/cards-turned/FamilyTurned.png",
       srcFront: "/images/cards/Family.png",
       alt: dictionary.family,
@@ -94,6 +102,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     },
     {
       key: "money",
+      slug: "money",
       srcBack: "/images/cards-turned/MoneyTurned.png",
       srcFront: "/images/cards/Money.png",
       alt: dictionary.money,
@@ -131,7 +140,8 @@ function FlippableCard({ card, isHovered, zIndex, onHoverStart, onHoverEnd }: Fl
   }, [isHovered]);
 
   return (
-    <div
+    <Link
+      href={`/categories/${card.slug}`}
       className={styles.cardWrap}
       style={{
         left: card.left,
@@ -161,7 +171,7 @@ function FlippableCard({ card, isHovered, zIndex, onHoverStart, onHoverEnd }: Fl
           </div>
         </motion.div>
       </motion.div>
-    </div>
+    </Link>
   );
 }
 

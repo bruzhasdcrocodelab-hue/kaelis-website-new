@@ -1,0 +1,106 @@
+import Image from "next/image";
+import MainButton from "@/components/global/MainButton";
+import type { Dictionary } from "@/lang";
+import { cardFan, FAN_CONTAINER_HEIGHT, FAN_CONTAINER_WIDTH } from "./cardFan";
+import styles from "./CategoryTopBlock.module.css";
+
+export interface CategoryTopBlockProps {
+  dictionary: Dictionary["categoryPage"]["topBlock"];
+  /** Always the top-level category name, even when viewing a nested subcategory. */
+  categoryLabel: string;
+}
+
+export default function CategoryTopBlock({ dictionary, categoryLabel }: CategoryTopBlockProps) {
+  return (
+    <section className={styles.section}>
+      <div className={styles.panel}>
+        <div className={styles.fan} aria-hidden>
+          {cardFan.map((card) => (
+            <div
+              key={card.id}
+              className={styles.fanCard}
+              style={{
+                left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
+                top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
+                width: card.width,
+                height: card.height,
+                transform: `rotate(${card.rotate}deg)`,
+              }}
+            >
+              <Image src="/images/cards/default-card.png" alt="" fill sizes="200px" />
+            </div>
+          ))}
+        </div>
+        <Image
+          src="/images/backgrounds/waves.svg"
+          alt=""
+          width={1780}
+          height={800}
+          className={styles.waves}
+          aria-hidden
+        />
+        <Image
+          src="/images/backgrounds/pattern-categories-top-block.svg"
+          alt=""
+          width={1627}
+          height={731}
+          className={styles.pattern}
+          aria-hidden
+        />
+
+        <div className={styles.row}>
+          <div className={styles.side}>
+            <MainButton variant="default" size="medium" icon="/icons/edit.svg" href="/">
+              {dictionary.changeQuestion}
+            </MainButton>
+          </div>
+
+          <div className={styles.center}>
+            <div className={styles.categoryTag}>
+              <Image src="/icons/main-star.svg" alt="" width={18} height={13} />
+              <p className={`font-instrument-xs ${styles.categoryTagLabel}`}>
+                {dictionary.categoryPrefix} {categoryLabel}
+              </p>
+            </div>
+            <div className={styles.askBlock}>
+              <p className={`font-bona-topblock-title ${styles.askTitle}`}>{dictionary.askTitle}</p>
+              <p className={`font-instrument-xs ${styles.askDescription}`}>{dictionary.askDescription}</p>
+            </div>
+          </div>
+
+          <div className={styles.side}>
+            <div className={styles.sideEnd}>
+              <div className={styles.triggerButton}>
+                <span className={`font-instrument-sm-emphasized ${styles.triggerLabel}`}>
+                  {dictionary.analyst}
+                </span>
+                <span className={styles.triggerIconWrap}>
+                  <Image src="/icons/analyst.svg" alt="" width={24} height={24} />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.inputArea}>
+          <div className={styles.inputBox}>
+            <p className={`font-instrument-sm ${styles.placeholder}`}>{dictionary.placeholder}</p>
+          </div>
+          <Image
+            src="/icons/main-star.svg"
+            alt=""
+            width={50}
+            height={62}
+            className={styles.inputStar}
+            aria-hidden
+          />
+          <div className={styles.continueWrap}>
+            <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" href="/">
+              {dictionary.continue}
+            </MainButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

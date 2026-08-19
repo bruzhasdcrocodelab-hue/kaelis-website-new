@@ -36,6 +36,21 @@ const uk: Dictionary = {
     description:
       "Розумійте свої думки, емоції та патерни за допомогою ШІ-рефлексій, персоналізованих розкладів та інструментів для самопізнання",
   },
+  categoryPage: {
+    categoryLabel: "Категорія",
+    returnToMain: "Повернутися на головну",
+    returnToPrefix: "Повернутися до",
+    getYourReadings: "Отримати розклад",
+    topBlock: {
+      changeQuestion: "Змінити питання",
+      categoryPrefix: "Категорія:",
+      askTitle: "Задайте питання",
+      askDescription: "Карти зберігають відповіді, які ви шукаєте. Нехай мудрість Таро скерує ваш шлях",
+      placeholder: "Опишіть своє питання…",
+      continue: "Продовжити",
+      analyst: "Аналітик",
+    },
+  },
   footer: {
     logo: "Kaelis AI",
     links: {
