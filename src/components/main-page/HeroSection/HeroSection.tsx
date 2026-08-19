@@ -40,14 +40,13 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
             icon={isCardHovered ? "/icons/right-arrow.svg" : undefined}
           >
             <span className={styles.ctaLabelWrap}>
-              <AnimatePresence mode="popLayout" initial={false}>
+              <AnimatePresence initial={false}>
                 <motion.span
                   key={isCardHovered ? "hover" : "idle"}
-                  layout
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, position: "absolute" }}
+                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                   className={styles.ctaLabel}
                 >
                   {isCardHovered ? dictionary.ctaHover : dictionary.cta}
