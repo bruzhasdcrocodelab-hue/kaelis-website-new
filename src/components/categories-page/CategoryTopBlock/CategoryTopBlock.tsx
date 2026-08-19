@@ -57,7 +57,14 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
 
           <div className={styles.center}>
             <div className={styles.categoryTag}>
-              <Image src="/icons/main-star.svg" alt="" width={18} height={13} />
+              <Image
+                src="/icons/eye-gradient.svg"
+                alt=""
+                width={24}
+                height={24}
+                className={styles.eyeIcon}
+                aria-hidden
+              />
               <p className={`font-instrument-xs ${styles.categoryTagLabel}`}>
                 {dictionary.categoryPrefix} {categoryLabel}
               </p>
@@ -87,7 +94,7 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
             <p className={`font-instrument-sm ${styles.placeholder}`}>{dictionary.placeholder}</p>
           </div>
           <Image
-            src="/icons/main-star.svg"
+            src="/icons/main-star-gradient.svg"
             alt=""
             width={50}
             height={62}

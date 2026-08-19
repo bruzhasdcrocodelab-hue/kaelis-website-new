@@ -42,7 +42,7 @@ export default function CategoryPageView({
         src="/images/backgrounds/pattern-categories.svg"
         alt=""
         width={1580}
-        height={1534}
+        height={764}
         className={styles.patternCategories}
         priority
       />

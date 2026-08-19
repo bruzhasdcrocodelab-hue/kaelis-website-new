@@ -115,7 +115,7 @@ export default function MainButton({
   const isStroke = variant === "stroke";
 
   const labelColorClasses = isStroke
-    ? "bg-gradient-pink-purple bg-clip-text text-transparent"
+    ? "bg-gradient-pink bg-clip-text text-transparent"
     : variant === "gradient"
       ? "text-white"
       : "text-black";
