@@ -9,6 +9,8 @@ export interface HeroSectionProps {
   isCardHovered?: boolean;
 }
 
+const CTA_LAYOUT_TRANSITION = { type: "spring", stiffness: 350, damping: 32 } as const;
+
 export default function HeroSection({ dictionary, isCardHovered = false }: HeroSectionProps) {
   return (
     <section className={styles.hero}>
@@ -30,20 +32,30 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
           </div>
           <p className={`font-instrument-sm ${styles.description}`}>{dictionary.description}</p>
         </div>
-        <MainButton variant="stroke" size="large" type="button" icon={isCardHovered ? "/icons/right-arrow.svg" : undefined}>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span
-              key={isCardHovered ? "hover" : "idle"}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className={styles.ctaLabel}
-            >
-              {isCardHovered ? dictionary.ctaHover : dictionary.cta}
-            </motion.span>
-          </AnimatePresence>
-        </MainButton>
+        <motion.div layout className={styles.ctaButtonWrap} transition={CTA_LAYOUT_TRANSITION}>
+          <MainButton
+            variant="stroke"
+            size="large"
+            type="button"
+            icon={isCardHovered ? "/icons/right-arrow.svg" : undefined}
+          >
+            <span className={styles.ctaLabelWrap}>
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={isCardHovered ? "hover" : "idle"}
+                  layout
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                  className={styles.ctaLabel}
+                >
+                  {isCardHovered ? dictionary.ctaHover : dictionary.cta}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </MainButton>
+        </motion.div>
       </div>
       <motion.div
         animate={{ opacity: isCardHovered ? 0 : 1, scale: isCardHovered ? 0.6 : 1 }}
