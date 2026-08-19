@@ -49,6 +49,12 @@ const uk: Dictionary = {
       placeholder: "Опишіть своє питання…",
       continue: "Продовжити",
       analyst: "Аналітик",
+      guides: {
+        analyst: "Аналітик",
+        witch: "Відьма",
+        psychologist: "Психолог",
+        friend: "Друг",
+      },
     },
   },
   footer: {

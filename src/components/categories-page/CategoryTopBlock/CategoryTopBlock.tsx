@@ -1,5 +1,6 @@
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
+import TriggerButton from "@/components/categories-page/TriggerButton";
 import type { Dictionary } from "@/lang";
 import {
   cardFan,
@@ -91,14 +92,7 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
 
           <div className={styles.side}>
             <div className={styles.sideEnd}>
-              <div className={styles.triggerButton}>
-                <span className={`font-instrument-sm-emphasized ${styles.triggerLabel}`}>
-                  {dictionary.analyst}
-                </span>
-                <span className={styles.triggerIconWrap}>
-                  <Image src="/icons/analyst.svg" alt="" width={24} height={24} />
-                </span>
-              </div>
+              <TriggerButton dictionary={dictionary.guides} />
             </div>
           </div>
         </div>

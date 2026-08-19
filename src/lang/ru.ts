@@ -49,6 +49,12 @@ const ru: Dictionary = {
       placeholder: "Опишите свой вопрос…",
       continue: "Продолжить",
       analyst: "Аналитик",
+      guides: {
+        analyst: "Аналитик",
+        witch: "Ведьма",
+        psychologist: "Психолог",
+        friend: "Друг",
+      },
     },
   },
   footer: {

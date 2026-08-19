@@ -47,6 +47,12 @@ const en = {
       placeholder: "Describe your question…",
       continue: "Continue",
       analyst: "Analyst",
+      guides: {
+        analyst: "Analyst",
+        witch: "Witch",
+        psychologist: "Psychologist",
+        friend: "Friend",
+      },
     },
   },
   footer: {

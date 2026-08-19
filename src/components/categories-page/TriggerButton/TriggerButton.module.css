@@ -1,0 +1,113 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 180px;
+  height: 44px;
+  padding: 6px 8px 6px 24px;
+  border-radius: 30px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-default);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+  border: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.triggerLabel {
+  color: var(--color-black);
+  white-space: nowrap;
+}
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  border-radius: 30px;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-black-30);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 24px 24px;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 24px 24px;
+}
+
+.iconGradient {
+  background-image: var(--gradient-pink-purple);
+  background-color: transparent;
+}
+
+.panelPositioner {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  width: 180px;
+  padding: 8px;
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  border: 1px solid var(--color-greyish-blue);
+  box-shadow: var(--shadow-default);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  text-align: left;
+}
+
+.menuItemActive {
+  background: var(--color-greyish-blue);
+}
+
+.menuItemContent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.menuItemLabel {
+  color: var(--color-black-75);
+  white-space: nowrap;
+}
+
+.menuItemLabelActive {
+  background-image: var(--gradient-pink-purple);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}

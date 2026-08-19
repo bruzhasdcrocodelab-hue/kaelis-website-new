@@ -150,33 +150,6 @@
   line-height: normal;
 }
 
-.triggerButton {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 44px;
-  padding: 6px 8px 6px 24px;
-  border-radius: 30px;
-  background: var(--color-white);
-  box-shadow: var(--shadow-default);
-  backdrop-filter: blur(var(--blur-shadow));
-  -webkit-backdrop-filter: blur(var(--blur-shadow));
-}
-
-.triggerLabel {
-  color: var(--color-black);
-  white-space: nowrap;
-}
-
-.triggerIconWrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 4px;
-}
-
 .inputArea {
   position: relative;
   z-index: 4;
