@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
@@ -18,9 +21,21 @@ export interface CategoryTopBlockProps {
 }
 
 export default function CategoryTopBlock({ dictionary, categoryLabel }: CategoryTopBlockProps) {
+  const [isConfirmed, setIsConfirmed] = useState(false);
+
   return (
     <section className={styles.section}>
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${isConfirmed ? styles.panelConfirmed : ""}`}>
+        {isConfirmed && (
+          <Image
+            src="/images/backgrounds/pattern-categories-top-block.svg"
+            alt=""
+            width={1627}
+            height={731}
+            className={`${styles.pattern} ${styles.patternBehind}`}
+            aria-hidden
+          />
+        )}
         <div className={styles.fan} aria-hidden>
           {cardFan.map((card) => (
             <div
@@ -46,29 +61,39 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
             </div>
           ))}
         </div>
-        <div className={styles.fadeOverlay} aria-hidden />
+        {!isConfirmed && <div className={styles.fadeOverlay} aria-hidden />}
         <Image
-          src="/images/backgrounds/waves.svg"
+          src={isConfirmed ? "/images/backgrounds/waves-2.svg" : "/images/backgrounds/waves.svg"}
           alt=""
           width={1780}
           height={800}
           className={styles.waves}
           aria-hidden
         />
-        <Image
-          src="/images/backgrounds/pattern-categories-top-block.svg"
-          alt=""
-          width={1627}
-          height={731}
-          className={styles.pattern}
-          aria-hidden
-        />
+        {!isConfirmed && (
+          <Image
+            src="/images/backgrounds/pattern-categories-top-block.svg"
+            alt=""
+            width={1627}
+            height={731}
+            className={styles.pattern}
+            aria-hidden
+          />
+        )}
 
         <div className={styles.row}>
           <div className={styles.side}>
-            <MainButton variant="default" size="medium" muted icon="/icons/edit.svg" href="/">
-              {dictionary.changeQuestion}
-            </MainButton>
+            {isConfirmed && (
+              <MainButton
+                variant="default"
+                size="medium"
+                muted
+                icon="/icons/edit.svg"
+                onClick={() => setIsConfirmed(false)}
+              >
+                {dictionary.changeQuestion}
+              </MainButton>
+            )}
           </div>
 
           <div className={styles.center}>
@@ -86,8 +111,12 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
               </p>
             </div>
             <div className={styles.askBlock}>
-              <p className={`font-bona-topblock-title ${styles.askTitle}`}>{dictionary.askTitle}</p>
-              <p className={`font-instrument-xs ${styles.askDescription}`}>{dictionary.askDescription}</p>
+              <p className={`font-bona-topblock-title ${styles.askTitle}`}>
+                {isConfirmed ? dictionary.chooseTitle : dictionary.askTitle}
+              </p>
+              <p className={`font-instrument-xs ${styles.askDescription}`}>
+                {isConfirmed ? dictionary.chooseDescription : dictionary.askDescription}
+              </p>
             </div>
           </div>
 
@@ -98,26 +127,33 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
           </div>
         </div>
 
-        <div className={styles.inputArea}>
-          <textarea
-            className={`font-instrument-sm ${styles.inputBox}`}
-            placeholder={dictionary.placeholder}
-            rows={1}
-          />
-          <Image
-            src="/icons/main-star-gradient.svg"
-            alt=""
-            width={50}
-            height={62}
-            className={styles.inputStar}
-            aria-hidden
-          />
-          <div className={styles.continueWrap}>
-            <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" href="/">
-              {dictionary.continue}
-            </MainButton>
+        {!isConfirmed && (
+          <div className={styles.inputArea}>
+            <textarea
+              className={`font-instrument-sm ${styles.inputBox}`}
+              placeholder={dictionary.placeholder}
+              rows={1}
+            />
+            <Image
+              src="/icons/main-star-gradient.svg"
+              alt=""
+              width={50}
+              height={62}
+              className={styles.inputStar}
+              aria-hidden
+            />
+            <div className={styles.continueWrap}>
+              <MainButton
+                variant="gradient"
+                size="small"
+                icon="/icons/right-arrow.svg"
+                onClick={() => setIsConfirmed(true)}
+              >
+                {dictionary.continue}
+              </MainButton>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

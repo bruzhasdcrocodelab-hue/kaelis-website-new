@@ -48,6 +48,8 @@ const uk: Dictionary = {
       askDescription: "Карти зберігають відповіді, які ви шукаєте. Нехай мудрість Таро скерує ваш шлях",
       placeholder: "Опишіть своє питання…",
       continue: "Продовжити",
+      chooseTitle: "Оберіть 3 карти",
+      chooseDescription: "«Це питання, яке я хочу поставити цьому тарологу»",
       analyst: "Аналітик",
       guides: {
         analyst: "Аналітик",

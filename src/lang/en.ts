@@ -46,6 +46,8 @@ const en = {
       askDescription: "The cards hold the answers you seek. Let the wisdom of Tarot guide your path",
       placeholder: "Describe your question…",
       continue: "Continue",
+      chooseTitle: "Choose 3 Cards",
+      chooseDescription: "“This is a question that i have for this tarot reader. So i will ask it here”",
       analyst: "Analyst",
       guides: {
         analyst: "Analyst",

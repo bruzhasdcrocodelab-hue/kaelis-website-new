@@ -35,6 +35,14 @@
   pointer-events: none;
 }
 
+.panelConfirmed {
+  background: var(--color-greyish-blue);
+}
+
+.panelConfirmed::before {
+  background: transparent;
+}
+
 .fan {
   position: absolute;
   inset: 0;
@@ -92,6 +100,10 @@
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 4;
+}
+
+.patternBehind {
+  z-index: -1;
 }
 
 .row {
