@@ -76,9 +76,9 @@
 .pattern {
   position: absolute;
   left: calc(50% - 0.23px);
-  top: -206px; 
-  width: 1627px;
-  height: 731px;
+  top: -216px; 
+  width: 1310px;
+  height: 880px;
   max-width: none;
   transform: translateX(-50%);
   pointer-events: none;
