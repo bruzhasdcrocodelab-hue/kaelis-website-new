@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
-import type { Dictionary } from "@/lang";
+import type { Dictionary, Locale } from "@/lang";
 import AskQuestionStep from "./AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep";
 import RevealCardsStep from "./RevealCardsStep";
@@ -12,6 +12,7 @@ import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
+  locale: Locale;
   /** Always the top-level category name, even when viewing a nested subcategory. */
   categoryLabel: string;
   /** How many fan cards the user may select for the current category/subcategory. */
@@ -22,6 +23,7 @@ type Step = "ask" | "choose" | "reveal";
 
 export default function CategoryTopBlock({
   dictionary,
+  locale,
   categoryLabel,
   maxSelectableCards,
 }: CategoryTopBlockProps) {
@@ -150,7 +152,7 @@ export default function CategoryTopBlock({
           <AskQuestionStep dictionary={dictionary} onContinue={() => setStep("choose")} />
         )}
         {step === "reveal" && (
-          <RevealCardsStep dictionary={dictionary} cardCount={maxSelectableCards} />
+          <RevealCardsStep dictionary={dictionary} locale={locale} cardCount={maxSelectableCards} />
         )}
       </div>
     </section>

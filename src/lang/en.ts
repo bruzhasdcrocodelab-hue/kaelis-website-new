@@ -50,6 +50,7 @@ const en = {
       chooseDescription: "“This is a question that i have for this tarot reader. So i will ask it here”",
       findTitle: "Find answers",
       tapToReveal: "Tap on the Card to Reveal it",
+      answerQuestion: "Answer the Question",
       analyst: "Analyst",
       guides: {
         analyst: "Analyst",

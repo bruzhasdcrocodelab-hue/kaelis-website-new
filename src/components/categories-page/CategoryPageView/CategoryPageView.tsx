@@ -58,6 +58,7 @@ export default function CategoryPageView({
         />
         <CategoryTopBlock
           dictionary={dictionary.categoryPage.topBlock}
+          locale={locale}
           categoryLabel={topLevelCategory.title[locale]}
           maxSelectableCards={current.maxSelectableCards}
         />

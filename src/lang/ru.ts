@@ -52,6 +52,7 @@ const ru: Dictionary = {
       chooseDescription: "«Это вопрос, который я хочу задать этому тарологу»",
       findTitle: "Найдите ответы",
       tapToReveal: "Нажмите на карту, чтобы открыть её",
+      answerQuestion: "Ответить на вопрос",
       analyst: "Аналитик",
       guides: {
         analyst: "Аналитик",
