@@ -80,26 +80,36 @@
 
 .waves {
   position: absolute;
-  left: calc(50% - 0.23px);
+  left: 50%;
   top: 0;
   width: 100%;
   height: auto;
   max-width: none;
   transform: translateX(-50%);
   pointer-events: none;
-  z-index: 3;
+  /* z-index: 3; */
+}
+
+.wavesLine {
+  position: absolute;
+  left: calc(50% - 3px);
+  bottom: 0;
+  width: 99%;
+  height: auto;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .pattern {
   position: absolute;
   left: calc(50% - 0.23px);
-  top: -216px;
-  width: 1310px;
-  height: 880px;
+  top: 0;
+  width: 101.5%;
+  height: auto;
   max-width: none;
   transform: translateX(-50%);
   pointer-events: none;
-  z-index: 4;
+  z-index: 2;
 }
 
 .patternBehind {

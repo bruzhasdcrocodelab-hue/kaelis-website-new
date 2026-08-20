@@ -63,14 +63,15 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
         </div>
         {!isConfirmed && <div className={styles.fadeOverlay} aria-hidden />}
         <Image
-          src={isConfirmed ? "/images/backgrounds/waves-2.svg" : "/images/backgrounds/waves.svg"}
+          src={isConfirmed ? "/images/backgrounds/waves-3.svg" : "/images/backgrounds/waves.svg"}
           alt=""
           width={1780}
           height={800}
           className={styles.waves}
           aria-hidden
+          style={{zIndex: 3}}
         />
-        {!isConfirmed && (
+        {!isConfirmed ? (
           <Image
             src="/images/backgrounds/pattern-categories-top-block.svg"
             alt=""
@@ -78,6 +79,16 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
             height={731}
             className={styles.pattern}
             aria-hidden
+          />
+        ):(
+          <Image
+            src="/images/backgrounds/gradient-line-waves.svg"
+            alt=""
+            width={1285}
+            height={400}
+            className={styles.wavesLine}
+            aria-hidden
+            style={{zIndex: -2}}
           />
         )}
 
