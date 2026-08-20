@@ -7,6 +7,12 @@ export interface CategoryNode {
   title: Record<Locale, string>;
   description: Record<Locale, string>;
   icon: CategoryIcon;
+  /**
+   * Number of fan cards the user may select for this category/subcategory
+   * on the CategoryTopBlock (e.g. Family = "Choose 3 Cards"). Not yet backed
+   * by real data, so placeholder values (1-5) are assigned per node.
+   */
+  maxSelectableCards: number;
   subcategories: CategoryNode[];
 }
 
@@ -15,8 +21,9 @@ function leaf(
   icon: CategoryIcon,
   title: Record<Locale, string>,
   description: Record<Locale, string>,
+  maxSelectableCards: number,
 ): CategoryNode {
-  return { slug, icon, title, description, subcategories: [] };
+  return { slug, icon, title, description, maxSelectableCards, subcategories: [] };
 }
 
 /**
@@ -34,30 +41,35 @@ const family: CategoryNode = {
   icon: "star",
   title: { en: "Family", ru: "Семья", uk: "Родина" },
   description: familyDescription,
+  maxSelectableCards: 3,
   subcategories: [
     leaf(
       "pregnancy",
       "star",
       { en: "Pregnancy", ru: "Беременность", uk: "Вагітність" },
       familyDescription,
+      2,
     ),
     leaf(
       "children",
       "filled-star",
       { en: "Children", ru: "Дети", uk: "Діти" },
       familyDescription,
+      4,
     ),
     leaf(
       "what-will-happen",
       "filled-star",
       { en: "What Will Happen?", ru: "Что будет?", uk: "Що буде?" },
       familyDescription,
+      1,
     ),
     leaf(
       "my-family",
       "star",
       { en: "My Family", ru: "Моя семья", uk: "Моя родина" },
       familyDescription,
+      5,
     ),
   ],
 };
@@ -73,50 +85,63 @@ const love: CategoryNode = {
   icon: "star",
   title: { en: "Love", ru: "Любовь", uk: "Кохання" },
   description: loveDescription,
+  maxSelectableCards: 4,
   subcategories: [
-    leaf("abuse", "star", { en: "Abuse", ru: "Абьюз", uk: "Абʼюз" }, loveDescription),
-    leaf("destiny-1", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription),
+    leaf("abuse", "star", { en: "Abuse", ru: "Абьюз", uk: "Абʼюз" }, loveDescription, 2),
+    leaf("destiny-1", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 3),
     leaf(
       "argument",
       "filled-star",
       { en: "Argument", ru: "Ссора", uk: "Сварка" },
       loveDescription,
+      1,
     ),
-    leaf("choice", "filled-star", { en: "Choice", ru: "Выбор", uk: "Вибір" }, loveDescription),
+    leaf(
+      "choice",
+      "filled-star",
+      { en: "Choice", ru: "Выбор", uk: "Вибір" },
+      loveDescription,
+      5,
+    ),
     leaf(
       "mutual-feelings",
       "star",
       { en: "Mutual Feelings", ru: "Взаимные чувства", uk: "Взаємні почуття" },
       loveDescription,
+      4,
     ),
-    leaf("destiny-2", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription),
+    leaf("destiny-2", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 2),
     leaf(
       "cheating",
       "filled-star",
       { en: "Cheating", ru: "Измена", uk: "Зрада" },
       loveDescription,
+      3,
     ),
     leaf(
       "breakup",
       "filled-star",
       { en: "Breakup", ru: "Расставание", uk: "Розставання" },
       loveDescription,
+      1,
     ),
-    leaf("parting", "star", { en: "Parting", ru: "Разлука", uk: "Розлука" }, loveDescription),
-    leaf("union", "star", { en: "Union", ru: "Союз", uk: "Союз" }, loveDescription),
+    leaf("parting", "star", { en: "Parting", ru: "Разлука", uk: "Розлука" }, loveDescription, 4),
+    leaf("union", "star", { en: "Union", ru: "Союз", uk: "Союз" }, loveDescription, 2),
     leaf(
       "compatibility",
       "filled-star",
       { en: "Compatibility", ru: "Совместимость", uk: "Сумісність" },
       loveDescription,
+      5,
     ),
     leaf(
       "between-us",
       "filled-star",
       { en: "Between Us", ru: "Между нами", uk: "Між нами" },
       loveDescription,
+      3,
     ),
-    leaf("karma", "star", { en: "Karma", ru: "Карма", uk: "Карма" }, loveDescription),
+    leaf("karma", "star", { en: "Karma", ru: "Карма", uk: "Карма" }, loveDescription, 1),
   ],
 };
 
@@ -129,6 +154,7 @@ const yesNo: CategoryNode = {
     ru: "Получите чёткий, прямой ответ на волнующий вас вопрос",
     uk: "Отримайте чітку, пряму відповідь на питання, що вас хвилює",
   },
+  maxSelectableCards: 1,
   subcategories: [],
 };
 
@@ -141,6 +167,7 @@ const oneCard: CategoryNode = {
     ru: "Расклад на одну карту для быстрой ясности и подсказки",
     uk: "Розклад на одну карту для швидкої ясності та підказки",
   },
+  maxSelectableCards: 1,
   subcategories: [],
 };
 
@@ -153,6 +180,7 @@ const threeCards: CategoryNode = {
     ru: "Прошлое, настоящее и будущее в раскладе из трёх карт",
     uk: "Минуле, теперішнє й майбутнє в розкладі з трьох карт",
   },
+  maxSelectableCards: 3,
   subcategories: [],
 };
 
@@ -165,6 +193,7 @@ const work: CategoryNode = {
     ru: "Разберитесь в карьерном пути, возможностях и трудностях",
     uk: "Розберіться в кар'єрному шляху, можливостях і труднощах",
   },
+  maxSelectableCards: 4,
   subcategories: [],
 };
 
@@ -177,6 +206,7 @@ const money: CategoryNode = {
     ru: "Получите понимание своих финансов, стабильности и достатка",
     uk: "Отримайте розуміння своїх фінансів, стабільності та достатку",
   },
+  maxSelectableCards: 2,
   subcategories: [],
 };
 

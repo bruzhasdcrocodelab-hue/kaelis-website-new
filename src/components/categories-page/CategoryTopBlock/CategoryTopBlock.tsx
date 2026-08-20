@@ -12,16 +12,32 @@ import {
   FAN_CONTAINER_HEIGHT,
   FAN_CONTAINER_WIDTH,
 } from "./cardFan";
+import FanCard from "./FanCard";
 import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
   /** Always the top-level category name, even when viewing a nested subcategory. */
   categoryLabel: string;
+  /** How many fan cards the user may select for the current category/subcategory. */
+  maxSelectableCards: number;
 }
 
-export default function CategoryTopBlock({ dictionary, categoryLabel }: CategoryTopBlockProps) {
+export default function CategoryTopBlock({
+  dictionary,
+  categoryLabel,
+  maxSelectableCards,
+}: CategoryTopBlockProps) {
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const toggleCard = (id: string) => {
+    setSelectedIds((prev) => {
+      if (prev.includes(id)) return prev.filter((cardId) => cardId !== id);
+      if (prev.length >= maxSelectableCards) return prev;
+      return [...prev, id];
+    });
+  };
 
   return (
     <section className={styles.section}>
@@ -36,30 +52,34 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
             aria-hidden
           />
         )}
-        <div className={styles.fan} aria-hidden>
-          {cardFan.map((card) => (
-            <div
-              key={card.id}
-              className={styles.fanCardBox}
-              style={{
-                left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
-                top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
-                width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
-                height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
-              }}
-            >
+        <div className={styles.fan}>
+          {cardFan.map((card) => {
+            const isSelected = selectedIds.includes(card.id);
+            const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
+            return (
               <div
-                className={styles.fanCard}
+                key={card.id}
+                className={styles.fanCardBox}
                 style={{
-                  width: CARD_TRUE_WIDTH,
-                  height: CARD_TRUE_HEIGHT,
-                  transform: `rotate(${card.rotate}deg)`,
+                  left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
+                  top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
+                  width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
+                  height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
+                  zIndex: isSelected ? cardFan.length + 1 : undefined,
                 }}
               >
-                <Image src="/images/cards/default-card.png" alt="" fill sizes="200px" />
+                <FanCard
+                  card={card}
+                  width={CARD_TRUE_WIDTH}
+                  height={CARD_TRUE_HEIGHT}
+                  isSelected={isSelected}
+                  isDisabled={selectionDisabled}
+                  isInteractive={isConfirmed}
+                  onToggle={() => isConfirmed && !selectionDisabled && toggleCard(card.id)}
+                />
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         {!isConfirmed && <div className={styles.fadeOverlay} aria-hidden />}
         <Image
