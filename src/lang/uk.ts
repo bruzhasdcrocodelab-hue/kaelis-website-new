@@ -50,6 +50,8 @@ const uk: Dictionary = {
       continue: "Продовжити",
       chooseTitle: "Оберіть 3 карти",
       chooseDescription: "«Це питання, яке я хочу поставити цьому тарологу»",
+      findTitle: "Знайдіть відповіді",
+      tapToReveal: "Торкніться картки, щоб відкрити її",
       analyst: "Аналітик",
       guides: {
         analyst: "Аналітик",

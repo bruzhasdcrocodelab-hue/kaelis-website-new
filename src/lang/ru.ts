@@ -50,6 +50,8 @@ const ru: Dictionary = {
       continue: "Продолжить",
       chooseTitle: "Выберите 3 карты",
       chooseDescription: "«Это вопрос, который я хочу задать этому тарологу»",
+      findTitle: "Найдите ответы",
+      tapToReveal: "Нажмите на карту, чтобы открыть её",
       analyst: "Аналитик",
       guides: {
         analyst: "Аналитик",

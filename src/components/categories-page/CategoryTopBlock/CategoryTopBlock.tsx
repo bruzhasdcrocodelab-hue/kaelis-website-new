@@ -5,14 +5,9 @@ import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
 import type { Dictionary } from "@/lang";
-import {
-  cardFan,
-  CARD_TRUE_HEIGHT,
-  CARD_TRUE_WIDTH,
-  FAN_CONTAINER_HEIGHT,
-  FAN_CONTAINER_WIDTH,
-} from "./cardFan";
-import FanCard from "./FanCard";
+import AskQuestionStep from "./AskQuestionStep";
+import ChooseCardsStep from "./ChooseCardsStep";
+import RevealCardsStep from "./RevealCardsStep";
 import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {
@@ -23,20 +18,39 @@ export interface CategoryTopBlockProps {
   maxSelectableCards: number;
 }
 
+type Step = "ask" | "choose" | "reveal";
+
 export default function CategoryTopBlock({
   dictionary,
   categoryLabel,
   maxSelectableCards,
 }: CategoryTopBlockProps) {
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [step, setStep] = useState<Step>("ask");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const toggleCard = (id: string) => {
-    setSelectedIds((prev) => {
-      if (prev.includes(id)) return prev.filter((cardId) => cardId !== id);
-      if (prev.length >= maxSelectableCards) return prev;
-      return [...prev, id];
-    });
+    if (selectedIds.includes(id)) {
+      if (selectedIds.length >= maxSelectableCards) {
+        setStep("reveal");
+        return;
+      }
+      setSelectedIds((prev) => prev.filter((cardId) => cardId !== id));
+      return;
+    }
+    setSelectedIds((prev) => (prev.length >= maxSelectableCards ? prev : [...prev, id]));
+  };
+
+  const isConfirmed = step !== "ask";
+
+  const stepTitle: Record<Step, string> = {
+    ask: dictionary.askTitle,
+    choose: dictionary.chooseTitle,
+    reveal: dictionary.findTitle,
+  };
+  const stepDescription: Record<Step, string> = {
+    ask: dictionary.askDescription,
+    choose: dictionary.chooseDescription,
+    reveal: dictionary.chooseDescription,
   };
 
   return (
@@ -52,36 +66,14 @@ export default function CategoryTopBlock({
             aria-hidden
           />
         )}
-        <div className={styles.fan}>
-          {cardFan.map((card) => {
-            const isSelected = selectedIds.includes(card.id);
-            const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
-            return (
-              <div
-                key={card.id}
-                className={styles.fanCardBox}
-                style={{
-                  left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
-                  top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
-                  width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
-                  height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
-                  zIndex: isSelected ? cardFan.length + 1 : undefined,
-                }}
-              >
-                <FanCard
-                  card={card}
-                  width={CARD_TRUE_WIDTH}
-                  height={CARD_TRUE_HEIGHT}
-                  isSelected={isSelected}
-                  isDisabled={selectionDisabled}
-                  isInteractive={isConfirmed}
-                  onToggle={() => isConfirmed && !selectionDisabled && toggleCard(card.id)}
-                />
-              </div>
-            );
-          })}
-        </div>
-        {!isConfirmed && <div className={styles.fadeOverlay} aria-hidden />}
+        {step === "choose" && (
+          <ChooseCardsStep
+            selectedIds={selectedIds}
+            maxSelectableCards={maxSelectableCards}
+            onToggleCard={toggleCard}
+          />
+        )}
+        {step === "ask" && <div className={styles.fadeOverlay} aria-hidden />}
         <Image
           src={isConfirmed ? "/images/backgrounds/waves-3.svg" : "/images/backgrounds/waves.svg"}
           alt=""
@@ -91,7 +83,7 @@ export default function CategoryTopBlock({
           aria-hidden
           style={{zIndex: 3}}
         />
-        {!isConfirmed ? (
+        {step === "ask" ? (
           <Image
             src="/images/backgrounds/pattern-categories-top-block.svg"
             alt=""
@@ -114,13 +106,13 @@ export default function CategoryTopBlock({
 
         <div className={styles.row}>
           <div className={styles.side}>
-            {isConfirmed && (
+            {step === "choose" && (
               <MainButton
                 variant="default"
                 size="medium"
                 muted
                 icon="/icons/edit.svg"
-                onClick={() => setIsConfirmed(false)}
+                onClick={() => setStep("ask")}
               >
                 {dictionary.changeQuestion}
               </MainButton>
@@ -142,48 +134,23 @@ export default function CategoryTopBlock({
               </p>
             </div>
             <div className={styles.askBlock}>
-              <p className={`font-bona-topblock-title ${styles.askTitle}`}>
-                {isConfirmed ? dictionary.chooseTitle : dictionary.askTitle}
-              </p>
-              <p className={`font-instrument-xs ${styles.askDescription}`}>
-                {isConfirmed ? dictionary.chooseDescription : dictionary.askDescription}
-              </p>
+              <p className={`font-bona-topblock-title ${styles.askTitle}`}>{stepTitle[step]}</p>
+              <p className={`font-instrument-xs ${styles.askDescription}`}>{stepDescription[step]}</p>
             </div>
           </div>
 
           <div className={styles.side}>
             <div className={styles.sideEnd}>
-              <TriggerButton dictionary={dictionary.guides} />
+              {step === "choose" && <TriggerButton dictionary={dictionary.guides} />}
             </div>
           </div>
         </div>
 
-        {!isConfirmed && (
-          <div className={styles.inputArea}>
-            <textarea
-              className={`font-instrument-sm ${styles.inputBox}`}
-              placeholder={dictionary.placeholder}
-              rows={1}
-            />
-            <Image
-              src="/icons/main-star-gradient.svg"
-              alt=""
-              width={50}
-              height={62}
-              className={styles.inputStar}
-              aria-hidden
-            />
-            <div className={styles.continueWrap}>
-              <MainButton
-                variant="gradient"
-                size="small"
-                icon="/icons/right-arrow.svg"
-                onClick={() => setIsConfirmed(true)}
-              >
-                {dictionary.continue}
-              </MainButton>
-            </div>
-          </div>
+        {step === "ask" && (
+          <AskQuestionStep dictionary={dictionary} onContinue={() => setStep("choose")} />
+        )}
+        {step === "reveal" && (
+          <RevealCardsStep dictionary={dictionary} cardCount={maxSelectableCards} />
         )}
       </div>
     </section>

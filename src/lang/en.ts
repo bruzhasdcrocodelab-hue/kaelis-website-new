@@ -48,6 +48,8 @@ const en = {
       continue: "Continue",
       chooseTitle: "Choose 3 Cards",
       chooseDescription: "“This is a question that i have for this tarot reader. So i will ask it here”",
+      findTitle: "Find answers",
+      tapToReveal: "Tap on the Card to Reveal it",
       analyst: "Analyst",
       guides: {
         analyst: "Analyst",
