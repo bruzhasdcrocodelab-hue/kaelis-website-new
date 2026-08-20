@@ -279,3 +279,22 @@
 .revealCard :global(img) {
   object-fit: cover;
 }
+
+.revealCardArt {
+  position: absolute;
+  left: -19.39%;
+  top: 1.12%;
+  width: 119.39%;
+  height: 108.6%;
+  max-width: none;
+}
+
+.revealCardFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: lighten;
+  pointer-events: none;
+}

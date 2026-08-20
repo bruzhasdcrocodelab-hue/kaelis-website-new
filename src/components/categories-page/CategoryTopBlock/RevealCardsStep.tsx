@@ -25,6 +25,22 @@ export default function RevealCardsStep({ dictionary, cardCount }: RevealCardsSt
             style={{ width: CARD_TRUE_WIDTH, height: CARD_TRUE_HEIGHT }}
           >
             <Image src="/images/cards/default-card.png" alt="" fill sizes="200px" />
+            {/* Пример лицевой стороны с картой-рыцарем: */}
+            {/* <Image
+              src="/images/cards/deck/knight-of-wands.png"
+              alt=""
+              width={756}
+              height={1228}
+              sizes="200px"
+              className={styles.revealCardArt}
+            />
+            <Image
+              src="/images/cards/deck/frame-overlay.png"
+              alt=""
+              fill
+              sizes="200px"
+              className={styles.revealCardFrame}
+            /> */}
           </button>
         ))}
       </div>
