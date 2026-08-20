@@ -57,6 +57,12 @@
   margin-left: 10px;
 }
 
+.title.titleWrapped {
+  margin-top: 20px;
+  margin-bottom: 0;
+  line-height: 90%; /* 77.4px */
+}
+
 .description {
   width: 300px;
   color: var(--color-white-60);

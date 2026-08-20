@@ -2,6 +2,7 @@ import type { Dictionary, Locale } from "@/lang";
 import type { CategoryNode } from "@/lib/categories/data";
 import MainButton from "@/components/global/MainButton";
 import SubcategoryRing from "@/components/categories-page/SubcategoryRing";
+import CategoryTitle from "./CategoryTitle";
 import styles from "./CategoryHeroSection.module.css";
 
 export interface CategoryHeroSectionProps {
@@ -37,7 +38,7 @@ export default function CategoryHeroSection({
               {dictionary.categoryLabel}
             </p>
             <div className={styles.titleWrap}>
-              <p className={`font-bona-category-title ${styles.title}`}>{current.title[locale]}</p>
+              <CategoryTitle title={current.title[locale]} />
               <p className={`font-instrument-sm ${styles.description}`}>
                 {current.description[locale]}
               </p>
