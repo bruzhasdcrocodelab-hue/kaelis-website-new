@@ -35,7 +35,7 @@ export default function RevealCardsStep({ dictionary, cardCount }: RevealCardsSt
               className={styles.revealCardArt}
             />
             <Image
-              src="/images/cards/deck/frame-overlay.png"
+              src="/images/cards/default-card.png"
               alt=""
               fill
               sizes="200px"
