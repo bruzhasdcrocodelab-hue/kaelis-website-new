@@ -53,11 +53,11 @@ export default function FanCard({
       animate={{
         x: isSelected ? pushX : 0,
         y: isSelected ? pushY : 0,
-        filter: isSelected ? "brightness(1.35) saturate(0.85)" : "brightness(1) saturate(1)",
+        filter: isSelected ? "brightness(1.2) saturate(1)" : "brightness(1) saturate(1)",
       }}
       whileHover={
         isInteractive && !isSelected && !isDisabled
-          ? { x: pushX, y: pushY, filter: "brightness(1.15)" }
+          ? { x: pushX, y: pushY }
           : undefined
       }
       transition={{ type: "spring", stiffness: 320, damping: 26 }}
