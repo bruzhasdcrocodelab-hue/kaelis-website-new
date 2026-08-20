@@ -11,6 +11,8 @@
   border-radius: var(--radius-panel);
   overflow: clip;
   box-shadow: var(--shadow-default);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
   z-index: 10;
 }
 
