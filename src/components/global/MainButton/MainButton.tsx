@@ -30,6 +30,8 @@ export interface MainButtonProps
   iconRotation?: number;
   /** When set, renders as a `next/link` with the same styling instead of a `<button>`. */
   href?: string;
+  /** When true, forces the label and icon to `--color-black-75` regardless of `variant`. */
+  muted?: boolean;
 }
 
 const TEXT_ONLY_PADDING: Record<MainButtonSize, string> = {
@@ -76,14 +78,16 @@ function Icon({
   src,
   variant,
   rotation,
+  muted,
 }: {
   src: string;
   variant: MainButtonVariant;
   rotation?: number;
+  muted?: boolean;
 }) {
   return (
     <span
-      className={`${ICON_BOX} ${ICON_FILL_CLASS[variant]}`}
+      className={muted ? ICON_BOX : `${ICON_BOX} ${ICON_FILL_CLASS[variant]}`}
       style={{
         maskImage: `url(${src})`,
         maskRepeat: "no-repeat",
@@ -94,6 +98,7 @@ function Icon({
         WebkitMaskPosition: "center",
         WebkitMaskSize: "24px 24px",
         transform: rotation ? `rotate(${rotation}deg)` : undefined,
+        backgroundColor: muted ? "var(--color-black-75, rgba(47, 47, 47, 0.75))" : undefined,
       }}
     />
   );
@@ -105,6 +110,7 @@ export default function MainButton({
   icon,
   iconRotation,
   href,
+  muted,
   children,
   className,
   type = "button",
@@ -114,11 +120,15 @@ export default function MainButton({
   const hasIcon = Boolean(icon);
   const isStroke = variant === "stroke";
 
-  const labelColorClasses = isStroke
-    ? "bg-gradient-pink bg-clip-text text-transparent"
-    : variant === "gradient"
-      ? "text-white"
-      : "text-black";
+  const labelColorClasses = muted
+    ? ""
+    : isStroke
+      ? "bg-gradient-pink bg-clip-text text-transparent"
+      : variant === "gradient"
+        ? "text-white"
+        : "text-black";
+
+  const labelColorStyle = muted ? { color: "var(--color-black-75, rgba(47, 47, 47, 0.75))" } : undefined;
 
   const layoutClasses =
     hasLabel && hasIcon
@@ -142,8 +152,14 @@ export default function MainButton({
 
   const content = (
     <>
-      {hasLabel && <span className={`${TEXT_SIZE[size]} ${labelColorClasses}`}>{children}</span>}
-      {hasIcon && icon && <Icon src={icon} variant={variant} rotation={iconRotation} />}
+      {hasLabel && (
+        <span className={`${TEXT_SIZE[size]} ${labelColorClasses}`} style={labelColorStyle}>
+          {children}
+        </span>
+      )}
+      {hasIcon && icon && (
+        <Icon src={icon} variant={variant} rotation={iconRotation} muted={muted} />
+      )}
     </>
   );
 

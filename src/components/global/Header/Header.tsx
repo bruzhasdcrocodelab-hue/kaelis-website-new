@@ -10,7 +10,9 @@ export interface HeaderProps {
 export default function Header({ dictionary }: HeaderProps) {
   return (
     <header className={styles.header}>
-      <p className={`font-instrument-xl ${styles.logo}`}>{dictionary.logo}</p>
+      <Link href="/" className={`font-instrument-xl ${styles.logo}`}>
+        {dictionary.logo}
+      </Link>
       <nav className={`font-instrument-base ${styles.nav}`}>
         <Link href="/" className={styles.navLink}>
           {dictionary.nav.tarotSpreads}

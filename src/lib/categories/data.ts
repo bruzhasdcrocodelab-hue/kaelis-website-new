@@ -14,63 +14,109 @@ function leaf(
   slug: string,
   icon: CategoryIcon,
   title: Record<Locale, string>,
-  description: Record<Locale, string> = { en: "", ru: "", uk: "" },
+  description: Record<Locale, string>,
 ): CategoryNode {
   return { slug, icon, title, description, subcategories: [] };
 }
+
+/**
+ * Subcategories don't yet have their own copy from the backend, so they
+ * temporarily fall back to their parent category's description.
+ */
+const familyDescription: Record<Locale, string> = {
+  en: "Strengthen emotional bonds, find harmony, and protect your loved ones",
+  ru: "Укрепите эмоциональные связи, найдите гармонию и защитите близких",
+  uk: "Зміцніть емоційні зв'язки, знайдіть гармонію та захистіть близьких",
+};
 
 const family: CategoryNode = {
   slug: "family",
   icon: "star",
   title: { en: "Family", ru: "Семья", uk: "Родина" },
-  description: {
-    en: "Strengthen emotional bonds, find harmony, and protect your loved ones",
-    ru: "Укрепите эмоциональные связи, найдите гармонию и защитите близких",
-    uk: "Зміцніть емоційні зв'язки, знайдіть гармонію та захистіть близьких",
-  },
+  description: familyDescription,
   subcategories: [
-    leaf("pregnancy", "star", { en: "Pregnancy", ru: "Беременность", uk: "Вагітність" }),
-    leaf("children", "filled-star", { en: "Children", ru: "Дети", uk: "Діти" }),
-    leaf("what-will-happen", "filled-star", {
-      en: "What Will Happen?",
-      ru: "Что будет?",
-      uk: "Що буде?",
-    }),
-    leaf("my-family", "star", { en: "My Family", ru: "Моя семья", uk: "Моя родина" }),
+    leaf(
+      "pregnancy",
+      "star",
+      { en: "Pregnancy", ru: "Беременность", uk: "Вагітність" },
+      familyDescription,
+    ),
+    leaf(
+      "children",
+      "filled-star",
+      { en: "Children", ru: "Дети", uk: "Діти" },
+      familyDescription,
+    ),
+    leaf(
+      "what-will-happen",
+      "filled-star",
+      { en: "What Will Happen?", ru: "Что будет?", uk: "Що буде?" },
+      familyDescription,
+    ),
+    leaf(
+      "my-family",
+      "star",
+      { en: "My Family", ru: "Моя семья", uk: "Моя родина" },
+      familyDescription,
+    ),
   ],
+};
+
+const loveDescription: Record<Locale, string> = {
+  en: "Explore your romantic destiny, compatibility, and the future of your relationship",
+  ru: "Узнайте свою романтическую судьбу, совместимость и будущее отношений",
+  uk: "Дізнайтеся свою романтичну долю, сумісність і майбутнє стосунків",
 };
 
 const love: CategoryNode = {
   slug: "love",
   icon: "star",
   title: { en: "Love", ru: "Любовь", uk: "Кохання" },
-  description: {
-    en: "Explore your romantic destiny, compatibility, and the future of your relationship",
-    ru: "Узнайте свою романтическую судьбу, совместимость и будущее отношений",
-    uk: "Дізнайтеся свою романтичну долю, сумісність і майбутнє стосунків",
-  },
+  description: loveDescription,
   subcategories: [
-    leaf("abuse", "star", { en: "Abuse", ru: "Абьюз", uk: "Абʼюз" }),
-    leaf("destiny-1", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }),
-    leaf("argument", "filled-star", { en: "Argument", ru: "Ссора", uk: "Сварка" }),
-    leaf("choice", "filled-star", { en: "Choice", ru: "Выбор", uk: "Вибір" }),
-    leaf("mutual-feelings", "star", {
-      en: "Mutual Feelings",
-      ru: "Взаимные чувства",
-      uk: "Взаємні почуття",
-    }),
-    leaf("destiny-2", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }),
-    leaf("cheating", "filled-star", { en: "Cheating", ru: "Измена", uk: "Зрада" }),
-    leaf("breakup", "filled-star", { en: "Breakup", ru: "Расставание", uk: "Розставання" }),
-    leaf("parting", "star", { en: "Parting", ru: "Разлука", uk: "Розлука" }),
-    leaf("union", "star", { en: "Union", ru: "Союз", uk: "Союз" }),
-    leaf("compatibility", "filled-star", {
-      en: "Compatibility",
-      ru: "Совместимость",
-      uk: "Сумісність",
-    }),
-    leaf("between-us", "filled-star", { en: "Between Us", ru: "Между нами", uk: "Між нами" }),
-    leaf("karma", "star", { en: "Karma", ru: "Карма", uk: "Карма" }),
+    leaf("abuse", "star", { en: "Abuse", ru: "Абьюз", uk: "Абʼюз" }, loveDescription),
+    leaf("destiny-1", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription),
+    leaf(
+      "argument",
+      "filled-star",
+      { en: "Argument", ru: "Ссора", uk: "Сварка" },
+      loveDescription,
+    ),
+    leaf("choice", "filled-star", { en: "Choice", ru: "Выбор", uk: "Вибір" }, loveDescription),
+    leaf(
+      "mutual-feelings",
+      "star",
+      { en: "Mutual Feelings", ru: "Взаимные чувства", uk: "Взаємні почуття" },
+      loveDescription,
+    ),
+    leaf("destiny-2", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription),
+    leaf(
+      "cheating",
+      "filled-star",
+      { en: "Cheating", ru: "Измена", uk: "Зрада" },
+      loveDescription,
+    ),
+    leaf(
+      "breakup",
+      "filled-star",
+      { en: "Breakup", ru: "Расставание", uk: "Розставання" },
+      loveDescription,
+    ),
+    leaf("parting", "star", { en: "Parting", ru: "Разлука", uk: "Розлука" }, loveDescription),
+    leaf("union", "star", { en: "Union", ru: "Союз", uk: "Союз" }, loveDescription),
+    leaf(
+      "compatibility",
+      "filled-star",
+      { en: "Compatibility", ru: "Совместимость", uk: "Сумісність" },
+      loveDescription,
+    ),
+    leaf(
+      "between-us",
+      "filled-star",
+      { en: "Between Us", ru: "Между нами", uk: "Між нами" },
+      loveDescription,
+    ),
+    leaf("karma", "star", { en: "Karma", ru: "Карма", uk: "Карма" }, loveDescription),
   ],
 };
 

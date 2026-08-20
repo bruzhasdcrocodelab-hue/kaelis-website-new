@@ -45,13 +45,16 @@
 
 .title {
   margin-bottom: -6px;
+  max-width: 480px;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  white-space: nowrap;
+  text-align: center;
+  text-wrap: balance;
   line-height: normal;
   padding-right: 10px;
+  margin-left: 10px;
 }
 
 .description {

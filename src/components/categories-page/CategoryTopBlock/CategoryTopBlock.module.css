@@ -61,6 +61,16 @@
   object-fit: cover;
 }
 
+.fadeOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.15;
+  background: linear-gradient(180deg, #fff -0.06%, rgba(255, 255, 255, 0) 100.09%);
+  pointer-events: none;
+  rotate: 180deg;
+}
+
 .waves {
   position: absolute;
   left: calc(50% - 0.23px);
@@ -70,24 +80,24 @@
   max-width: none;
   transform: translateX(-50%);
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
 }
 
 .pattern {
   position: absolute;
   left: calc(50% - 0.23px);
-  top: -216px; 
+  top: -216px;
   width: 1310px;
   height: 880px;
   max-width: none;
   transform: translateX(-50%);
   pointer-events: none;
-  z-index: 3;
+  z-index: 4;
 }
 
 .row {
   position: relative;
-  z-index: 4;
+  z-index: 5;
   display: flex;
   align-items: flex-start;
   width: 100%;
@@ -152,7 +162,7 @@
 
 .inputArea {
   position: relative;
-  z-index: 4;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -165,15 +175,19 @@
   height: 120px;
   margin-bottom: -16px;
   padding: 12px 16px;
+  border: none;
   border-radius: var(--radius-card);
   background: var(--color-white);
   box-shadow: var(--shadow-default);
   backdrop-filter: blur(var(--blur-shadow));
   -webkit-backdrop-filter: blur(var(--blur-shadow));
   margin-top: 68px;
+  color: var(--color-black);
+  resize: none;
+  outline: none;
 }
 
-.placeholder {
+.inputBox::placeholder {
   color: var(--color-black-40);
 }
 

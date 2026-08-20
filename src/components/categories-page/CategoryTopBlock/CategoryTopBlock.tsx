@@ -46,6 +46,7 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
             </div>
           ))}
         </div>
+        <div className={styles.fadeOverlay} aria-hidden />
         <Image
           src="/images/backgrounds/waves.svg"
           alt=""
@@ -65,7 +66,7 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
 
         <div className={styles.row}>
           <div className={styles.side}>
-            <MainButton variant="default" size="medium" icon="/icons/edit.svg" href="/">
+            <MainButton variant="default" size="medium" muted icon="/icons/edit.svg" href="/">
               {dictionary.changeQuestion}
             </MainButton>
           </div>
@@ -98,9 +99,11 @@ export default function CategoryTopBlock({ dictionary, categoryLabel }: Category
         </div>
 
         <div className={styles.inputArea}>
-          <div className={styles.inputBox}>
-            <p className={`font-instrument-sm ${styles.placeholder}`}>{dictionary.placeholder}</p>
-          </div>
+          <textarea
+            className={`font-instrument-sm ${styles.inputBox}`}
+            placeholder={dictionary.placeholder}
+            rows={1}
+          />
           <Image
             src="/icons/main-star-gradient.svg"
             alt=""

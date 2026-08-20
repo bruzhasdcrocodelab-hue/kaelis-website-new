@@ -50,6 +50,7 @@ export default function CategoryHeroSection({
             icon="/icons/right-arrow.svg"
             href="/"
             className="shadow-default"
+            muted
           >
             {dictionary.getYourReadings}
           </MainButton>
