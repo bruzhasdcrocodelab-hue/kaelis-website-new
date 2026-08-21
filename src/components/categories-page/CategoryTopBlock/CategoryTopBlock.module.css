@@ -243,6 +243,37 @@
   border-radius: 30px;
 }
 
+.truthArea {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.truthBox {
+  display: flex;
+  flex: 1 0 0;
+  align-items: flex-start;
+  min-height: 0;
+  width: 450px;
+  margin-bottom: -16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow-default);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+  color: var(--color-black-75);
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
 .revealArea {
   position: relative;
   z-index: 5;

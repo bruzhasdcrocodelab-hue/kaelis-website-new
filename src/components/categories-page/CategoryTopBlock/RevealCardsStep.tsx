@@ -13,6 +13,7 @@ export interface RevealCardsStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
   locale: Locale;
   cardCount: number;
+  onAnswerQuestion: () => void;
 }
 
 const FLIP_DURATION = 0.5;
@@ -118,7 +119,12 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
   );
 }
 
-export default function RevealCardsStep({ dictionary, locale, cardCount }: RevealCardsStepProps) {
+export default function RevealCardsStep({
+  dictionary,
+  locale,
+  cardCount,
+  onAnswerQuestion,
+}: RevealCardsStepProps) {
   const cards = useMemo(() => pickRandomCards(cardCount), [cardCount]);
   const [isRevealed, setIsRevealed] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
@@ -155,7 +161,7 @@ export default function RevealCardsStep({ dictionary, locale, cardCount }: Revea
           ))}
         </div>
         <div className={`${styles.answerWrap} ${isRevealed ? styles.answerWrapVisible : ""}`}>
-          <MainButton variant="gradient" size="small">
+          <MainButton variant="gradient" size="small" onClick={onAnswerQuestion}>
             {dictionary.answerQuestion}
           </MainButton>
         </div>

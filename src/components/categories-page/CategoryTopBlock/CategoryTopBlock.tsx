@@ -5,6 +5,7 @@ import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
 import type { Dictionary, Locale } from "@/lang";
+import AnswerStep from "./AnswerStep";
 import AskQuestionStep from "./AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep";
 import RevealCardsStep from "./RevealCardsStep";
@@ -19,7 +20,7 @@ export interface CategoryTopBlockProps {
   maxSelectableCards: number;
 }
 
-type Step = "ask" | "choose" | "reveal";
+type Step = "ask" | "choose" | "reveal" | "answer";
 
 export default function CategoryTopBlock({
   dictionary,
@@ -42,17 +43,20 @@ export default function CategoryTopBlock({
     setSelectedIds((prev) => (prev.length >= maxSelectableCards ? prev : [...prev, id]));
   };
 
-  const isConfirmed = step !== "ask";
+  const isConfirmed = step === "choose" || step === "reveal";
+  const hasFan = step === "ask" || step === "answer";
 
   const stepTitle: Record<Step, string> = {
     ask: dictionary.askTitle,
     choose: dictionary.chooseTitle,
     reveal: dictionary.findTitle,
+    answer: dictionary.truthTitle,
   };
   const stepDescription: Record<Step, string> = {
     ask: dictionary.askDescription,
     choose: dictionary.chooseDescription,
     reveal: dictionary.chooseDescription,
+    answer: dictionary.truthDescription,
   };
 
   return (
@@ -75,7 +79,7 @@ export default function CategoryTopBlock({
             onToggleCard={toggleCard}
           />
         )}
-        {step === "ask" && (
+        {hasFan && (
           <>
             <ChooseCardsStep
               selectedIds={selectedIds}
@@ -95,7 +99,7 @@ export default function CategoryTopBlock({
           aria-hidden
           style={{zIndex: 3}}
         />
-        {step === "ask" ? (
+        {hasFan ? (
           <Image
             src="/images/backgrounds/pattern-categories-top-block.svg"
             alt=""
@@ -162,7 +166,22 @@ export default function CategoryTopBlock({
           <AskQuestionStep dictionary={dictionary} onContinue={() => setStep("choose")} />
         )}
         {step === "reveal" && (
-          <RevealCardsStep dictionary={dictionary} locale={locale} cardCount={maxSelectableCards} />
+          <RevealCardsStep
+            dictionary={dictionary}
+            locale={locale}
+            cardCount={maxSelectableCards}
+            onAnswerQuestion={() => setStep("answer")}
+          />
+        )}
+        {step === "answer" && (
+          <AnswerStep
+            dictionary={dictionary}
+            answer={dictionary.cardDescription}
+            onStartOver={() => {
+              setSelectedIds([]);
+              setStep("ask");
+            }}
+          />
         )}
       </div>
     </section>
