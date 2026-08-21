@@ -14,12 +14,14 @@ export interface ChooseCardsStepProps {
   selectedIds: string[];
   maxSelectableCards: number;
   onToggleCard: (id: string) => void;
+  isInteractive?: boolean;
 }
 
 export default function ChooseCardsStep({
   selectedIds,
   maxSelectableCards,
   onToggleCard,
+  isInteractive = true,
 }: ChooseCardsStepProps) {
   return (
     <div className={styles.fan}>
@@ -44,7 +46,7 @@ export default function ChooseCardsStep({
               height={CARD_TRUE_HEIGHT}
               isSelected={isSelected}
               isDisabled={selectionDisabled}
-              isInteractive
+              isInteractive={isInteractive}
               onToggle={() => onToggleCard(card.id)}
             />
           </div>

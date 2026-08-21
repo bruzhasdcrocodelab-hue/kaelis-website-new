@@ -75,7 +75,17 @@ export default function CategoryTopBlock({
             onToggleCard={toggleCard}
           />
         )}
-        {step === "ask" && <div className={styles.fadeOverlay} aria-hidden />}
+        {step === "ask" && (
+          <>
+            <ChooseCardsStep
+              selectedIds={selectedIds}
+              maxSelectableCards={maxSelectableCards}
+              onToggleCard={toggleCard}
+              isInteractive={false}
+            />
+            <div className={styles.fadeOverlay} aria-hidden />
+          </>
+        )}
         <Image
           src={isConfirmed ? "/images/backgrounds/waves-3.svg" : "/images/backgrounds/waves.svg"}
           alt=""
@@ -143,7 +153,7 @@ export default function CategoryTopBlock({
 
           <div className={styles.side}>
             <div className={styles.sideEnd}>
-              {step === "choose" && <TriggerButton dictionary={dictionary.guides} />}
+              {(step === "choose" || step === "ask") && <TriggerButton dictionary={dictionary.guides} />}
             </div>
           </div>
         </div>
