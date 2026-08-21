@@ -82,7 +82,7 @@ export default function CategoryTopBlock({
         {hasFan && (
           <>
             <ChooseCardsStep
-              selectedIds={selectedIds}
+              selectedIds={[]}
               maxSelectableCards={maxSelectableCards}
               onToggleCard={toggleCard}
               isInteractive={false}
