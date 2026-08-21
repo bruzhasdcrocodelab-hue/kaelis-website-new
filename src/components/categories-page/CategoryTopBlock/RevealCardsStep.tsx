@@ -18,6 +18,7 @@ export interface RevealCardsStepProps {
 const FLIP_DURATION = 0.5;
 const SELECT_ROTATION = -8;
 const DETAIL_TRANSITION = { duration: 0.4, ease: [0.4, 0, 0.2, 1] as const };
+<<<<<<< HEAD
 const SELECT_ROTATION_RAD = (Math.abs(SELECT_ROTATION) * Math.PI) / 180;
 /**
  * When the card rotates, its rotated bounding box grows taller than
@@ -27,6 +28,8 @@ const SELECT_ROTATION_RAD = (Math.abs(SELECT_ROTATION) * Math.PI) / 180;
 const NAME_RISE =
   CARD_TRUE_WIDTH * Math.sin(SELECT_ROTATION_RAD) -
   CARD_TRUE_HEIGHT * (1 - Math.cos(SELECT_ROTATION_RAD));
+=======
+>>>>>>> 10b3dad330eb5cff31b0df616fa4d2c2eaef05bf
 
 function pickRandomCards(count: number): TarotCard[] {
   const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
@@ -63,7 +66,11 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
       >
         {card.name[locale]}
+<<<<<<< HEAD
       </motion.p>
+=======
+      </p>
+>>>>>>> 10b3dad330eb5cff31b0df616fa4d2c2eaef05bf
       <motion.button
         type="button"
         className={styles.revealCard}
