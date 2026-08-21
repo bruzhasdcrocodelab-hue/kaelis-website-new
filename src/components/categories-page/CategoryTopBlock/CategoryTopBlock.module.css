@@ -61,7 +61,7 @@
 .fanCard {
   position: relative;
   flex-shrink: 0;
-  border-radius: 8px;
+  border-radius: 8;
   overflow: hidden;
   border: none;
   padding: 0;
@@ -249,8 +249,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-top: 14px;
+  /* gap: 10px; */
+  margin-top: 8px
 }
 
 .revealLabel {
@@ -284,11 +284,12 @@
 .revealCardName {
   color: var(--color-black-75);
   text-align: center;
-  white-space: nowrap;
   opacity: 0;
   height: 0;
   overflow: hidden;
   transition: opacity 0.2s ease;
+  width: 98px;
+  text-wrap: balance;
 }
 
 .revealCardNameVisible {
@@ -335,6 +336,104 @@
   pointer-events: none;
 }
 
+.revealCardHoverOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  text-align: center;
+  background: var(--color-black-50);
+  color: var(--color-white);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.revealCard:hover .revealCardHoverOverlay {
+  opacity: 1;
+}
+
+.cardDetailArt {
+  position: absolute;
+  left: 130px;
+  top: 112px;
+  width: 226px;
+  height: 404px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 96px;
+  overflow: hidden;
+  border-radius: 8;
+  z-index: 6;
+}
+
+.cardDetailArtImage {
+  position: absolute;
+  max-width: none;
+}
+
+.cardDetailArtFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: lighten;
+  pointer-events: none;
+}
+
+.cardDetailArtLabel {
+  position: relative;
+  padding: 6px 16px;
+  border-radius: 30px;
+  background: var(--color-white-75);
+  color: var(--color-black-75);
+  white-space: nowrap;
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.cardDetailInfo {
+  position: absolute;
+  right: 110px;
+  top: calc(50% - 108px);
+  width: 226px;
+  height: 404px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  padding-bottom: 96px;
+  overflow: hidden;
+  border-radius: 8;
+  z-index: 6;
+}
+
+.cardDetailInfoBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.cardDetailInfoText {
+  position: relative;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--color-white-75);
+  color: var(--color-black-75);
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+  margin-top: -122;
+}
+
 .answerWrap {
   display: flex;
   justify-content: center;
@@ -353,5 +452,5 @@
   border-radius: 30px;
   position: absolute;
   bottom: -23;
-  left: 28%;
+  left: 27.5%;
 }

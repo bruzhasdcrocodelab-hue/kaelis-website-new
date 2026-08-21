@@ -24,7 +24,7 @@ export interface TarotCard {
  *  2. The shared frame overlay (`frameOverlayImage` below) — full-bleed on
  *     top, blended with `mix-blend-mode: lighten`.
  */
-export const frameOverlayImage = "/images/cards/deck/frame-overlay.png";
+export const frameOverlayImage = "/images/cards/default-card.png";
 
 export const tarotDeck: TarotCard[] = [
   // Major Arcana
