@@ -93,7 +93,7 @@ export default function CategoryTopBlock({
           </>
         )}
         <Image
-          src={isConfirmed ? "/images/backgrounds/waves-3.svg" : "/images/backgrounds/waves.svg"}
+          src="/images/backgrounds/waves-3.svg"
           alt=""
           width={1780}
           height={800}
@@ -102,14 +102,25 @@ export default function CategoryTopBlock({
           style={{zIndex: 3}}
         />
         {hasFan ? (
-          <Image
-            src="/images/backgrounds/pattern-categories-top-block.svg"
-            alt=""
-            width={1627}
-            height={731}
-            className={styles.pattern}
-            aria-hidden
-          />
+          <>
+            <Image
+              src="/images/backgrounds/line-waves.svg"
+              alt=""
+              width={1285}
+              height={400}
+              className={styles.wavesLine}
+              aria-hidden
+              style={{zIndex: 2}}
+            />
+            <Image
+              src="/images/backgrounds/pattern-categories-top-block.svg"
+              alt=""
+              width={1627}
+              height={731}
+              className={styles.pattern}
+              aria-hidden
+            />
+          </>
         ):(
           <Image
             src="/images/backgrounds/gradient-line-waves.svg"

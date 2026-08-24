@@ -102,7 +102,7 @@
 .wavesLine {
   position: absolute;
   left: calc(50% - 3px);
-  bottom: 0;
+  bottom: 1;
   width: 99%;
   height: auto;
   transform: translateX(-50%);
