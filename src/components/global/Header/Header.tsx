@@ -3,6 +3,7 @@ import MainButton from "@/components/global/MainButton";
 import LanguageSelector from "@/components/global/LanguageSelector";
 import type { Dictionary, Locale } from "@/lang";
 import styles from "./Header.module.css";
+import OurAppLink from "./OurAppLink";
 
 export interface HeaderProps {
   dictionary: Dictionary["header"];
@@ -19,9 +20,7 @@ export default function Header({ dictionary, locale }: HeaderProps) {
         <Link href="/" className={styles.navLink}>
           {dictionary.nav.tarotSpreads}
         </Link>
-        <Link href="/" className={styles.navLink}>
-          {dictionary.nav.ourApp}
-        </Link>
+        <OurAppLink className={styles.navLink}>{dictionary.nav.ourApp}</OurAppLink>
         <Link href="/terms-of-use" className={styles.navLink}>
           {dictionary.nav.termsOfUse}
         </Link>

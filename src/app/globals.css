@@ -4,6 +4,7 @@
 :root {
   --background: var(--color-white);
   --foreground: var(--color-neutral-900);
+  scroll-behavior: smooth;
 }
 
 @theme inline {
