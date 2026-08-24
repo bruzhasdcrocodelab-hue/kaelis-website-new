@@ -9,7 +9,7 @@ export interface TopBlockSectionProps {
 
 export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
   return (
-    <section className={styles.topBlock}>
+    <section id="top-block" className={styles.topBlock}>
       <div className={styles.background} aria-hidden>
         <div className={styles.backgroundTint} />
         <Image
