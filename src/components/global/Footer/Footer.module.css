@@ -62,4 +62,5 @@
   min-width: 0;
   color: var(--color-black-75);
   text-align: right;
+  text-decoration: none;
 }

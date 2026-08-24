@@ -1,0 +1,71 @@
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 60px 60px 30px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: -20px;
+  color: var(--color-white);
+  white-space: nowrap;
+  line-height: normal;
+}
+
+.titleWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin-bottom: -6px;
+  max-width: 480px;
+  background-image: var(--gradient-pink);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-align: center;
+  text-wrap: balance;
+  line-height: normal;
+  padding-right: 10px;
+  margin-left: 10px;
+}
+
+.title.titleWrapped {
+  margin-top: 20px;
+  margin-bottom: 0;
+  line-height: 90%; /* 77.4px */
+}
+
+.description {
+  width: 300px;
+  color: var(--color-white-60);
+  text-align: center;
+  line-height: normal;
+}

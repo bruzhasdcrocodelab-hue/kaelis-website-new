@@ -19,13 +19,13 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
           <div className={styles.titleTop}>
             <p className={`font-bona-hero ${styles.titleLine1}`}>{dictionary.titleLine1}</p>
             <div className={styles.titleRow}>
-              <p className={`font-bona-3xl-emphasized ${styles.titleWord}`}>
+              <p className={`font-bona-3xl-emphasized ${styles.titleWord}`} style={{marginRight: 6}}>
                 {dictionary.titleToThe}
               </p>
               <p className={`font-bona-hero-emphasized ${styles.titleHighlight}`}>
                 {dictionary.titleHighlight}
               </p>
-              <p className={`font-bona-3xl-emphasized ${styles.titleWord}`}>
+              <p className={`font-bona-3xl-emphasized ${styles.titleWord}`} style={{marginLeft: 16}}>
                 {dictionary.titleWorld}
               </p>
             </div>

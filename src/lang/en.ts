@@ -34,6 +34,38 @@ const en = {
     description:
       "Understand your thoughts, emotions, and patterns with AI-guided reflections, personalized readings, and mindful tools designed for self-discovery",
   },
+  categoryPage: {
+    categoryLabel: "Category",
+    returnToMain: "Return to Main",
+    returnToPrefix: "Return to",
+    getYourReadings: "Get Your Readings",
+    topBlock: {
+      changeQuestion: "Change Question",
+      categoryPrefix: "Category:",
+      askTitle: "Ask a Question",
+      askDescription: "The cards hold the answers you seek. Let the wisdom of Tarot guide your path",
+      placeholder: "Describe your question…",
+      continue: "Continue",
+      chooseTitle: "Choose 3 Cards",
+      chooseDescription: "“This is a question that i have for this tarot reader. So i will ask it here”",
+      findTitle: "Find answers",
+      tapToReveal: "Tap on the Card to Reveal it",
+      answerQuestion: "Answer the Question",
+      truthTitle: "The Truth",
+      truthDescription: "“This is a question that i have for this tarot reader. So i will ask it here”",
+      startOver: "Start Over",
+      moreInfo: "More Info",
+      cardDescription:
+        "The Knight of Wands is a tarot card that stands for high energy, bold action, passion, and sudden adventure. It shows that you are ready to chase a goal or dream with speed and power. When you see this card, it means go fast, take risks, and act with a brave heart.",
+      analyst: "Analyst",
+      guides: {
+        analyst: "Analyst",
+        witch: "Witch",
+        psychologist: "Psychologist",
+        friend: "Friend",
+      },
+    },
+  },
   footer: {
     logo: "Kaelis AI",
     links: {

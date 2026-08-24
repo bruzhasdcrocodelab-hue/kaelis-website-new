@@ -31,6 +31,7 @@
   --color-black-60: rgba(47, 47, 47, 0.6);
   --color-black-50: rgba(47, 47, 47, 0.5);
   --color-black-40: rgba(47, 47, 47, 0.4);
+  --color-black-30: rgba(47, 47, 47, 0.3);
   --color-black-15: rgba(47, 47, 47, 0.15);
   --color-black-7: rgba(47, 47, 47, 0.07);
 
@@ -102,6 +103,12 @@
   --text-hero-emphasized: 116px;
   --tracking-hero: -2.88px;
   --tracking-hero-emphasized: -11.6px;
+
+  /* ---- Typography: category page title (one-off, node-id=1464-1491) ---- */
+  --text-category-title: 86px;
+  /* --tracking-category-title: -4.5px; */
+  --text-topblock-title: 56px;
+  --tracking-topblock-title: -3px;
 
   /* All type styles use 100% line-height and 400 weight unless noted. */
 
@@ -224,6 +231,22 @@
   font-size: var(--text-hero-emphasized);
   line-height: 1;
   letter-spacing: var(--tracking-hero-emphasized);
+}
+.font-bona-category-title {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-category-title);
+  line-height: 1;
+  letter-spacing: var(--tracking-category-title);
+}
+.font-bona-topblock-title {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-topblock-title);
+  line-height: 1;
+  letter-spacing: var(--tracking-topblock-title);
 }
 .font-bona-4xl {
   font-family: var(--font-bona-nova-sc);

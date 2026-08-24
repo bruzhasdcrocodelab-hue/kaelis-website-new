@@ -41,7 +41,7 @@
 
 .titleRow {
   display: flex;
-  gap: 16px;
+  /* gap: 16px; */
   align-items: center;
   padding-top: 8px;
 }
@@ -58,6 +58,7 @@
   padding-top: 11.5px;
   padding-bottom: 11.5px;
   padding-right: 10px;
+  margin-left: 10px;
 }
 
 .description {

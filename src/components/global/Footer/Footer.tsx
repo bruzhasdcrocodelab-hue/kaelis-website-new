@@ -35,7 +35,9 @@ export default function Footer({ dictionary }: FooterProps) {
           {dictionary.links.privacyPolicy}
         </Link>
       </div>
-      <p className={`font-instrument-xl ${styles.logo}`}>{dictionary.logo}</p>
+      <Link href="/" className={`font-instrument-xl ${styles.logo}`}>
+        {dictionary.logo}
+      </Link>
     </footer>
   );
 }
