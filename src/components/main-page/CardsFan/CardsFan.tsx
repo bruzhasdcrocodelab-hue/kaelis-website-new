@@ -117,16 +117,29 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
 
 const CARD_LIFT = 40;
 const FLIP_DURATION = 0.5;
+const FAN_CENTER_LEFT = 650;
+const FAN_CENTER_TOP = 205;
+const FAN_STAGGER = 0.06;
 
 interface FlippableCardProps {
   card: CardSpec;
   isHovered: boolean;
+  isDealt: boolean;
+  dealDelay: number;
   zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
 }
 
-function FlippableCard({ card, isHovered, zIndex, onHoverStart, onHoverEnd }: FlippableCardProps) {
+function FlippableCard({
+  card,
+  isHovered,
+  isDealt,
+  dealDelay,
+  zIndex,
+  onHoverStart,
+  onHoverEnd,
+}: FlippableCardProps) {
   const [showFront, setShowFront] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -138,6 +151,11 @@ function FlippableCard({ card, isHovered, zIndex, onHoverStart, onHoverEnd }: Fl
     );
     return () => clearTimeout(timeoutRef.current);
   }, [isHovered]);
+
+  const cardCenterX = card.left + card.width / 2;
+  const cardCenterY = card.top + card.height / 2;
+  const dealOffsetX = FAN_CENTER_LEFT - cardCenterX;
+  const dealOffsetY = FAN_CENTER_TOP - cardCenterY;
 
   return (
     <Link
@@ -155,11 +173,25 @@ function FlippableCard({ card, isHovered, zIndex, onHoverStart, onHoverEnd }: Fl
     >
       <motion.div
         className={styles.card}
-        animate={{
-          rotate: card.rotate,
-          y: isHovered ? -CARD_LIFT : 0,
+        initial={{
+          x: dealOffsetX,
+          y: dealOffsetY,
+          rotate: 0,
+          scale: 0.6,
+          opacity: 0,
         }}
-        transition={{ type: "spring", stiffness: 300, damping: 24 }}
+        animate={{
+          x: 0,
+          rotate: card.rotate,
+          y: isDealt && isHovered ? -CARD_LIFT : 0,
+          scale: 1,
+          opacity: 1,
+        }}
+        transition={
+          isDealt
+            ? { type: "spring", stiffness: 300, damping: 24 }
+            : { type: "spring", stiffness: 170, damping: 20, delay: dealDelay }
+        }
       >
         <motion.div
           className={styles.cardFace}
@@ -177,6 +209,12 @@ function FlippableCard({ card, isHovered, zIndex, onHoverStart, onHoverEnd }: Fl
 
 export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
   const cards = buildCards(dictionary);
+  const [isDealt, setIsDealt] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setIsDealt(true), cards.length * FAN_STAGGER * 1000 + 600);
+    return () => clearTimeout(timeoutId);
+  }, [cards.length]);
 
   return (
     <div className={styles.cardsFan}>
@@ -186,6 +224,8 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
             key={card.key}
             card={card}
             isHovered={hoveredIndex === index}
+            isDealt={isDealt}
+            dealDelay={index * FAN_STAGGER}
             zIndex={hoveredIndex === index ? 10 : index}
             onHoverStart={() => onCardHoverChange(index)}
             onHoverEnd={() => onCardHoverChange(null)}
