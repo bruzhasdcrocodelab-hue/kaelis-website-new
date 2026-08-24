@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
-import type { Dictionary, Locale } from "@/lang";
+import { pluralizeCardCount, type Dictionary, type Locale } from "@/lang";
 import AnswerStep from "./AnswerStep";
 import AskQuestionStep from "./AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep";
@@ -48,7 +48,9 @@ export default function CategoryTopBlock({
 
   const stepTitle: Record<Step, string> = {
     ask: dictionary.askTitle,
-    choose: dictionary.chooseTitle,
+    choose: dictionary.chooseTitle
+      .replace("{count}", String(maxSelectableCards))
+      .replace("{cards}", pluralizeCardCount(locale, maxSelectableCards, dictionary)),
     reveal: dictionary.findTitle,
     answer: dictionary.truthTitle,
   };
