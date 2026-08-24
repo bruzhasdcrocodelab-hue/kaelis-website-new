@@ -161,7 +161,7 @@ export default function RevealCardsStep({
 
   return (
     <>
-      <div className={styles.revealArea} onClick={() => setSelectedSlug(null)}>
+      <div className={`${styles.revealArea} ${isRevealed ? 'bottom-[-10px]' : 'bottom-[-20px]'}`} onClick={() => setSelectedSlug(null)}>
         <p
           className={`font-instrument-xxs-emphasized ${styles.revealLabel} ${isRevealed ? styles.revealLabelHidden : ""}`}
         >
