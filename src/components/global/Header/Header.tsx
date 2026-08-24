@@ -20,7 +20,7 @@ export default function Header({ dictionary }: HeaderProps) {
         <Link href="/" className={styles.navLink}>
           {dictionary.nav.ourApp}
         </Link>
-        <Link href="/" className={styles.navLink}>
+        <Link href="/terms-of-use" className={styles.navLink}>
           {dictionary.nav.termsOfUse}
         </Link>
       </nav>

@@ -110,6 +110,9 @@
   --text-topblock-title: 56px;
   --tracking-topblock-title: -3px;
 
+  /* ---- Typography: Terms of Use hero title (one-off, node-id=1507-1475) ---- */
+  --text-terms-title: 80px;
+
   /* All type styles use 100% line-height and 400 weight unless noted. */
 
   /* Bona Nova SC — default (Regular) letter-spacing per size */
@@ -247,6 +250,13 @@
   font-size: var(--text-topblock-title);
   line-height: 1;
   letter-spacing: var(--tracking-topblock-title);
+}
+.font-bona-terms-title {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-terms-title);
+  line-height: 1;
 }
 .font-bona-4xl {
   font-family: var(--font-bona-nova-sc);

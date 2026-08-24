@@ -1,0 +1,99 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  max-width: 920px;
+  padding: 48px 64px 64px;
+  border: 1px solid var(--color-greyish-blue);
+  border-radius: var(--radius-panel);
+  background: var(--color-white);
+  overflow: clip;
+}
+
+.marker {
+  color: var(--color-black-40);
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  color: var(--color-black);
+  line-height: normal;
+}
+
+.sectionNumber {
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.paragraph {
+  width: 100%;
+  color: var(--color-black-75);
+  line-height: normal;
+}
+
+.note {
+  width: 100%;
+  color: var(--color-black-75);
+  line-height: normal;
+}
+
+.noteLabel {
+  color: var(--color-black);
+  text-decoration: underline;
+  text-underline-offset: from-font;
+}
+
+.contactPlate {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--color-black-15);
+  border-radius: 12;
+  margin-top: 20;
+}
+
+.contactName {
+  color: var(--color-black);
+  line-height: normal;
+}
+
+.contactLine {
+  color: var(--color-black-75);
+  line-height: normal;
+}

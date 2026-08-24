@@ -1,0 +1,37 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  padding: 80px 60px;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyebrow {
+  margin-bottom: -20px;
+  color: var(--color-white);
+  white-space: nowrap;
+  line-height: normal;
+}
+
+.title {
+  background-image: var(--gradient-pink);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+  line-height: normal;
+}
+
+.lastUpdated {
+  color: var(--color-white-50);
+  white-space: nowrap;
+  line-height: normal;
+}
