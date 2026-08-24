@@ -67,7 +67,7 @@
   color: var(--color-black-75);
 }
 
-.itemLabelActive {
+.itemOption .itemLabelActive {
   background-image: var(--gradient-pink-purple);
   background-clip: text;
   -webkit-background-clip: text;
