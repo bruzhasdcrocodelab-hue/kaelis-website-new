@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
@@ -45,6 +45,8 @@ interface RevealCardProps {
 
 function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCardClick }: RevealCardProps) {
   const [showFront, setShowFront] = useState(false);
+  const [nameWrapped, setNameWrapped] = useState(false);
+  const nameRef = useRef<HTMLParagraphElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
@@ -56,9 +58,27 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
     return () => clearTimeout(timeoutRef.current);
   }, [isRevealed]);
 
+  useLayoutEffect(() => {
+    const el = nameRef.current;
+    if (!el) return;
+
+    const checkWrap = () => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      setNameWrapped(range.getClientRects().length > 1);
+    };
+
+    checkWrap();
+
+    const observer = new ResizeObserver(checkWrap);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [card.name, locale, isRevealed]);
+
   return (
-    <div className={styles.revealCardCol}>
+    <div className={`${styles.revealCardCol} ${nameWrapped ? styles.revealCardColWrapped : ""}`}>
       <motion.p
+        ref={nameRef}
         className={`font-instrument-xs-emphasized ${styles.revealCardName} ${isRevealed ? styles.revealCardNameVisible : ""}`}
         animate={{ y: isSelected ? -NAME_RISE + 6 : 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
