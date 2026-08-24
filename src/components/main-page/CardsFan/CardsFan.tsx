@@ -119,14 +119,15 @@ const CARD_LIFT = 40;
 const FLIP_DURATION = 0.5;
 const FAN_CENTER_LEFT = 650;
 const FAN_CENTER_TOP = 205;
-const FAN_STAGGER = 0.06;
+const FAN_CENTER_INDEX = 3;
+const DEAL_DURATION = 900;
 
 interface FlippableCardProps {
   card: CardSpec;
   isHovered: boolean;
   isDealt: boolean;
-  dealDelay: number;
-  zIndex: number;
+  stackZIndex: number;
+  hoverZIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
 }
@@ -135,8 +136,8 @@ function FlippableCard({
   card,
   isHovered,
   isDealt,
-  dealDelay,
-  zIndex,
+  stackZIndex,
+  hoverZIndex,
   onHoverStart,
   onHoverEnd,
 }: FlippableCardProps) {
@@ -166,7 +167,7 @@ function FlippableCard({
         top: card.top,
         width: card.width,
         height: card.height,
-        zIndex,
+        zIndex: isDealt ? hoverZIndex : stackZIndex,
       }}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
@@ -177,20 +178,16 @@ function FlippableCard({
           x: dealOffsetX,
           y: dealOffsetY,
           rotate: 0,
-          scale: 0.6,
-          opacity: 0,
         }}
         animate={{
           x: 0,
           rotate: card.rotate,
           y: isDealt && isHovered ? -CARD_LIFT : 0,
-          scale: 1,
-          opacity: 1,
         }}
         transition={
           isDealt
             ? { type: "spring", stiffness: 300, damping: 24 }
-            : { type: "spring", stiffness: 170, damping: 20, delay: dealDelay }
+            : { type: "spring", stiffness: 190, damping: 22 }
         }
       >
         <motion.div
@@ -211,26 +208,33 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
   const cards = buildCards(dictionary);
   const [isDealt, setIsDealt] = useState(false);
 
+  const dealOrder = [...cards.keys()].sort(
+    (a, b) => Math.abs(a - FAN_CENTER_INDEX) - Math.abs(b - FAN_CENTER_INDEX),
+  );
+
   useEffect(() => {
-    const timeoutId = setTimeout(() => setIsDealt(true), cards.length * FAN_STAGGER * 1000 + 600);
+    const timeoutId = setTimeout(() => setIsDealt(true), DEAL_DURATION);
     return () => clearTimeout(timeoutId);
-  }, [cards.length]);
+  }, []);
 
   return (
     <div className={styles.cardsFan}>
       <div className={styles.inner}>
-        {cards.map((card, index) => (
-          <FlippableCard
-            key={card.key}
-            card={card}
-            isHovered={hoveredIndex === index}
-            isDealt={isDealt}
-            dealDelay={index * FAN_STAGGER}
-            zIndex={hoveredIndex === index ? 10 : index}
-            onHoverStart={() => onCardHoverChange(index)}
-            onHoverEnd={() => onCardHoverChange(null)}
-          />
-        ))}
+        {cards.map((card, index) => {
+          const dealRank = dealOrder.indexOf(index);
+          return (
+            <FlippableCard
+              key={card.key}
+              card={card}
+              isHovered={hoveredIndex === index}
+              isDealt={isDealt}
+              stackZIndex={dealRank}
+              hoverZIndex={hoveredIndex === index ? 10 : index}
+              onHoverStart={() => onCardHoverChange(index)}
+              onHoverEnd={() => onCardHoverChange(null)}
+            />
+          );
+        })}
       </div>
     </div>
   );
