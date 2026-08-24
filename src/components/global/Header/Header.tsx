@@ -1,13 +1,15 @@
 import Link from "next/link";
 import MainButton from "@/components/global/MainButton";
-import type { Dictionary } from "@/lang";
+import LanguageSelector from "@/components/global/LanguageSelector";
+import type { Dictionary, Locale } from "@/lang";
 import styles from "./Header.module.css";
 
 export interface HeaderProps {
   dictionary: Dictionary["header"];
+  locale: Locale;
 }
 
-export default function Header({ dictionary }: HeaderProps) {
+export default function Header({ dictionary, locale }: HeaderProps) {
   return (
     <header className={styles.header}>
       <Link href="/" className={`font-instrument-xl ${styles.logo}`}>
@@ -28,15 +30,7 @@ export default function Header({ dictionary }: HeaderProps) {
         <MainButton variant="stroke" size="medium" type="button">
           {dictionary.downloadApp}
         </MainButton>
-        <MainButton
-          variant="stroke"
-          size="medium"
-          icon="/icons/right-arrow.svg"
-          iconRotation={90}
-          type="button"
-        >
-          {dictionary.language}
-        </MainButton>
+        <LanguageSelector locale={locale} />
       </div>
     </header>
   );
