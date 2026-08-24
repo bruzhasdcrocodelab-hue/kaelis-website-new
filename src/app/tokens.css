@@ -77,6 +77,13 @@
   --blur-default: 10.25px;
   --blur-shadow: 12.5px;
 
+  /* ---- Effects: background pattern float/pulse animation ---- */
+  --pattern-float-duration: 7s;
+  --pattern-float-distance: -14px;
+  --pattern-pulse-duration: 5s;
+  --pattern-pulse-opacity-max: 1;
+  --pattern-pulse-opacity-min: 0.82;
+
   /* ---- Radii ---- */
   --radius-page: 50px;
   --radius-panel: 30px;

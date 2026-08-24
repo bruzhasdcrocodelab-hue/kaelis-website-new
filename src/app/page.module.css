@@ -32,28 +32,67 @@
   max-width: none;
   pointer-events: none;
   z-index: 1;
+  animation: patternFloatCenter var(--pattern-float-duration) ease-in-out infinite,
+    patternPulse var(--pattern-pulse-duration) ease-in-out infinite;
 }
 
-.patternLeft {
-  position: absolute;
-  top: 120px;
-  left: 20px;
-  width: 23%;
-  height: auto;
-  max-width: none;
-  pointer-events: none;
-  z-index: 0;
-}
-
+.patternLeft,
 .patternRight {
   position: absolute;
   top: 120px;
-  right: 20px;
   width: 23%;
   height: auto;
   max-width: none;
   pointer-events: none;
   z-index: 0;
+  animation: patternFloatSide var(--pattern-float-duration) ease-in-out infinite,
+    patternPulse var(--pattern-pulse-duration) ease-in-out infinite;
+}
+
+.patternLeft {
+  left: 20px;
+}
+
+.patternRight {
+  right: 20px;
+}
+
+@keyframes patternFloatCenter {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(var(--pattern-float-distance));
+  }
+}
+
+@keyframes patternFloatSide {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(var(--pattern-float-distance));
+  }
+}
+
+@keyframes patternPulse {
+  0%,
+  100% {
+    opacity: var(--pattern-pulse-opacity-max);
+  }
+  50% {
+    opacity: var(--pattern-pulse-opacity-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .patternCenter,
+  .patternLeft,
+  .patternRight {
+    animation: none;
+  }
 }
 
 .content {
