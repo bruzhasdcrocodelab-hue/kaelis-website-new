@@ -1,0 +1,51 @@
+.page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  border: 10px solid var(--color-greyish-blue);
+  border-radius: var(--radius-page);
+  overflow: clip;
+  background: var(--color-greyish-blue);
+}
+
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 500;
+  object-fit: cover;
+  object-position: top;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.patternArticle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  z-index: 1;
+}
+
+.articleWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0 60px 50px;
+}
