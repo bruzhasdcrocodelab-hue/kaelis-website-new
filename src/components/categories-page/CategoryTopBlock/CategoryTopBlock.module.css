@@ -439,10 +439,9 @@
   width: 226px;
   height: 404px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 8px;
-  padding-bottom: 96px;
   overflow: hidden;
   border-radius: 8;
   z-index: 6;
@@ -459,6 +458,7 @@
 
 .cardDetailInfoText {
   position: relative;
+  max-height: 100%;
   padding: 12px;
   border-radius: 12px;
   background: var(--color-white-75);
@@ -466,7 +466,7 @@
   box-shadow: var(--shadow-medium);
   backdrop-filter: blur(var(--blur-shadow));
   -webkit-backdrop-filter: blur(var(--blur-shadow));
-  margin-top: -122;
+  overflow-y: auto;
 }
 
 .answerWrap {

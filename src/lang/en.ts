@@ -56,7 +56,7 @@ const en = {
       startOver: "Start Over",
       moreInfo: "More Info",
       cardDescription:
-        "The Knight of Wands is a tarot card that stands for high energy, bold action, passion, and sudden adventure. It shows that you are ready to chase a goal or dream with speed and power. When you see this card, it means go fast, take risks, and act with a brave heart.",
+        "The Knight of Wands is a tarot card that stands for high energy, bold action, passion, and sudden adventure. It shows that you are ready to chase a goal or dream with speed and power. When you see this card, it means go fast, take risks, and act with a brave heart.The Knight of Wands is a tarot card that stands for high energy, bold action, passion, and sudden adventure. It shows that you are ready to chase a goal or dream with speed and power. When you see this card, it means go fast, take risks, and act with a brave heart. The Knight of Wands is a tarot card that stands for high energy, bold action, passion, and sudden adventure. It shows that you are ready to chase a goal or dream with speed and power. When you see this card, it means go fast, take risks, and act with a brave heart.",
       analyst: "Analyst",
       guides: {
         analyst: "Analyst",
