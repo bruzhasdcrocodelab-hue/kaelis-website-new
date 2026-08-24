@@ -1,8 +1,10 @@
 import TermsPageView from "@/components/article/TermsPageView";
-import { dictionaries, defaultLocale } from "@/lang";
+import { dictionaries } from "@/lang";
+import { getLocale } from "@/lib/locale";
 
-export default function TermsOfUsePage() {
-  const dictionary = dictionaries[defaultLocale];
+export default async function TermsOfUsePage() {
+  const locale = await getLocale();
+  const dictionary = dictionaries[locale];
 
-  return <TermsPageView dictionary={dictionary} />;
+  return <TermsPageView dictionary={dictionary} locale={locale} />;
 }

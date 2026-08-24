@@ -1,0 +1,93 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 76px;
+  height: 44px;
+}
+
+.shell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 76px;
+  padding: 6px 6px 6px 16px;
+  border: 1.2px solid #d3aced;
+  background: transparent;
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  text-align: left;
+  padding: 0;
+}
+
+.rowTrigger {
+  justify-content: space-between;
+  height: 32px;
+  gap: 2px;
+}
+
+.rowOption {
+  justify-content: flex-start;
+  height: 29px;
+  padding: 6px 0;
+}
+
+.label {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+  background-image: var(--gradient-pink);
+}
+
+.labelActive {
+  background-image: var(--gradient-pink);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  border-radius: 30px;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  background-image: var(--gradient-pink);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 24px 24px;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 24px 24px;
+  transform: rotate(90deg);
+}
+
+.divider {
+  width: 44px;
+  height: 1px;
+  background: var(--gradient-pink);
+  flex-shrink: 0;
+  opacity: 0.2;
+}

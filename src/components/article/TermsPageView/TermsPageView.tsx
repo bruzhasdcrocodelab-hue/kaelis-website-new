@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Dictionary } from "@/lang";
+import type { Dictionary, Locale } from "@/lang";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import TermsHeroSection from "@/components/article/TermsHeroSection";
@@ -8,9 +8,10 @@ import styles from "./TermsPageView.module.css";
 
 export interface TermsPageViewProps {
   dictionary: Dictionary;
+  locale: Locale;
 }
 
-export default function TermsPageView({ dictionary }: TermsPageViewProps) {
+export default function TermsPageView({ dictionary, locale }: TermsPageViewProps) {
   return (
     <div className={styles.page}>
       <Image
@@ -30,7 +31,7 @@ export default function TermsPageView({ dictionary }: TermsPageViewProps) {
         priority
       />
       <div className={styles.content}>
-        <Header dictionary={dictionary.header} />
+        <Header dictionary={dictionary.header} locale={locale} />
         <TermsHeroSection dictionary={dictionary.termsOfUse} />
         <div className={styles.articleWrap}>
           <TermsArticleCard dictionary={dictionary.termsOfUse} />

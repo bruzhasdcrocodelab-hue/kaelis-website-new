@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { dictionaries, defaultLocale } from "@/lang";
+import { dictionaries } from "@/lang";
+import { getLocale } from "@/lib/locale";
 import { findCategoryPath } from "@/lib/categories/data";
 import CategoryPageView from "@/components/categories-page/CategoryPageView";
 
@@ -13,19 +14,20 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   if (!path) notFound();
 
-  const dictionary = dictionaries[defaultLocale];
+  const locale = await getLocale();
+  const dictionary = dictionaries[locale];
   const current = path[path.length - 1];
   const parent = path.length > 1 ? path[path.length - 2] : undefined;
 
   const returnHref = parent ? `/categories/${slug.slice(0, -1).join("/")}` : "/";
   const returnLabel = parent
-    ? `${dictionary.categoryPage.returnToPrefix} ${parent.title[defaultLocale]}`
+    ? `${dictionary.categoryPage.returnToPrefix} ${parent.title[locale]}`
     : dictionary.categoryPage.returnToMain;
 
   return (
     <CategoryPageView
       dictionary={dictionary}
-      locale={defaultLocale}
+      locale={locale}
       current={current}
       topLevelCategory={path[0]}
       path={slug}

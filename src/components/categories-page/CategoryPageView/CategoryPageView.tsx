@@ -47,7 +47,7 @@ export default function CategoryPageView({
         priority
       />
       <div className={styles.content}>
-        <Header dictionary={dictionary.header} />
+        <Header dictionary={dictionary.header} locale={locale} />
         <CategoryHeroSection
           dictionary={dictionary.categoryPage}
           locale={locale}

@@ -3,11 +3,13 @@ import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import HeroCardsSection from "@/components/main-page/HeroCardsSection";
 import TopBlockSection from "@/components/main-page/TopBlockSection";
-import { dictionaries, defaultLocale } from "@/lang";
+import { dictionaries } from "@/lang";
+import { getLocale } from "@/lib/locale";
 import styles from "./page.module.css";
 
-export default function Home() {
-  const dictionary = dictionaries[defaultLocale];
+export default async function Home() {
+  const locale = await getLocale();
+  const dictionary = dictionaries[locale];
 
   return (
     <div className={styles.page}>
@@ -44,7 +46,7 @@ export default function Home() {
         priority
       />
       <div className={styles.content}>
-        <Header dictionary={dictionary.header} />
+        <Header dictionary={dictionary.header} locale={locale} />
         <HeroCardsSection heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards} />
         <TopBlockSection dictionary={dictionary.topBlock} />
         <Footer dictionary={dictionary.footer} />
