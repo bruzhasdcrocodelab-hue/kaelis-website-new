@@ -16,20 +16,56 @@ const CONSTELLATION_PATH =
 /** Ring radii for Vector 2's solid concentric circles, outermost first. */
 const SOLID_RING_RADII = [510.75, 407.1, 380.06, 350.01, 304.95];
 
-/** Ring radii for Vector 2's dashed circles (longer marks). */
-const DASHED_RING_RADII = [477.04, 286.22, 449.25];
+/** Ring radii for Vector 2's dashed circles (longer marks) that spin with the rest of the pattern. */
+const DASHED_RING_RADII = [286.22, 449.25];
 
-/** Radius of Vector 2's finely dotted circle — spins counter to the rest of the pattern. */
-const DOTTED_RING_RADIUS = 226.13;
+/** The dashed ring Ellipse 10 rides on — stays fixed in place instead of spinning. */
+const ELLIPSE_10_RING_RADIUS = 477.04;
 
-/** Small moon-phase glyphs scattered across the rings (5 crescent/half icons), each [cx, cy]. */
-const MOON_GLYPHS: Array<{ cx: number; cy: number; r: number; variant: "crescent" | "half" }> = [
-  { cx: 641.03, cy: 504.9, r: 15.87, variant: "crescent" },
-  { cx: 936.96, cy: 291.59, r: 15.77, variant: "half" },
-  { cx: 1027.1, cy: 332.15, r: 15.77, variant: "crescent" },
-  { cx: 741.68, cy: 1189.9, r: 15.77, variant: "half" },
-  { cx: 1120.23, cy: 1045.69, r: 26.29, variant: "half" },
+/** The dotted ring Ellipse 7 rides on — stays fixed in place instead of spinning. */
+const ELLIPSE_7_RING_RADIUS = 226.13;
+
+type Glyph = { cx: number; cy: number; r: number; variant: "crescentCutout" | "half" | "outline" };
+
+/** Glyphs riding the two dashed rings that spin with the rest of Vector 2. */
+const SPINNING_GLYPHS: Glyph[] = [
+  { cx: 641.03, cy: 504.9, r: 15.87, variant: "crescentCutout" },
+  { cx: 741.68, cy: 1189.9, r: 15.77, variant: "outline" },
+  { cx: 1120.23, cy: 1045.69, r: 26.29, variant: "outline" },
 ];
+
+/** Glyphs riding the dashed ring that carries Ellipse 10 — stay fixed with it. */
+const STATIC_GLYPHS: Glyph[] = [
+  { cx: 936.96, cy: 291.59, r: 15.77, variant: "half" },
+  { cx: 1027.1, cy: 332.15, r: 15.77, variant: "outline" },
+];
+
+function renderGlyph(glyph: Glyph, key: number | string) {
+  switch (glyph.variant) {
+    case "crescentCutout":
+      return (
+        <path
+          key={key}
+          fillRule="evenodd"
+          d={`M ${glyph.cx} ${glyph.cy - glyph.r} A ${glyph.r} ${glyph.r} 0 1 0 ${glyph.cx} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 1 0 ${glyph.cx} ${glyph.cy - glyph.r} Z
+              M ${glyph.cx} ${glyph.cy - glyph.r} A ${glyph.r * 0.62} ${glyph.r} 0 0 0 ${glyph.cx} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 0 0 ${glyph.cx} ${glyph.cy - glyph.r} Z`}
+          fill="var(--color-gold)"
+        />
+      );
+    case "half":
+      return (
+        <g key={key}>
+          <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" />
+          <path
+            d={`M ${glyph.cx} ${glyph.cy - glyph.r} A ${glyph.r} ${glyph.r} 0 0 1 ${glyph.cx} ${glyph.cy + glyph.r} Z`}
+            fill="var(--color-gold)"
+          />
+        </g>
+      );
+    case "outline":
+      return <circle key={key} cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" />;
+  }
+}
 
 /** 12 spokes radiating from the pattern's center out to the outermost solid ring. */
 const SPOKE_COUNT = 12;
@@ -102,7 +138,7 @@ export default function ConstellationPattern() {
         {/* Soft glow, revealed only through the ring/line strokes drawn above it. */}
         <circle cx={CENTER_X} cy="744.264" r="522.53" fill="url(#constellationGlow)" className={styles.glow} />
 
-        {/* Vector 1 + Vector 2 (minus its dotted ring) spin together, clockwise. */}
+        {/* Vector 1 + Vector 2 (minus the two rings that carry Ellipse 7 and Ellipse 10) spin together, clockwise. */}
         <g className={styles.spinClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
           <path d={CONSTELLATION_PATH} stroke="var(--color-gold)" />
 
@@ -138,42 +174,32 @@ export default function ConstellationPattern() {
             />
           ))}
 
-          {MOON_GLYPHS.map((moon, i) =>
-            moon.variant === "crescent" ? (
-              <path
-                key={i}
-                d={`M ${moon.cx} ${moon.cy - moon.r}
-                    A ${moon.r} ${moon.r} 0 1 0 ${moon.cx} ${moon.cy + moon.r}
-                    A ${moon.r * 0.62} ${moon.r} 0 1 1 ${moon.cx} ${moon.cy - moon.r}
-                    Z`}
-                fill="var(--color-gold)"
-              />
-            ) : (
-              <g key={i}>
-                <circle cx={moon.cx} cy={moon.cy} r={moon.r} stroke="var(--color-gold)" />
-                <path
-                  d={`M ${moon.cx} ${moon.cy - moon.r} A ${moon.r} ${moon.r} 0 0 1 ${moon.cx} ${moon.cy + moon.r} Z`}
-                  fill="var(--color-gold)"
-                />
-              </g>
-            ),
-          )}
+          {SPINNING_GLYPHS.map((glyph, i) => renderGlyph(glyph, i))}
         </g>
 
-        {/* The dotted ring inside Vector 2 spins counter to everything else. */}
+        {/* The dotted ring (carrying Ellipse 7) and the dashed ring carrying Ellipse 10
+            stay fixed in place while the rest of Vector 2 spins around them. */}
         <circle
-          className={styles.spinCounterClockwise}
-          style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}
           cx={CENTER_X}
           cy={CENTER_Y}
-          r={DOTTED_RING_RADIUS}
+          r={ELLIPSE_7_RING_RADIUS}
           stroke="var(--color-gold)"
           strokeDasharray="0.1 3.6"
           strokeLinecap="round"
         />
+        <circle
+          cx={CENTER_X}
+          cy={CENTER_Y}
+          r={ELLIPSE_10_RING_RADIUS}
+          stroke="var(--color-gold)"
+          strokeDasharray="9 10"
+          strokeLinecap="round"
+        />
+
+        {STATIC_GLYPHS.map((glyph, i) => renderGlyph(glyph, i))}
       </g>
 
-      {/* Ellipse 7 and Ellipse 10 — fixed moons, do not orbit or spin. */}
+      {/* Ellipse 7 and Ellipse 10 — fixed moons riding on their (now static) rings. */}
       <circle cx={ellipse7.cx} cy={ellipse7.cy} r={ellipse7.r} fill="var(--color-gold)" />
       <circle cx={ellipse10.cx} cy={ellipse10.cy} r={ellipse10.r} fill="var(--color-gold-light)" />
 
