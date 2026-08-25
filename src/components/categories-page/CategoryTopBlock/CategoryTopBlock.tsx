@@ -5,6 +5,7 @@ import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
 import { pluralizeCardCount, type Dictionary, type Locale } from "@/lang";
+import AnimatedWaves from "./AnimatedWaves";
 import AnswerStep from "./AnswerStep";
 import AskQuestionStep from "./AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep";
@@ -92,15 +93,7 @@ export default function CategoryTopBlock({
             <div className={styles.fadeOverlay} aria-hidden />
           </>
         )}
-        <Image
-          src="/images/backgrounds/waves-3.svg"
-          alt=""
-          width={1780}
-          height={800}
-          className={styles.waves}
-          aria-hidden
-          style={{zIndex: 3}}
-        />
+        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
         {hasFan ? (
           <>
             <Image
