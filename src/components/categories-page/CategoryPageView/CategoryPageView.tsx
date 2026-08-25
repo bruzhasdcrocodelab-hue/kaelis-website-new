@@ -5,6 +5,7 @@ import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import CategoryHeroSection from "@/components/categories-page/CategoryHeroSection";
 import CategoryTopBlock from "@/components/categories-page/CategoryTopBlock";
+import ConstellationPattern from "@/components/categories-page/ConstellationPattern";
 import styles from "./CategoryPageView.module.css";
 
 export interface CategoryPageViewProps {
@@ -38,14 +39,7 @@ export default function CategoryPageView({
         className={styles.backgroundImage}
         priority
       />
-      <Image
-        src="/images/backgrounds/pattern-categories.svg"
-        alt=""
-        width={1580}
-        height={764}
-        className={styles.patternCategories}
-        priority
-      />
+      <ConstellationPattern />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
         <CategoryHeroSection

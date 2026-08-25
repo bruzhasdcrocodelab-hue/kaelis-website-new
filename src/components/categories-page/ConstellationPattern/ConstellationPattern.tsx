@@ -1,0 +1,201 @@
+import styles from "./ConstellationPattern.module.css";
+
+/**
+ * Recreation of pattern-categories.svg (Figma node-id=1494-744, "BG") as animatable
+ * SVG primitives instead of the flattened stroke-to-fill export. Geometry (ring radii,
+ * moon positions, constellation path) is copied from that export so the static frame
+ * matches pixel-for-pixel; layers are regrouped so each piece named in the animation
+ * spec can be transformed independently.
+ */
+const CENTER_X = 790.5;
+const CENTER_Y = 744.5;
+
+const CONSTELLATION_PATH =
+  "M796.508 323.135L845.33 398.996M845.33 398.996L793.504 428.288L842.325 441.057L845.33 398.996ZM957.995 421.529L976.772 447.817M976.772 447.817L1011.32 429.04M976.772 447.817L980.528 487.625M980.528 487.625L1011.32 481.616L1049.63 489.879M980.528 487.625L976.772 519.922V552.971M1202.1 607.05L1192.34 592.779L1161.54 607.05L1153.28 623.574M1153.28 623.574L1166.05 643.854L1161.54 673.898L1072.91 633.338L1018.08 623.574L1079.67 607.05L1153.28 623.574ZM1102.96 758.021L1133 795.575M1133 795.575L1063.15 817.357M1133 795.575L1154.03 809.095L1204.35 823.366M1006.06 990.861L1048.13 963.821L1067.65 944.293M1067.65 944.293L1105.21 936.031L1123.24 924.764M1067.65 944.293L1033.86 931.524L991.043 970.581M906.92 1029.92L903.916 1098.56L906.92 1107.71M906.92 1107.71L926.448 1092.61L960.999 1029.92M906.92 1107.71L898.658 1128.31L918.937 1156.68L898.658 1168.12M700.368 1141.08L724.403 1127.56L782.238 1064.47M637.276 1003.63L566.672 1060.71L562.917 1097.52L553.904 1101.27L550.899 1127.56L525.362 1066.72L532.873 1029.92L493.065 1024.66L496.069 1003.63M378.147 969.83L469.781 938.284L475.039 918.756M475.039 918.756H487.807L480.296 875.192M475.039 918.756L441.239 907.489L390.916 892.467M480.296 875.192L452.506 862.423L445.746 824.117L457.763 818.108L499.825 862.423L480.296 875.192ZM402.182 565.739L427.719 562.735L455.51 585.268M455.51 585.268H495.318M455.51 585.268L444.243 607.05M495.318 585.268L492.314 552.22L508.087 534.193M495.318 585.268L517.851 619.067M508.087 534.193H548.646V549.215L508.087 534.193ZM508.087 534.193L495.318 514.665M621.163 411.764L640.28 425.274L653.049 434.297L625.258 483.119M621.163 411.764L596.716 394.489L616.996 358.436L650.044 365.947L621.163 411.764ZM640.28 425.274L673.328 417.022M375.894 641.6V727.226L422.462 755.016L496.82 739.994L395.422 675.4L375.894 641.6Z";
+
+/** Ring radii for Vector 2's solid concentric circles, outermost first. */
+const SOLID_RING_RADII = [510.75, 407.1, 380.06, 350.01, 304.95];
+
+/** Ring radii for Vector 2's dashed circles (longer marks). */
+const DASHED_RING_RADII = [477.04, 286.22, 449.25];
+
+/** Radius of Vector 2's finely dotted circle — spins counter to the rest of the pattern. */
+const DOTTED_RING_RADIUS = 226.13;
+
+/** Small moon-phase glyphs scattered across the rings (5 crescent/half icons), each [cx, cy]. */
+const MOON_GLYPHS: Array<{ cx: number; cy: number; r: number; variant: "crescent" | "half" }> = [
+  { cx: 641.03, cy: 504.9, r: 15.87, variant: "crescent" },
+  { cx: 936.96, cy: 291.59, r: 15.77, variant: "half" },
+  { cx: 1027.1, cy: 332.15, r: 15.77, variant: "crescent" },
+  { cx: 741.68, cy: 1189.9, r: 15.77, variant: "half" },
+  { cx: 1120.23, cy: 1045.69, r: 26.29, variant: "half" },
+];
+
+/** 12 spokes radiating from the pattern's center out to the outermost solid ring. */
+const SPOKE_COUNT = 12;
+const SPOKE_RADIUS = SOLID_RING_RADII[0];
+
+/** The four moons riding on the rings — Ellipse 7/8/9/10 from the Figma layer names. */
+const ellipse7 = { cx: 594.463, cy: 632.586, r: 20.2796 };
+const ellipse10 = { cx: 791.251, cy: 272.06, r: 24.7862 };
+const ellipse8Orbit = { r: 283.16, startAngle: -0.15 };
+const ellipse9Orbit = { r: 408.31, startAngle: -177.26 };
+const ELLIPSE_R = 20.2796;
+const ELLIPSE9_R = 14.2709;
+
+export default function ConstellationPattern() {
+  return (
+    <svg
+      className={styles.pattern}
+      width="1580"
+      height="764"
+      viewBox="0 0 1580 764"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="constellationFadeOuter" x1={CENTER_X} y1="221.5" x2={CENTER_X} y2="1313.5" gradientUnits="userSpaceOnUse">
+          <stop stopColor="var(--color-gold)" />
+          <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="constellationFadeMid" x1={CENTER_X} y1="243.5" x2={CENTER_X} y2="1291.5" gradientUnits="userSpaceOnUse">
+          <stop stopColor="var(--color-gold)" />
+          <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="constellationFadeWide" x1={CENTER_X} y1="0.5" x2={CENTER_X} y2="1534.5" gradientUnits="userSpaceOnUse">
+          <stop stopColor="var(--color-gold)" />
+          <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
+        </linearGradient>
+        <radialGradient id="constellationGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${CENTER_X} ${744.264}) scale(522.53 522.53)`}>
+          <stop offset="0.05" stopColor="var(--color-gold)" stopOpacity="0" />
+          <stop offset="0.35" stopColor="var(--color-gold)" stopOpacity="0.18" />
+          <stop offset="0.502" stopColor="var(--color-gold)" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
+      <g className={styles.static} opacity="0.5">
+        <path
+          d="M481 279.953C328.28 380.661 227.5 553.762 227.5 750.404C227.5 1061.39 479.564 1313.5 790.5 1313.5C1101.44 1313.5 1353.5 1061.39 1353.5 750.404C1353.5 553.762 1252.72 380.661 1100 279.953"
+          stroke="url(#constellationFadeOuter)"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M478.5 309.963C340.538 407.865 250.5 568.956 250.5 751.093C250.5 1049.55 492.266 1291.5 790.5 1291.5C1088.73 1291.5 1330.5 1049.55 1330.5 751.093C1330.5 568.956 1240.46 407.865 1102.5 309.963"
+          stroke="url(#constellationFadeMid)"
+          strokeLinecap="round"
+        />
+        <path
+          d="M518.785 0.5C216.337 111.424 0.5 402.216 0.5 743.485C0.5 1180.35 354.195 1534.5 790.5 1534.5C1226.81 1534.5 1580.5 1180.35 1580.5 743.485C1580.5 402.216 1364.66 111.424 1062.21 0.5"
+          stroke="url(#constellationFadeWide)"
+          strokeLinecap="round"
+        />
+      </g>
+
+      <g clipPath="url(#constellationClip)">
+        <clipPath id="constellationClip">
+          <circle cx={CENTER_X} cy="744.264" r="522.53" />
+        </clipPath>
+
+        {/* Soft glow, revealed only through the ring/line strokes drawn above it. */}
+        <circle cx={CENTER_X} cy="744.264" r="522.53" fill="url(#constellationGlow)" className={styles.glow} />
+
+        {/* Vector 1 + Vector 2 (minus its dotted ring) spin together, clockwise. */}
+        <g className={styles.spinClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
+          <path d={CONSTELLATION_PATH} stroke="var(--color-gold)" />
+
+          {Array.from({ length: SPOKE_COUNT }, (_, i) => {
+            const angle = (i * 360) / SPOKE_COUNT;
+            return (
+              <line
+                key={`spoke-${i}`}
+                x1={CENTER_X}
+                y1={CENTER_Y}
+                x2={CENTER_X + SPOKE_RADIUS}
+                y2={CENTER_Y}
+                stroke="var(--color-gold)"
+                strokeOpacity="0.25"
+                transform={`rotate(${angle} ${CENTER_X} ${CENTER_Y})`}
+              />
+            );
+          })}
+
+          {SOLID_RING_RADII.map((r) => (
+            <circle key={`solid-${r}`} cx={CENTER_X} cy={CENTER_Y} r={r} stroke="var(--color-gold)" strokeOpacity="0.4" />
+          ))}
+
+          {DASHED_RING_RADII.map((r) => (
+            <circle
+              key={`dashed-${r}`}
+              cx={CENTER_X}
+              cy={CENTER_Y}
+              r={r}
+              stroke="var(--color-gold)"
+              strokeDasharray="9 10"
+              strokeLinecap="round"
+            />
+          ))}
+
+          {MOON_GLYPHS.map((moon, i) =>
+            moon.variant === "crescent" ? (
+              <path
+                key={i}
+                d={`M ${moon.cx} ${moon.cy - moon.r}
+                    A ${moon.r} ${moon.r} 0 1 0 ${moon.cx} ${moon.cy + moon.r}
+                    A ${moon.r * 0.62} ${moon.r} 0 1 1 ${moon.cx} ${moon.cy - moon.r}
+                    Z`}
+                fill="var(--color-gold)"
+              />
+            ) : (
+              <g key={i}>
+                <circle cx={moon.cx} cy={moon.cy} r={moon.r} stroke="var(--color-gold)" />
+                <path
+                  d={`M ${moon.cx} ${moon.cy - moon.r} A ${moon.r} ${moon.r} 0 0 1 ${moon.cx} ${moon.cy + moon.r} Z`}
+                  fill="var(--color-gold)"
+                />
+              </g>
+            ),
+          )}
+        </g>
+
+        {/* The dotted ring inside Vector 2 spins counter to everything else. */}
+        <circle
+          className={styles.spinCounterClockwise}
+          style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}
+          cx={CENTER_X}
+          cy={CENTER_Y}
+          r={DOTTED_RING_RADIUS}
+          stroke="var(--color-gold)"
+          strokeDasharray="0.1 3.6"
+          strokeLinecap="round"
+        />
+      </g>
+
+      {/* Ellipse 7 and Ellipse 10 — fixed moons, do not orbit or spin. */}
+      <circle cx={ellipse7.cx} cy={ellipse7.cy} r={ellipse7.r} fill="var(--color-gold)" />
+      <circle cx={ellipse10.cx} cy={ellipse10.cy} r={ellipse10.r} fill="var(--color-gold-light)" />
+
+      {/* Ellipse 8 orbits clockwise, Ellipse 9 orbits counter-clockwise, each on its own ring. */}
+      <g className={styles.orbitClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
+        <circle
+          cx={CENTER_X + ellipse8Orbit.r}
+          cy={CENTER_Y}
+          r={ELLIPSE_R}
+          fill="var(--color-gold-light)"
+          transform={`rotate(${ellipse8Orbit.startAngle} ${CENTER_X} ${CENTER_Y})`}
+        />
+      </g>
+      <g className={styles.orbitCounterClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
+        <circle
+          cx={CENTER_X + ellipse9Orbit.r}
+          cy={CENTER_Y}
+          r={ELLIPSE9_R}
+          fill="var(--color-gold)"
+          transform={`rotate(${ellipse9Orbit.startAngle} ${CENTER_X} ${CENTER_Y})`}
+        />
+      </g>
+    </svg>
+  );
+}
