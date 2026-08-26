@@ -18,6 +18,10 @@
   animation: constellationSpin var(--constellation-spin-duration) linear infinite;
 }
 
+.spinCounterClockwise {
+  animation: constellationSpinReverse var(--constellation-ring-spin-duration-reverse) linear infinite;
+}
+
 .orbitClockwise {
   animation: constellationSpin var(--constellation-orbit-duration) linear infinite;
 }
@@ -57,6 +61,7 @@
 @media (prefers-reduced-motion: reduce) {
   .glow,
   .spinClockwise,
+  .spinCounterClockwise,
   .orbitClockwise,
   .orbitCounterClockwise {
     animation: none;

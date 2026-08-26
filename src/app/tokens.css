@@ -87,6 +87,7 @@
 
   /* ---- Effects: categories constellation pattern rotation (node-id=1494-744) ---- */
   --constellation-spin-duration: 120s;
+  --constellation-ring-spin-duration-reverse: 95s;
   --constellation-orbit-duration: 70s;
   --constellation-orbit-duration-reverse: 55s;
 

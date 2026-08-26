@@ -16,8 +16,11 @@ const CONSTELLATION_PATH =
 /** Ring radii for Vector 2's solid concentric circles, outermost first. */
 const SOLID_RING_RADII = [510.75, 407.1, 380.06, 350.01, 304.95];
 
-/** Ring radii for Vector 2's dashed circles (longer marks) that spin with the rest of the pattern. */
-const DASHED_RING_RADII = [286.22, 449.25];
+/** Ring radius for Vector 2's dashed circle (longer marks) that spins clockwise with the rest of the pattern. */
+const DASHED_RING_RADIUS = 449.25;
+
+/** The dashed ring that carries a crescent glyph — stays fixed in place instead of spinning. */
+const STATIC_DASHED_RING_RADIUS = 286.22;
 
 /** The dashed ring Ellipse 10 rides on — stays fixed in place instead of spinning. */
 const ELLIPSE_10_RING_RADIUS = 477.04;
@@ -27,12 +30,14 @@ const ELLIPSE_7_RING_RADIUS = 226.13;
 
 type Glyph = { cx: number; cy: number; r: number; variant: "crescentCutout" | "half" | "outline" };
 
-/** Glyphs riding the two dashed rings that spin with the rest of Vector 2. */
+/** Glyphs riding the ring that spins clockwise with the rest of Vector 2. */
 const SPINNING_GLYPHS: Glyph[] = [
-  { cx: 641.03, cy: 504.9, r: 15.87, variant: "crescentCutout" },
   { cx: 741.68, cy: 1189.9, r: 15.77, variant: "outline" },
   { cx: 1120.23, cy: 1045.69, r: 26.29, variant: "outline" },
 ];
+
+/** Crescent-moon glyph riding the dashed ring that stays fixed (does not spin). */
+const STATIC_SPIN_GLYPHS: Glyph[] = [{ cx: 641.03, cy: 504.9, r: 15.87, variant: "crescentCutout" }];
 
 /** Glyphs riding the dashed ring that carries Ellipse 10 — stay fixed with it. */
 const STATIC_GLYPHS: Glyph[] = [
@@ -42,28 +47,36 @@ const STATIC_GLYPHS: Glyph[] = [
 
 function renderGlyph(glyph: Glyph, key: number | string) {
   switch (glyph.variant) {
-    case "crescentCutout":
-      return (
+   case "crescentCutout":
+    return (
+      <g key={key}>
+        <defs>
+          <clipPath id={`clip-${key}`}>
+            <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} strokeWidth={1.5} />
+          </clipPath>
+        </defs>
+        <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" />
         <path
           key={key}
-          fillRule="evenodd"
-          d={`M ${glyph.cx} ${glyph.cy - glyph.r} A ${glyph.r} ${glyph.r} 0 1 0 ${glyph.cx} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 1 0 ${glyph.cx} ${glyph.cy - glyph.r} Z
-              M ${glyph.cx} ${glyph.cy - glyph.r} A ${glyph.r * 0.62} ${glyph.r} 0 0 0 ${glyph.cx} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 0 0 ${glyph.cx} ${glyph.cy - glyph.r} Z`}
+          d={`M ${glyph.cx + glyph.r * 0.38} ${glyph.cy - glyph.r} A ${glyph.r * 0.62} ${glyph.r} 0 0 1 ${glyph.cx + glyph.r * 0.38} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 0 1 ${glyph.cx + glyph.r * 0.38} ${glyph.cy - glyph.r} Z`}
           fill="var(--color-gold)"
+          clipPath={`url(#clip-${key})`}
         />
-      );
+      </g>
+    );
     case "half":
       return (
         <g key={key}>
-          <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" />
+          <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" strokeWidth={1.5} />
           <path
-            d={`M ${glyph.cx} ${glyph.cy - glyph.r} A ${glyph.r} ${glyph.r} 0 0 1 ${glyph.cx} ${glyph.cy + glyph.r} Z`}
+            key={key}
+            d={`M ${glyph.cx} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 0 1 ${glyph.cx} ${glyph.cy - glyph.r} Z`}
             fill="var(--color-gold)"
           />
         </g>
       );
     case "outline":
-      return <circle key={key} cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" />;
+      return <circle key={key} cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" strokeWidth={1.5} />;
   }
 }
 
@@ -111,7 +124,7 @@ export default function ConstellationPattern() {
       </defs>
 
       {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
-      <g className={styles.static} opacity="0.5">
+      <g className={styles.static} opacity="1">
         <path
           d="M481 279.953C328.28 380.661 227.5 553.762 227.5 750.404C227.5 1061.39 479.564 1313.5 790.5 1313.5C1101.44 1313.5 1353.5 1061.39 1353.5 750.404C1353.5 553.762 1252.72 380.661 1100 279.953"
           stroke="url(#constellationFadeOuter)"
@@ -132,11 +145,11 @@ export default function ConstellationPattern() {
 
       <g clipPath="url(#constellationClip)">
         <clipPath id="constellationClip">
-          <circle cx={CENTER_X} cy="744.264" r="522.53" />
+          <circle cx={CENTER_X} cy="744.264" r="522.53" strokeWidth={1.5} />
         </clipPath>
 
         {/* Soft glow, revealed only through the ring/line strokes drawn above it. */}
-        <circle cx={CENTER_X} cy="744.264" r="522.53" fill="url(#constellationGlow)" className={styles.glow} />
+        <circle cx={CENTER_X} cy="744.264" r="522.53" fill="url(#constellationGlow)" className={styles.glow} strokeWidth={1.5} />
 
         {/* Vector 1 + Vector 2 (minus the two rings that carry Ellipse 7 and Ellipse 10) spin together, clockwise. */}
         <g className={styles.spinClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
@@ -159,26 +172,39 @@ export default function ConstellationPattern() {
           })}
 
           {SOLID_RING_RADII.map((r) => (
-            <circle key={`solid-${r}`} cx={CENTER_X} cy={CENTER_Y} r={r} stroke="var(--color-gold)" strokeOpacity="0.4" />
-          ))}
-
-          {DASHED_RING_RADII.map((r) => (
-            <circle
-              key={`dashed-${r}`}
-              cx={CENTER_X}
-              cy={CENTER_Y}
-              r={r}
-              stroke="var(--color-gold)"
-              strokeDasharray="9 10"
-              strokeLinecap="round"
-            />
+            <circle key={`solid-${r}`} cx={CENTER_X} cy={CENTER_Y} r={r} stroke="var(--color-gold)" strokeOpacity="0.4" strokeWidth={1.5} />
           ))}
 
           {SPINNING_GLYPHS.map((glyph, i) => renderGlyph(glyph, i))}
         </g>
 
-        {/* The dotted ring (carrying Ellipse 7) and the dashed ring carrying Ellipse 10
-            stay fixed in place while the rest of Vector 2 spins around them. */}
+        {/* The dotted ring (2nd from outside among dotted/dashed rings) spins counter-clockwise,
+            independently from the rest of Vector 2. */}
+        <g className={styles.spinCounterClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
+          <circle
+            cx={CENTER_X}
+            cy={CENTER_Y}
+            r={DASHED_RING_RADIUS}
+            stroke="var(--color-gold)"
+            strokeDasharray="1.5 15.6"
+            strokeLinecap="round"
+            strokeWidth={1.5}
+          />
+        </g>
+
+        {/* The dashed ring carrying its crescent glyph, the dotted ring (carrying Ellipse 7),
+            and the dashed ring carrying Ellipse 10 all stay fixed in place. */}
+        <circle
+          cx={CENTER_X}
+          cy={CENTER_Y}
+          r={STATIC_DASHED_RING_RADIUS}
+          stroke="var(--color-gold)"
+          strokeDasharray="9 10"
+          strokeLinecap="round"
+          strokeWidth={1.5}
+        />
+        {STATIC_SPIN_GLYPHS.map((glyph, i) => renderGlyph(glyph, `static-spin-${i}`))}
+
         <circle
           cx={CENTER_X}
           cy={CENTER_Y}
@@ -186,6 +212,7 @@ export default function ConstellationPattern() {
           stroke="var(--color-gold)"
           strokeDasharray="0.1 3.6"
           strokeLinecap="round"
+          strokeWidth={1.5}
         />
         <circle
           cx={CENTER_X}
@@ -194,14 +221,15 @@ export default function ConstellationPattern() {
           stroke="var(--color-gold)"
           strokeDasharray="9 10"
           strokeLinecap="round"
+          strokeWidth={1.5}
         />
 
         {STATIC_GLYPHS.map((glyph, i) => renderGlyph(glyph, i))}
       </g>
 
       {/* Ellipse 7 and Ellipse 10 — fixed moons riding on their (now static) rings. */}
-      <circle cx={ellipse7.cx} cy={ellipse7.cy} r={ellipse7.r} fill="var(--color-gold)" />
-      <circle cx={ellipse10.cx} cy={ellipse10.cy} r={ellipse10.r} fill="var(--color-gold-light)" />
+      <circle cx={ellipse7.cx} cy={ellipse7.cy} r={ellipse7.r} fill="var(--color-gold)" strokeWidth={1.5} />
+      <circle cx={ellipse10.cx} cy={ellipse10.cy} r={ellipse10.r} fill="var(--color-gold-light)" strokeWidth={1.5} />
 
       {/* Ellipse 8 orbits clockwise, Ellipse 9 orbits counter-clockwise, each on its own ring. */}
       <g className={styles.orbitClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
@@ -211,6 +239,7 @@ export default function ConstellationPattern() {
           r={ELLIPSE_R}
           fill="var(--color-gold-light)"
           transform={`rotate(${ellipse8Orbit.startAngle} ${CENTER_X} ${CENTER_Y})`}
+          strokeWidth={1.5}
         />
       </g>
       <g className={styles.orbitCounterClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
@@ -220,6 +249,7 @@ export default function ConstellationPattern() {
           r={ELLIPSE9_R}
           fill="var(--color-gold)"
           transform={`rotate(${ellipse9Orbit.startAngle} ${CENTER_X} ${CENTER_Y})`}
+          strokeWidth={1.5}
         />
       </g>
     </svg>
