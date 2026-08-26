@@ -14,7 +14,6 @@ export interface CategoryPageViewProps {
   current: CategoryNode;
   /** The top-level category name, shown in TopBlock's "Category: X" label regardless of depth. */
   topLevelCategory: CategoryNode;
-  /** Slug path to the currently viewed node. */
   path: string[];
   returnHref: string;
   returnLabel: string;
@@ -26,7 +25,7 @@ export default function CategoryPageView({
   current,
   topLevelCategory,
   path,
-  returnHref,
+  returnHref, 
   returnLabel,
 }: CategoryPageViewProps) {
   return (
