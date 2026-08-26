@@ -10,6 +10,18 @@ import styles from "./ConstellationPattern.module.css";
 const CENTER_X = 790.5;
 const CENTER_Y = 744.5;
 
+/**
+ * Soft elliptical hole cut behind the title/description text (.titleWrap in
+ * CategoryHeroSection), so the animated rings/moons don't clash with the copy.
+ * Position/size are derived from .titleWrap's on-screen box relative to this
+ * SVG's origin (measured at the default viewport; the mask is defined in the
+ * SVG's own coordinate space so it scales together with the pattern).
+ */
+const TITLE_CUTOUT_X = 786;
+const TITLE_CUTOUT_Y = 210;
+const TITLE_CUTOUT_RX = 960;
+const TITLE_CUTOUT_RY = 310;
+
 const CONSTELLATION_PATH =
   "M796.508 323.135L845.33 398.996M845.33 398.996L793.504 428.288L842.325 441.057L845.33 398.996ZM957.995 421.529L976.772 447.817M976.772 447.817L1011.32 429.04M976.772 447.817L980.528 487.625M980.528 487.625L1011.32 481.616L1049.63 489.879M980.528 487.625L976.772 519.922V552.971M1202.1 607.05L1192.34 592.779L1161.54 607.05L1153.28 623.574M1153.28 623.574L1166.05 643.854L1161.54 673.898L1072.91 633.338L1018.08 623.574L1079.67 607.05L1153.28 623.574ZM1102.96 758.021L1133 795.575M1133 795.575L1063.15 817.357M1133 795.575L1154.03 809.095L1204.35 823.366M1006.06 990.861L1048.13 963.821L1067.65 944.293M1067.65 944.293L1105.21 936.031L1123.24 924.764M1067.65 944.293L1033.86 931.524L991.043 970.581M906.92 1029.92L903.916 1098.56L906.92 1107.71M906.92 1107.71L926.448 1092.61L960.999 1029.92M906.92 1107.71L898.658 1128.31L918.937 1156.68L898.658 1168.12M700.368 1141.08L724.403 1127.56L782.238 1064.47M637.276 1003.63L566.672 1060.71L562.917 1097.52L553.904 1101.27L550.899 1127.56L525.362 1066.72L532.873 1029.92L493.065 1024.66L496.069 1003.63M378.147 969.83L469.781 938.284L475.039 918.756M475.039 918.756H487.807L480.296 875.192M475.039 918.756L441.239 907.489L390.916 892.467M480.296 875.192L452.506 862.423L445.746 824.117L457.763 818.108L499.825 862.423L480.296 875.192ZM402.182 565.739L427.719 562.735L455.51 585.268M455.51 585.268H495.318M455.51 585.268L444.243 607.05M495.318 585.268L492.314 552.22L508.087 534.193M495.318 585.268L517.851 619.067M508.087 534.193H548.646V549.215L508.087 534.193ZM508.087 534.193L495.318 514.665M621.163 411.764L640.28 425.274L653.049 434.297L625.258 483.119M621.163 411.764L596.716 394.489L616.996 358.436L650.044 365.947L621.163 411.764ZM640.28 425.274L673.328 417.022M375.894 641.6V727.226L422.462 755.016L496.82 739.994L395.422 675.4L375.894 641.6Z";
 
@@ -121,6 +133,22 @@ export default function ConstellationPattern() {
           <stop offset="0.35" stopColor="var(--color-gold)" stopOpacity="0.18" />
           <stop offset="0.502" stopColor="var(--color-gold)" stopOpacity="0" />
         </radialGradient>
+
+        {/*
+          Cuts a soft hole behind the title/description block so the animated rings and
+          moons don't visually clash with the text. Sized/positioned in the SVG's own
+          coordinate space to line up with .titleWrap, which sits near CENTER_X at the
+          top of the pattern. Applied as a mask on the whole pattern (not on the animated
+          groups) so the hole itself stays fixed while spinning elements fade underneath it.
+        */}
+        <radialGradient id="titleCutoutMask" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${TITLE_CUTOUT_X} ${TITLE_CUTOUT_Y}) scale(${TITLE_CUTOUT_RX} ${TITLE_CUTOUT_RY})`}>
+          <stop offset="0" stopColor="#000000" />
+          <stop offset="0.25" stopColor="#000000" />
+          <stop offset="1" stopColor="#ffffff" />
+        </radialGradient>
+        <mask id="titleCutout" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="764">
+          <rect x="0" y="0" width="1580" height="764" fill="url(#titleCutoutMask)" />
+        </mask>
       </defs>
 
       {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
@@ -142,6 +170,9 @@ export default function ConstellationPattern() {
           strokeLinecap="round"
         />
       </g>
+
+      <g mask="url(#titleCutout)">
+      
 
       <g clipPath="url(#constellationClip)">
         <clipPath id="constellationClip">
@@ -251,6 +282,7 @@ export default function ConstellationPattern() {
           transform={`rotate(${ellipse9Orbit.startAngle} ${CENTER_X} ${CENTER_Y})`}
           strokeWidth={1.5}
         />
+      </g>
       </g>
     </svg>
   );
