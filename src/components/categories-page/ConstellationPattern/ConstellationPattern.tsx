@@ -62,14 +62,25 @@ const STATIC_GLYPHS: Glyph[] = [
  * drawn underneath (and sharing this mask) don't show through the glyphs riding on them.
  * The hole radius is padded slightly beyond glyph.r so the ring's stroke width is fully
  * cleared, not just clipped at the glyph's center line.
+ *
+ * `spinClassName` optionally wraps the holes in a group carrying a rotation animation,
+ * so that once composed with the ambient rotation of whatever masked element references
+ * this mask, the hole lands at — and tracks — the glyph's absolute position. The caller
+ * is responsible for picking a rotation that actually cancels/adds correctly against
+ * that ambient transform (see spinningGlyphsDashedRingHoleMask's "beat rate" below).
  */
-function renderGlyphHoleMask(id: string, glyphs: Glyph[]) {
+function renderGlyphHoleMask(id: string, glyphs: Glyph[], spinClassName?: string) {
+  const holes = glyphs.map((glyph, i) => <circle key={i} cx={glyph.cx} cy={glyph.cy} r={glyph.r + 1.5} fill="#000000" />);
   return (
     <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1580">
       <rect x="0" y="0" width="1580" height="1580" fill="#ffffff" />
-      {glyphs.map((glyph, i) => (
-        <circle key={i} cx={glyph.cx} cy={glyph.cy} r={glyph.r + 1.5} fill="#000000" />
-      ))}
+      {spinClassName ? (
+        <g className={spinClassName} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
+          {holes}
+        </g>
+      ) : (
+        holes
+      )}
     </mask>
   );
 }
@@ -175,6 +186,17 @@ export default function ConstellationPattern() {
         */}
         {renderGlyphHoleMask("spinningGlyphsHoleMask", SPINNING_GLYPHS)}
         {renderGlyphHoleMask("staticGlyphsHoleMask", [...STATIC_SPIN_GLYPHS, ...STATIC_GLYPHS])}
+        {/*
+          SPINNING_GLYPHS also visually ride the dashed ring, which spins counter-clockwise
+          in its own group — independently of the glyphs' clockwise frame. This mask is
+          referenced from a circle nested inside that counter-clockwise group, so its content
+          renders in that group's rotated coordinate space. To land the hole at the glyphs'
+          absolute (clockwise) position despite that, its holes spin clockwise at the "beat"
+          rate between the two frames (1 / (1/spinDuration + 1/ringSpinDurationReverse)) —
+          the rotation needed to cancel the ambient counter-clockwise spin and add the
+          glyphs' own clockwise spin on top, not the glyphs' plain spin rate.
+        */}
+        {renderGlyphHoleMask("spinningGlyphsDashedRingHoleMask", SPINNING_GLYPHS, styles.spinClockwiseRelativeToCounterRing)}
       </defs>
 
       {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
@@ -248,6 +270,7 @@ export default function ConstellationPattern() {
             strokeDasharray="1.5 15.6"
             strokeLinecap="round"
             strokeWidth={1.5}
+            mask="url(#spinningGlyphsDashedRingHoleMask)"
           />
         </g>
 

@@ -99,6 +99,12 @@
   --constellation-ring-spin-duration-reverse: 95s;
   --constellation-orbit-duration: 70s;
   --constellation-orbit-duration-reverse: 55s;
+  /*
+   * "Beat" period between --constellation-spin-duration (120s) and
+   * --constellation-ring-spin-duration-reverse (95s): 1 / (1/120 + 1/95).
+   * Update this if either of those two durations changes.
+   */
+  --constellation-spin-relative-to-counter-ring-duration: 53.023s;
 
   /* ---- Radii ---- */
   --radius-page: 50px;

@@ -22,6 +22,17 @@
   animation: constellationSpinReverse var(--constellation-ring-spin-duration-reverse) linear infinite;
 }
 
+/*
+ * Counter-rotates at the "beat" rate between the clockwise glyph frame and the
+ * counter-clockwise ring frame: 1 / (1/spinDuration + 1/ringSpinDurationReverse).
+ * Used to move a mask hole that lives inside the counter-clockwise ring's own local
+ * space so that, once composed with that ring's ambient rotation, the hole's absolute
+ * position matches the clockwise-spinning glyph it needs to stay under.
+ */
+.spinClockwiseRelativeToCounterRing {
+  animation: constellationSpin var(--constellation-spin-relative-to-counter-ring-duration) linear infinite;
+}
+
 .orbitClockwise {
   animation: constellationSpin var(--constellation-orbit-duration) linear infinite;
 }
@@ -62,6 +73,7 @@
   .glow,
   .spinClockwise,
   .spinCounterClockwise,
+  .spinClockwiseRelativeToCounterRing,
   .orbitClockwise,
   .orbitCounterClockwise {
     animation: none;
