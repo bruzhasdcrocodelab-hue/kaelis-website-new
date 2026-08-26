@@ -241,7 +241,7 @@ export default function ConstellationPattern() {
           cy={CENTER_Y}
           r={ELLIPSE_7_RING_RADIUS}
           stroke="var(--color-gold)"
-          strokeDasharray="0.1 3.6"
+          strokeDasharray="9 10"
           strokeLinecap="round"
           strokeWidth={1.5}
         />
