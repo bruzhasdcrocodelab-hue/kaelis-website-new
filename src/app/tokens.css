@@ -85,6 +85,15 @@
   --pattern-pulse-opacity-max: 1;
   --pattern-pulse-opacity-min: 0.82;
 
+    /* ---- Effects: subcategory node hover/idle float + icon pulse animation ---- */
+  --node-float-duration: 6s;
+  --node-float-distance: 10px;
+  --node-icon-pulse-duration: 2.2s;
+  --node-icon-pulse-scale-min: 0.92;
+  --node-icon-pulse-scale-max: 1.08;
+  --node-icon-pulse-opacity-min: 0.55;
+  --node-icon-pulse-opacity-max: 1;
+
   /* ---- Effects: categories constellation pattern rotation (node-id=1494-744) ---- */
   --constellation-spin-duration: 120s;
   --constellation-ring-spin-duration-reverse: 95s;

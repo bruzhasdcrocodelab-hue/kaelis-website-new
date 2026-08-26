@@ -1,27 +1,72 @@
 .node {
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
+  display: block;
   width: 88px;
   transform: translateX(-50%);
   text-decoration: none;
   transition:
     opacity 0.2s ease,
-    transform 0.2s ease;
+    translate 0.2s ease;
 }
 
 .node:hover {
   opacity: 0.85;
-  transform: translateX(-50%) translateY(-2px);
+  translate: 0 -2px;
+}
+
+.float {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  animation: nodeFloat var(--node-float-duration) ease-in-out infinite;
+  animation-delay: var(--node-float-delay, 0s);
 }
 
 .icon {
   flex-shrink: 0;
+  animation: nodeIconPulse var(--node-icon-pulse-duration, 2.2s) ease-in-out infinite;
+  animation-delay: var(--node-icon-pulse-delay, 0s);
 }
 
 .label {
   color: var(--color-white);
   text-align: center;
+}
+
+@keyframes nodeFloat {
+  0% {
+    translate: 0 0;
+  }
+  25% {
+    translate: var(--node-float-distance) 0;
+  }
+  50% {
+    translate: calc(var(--node-float-distance) * 0.5) var(--node-float-distance);
+  }
+  75% {
+    translate: calc(var(--node-float-distance) * -0.5) calc(var(--node-float-distance) * 0.5);
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes nodeIconPulse {
+  0%,
+  100% {
+    scale: var(--node-icon-pulse-scale-min);
+    opacity: var(--node-icon-pulse-opacity-min);
+  }
+  50% {
+    scale: var(--node-icon-pulse-scale-max);
+    opacity: var(--node-icon-pulse-opacity-max);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float,
+  .icon {
+    animation: none;
+  }
 }
