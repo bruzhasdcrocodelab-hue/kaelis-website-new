@@ -37,6 +37,7 @@
 
   /* ---- Colors: Gold ---- */
   --color-gold: #f5d0b0;
+  --color-gold-light: #ffd8a2;
 
   /* ---- Gradients ---- */
   --gradient-pink:
@@ -83,6 +84,12 @@
   --pattern-pulse-duration: 5s;
   --pattern-pulse-opacity-max: 1;
   --pattern-pulse-opacity-min: 0.82;
+
+  /* ---- Effects: categories constellation pattern rotation (node-id=1494-744) ---- */
+  --constellation-spin-duration: 120s;
+  --constellation-ring-spin-duration-reverse: 95s;
+  --constellation-orbit-duration: 70s;
+  --constellation-orbit-duration-reverse: 55s;
 
   /* ---- Radii ---- */
   --radius-page: 50px;
@@ -163,6 +170,7 @@
   --color-black-7: var(--color-black-7);
 
   --color-gold: var(--color-gold);
+  --color-gold-light: var(--color-gold-light);
 
   --font-heading: var(--font-bona-nova-sc);
   --font-sans: var(--font-instrument-sans);
