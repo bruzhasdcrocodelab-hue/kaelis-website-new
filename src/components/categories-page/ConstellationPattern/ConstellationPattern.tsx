@@ -57,6 +57,23 @@ const STATIC_GLYPHS: Glyph[] = [
   { cx: 1027.1, cy: 332.15, r: 15.77, variant: "outline" },
 ];
 
+/**
+ * Builds a mask that punches a solid hole for each glyph's circle, so ring/spoke strokes
+ * drawn underneath (and sharing this mask) don't show through the glyphs riding on them.
+ * The hole radius is padded slightly beyond glyph.r so the ring's stroke width is fully
+ * cleared, not just clipped at the glyph's center line.
+ */
+function renderGlyphHoleMask(id: string, glyphs: Glyph[]) {
+  return (
+    <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1580">
+      <rect x="0" y="0" width="1580" height="1580" fill="#ffffff" />
+      {glyphs.map((glyph, i) => (
+        <circle key={i} cx={glyph.cx} cy={glyph.cy} r={glyph.r + 1.5} fill="#000000" />
+      ))}
+    </mask>
+  );
+}
+
 function renderGlyph(glyph: Glyph, key: number | string) {
   switch (glyph.variant) {
    case "crescentCutout":
@@ -64,10 +81,10 @@ function renderGlyph(glyph: Glyph, key: number | string) {
       <g key={key}>
         <defs>
           <clipPath id={`clip-${key}`}>
-            <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} strokeWidth={1.5} />
+            <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} strokeWidth={1.8} />
           </clipPath>
         </defs>
-        <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" />
+        <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} strokeWidth={1.8} stroke="var(--color-gold)" />
         <path
           key={key}
           d={`M ${glyph.cx + glyph.r * 0.38} ${glyph.cy - glyph.r} A ${glyph.r * 0.62} ${glyph.r} 0 0 1 ${glyph.cx + glyph.r * 0.38} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 0 1 ${glyph.cx + glyph.r * 0.38} ${glyph.cy - glyph.r} Z`}
@@ -79,7 +96,7 @@ function renderGlyph(glyph: Glyph, key: number | string) {
     case "half":
       return (
         <g key={key}>
-          <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" strokeWidth={1.5} />
+          <circle cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" strokeWidth={1.8} />
           <path
             key={key}
             d={`M ${glyph.cx} ${glyph.cy + glyph.r} A ${glyph.r} ${glyph.r} 0 0 1 ${glyph.cx} ${glyph.cy - glyph.r} Z`}
@@ -88,7 +105,7 @@ function renderGlyph(glyph: Glyph, key: number | string) {
         </g>
       );
     case "outline":
-      return <circle key={key} cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" strokeWidth={1.5} />;
+      return <circle key={key} cx={glyph.cx} cy={glyph.cy} r={glyph.r} stroke="var(--color-gold)" strokeWidth={1.8} />;
   }
 }
 
@@ -149,6 +166,15 @@ export default function ConstellationPattern() {
         <mask id="titleCutout" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="764">
           <rect x="0" y="0" width="1580" height="764" fill="url(#titleCutoutMask)" />
         </mask>
+
+        {/*
+          Punch a hole in the ring/spoke strokes wherever a glyph rides on them, so the
+          ring line isn't visible cutting through the glyph's circle. Each mask lives in
+          the same rotating frame as the glyphs it covers, so the hole tracks the glyph
+          exactly as it animates.
+        */}
+        {renderGlyphHoleMask("spinningGlyphsHoleMask", SPINNING_GLYPHS)}
+        {renderGlyphHoleMask("staticGlyphsHoleMask", [...STATIC_SPIN_GLYPHS, ...STATIC_GLYPHS])}
       </defs>
 
       {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
@@ -184,27 +210,29 @@ export default function ConstellationPattern() {
 
         {/* Vector 1 + Vector 2 (minus the two rings that carry Ellipse 7 and Ellipse 10) spin together, clockwise. */}
         <g className={styles.spinClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
-          <path d={CONSTELLATION_PATH} stroke="var(--color-gold)" />
+          <g mask="url(#spinningGlyphsHoleMask)">
+            <path d={CONSTELLATION_PATH} stroke="var(--color-gold)" />
 
-          {Array.from({ length: SPOKE_COUNT }, (_, i) => {
-            const angle = (i * 360) / SPOKE_COUNT;
-            return (
-              <line
-                key={`spoke-${i}`}
-                x1={CENTER_X}
-                y1={CENTER_Y}
-                x2={CENTER_X + SPOKE_RADIUS}
-                y2={CENTER_Y}
-                stroke="var(--color-gold)"
-                strokeOpacity="0.25"
-                transform={`rotate(${angle} ${CENTER_X} ${CENTER_Y})`}
-              />
-            );
-          })}
+            {Array.from({ length: SPOKE_COUNT }, (_, i) => {
+              const angle = (i * 360) / SPOKE_COUNT;
+              return (
+                <line
+                  key={`spoke-${i}`}
+                  x1={CENTER_X}
+                  y1={CENTER_Y}
+                  x2={CENTER_X + SPOKE_RADIUS}
+                  y2={CENTER_Y}
+                  stroke="var(--color-gold)"
+                  strokeOpacity="0.25"
+                  transform={`rotate(${angle} ${CENTER_X} ${CENTER_Y})`}
+                />
+              );
+            })}
 
-          {SOLID_RING_RADII.map((r) => (
-            <circle key={`solid-${r}`} cx={CENTER_X} cy={CENTER_Y} r={r} stroke="var(--color-gold)" strokeOpacity="0.4" strokeWidth={1.5} />
-          ))}
+            {SOLID_RING_RADII.map((r) => (
+              <circle key={`solid-${r}`} cx={CENTER_X} cy={CENTER_Y} r={r} stroke="var(--color-gold)" strokeOpacity="0.4" strokeWidth={1.5} />
+            ))}
+          </g>
 
           {SPINNING_GLYPHS.map((glyph, i) => renderGlyph(glyph, i))}
         </g>
@@ -225,36 +253,38 @@ export default function ConstellationPattern() {
 
         {/* The dashed ring carrying its crescent glyph, the dotted ring (carrying Ellipse 7),
             and the dashed ring carrying Ellipse 10 all stay fixed in place. */}
-        <circle
-          cx={CENTER_X}
-          cy={CENTER_Y}
-          r={STATIC_DASHED_RING_RADIUS}
-          stroke="var(--color-gold)"
-          strokeDasharray="9 10"
-          strokeLinecap="round"
-          strokeWidth={1.5}
-        />
+        <g mask="url(#staticGlyphsHoleMask)">
+          <circle
+            cx={CENTER_X}
+            cy={CENTER_Y}
+            r={STATIC_DASHED_RING_RADIUS}
+            stroke="var(--color-gold)"
+            strokeDasharray="9 10"
+            strokeLinecap="round"
+            strokeWidth={1.5}
+          />
+
+          <circle
+            cx={CENTER_X}
+            cy={CENTER_Y}
+            r={ELLIPSE_7_RING_RADIUS}
+            stroke="var(--color-gold)"
+            strokeDasharray="9 10"
+            strokeLinecap="round"
+            strokeWidth={1.5}
+          />
+          <circle
+            cx={CENTER_X}
+            cy={CENTER_Y}
+            r={ELLIPSE_10_RING_RADIUS}
+            stroke="var(--color-gold)"
+            strokeDasharray="9 10"
+            strokeLinecap="round"
+            strokeWidth={1.5}
+          />
+        </g>
+
         {STATIC_SPIN_GLYPHS.map((glyph, i) => renderGlyph(glyph, `static-spin-${i}`))}
-
-        <circle
-          cx={CENTER_X}
-          cy={CENTER_Y}
-          r={ELLIPSE_7_RING_RADIUS}
-          stroke="var(--color-gold)"
-          strokeDasharray="9 10"
-          strokeLinecap="round"
-          strokeWidth={1.5}
-        />
-        <circle
-          cx={CENTER_X}
-          cy={CENTER_Y}
-          r={ELLIPSE_10_RING_RADIUS}
-          stroke="var(--color-gold)"
-          strokeDasharray="9 10"
-          strokeLinecap="round"
-          strokeWidth={1.5}
-        />
-
         {STATIC_GLYPHS.map((glyph, i) => renderGlyph(glyph, i))}
       </g>
 
