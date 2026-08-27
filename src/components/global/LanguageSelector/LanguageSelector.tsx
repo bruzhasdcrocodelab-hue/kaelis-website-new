@@ -63,6 +63,10 @@ export default function LanguageSelector({ locale }: LanguageSelectorProps) {
         animate={{ borderRadius: open ? 12 : 30 }}
         transition={TRANSITION}
         role={open ? "listbox" : undefined}
+        style={{
+          backdropFilter: "blur(12.5px)",
+          WebkitBackdropFilter: "blur(12.5px)",
+        }}
       >
         {(open ? LOCALE_ORDER : [locale]).map((item, index) => {
           const isActive = item === locale;

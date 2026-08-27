@@ -218,7 +218,13 @@ export default function RevealCardsStep({
               sizes="226px"
               className={styles.cardDetailArtFrame}
             />
-            <p className={`font-instrument-base ${styles.cardDetailArtLabel}`}>
+            <p
+              className={`font-instrument-base ${styles.cardDetailArtLabel}`}
+              style={{
+                backdropFilter: "blur(12.5px)",
+                WebkitBackdropFilter: "blur(12.5px)",
+              }}
+            >
               {selectedCard.name[locale]}
             </p>
           </motion.div>
@@ -242,7 +248,13 @@ export default function RevealCardsStep({
               sizes="226px"
               className={styles.cardDetailInfoBg}
             />
-            <p className={`font-instrument-sm ${styles.cardDetailInfoText}`}>
+            <p
+              className={`font-instrument-sm ${styles.cardDetailInfoText}`}
+              style={{
+                backdropFilter: "blur(12.5px)",
+                WebkitBackdropFilter: "blur(12.5px)",
+              }}
+            >
               {dictionary.cardDescription}
             </p>
           </motion.div>

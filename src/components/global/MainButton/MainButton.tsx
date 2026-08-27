@@ -114,6 +114,7 @@ export default function MainButton({
   children,
   className,
   type = "button",
+  style,
   ...rest
 }: MainButtonProps) {
   const hasLabel = children != null;
@@ -150,6 +151,12 @@ export default function MainButton({
     .filter(Boolean)
     .join(" ");
 
+  const blurStyle = {
+    backdropFilter: "blur(12.5px)",
+    WebkitBackdropFilter: "blur(12.5px)",
+    ...style,
+  };
+
   const content = (
     <>
       {hasLabel && (
@@ -165,14 +172,14 @@ export default function MainButton({
 
   if (href) {
     return (
-      <Link href={href} className={buttonClasses}>
+      <Link href={href} className={buttonClasses} style={blurStyle}>
         {content}
       </Link>
     );
   }
 
   return (
-    <button type={type} className={buttonClasses} {...rest}>
+    <button type={type} className={buttonClasses} style={blurStyle} {...rest}>
       {content}
     </button>
   );
