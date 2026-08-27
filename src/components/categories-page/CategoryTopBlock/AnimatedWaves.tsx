@@ -4,62 +4,69 @@ import { useId, useMemo, type CSSProperties } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 /**
- * "Running waves" effect — a narrow wavy ribbon pulled endlessly along a fixed
- * diagonal, one per top corner of the panel.
+ * "Running waves" effect — a narrow wavy ribbon running endlessly along a fixed
+ * diagonal, one per top corner of the panel, matching
+ * `public/images/backgrounds/waves-3.svg`.
  *
- * `public/images/backgrounds/waves-3.svg` puts a slim wavy band in each top
- * corner, lying on the diagonal that runs from near the top-centre out to the
- * lower outer corner. The ribbon's shape is authored in a LOCAL FRAME whose +y
- * axis is that diagonal, then rotated + translated into place. The animation
- * slides the ribbon along its own +y, so the waves travel down-and-outward
- * along the diagonal (not straight down). The right ribbon is the exact mirror
- * of the left about the panel's vertical centre — same position, shape and
- * motion, flipped.
+ * FRAME. Each ribbon is authored in a LOCAL frame: +y runs down the diagonal
+ * (top-centre -> lower outer corner), x is across the band. That frame is
+ * rotated + translated into place; the right ribbon is the exact mirror of the
+ * left about the panel's vertical centre.
  *
- * One wavelength of the ribbon edge is a tile: the edge is a single periodic
- * wave, so advancing exactly one wavelength lands the ribbon on a pixel-perfect
- * copy of itself and the loop is seamless.
+ * SEAMLESS LOOP. The band's centre-line is a periodic wave of wavelength
+ * WAVE_LENGTH. The animation advances the wave's PHASE by one full period; since
+ * the wave (and everything derived from it) is exactly periodic, phase 0 and
+ * phase 2*pi draw the identical shape, so the loop has no seam. The path is a
+ * mask, redrawn from ~1 period of pre-sampled phase keyframes that `motion`
+ * interpolates — cheap, and any sub-pixel interpolation error is invisible
+ * through a mask.
  *
- * The ribbon is a MASK over a STATIONARY gradient <rect>; the gradient vector
- * is aimed along the same diagonal (mirrored per side) so the colour falloff
- * follows the ribbon, and it never moves while the waves run under it. Only one
- * CSS transform animates — no per-frame path recalculation.
+ * PERSPECTIVE TAPER. The band's half-width is a function of screen position
+ * along the diagonal — small near the top-centre, full toward the outer edge.
+ * Because the taper is baked into the (fixed-in-screen) path geometry rather
+ * than layered as a clip, the band is genuinely squeezed, not cut. And because
+ * the taper depends on screen y (not on the scrolling phase) it stays put while
+ * the waves run under it, and it does not affect periodicity: at any fixed
+ * screen y the half-width is the same on every loop.
  */
 
 // waves-3.svg viewBox.
 const VIEW_W = 1320;
 const VIEW_H = 440;
 
-// --- ribbon geometry, in the local diagonal frame (x = across, y = along) ---
-// Both long edges share ONE periodic wave in phase, so the band keeps a
-// constant width and just snakes — a smooth serpentine, no lumps.
+// --- ribbon centre-line wave, in the local diagonal frame (x across, y along) ---
 const WAVE_LENGTH = 340;
 const WAVE_AMPLITUDE = 20;
-const WAVE_HARMONIC_AMPLITUDE = 20;
-const RIBBON_WIDTH = 86;
+const WAVE_HARMONIC_AMPLITUDE = 15;
 
-// Angle of the local +y axis, clockwise from straight down, for the LEFT
-// ribbon. SVG rotate() is clockwise, so a POSITIVE angle swings the downward
-// axis toward the lower-LEFT corner — the ribbon enters at the top edge near
-// centre and sweeps out through the left edge, hugging the corner along the
-// reference diagonal. The right ribbon mirrors it.
+// --- band width + perspective taper (both in the local frame) ---
+// Half-width near the narrow (top-centre) end and out toward the wide edge.
+const HALF_NARROW = 36;
+const HALF_WIDE = 86;
+// Local-y span over which the half-width eases from narrow to wide. The visible
+// diagonal of the left ribbon runs from y ~= 0 (top edge) to y ~= 280 (exits
+// the panel side), so the ramp resolves within that.
+const TAPER_START_Y = -10;
+const TAPER_END_Y = 310;
+
+// Angle of the local +y axis, clockwise from straight down (SVG rotate() is
+// clockwise), for the LEFT ribbon; positive swings the axis toward the
+// lower-left corner. The right ribbon mirrors it.
 const DIAGONAL_ANGLE_DEG = 56;
 
-// The LEFT ribbon's local origin in SVG space: right at the top edge, offset in
-// from the outer corner. The diagonal axis runs down-and-left from here.
+// LEFT ribbon's local origin in SVG space: at the top edge, in from the corner.
 const ORIGIN_X = 230;
 const ORIGIN_Y = -10;
 
-// The ribbon must always cover the whole visible diagonal at EVERY point in the
-// loop cycle. The mask slides its local y by +WAVE_LENGTH each loop, so the
-// ribbon's trailing (top) end retreats by one wavelength — it needs a few
-// wavelengths of lead-in above the origin, and plenty of run-out past where the
-// diagonal leaves the panel. All in whole wavelengths so the wave stays
-// periodic and the wrap is seamless.
-const LEAD_TILES = 3; // wavelengths of ribbon above the origin
-const RUNOUT_TILES = 8; // wavelengths of ribbon below the origin
-const SAMPLES_PER_WAVE = 40;
+// Ribbon must cover the whole visible diagonal at every phase. It is drawn from
+// a few wavelengths before the origin to well past where the diagonal leaves
+// the panel.
+const LEAD_TILES = 2;
+const RUNOUT_TILES = 5;
+const SAMPLES_PER_WAVE = 44;
 
+// Wave-phase keyframes over exactly one period (last == first for a clean loop).
+const PHASE_FRAMES = 24;
 const LOOP_DURATION_SECONDS = 6;
 
 interface Vec {
@@ -67,12 +74,22 @@ interface Vec {
   y: number;
 }
 
-/** Periodic serpentine offset (across the axis) at along-axis position `s`. */
-function waveOffset(s: number): number {
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
+/** Local half-width of the band at along-axis position `y` (the taper). */
+function halfWidthAt(y: number): number {
+  if (y <= TAPER_START_Y) return HALF_NARROW;
+  if (y >= TAPER_END_Y) return HALF_WIDE;
+  const t = smoothstep((y - TAPER_START_Y) / (TAPER_END_Y - TAPER_START_Y));
+  return HALF_NARROW + (HALF_WIDE - HALF_NARROW) * t;
+}
+
+/** Periodic centre-line offset (across the axis) at along-axis `y`, given phase. */
+function waveOffset(y: number, phase: number): number {
   const k = (2 * Math.PI) / WAVE_LENGTH;
   return (
-    Math.sin(s * k) * WAVE_AMPLITUDE +
-    Math.sin(s * k * 2 + Math.PI / 3) * WAVE_HARMONIC_AMPLITUDE
+    Math.sin(y * k + phase) * WAVE_AMPLITUDE +
+    Math.sin(y * k * 2 + phase * 2 + Math.PI / 3) * WAVE_HARMONIC_AMPLITUDE
   );
 }
 
@@ -94,11 +111,11 @@ function spline(pts: Vec[], startCmd: "M" | "L"): string {
 }
 
 /**
- * The ribbon as one filled path in the local diagonal frame. Both edges use the
- * same in-phase wave, so width is constant and one wavelength up the axis is
- * identical to the next.
+ * The ribbon at a given wave phase, as one filled path in the local frame.
+ * Centre-line is the periodic wave; the two edges sit +/- halfWidthAt(y) from it,
+ * so the band is squeezed near the top-centre and full toward the outer edge.
  */
-function buildRibbonPath(): string {
+function buildRibbonPath(phase: number): string {
   const yStart = -LEAD_TILES * WAVE_LENGTH;
   const yEnd = RUNOUT_TILES * WAVE_LENGTH;
   const step = WAVE_LENGTH / SAMPLES_PER_WAVE;
@@ -106,9 +123,10 @@ function buildRibbonPath(): string {
   const left: Vec[] = [];
   const right: Vec[] = [];
   for (let y = yStart; y <= yEnd + 0.001; y += step) {
-    const c = waveOffset(y);
-    left.push({ x: c - RIBBON_WIDTH / 2, y });
-    right.push({ x: c + RIBBON_WIDTH / 2, y });
+    const c = waveOffset(y, phase);
+    const h = halfWidthAt(y);
+    left.push({ x: c - h, y });
+    right.push({ x: c + h, y });
   }
 
   return `${spline(left, "M")} ${spline([...right].reverse(), "L")} Z`;
@@ -116,24 +134,18 @@ function buildRibbonPath(): string {
 
 /**
  * Gradient endpoints for the LEFT ribbon, in SVG space, aimed along the
- * diagonal. waves-3.svg's stops run transparent -> opaque, so the transparent
- * end (x1,y1) is placed far down the diagonal and the opaque end (x2,y2) near
- * the top-outer corner — dense pink at the corner, fading as the ribbon runs
- * inward, matching waves-3.svg. The right ribbon's gradient is this mirrored
- * across x = VIEW_W / 2.
+ * diagonal: waves-3.svg's stops run transparent -> opaque, so the transparent
+ * end sits far down the diagonal and the opaque end near the top-outer corner.
+ * The right ribbon's gradient is this mirrored across x = VIEW_W / 2.
  */
-// A local along-axis distance d maps to SVG (ORIGIN - d*sinθ, ORIGIN + d*cosθ)
-// under SVG's clockwise rotate(). Transparent end far down-axis, opaque end
-// just past the top-outer corner.
 const rad = (DIAGONAL_ANGLE_DEG * Math.PI) / 180;
-const GRAD_LEN = 620;
 const alongToSvg = (d: number) => ({
   x: ORIGIN_X - Math.sin(rad) * d,
   y: ORIGIN_Y + Math.cos(rad) * d,
 });
 const GRAD_LEFT = {
-  x1: alongToSvg(GRAD_LEN).x,
-  y1: alongToSvg(GRAD_LEN).y,
+  x1: alongToSvg(620).x,
+  y1: alongToSvg(620).y,
   x2: alongToSvg(-40).x,
   y2: alongToSvg(-40).y,
 };
@@ -147,14 +159,21 @@ interface RibbonSideProps {
 }
 
 function RibbonSide({ animate, maskId, gradientId, mirror }: RibbonSideProps) {
-  const ribbonPath = useMemo(() => buildRibbonPath(), []);
+  // One period of phase keyframes; first frame repeated at the end so the loop
+  // closes exactly.
+  const frames = useMemo(() => {
+    const out: string[] = [];
+    // Negative phase so crests travel down-and-outward along +y (toward the
+    // outer corner), not up the axis.
+    for (let i = 0; i <= PHASE_FRAMES; i += 1) {
+      out.push(buildRibbonPath(-(i / PHASE_FRAMES) * 2 * Math.PI));
+    }
+    return out;
+  }, []);
 
-  // Left ribbon: rotate local +y onto the diagonal, move to the origin.
-  // Right ribbon: the whole thing mirrored about x = VIEW_W / 2.
   const place = `translate(${ORIGIN_X} ${ORIGIN_Y}) rotate(${DIAGONAL_ANGLE_DEG})`;
   const mirrorT = `translate(${VIEW_W} 0) scale(-1 1)`;
-
-  const staticPath = <path d={ribbonPath} fill="#fff" />;
+  const placed = mirror ? `${mirrorT} ${place}` : place;
 
   return (
     <>
@@ -166,22 +185,21 @@ function RibbonSide({ animate, maskId, gradientId, mirror }: RibbonSideProps) {
         width={VIEW_W}
         height={VIEW_H}
       >
-        <g transform={mirror ? `${mirrorT} ${place}` : place}>
+        <g transform={placed}>
           {animate ? (
-            <motion.g
-              initial={{ y: 0 }}
-              animate={{ y: WAVE_LENGTH }}
+            <motion.path
+              fill="#fff"
+              initial={{ d: frames[0] }}
+              animate={{ d: frames }}
               transition={{
                 duration: LOOP_DURATION_SECONDS,
                 ease: "linear",
                 repeat: Infinity,
                 repeatType: "loop",
               }}
-            >
-              {staticPath}
-            </motion.g>
+            />
           ) : (
-            staticPath
+            <path d={frames[0]} fill="#fff" />
           )}
         </g>
       </mask>
