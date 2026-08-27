@@ -35,7 +35,7 @@ const VIEW_H = 440;
 // constant width and just snakes — a smooth serpentine, no lumps.
 const WAVE_LENGTH = 340;
 const WAVE_AMPLITUDE = 20;
-const WAVE_HARMONIC_AMPLITUDE = 6;
+const WAVE_HARMONIC_AMPLITUDE = 20;
 const RIBBON_WIDTH = 86;
 
 // Angle of the local +y axis, clockwise from straight down, for the LEFT
@@ -43,11 +43,11 @@ const RIBBON_WIDTH = 86;
 // axis toward the lower-LEFT corner — the ribbon enters at the top edge near
 // centre and sweeps out through the left edge, hugging the corner along the
 // reference diagonal. The right ribbon mirrors it.
-const DIAGONAL_ANGLE_DEG = 40;
+const DIAGONAL_ANGLE_DEG = 56;
 
 // The LEFT ribbon's local origin in SVG space: right at the top edge, offset in
 // from the outer corner. The diagonal axis runs down-and-left from here.
-const ORIGIN_X = 210;
+const ORIGIN_X = 230;
 const ORIGIN_Y = -10;
 
 // The ribbon must always cover the whole visible diagonal at EVERY point in the
@@ -60,7 +60,7 @@ const LEAD_TILES = 3; // wavelengths of ribbon above the origin
 const RUNOUT_TILES = 8; // wavelengths of ribbon below the origin
 const SAMPLES_PER_WAVE = 40;
 
-const LOOP_DURATION_SECONDS = 8;
+const LOOP_DURATION_SECONDS = 6;
 
 interface Vec {
   x: number;
