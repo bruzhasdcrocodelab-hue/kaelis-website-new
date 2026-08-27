@@ -28,6 +28,11 @@ import { motion, useReducedMotion } from "motion/react";
  * the taper depends on screen y (not on the scrolling phase) it stays put while
  * the waves run under it, and it does not affect periodicity: at any fixed
  * screen y the half-width is the same on every loop.
+ *
+ * COLOUR. A stationary <rect> filled with the mock's plain vertical
+ * pink-to-transparent gradient (transparent across the top, solid pink toward
+ * the bottom, including the opacity ramp) is revealed only through the moving
+ * ribbon mask. Same gradient for both sides — it is vertical, so no mirroring.
  */
 
 // waves-3.svg viewBox.
@@ -131,22 +136,21 @@ function buildRibbonPath(phase: number): string {
 }
 
 /**
- * Gradient endpoints for the LEFT ribbon, in SVG space, aimed along the
- * diagonal: waves-3.svg's stops run transparent -> opaque, so the transparent
- * end sits far down the diagonal and the opaque end near the top-outer corner.
- * The right ribbon's gradient is this mirrored across x = VIEW_W / 2.
+ * The pink-to-transparent wash, lifted verbatim from waves-3.svg
+ * (paint0_linear_1464_3679). It is a near-vertical gradient — dx over its whole
+ * length is ~11px against dy ~337px — so we treat it as PLAIN VERTICAL. The
+ * gradient vector runs bottom -> top:
+ *   y1 = 291.794  offset 0        #F5D0B0 @ 0 opacity  (transparent, lower)
+ *                 offset 0.533654 #FFB6D0 @ 0.5 opacity
+ *   y2 = -45.7297 offset 1        #E595E4 @ 1 opacity   (solid pink, upper)
+ * i.e. transparent across the lower reach of the ribbon, easing to solid pink
+ * toward the top-outer corner — including the opacity ramp. Both ribbons share
+ * it; a vertical gradient needs no mirroring. (This is the SVG export's actual
+ * direction; the mock's "180deg" token describes the same three stops on a box
+ * whose orientation is flipped relative to this SVG's y-axis.)
  */
-const rad = (DIAGONAL_ANGLE_DEG * Math.PI) / 180;
-const alongToSvg = (d: number) => ({
-  x: ORIGIN_X - Math.sin(rad) * d,
-  y: ORIGIN_Y + Math.cos(rad) * d,
-});
-const GRAD_LEFT = {
-  x1: alongToSvg(620).x,
-  y1: alongToSvg(620).y,
-  x2: alongToSvg(-40).x,
-  y2: alongToSvg(-40).y,
-};
+const GRAD_Y1 = 291.794; // offset 0  — transparent end
+const GRAD_Y2 = -45.7297; // offset 1  — opaque end
 
 interface RibbonSideProps {
   animate: boolean;
@@ -155,6 +159,15 @@ interface RibbonSideProps {
   /** false = left ribbon, true = right ribbon (mirror of the left). */
   mirror: boolean;
 }
+
+/** Stops from waves-3.svg (paint0_linear_1464_3679), shared by both ribbons. */
+const GRAD_STOPS = (
+  <>
+    <stop offset="0" stopColor="#F5D0B0" stopOpacity="0" />
+    <stop offset="0.533654" stopColor="#FFB6D0" stopOpacity="0.5" />
+    <stop offset="1" stopColor="#E595E4" stopOpacity="1" />
+  </>
+);
 
 function RibbonSide({ animate, maskId, gradientId, mirror }: RibbonSideProps) {
   // One period of phase keyframes; first frame repeated at the end so the loop
@@ -225,18 +238,9 @@ export default function AnimatedWaves({ className, style }: AnimatedWavesProps) 
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const leftMaskId = `waves-mask-l-${rawId}`;
   const rightMaskId = `waves-mask-r-${rawId}`;
-  const leftGradId = `waves-grad-l-${rawId}`;
-  const rightGradId = `waves-grad-r-${rawId}`;
+  const gradId = `waves-grad-${rawId}`;
 
   const animate = !prefersReducedMotion;
-
-  const gradStops = (
-    <>
-      <stop stopColor="#F5D0B0" stopOpacity="0" />
-      <stop offset="0.533654" stopColor="#FFB6D0" stopOpacity="0.5" />
-      <stop offset="1" stopColor="#E595E4" />
-    </>
-  );
 
   return (
     <svg
@@ -250,39 +254,30 @@ export default function AnimatedWaves({ className, style }: AnimatedWavesProps) 
       aria-hidden
     >
       <defs>
+        {/* Plain vertical pink-to-transparent wash from the mock token. Shared
+            by both ribbons (a vertical gradient needs no mirroring). */}
         <linearGradient
-          id={leftGradId}
-          x1={GRAD_LEFT.x1}
-          y1={GRAD_LEFT.y1}
-          x2={GRAD_LEFT.x2}
-          y2={GRAD_LEFT.y2}
+          id={gradId}
+          x1={0}
+          y1={GRAD_Y1}
+          x2={0}
+          y2={GRAD_Y2}
           gradientUnits="userSpaceOnUse"
         >
-          {gradStops}
-        </linearGradient>
-        {/* Mirror of the left gradient across the panel's vertical centre. */}
-        <linearGradient
-          id={rightGradId}
-          x1={VIEW_W - GRAD_LEFT.x1}
-          y1={GRAD_LEFT.y1}
-          x2={VIEW_W - GRAD_LEFT.x2}
-          y2={GRAD_LEFT.y2}
-          gradientUnits="userSpaceOnUse"
-        >
-          {gradStops}
+          {GRAD_STOPS}
         </linearGradient>
       </defs>
 
       <RibbonSide
         animate={animate}
         maskId={leftMaskId}
-        gradientId={leftGradId}
+        gradientId={gradId}
         mirror={false}
       />
       <RibbonSide
         animate={animate}
         maskId={rightMaskId}
-        gradientId={rightGradId}
+        gradientId={gradId}
         mirror
       />
     </svg>
