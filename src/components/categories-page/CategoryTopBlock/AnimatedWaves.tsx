@@ -4,61 +4,79 @@ import { useId, useMemo, type CSSProperties } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 /**
- * "Running waves" effect — a wavy ribbon pulled straight down under a fixed
- * window.
+ * "Running waves" effect — a narrow wavy ribbon pulled endlessly along a fixed
+ * diagonal, one per top corner of the panel.
  *
- * Think of `public/images/backgrounds/waves-3.svg` as one segment of an
- * endless ribbon: a band with a wavy edge on each side. Stack identical
- * segments vertically and, because every edge is the SAME periodic wave
- * sampled one period apart, the wide part of one segment flows seamlessly
- * into the narrow part of the next. That endless wavy band is used as a MASK;
- * the panel is the rectangular window it runs under. Sliding the mask down by
- * exactly one wave period lands it on a pixel-identical copy of itself, so the
- * loop is seamless and the waves appear to run forever, top to bottom.
+ * `public/images/backgrounds/waves-3.svg` puts a slim wavy band in each top
+ * corner, lying on the diagonal that runs from near the top-centre out to the
+ * lower outer corner. The ribbon's shape is authored in a LOCAL FRAME whose +y
+ * axis is that diagonal, then rotated + translated into place. The animation
+ * slides the ribbon along its own +y, so the waves travel down-and-outward
+ * along the diagonal (not straight down). The right ribbon is the exact mirror
+ * of the left about the panel's vertical centre — same position, shape and
+ * motion, flipped.
  *
- * The gradient/opacity wash from waves-3.svg stays in a STATIONARY <rect>;
- * only the mask moves, so the colour never travels with the waves. Only a CSS
- * transform animates — no per-frame path recalculation.
+ * One wavelength of the ribbon edge is a tile: the edge is a single periodic
+ * wave, so advancing exactly one wavelength lands the ribbon on a pixel-perfect
+ * copy of itself and the loop is seamless.
+ *
+ * The ribbon is a MASK over a STATIONARY gradient <rect>; the gradient vector
+ * is aimed along the same diagonal (mirrored per side) so the colour falloff
+ * follows the ribbon, and it never moves while the waves run under it. Only one
+ * CSS transform animates — no per-frame path recalculation.
  */
 
 // waves-3.svg viewBox.
 const VIEW_W = 1320;
 const VIEW_H = 440;
 
-// --- the periodic wave that forms every edge of the ribbon ---
-// PERIOD is the vertical tile distance; the animation advances exactly this
-// far per loop, so the wrap is invisible.
-const WAVE_PERIOD = 300;
-const WAVE_AMPLITUDE = 30;
-const WAVE_HARMONIC_AMPLITUDE = 11;
+// --- ribbon geometry, in the local diagonal frame (x = across, y = along) ---
+// Both long edges share ONE periodic wave in phase, so the band keeps a
+// constant width and just snakes — a smooth serpentine, no lumps.
+const WAVE_LENGTH = 340;
+const WAVE_AMPLITUDE = 20;
+const WAVE_HARMONIC_AMPLITUDE = 6;
+const RIBBON_WIDTH = 86;
 
-// Each ribbon is a wide vertical band roughly matching one waves-3.svg wedge
-// (its top edge spans ~670px). Its two edges are the same wave, offset
-// vertically by BAND_PHASE_SHIFT (giving interlocking wide bellies / narrow
-// necks) and horizontally by BAND_WIDTH.
-const BAND_WIDTH = 620;
-const BAND_PHASE_SHIFT = WAVE_PERIOD / 2;
+// Angle of the local +y axis, clockwise from straight down, for the LEFT
+// ribbon. SVG rotate() is clockwise, so a POSITIVE angle swings the downward
+// axis toward the lower-LEFT corner — the ribbon enters at the top edge near
+// centre and sweeps out through the left edge, hugging the corner along the
+// reference diagonal. The right ribbon mirrors it.
+const DIAGONAL_ANGLE_DEG = 40;
 
-// Enough periods to cover the window plus a period of slack top and bottom.
-const SEGMENTS = 5;
-const SAMPLES_PER_PERIOD = 44;
+// The LEFT ribbon's local origin in SVG space: right at the top edge, offset in
+// from the outer corner. The diagonal axis runs down-and-left from here.
+const ORIGIN_X = 210;
+const ORIGIN_Y = -10;
 
-const LOOP_DURATION_SECONDS = 7;
+// The ribbon must always cover the whole visible diagonal at EVERY point in the
+// loop cycle. The mask slides its local y by +WAVE_LENGTH each loop, so the
+// ribbon's trailing (top) end retreats by one wavelength — it needs a few
+// wavelengths of lead-in above the origin, and plenty of run-out past where the
+// diagonal leaves the panel. All in whole wavelengths so the wave stays
+// periodic and the wrap is seamless.
+const LEAD_TILES = 3; // wavelengths of ribbon above the origin
+const RUNOUT_TILES = 8; // wavelengths of ribbon below the origin
+const SAMPLES_PER_WAVE = 40;
+
+const LOOP_DURATION_SECONDS = 8;
 
 interface Vec {
   x: number;
   y: number;
 }
 
-/** Periodic wave horizontal offset at height `y`. */
-function waveOffset(y: number): number {
-  const k = (2 * Math.PI) / WAVE_PERIOD;
+/** Periodic serpentine offset (across the axis) at along-axis position `s`. */
+function waveOffset(s: number): number {
+  const k = (2 * Math.PI) / WAVE_LENGTH;
   return (
-    Math.sin(y * k) * WAVE_AMPLITUDE +
-    Math.sin(y * k * 2 + Math.PI / 3) * WAVE_HARMONIC_AMPLITUDE
+    Math.sin(s * k) * WAVE_AMPLITUDE +
+    Math.sin(s * k * 2 + Math.PI / 3) * WAVE_HARMONIC_AMPLITUDE
   );
 }
 
+/** Smooth Catmull-Rom -> cubic-Bezier through `pts`. */
 function spline(pts: Vec[], startCmd: "M" | "L"): string {
   let out = `${startCmd} ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`;
   for (let i = 0; i < pts.length - 1; i += 1) {
@@ -76,53 +94,67 @@ function spline(pts: Vec[], startCmd: "M" | "L"): string {
 }
 
 /**
- * The whole ribbon as one filled path in local space (x right, y down).
- * Left edge:  x = waveOffset(y)
- * Right edge: x = waveOffset(y + BAND_PHASE_SHIFT) + BAND_WIDTH
- * Both are the same wave, so segment k's edges line up with segment k+1's —
- * the stack has no seam and advancing y by WAVE_PERIOD is invisible.
+ * The ribbon as one filled path in the local diagonal frame. Both edges use the
+ * same in-phase wave, so width is constant and one wavelength up the axis is
+ * identical to the next.
  */
 function buildRibbonPath(): string {
-  const yStart = -WAVE_PERIOD;
-  const yEnd = yStart + SEGMENTS * WAVE_PERIOD;
-  const step = WAVE_PERIOD / SAMPLES_PER_PERIOD;
+  const yStart = -LEAD_TILES * WAVE_LENGTH;
+  const yEnd = RUNOUT_TILES * WAVE_LENGTH;
+  const step = WAVE_LENGTH / SAMPLES_PER_WAVE;
 
   const left: Vec[] = [];
   const right: Vec[] = [];
   for (let y = yStart; y <= yEnd + 0.001; y += step) {
-    left.push({ x: waveOffset(y), y });
-    right.push({ x: waveOffset(y + BAND_PHASE_SHIFT) + BAND_WIDTH, y });
+    const c = waveOffset(y);
+    left.push({ x: c - RIBBON_WIDTH / 2, y });
+    right.push({ x: c + RIBBON_WIDTH / 2, y });
   }
 
   return `${spline(left, "M")} ${spline([...right].reverse(), "L")} Z`;
 }
 
-interface RibbonConfig {
-  /** SVG-space translation applied to the ribbon's local origin. */
-  offsetX: number;
-  /** true => mirror horizontally so the band hugs the right corner. */
-  mirror: boolean;
-  gradientId: string;
-}
+/**
+ * Gradient endpoints for the LEFT ribbon, in SVG space, aimed along the
+ * diagonal. waves-3.svg's stops run transparent -> opaque, so the transparent
+ * end (x1,y1) is placed far down the diagonal and the opaque end (x2,y2) near
+ * the top-outer corner — dense pink at the corner, fading as the ribbon runs
+ * inward, matching waves-3.svg. The right ribbon's gradient is this mirrored
+ * across x = VIEW_W / 2.
+ */
+// A local along-axis distance d maps to SVG (ORIGIN - d*sinθ, ORIGIN + d*cosθ)
+// under SVG's clockwise rotate(). Transparent end far down-axis, opaque end
+// just past the top-outer corner.
+const rad = (DIAGONAL_ANGLE_DEG * Math.PI) / 180;
+const GRAD_LEN = 620;
+const alongToSvg = (d: number) => ({
+  x: ORIGIN_X - Math.sin(rad) * d,
+  y: ORIGIN_Y + Math.cos(rad) * d,
+});
+const GRAD_LEFT = {
+  x1: alongToSvg(GRAD_LEN).x,
+  y1: alongToSvg(GRAD_LEN).y,
+  x2: alongToSvg(-40).x,
+  y2: alongToSvg(-40).y,
+};
 
-function Ribbon({
-  config,
-  animate,
-  maskId,
-}: {
-  config: RibbonConfig;
+interface RibbonSideProps {
   animate: boolean;
   maskId: string;
-}) {
-  const { offsetX, mirror, gradientId } = config;
+  gradientId: string;
+  /** false = left ribbon, true = right ribbon (mirror of the left). */
+  mirror: boolean;
+}
+
+function RibbonSide({ animate, maskId, gradientId, mirror }: RibbonSideProps) {
   const ribbonPath = useMemo(() => buildRibbonPath(), []);
 
-  const sx = mirror ? -1 : 1;
-  const shape = (
-    <g transform={`translate(${offsetX} 0) scale(${sx} 1)`}>
-      <path d={ribbonPath} fill="#fff" />
-    </g>
-  );
+  // Left ribbon: rotate local +y onto the diagonal, move to the origin.
+  // Right ribbon: the whole thing mirrored about x = VIEW_W / 2.
+  const place = `translate(${ORIGIN_X} ${ORIGIN_Y}) rotate(${DIAGONAL_ANGLE_DEG})`;
+  const mirrorT = `translate(${VIEW_W} 0) scale(-1 1)`;
+
+  const staticPath = <path d={ribbonPath} fill="#fff" />;
 
   return (
     <>
@@ -134,23 +166,26 @@ function Ribbon({
         width={VIEW_W}
         height={VIEW_H}
       >
-        {animate ? (
-          <motion.g
-            initial={{ y: 0 }}
-            animate={{ y: WAVE_PERIOD }}
-            transition={{
-              duration: LOOP_DURATION_SECONDS,
-              ease: "linear",
-              repeat: Infinity,
-              repeatType: "loop",
-            }}
-          >
-            {shape}
-          </motion.g>
-        ) : (
-          shape
-        )}
+        <g transform={mirror ? `${mirrorT} ${place}` : place}>
+          {animate ? (
+            <motion.g
+              initial={{ y: 0 }}
+              animate={{ y: WAVE_LENGTH }}
+              transition={{
+                duration: LOOP_DURATION_SECONDS,
+                ease: "linear",
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+            >
+              {staticPath}
+            </motion.g>
+          ) : (
+            staticPath
+          )}
+        </g>
       </mask>
+
       {/* Stationary gradient wash, revealed only through the moving ribbon. */}
       <rect
         x="0"
@@ -174,22 +209,18 @@ export default function AnimatedWaves({ className, style }: AnimatedWavesProps) 
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const leftMaskId = `waves-mask-l-${rawId}`;
   const rightMaskId = `waves-mask-r-${rawId}`;
+  const leftGradId = `waves-grad-l-${rawId}`;
+  const rightGradId = `waves-grad-r-${rawId}`;
 
   const animate = !prefersReducedMotion;
 
-  // Local band spans x in [~0, BAND_WIDTH]; place the left one so its outer
-  // edge sits past the left panel edge (waves-3.svg's wedge starts near
-  // x = -215), the right one mirrored.
-  const leftConfig: RibbonConfig = {
-    offsetX: -215,
-    mirror: false,
-    gradientId: "paint0_linear_1464_3679",
-  };
-  const rightConfig: RibbonConfig = {
-    offsetX: VIEW_W + 215,
-    mirror: true,
-    gradientId: "paint1_linear_1464_3679",
-  };
+  const gradStops = (
+    <>
+      <stop stopColor="#F5D0B0" stopOpacity="0" />
+      <stop offset="0.533654" stopColor="#FFB6D0" stopOpacity="0.5" />
+      <stop offset="1" stopColor="#E595E4" />
+    </>
+  );
 
   return (
     <svg
@@ -204,33 +235,40 @@ export default function AnimatedWaves({ className, style }: AnimatedWavesProps) 
     >
       <defs>
         <linearGradient
-          id="paint0_linear_1464_3679"
-          x1="129.033"
-          y1="291.794"
-          x2="117.513"
-          y2="-45.7297"
+          id={leftGradId}
+          x1={GRAD_LEFT.x1}
+          y1={GRAD_LEFT.y1}
+          x2={GRAD_LEFT.x2}
+          y2={GRAD_LEFT.y2}
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#F5D0B0" stopOpacity="0" />
-          <stop offset="0.533654" stopColor="#FFB6D0" stopOpacity="0.5" />
-          <stop offset="1" stopColor="#E595E4" />
+          {gradStops}
         </linearGradient>
+        {/* Mirror of the left gradient across the panel's vertical centre. */}
         <linearGradient
-          id="paint1_linear_1464_3679"
-          x1="1210.5"
-          y1="291.794"
-          x2="1222.02"
-          y2="-45.7297"
+          id={rightGradId}
+          x1={VIEW_W - GRAD_LEFT.x1}
+          y1={GRAD_LEFT.y1}
+          x2={VIEW_W - GRAD_LEFT.x2}
+          y2={GRAD_LEFT.y2}
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#F5D0B0" stopOpacity="0" />
-          <stop offset="0.533654" stopColor="#FFB6D0" stopOpacity="0.5" />
-          <stop offset="1" stopColor="#E595E4" />
+          {gradStops}
         </linearGradient>
       </defs>
 
-      <Ribbon config={leftConfig} animate={animate} maskId={leftMaskId} />
-      <Ribbon config={rightConfig} animate={animate} maskId={rightMaskId} />
+      <RibbonSide
+        animate={animate}
+        maskId={leftMaskId}
+        gradientId={leftGradId}
+        mirror={false}
+      />
+      <RibbonSide
+        animate={animate}
+        maskId={rightMaskId}
+        gradientId={rightGradId}
+        mirror
+      />
     </svg>
   );
 }
