@@ -1,298 +1,207 @@
 "use client";
 
-import { useMemo, type CSSProperties } from "react";
+import { useId, useMemo, type CSSProperties } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 /**
- * Each corner blob is the exact wedge-shaped silhouette of
- * `public/images/backgrounds/waves-3.svg` (thick at the panel corner,
- * tapering to a point at its far tip) — that artwork is just one frame
- * (one phase) of this same running wave.
+ * "Running waves" effect — a wavy ribbon pulled straight down under a fixed
+ * window.
  *
- * Both of its edges — the wavy top edge and the wavy belly edge, traced
- * from the reference — are displaced by the very same vector at every
- * point: a sine wave perpendicular to the blob's main diagonal (side tip
- * -> far tip), keyed to how far that point has travelled along the whole
- * boundary. Because every point of the mass (both edges together) shifts
- * identically rather than the edges moving relative to each other, the
- * wedge's shape and depth are exactly preserved at every phase; only its
- * position ripples, like a flag. The three anchor points (side tip, far
- * tip, bottom tip) get zero shift, so the corners never detach from the
- * panel edge.
+ * Think of `public/images/backgrounds/waves-3.svg` as one segment of an
+ * endless ribbon: a band with a wavy edge on each side. Stack identical
+ * segments vertically and, because every edge is the SAME periodic wave
+ * sampled one period apart, the wide part of one segment flows seamlessly
+ * into the narrow part of the next. That endless wavy band is used as a MASK;
+ * the panel is the rectangular window it runs under. Sliding the mask down by
+ * exactly one wave period lands it on a pixel-identical copy of itself, so the
+ * loop is seamless and the waves appear to run forever, top to bottom.
+ *
+ * The gradient/opacity wash from waves-3.svg stays in a STATIONARY <rect>;
+ * only the mask moves, so the colour never travels with the waves. Only a CSS
+ * transform animates — no per-frame path recalculation.
  */
-const WAVE_AMPLITUDE = 22;
-const WAVE_WAVELENGTH = 420;
-const SAMPLES_PER_SEGMENT = 24;
-const WAVE_LOOP_DURATION = 2.5;
-const FRAME_COUNT = 48;
 
-interface Point {
+// waves-3.svg viewBox.
+const VIEW_W = 1320;
+const VIEW_H = 440;
+
+// --- the periodic wave that forms every edge of the ribbon ---
+// PERIOD is the vertical tile distance; the animation advances exactly this
+// far per loop, so the wrap is invisible.
+const WAVE_PERIOD = 300;
+const WAVE_AMPLITUDE = 30;
+const WAVE_HARMONIC_AMPLITUDE = 11;
+
+// Each ribbon is a wide vertical band roughly matching one waves-3.svg wedge
+// (its top edge spans ~670px). Its two edges are the same wave, offset
+// vertically by BAND_PHASE_SHIFT (giving interlocking wide bellies / narrow
+// necks) and horizontally by BAND_WIDTH.
+const BAND_WIDTH = 620;
+const BAND_PHASE_SHIFT = WAVE_PERIOD / 2;
+
+// Enough periods to cover the window plus a period of slack top and bottom.
+const SEGMENTS = 5;
+const SAMPLES_PER_PERIOD = 44;
+
+const LOOP_DURATION_SECONDS = 7;
+
+interface Vec {
   x: number;
   y: number;
 }
 
-type CubicSegment = [Point, Point, Point, Point];
-
-function cubicPoint(seg: CubicSegment, t: number): Point {
-  const [p0, p1, p2, p3] = seg;
-  const mt = 1 - t;
-  return {
-    x:
-      mt * mt * mt * p0.x +
-      3 * mt * mt * t * p1.x +
-      3 * mt * t * t * p2.x +
-      t * t * t * p3.x,
-    y:
-      mt * mt * mt * p0.y +
-      3 * mt * mt * t * p1.y +
-      3 * mt * t * t * p2.y +
-      t * t * t * p3.y,
-  };
+/** Periodic wave horizontal offset at height `y`. */
+function waveOffset(y: number): number {
+  const k = (2 * Math.PI) / WAVE_PERIOD;
+  return (
+    Math.sin(y * k) * WAVE_AMPLITUDE +
+    Math.sin(y * k * 2 + Math.PI / 3) * WAVE_HARMONIC_AMPLITUDE
+  );
 }
 
-/** Flattens a chain of cubic segments (in curve order) into a point list. */
-function flattenSegments(segments: CubicSegment[]): Point[] {
-  const points: Point[] = [];
-  segments.forEach((seg, segIndex) => {
-    const start = segIndex === 0 ? 0 : 1;
-    for (let i = start; i <= SAMPLES_PER_SEGMENT; i += 1) {
-      points.push(cubicPoint(seg, i / SAMPLES_PER_SEGMENT));
-    }
-  });
-  return points;
-}
-
-/** Point's signed distance along `dir` from `origin`, used as the wave's input. */
-function projectAlong(point: Point, origin: Point, dirX: number, dirY: number): number {
-  return (point.x - origin.x) * dirX + (point.y - origin.y) * dirY;
-}
-
-function rippleMass(
-  topNearToFar: Point[],
-  bellyFarToNear: Point[],
-  sideTip: Point,
-  farTip: Point,
-  bottomTip: Point,
-  phase: number,
-  waveSign: 1 | -1,
-): { top: Point[]; belly: Point[] } {
-  const dx = farTip.x - sideTip.x;
-  const dy = farTip.y - sideTip.y;
-  const diagonalLength = Math.hypot(dx, dy);
-  const dirX = dx / diagonalLength;
-  const dirY = dy / diagonalLength;
-  const normalX = -dirY;
-  const normalY = dirX;
-
-  // The whole boundary tapers to zero displacement at its three anchor
-  // points (side tip, far tip, bottom tip) so those corners stay put.
-  const bottomAlong = projectAlong(bottomTip, sideTip, dirX, dirY);
-  const totalAlong = Math.max(diagonalLength, Math.abs(bottomAlong));
-
-  const shiftFor = (point: Point): Point => {
-    const along = projectAlong(point, sideTip, dirX, dirY);
-    const t = Math.min(Math.max(along / totalAlong, -1), 1);
-    const taper = Math.sin(Math.PI * Math.abs(t));
-    const wave =
-      Math.sin((along / WAVE_WAVELENGTH) * 2 * Math.PI + phase) *
-      WAVE_AMPLITUDE *
-      taper *
-      waveSign;
-    return {
-      x: point.x + normalX * wave,
-      y: point.y + normalY * wave,
-    };
-  };
-
-  return {
-    top: topNearToFar.map(shiftFor),
-    belly: bellyFarToNear.map(shiftFor),
-  };
-}
-
-function toSmoothPath(points: Point[]): string {
-  let d = `M${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)} `;
-  for (let i = 0; i < points.length - 1; i += 1) {
-    const p0 = points[i - 1] ?? points[i];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = points[i + 2] ?? p2;
-
+function spline(pts: Vec[], startCmd: "M" | "L"): string {
+  let out = `${startCmd} ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`;
+  for (let i = 0; i < pts.length - 1; i += 1) {
+    const p0 = pts[i - 1] ?? pts[i];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] ?? p2;
     const c1x = p1.x + (p2.x - p0.x) / 6;
     const c1y = p1.y + (p2.y - p0.y) / 6;
     const c2x = p2.x - (p3.x - p1.x) / 6;
     const c2y = p2.y - (p3.y - p1.y) / 6;
-
-    d += `C${c1x.toFixed(2)} ${c1y.toFixed(2)} ${c2x.toFixed(2)} ${c2y.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)} `;
+    out += ` C ${c1x.toFixed(2)} ${c1y.toFixed(2)} ${c2x.toFixed(2)} ${c2y.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
   }
-  return `${d.trim()} Z`;
+  return out;
 }
 
-interface BlobConfig {
-  /** Wavy top edge, side tip -> far tip, traced from waves-3.svg. */
-  topSegments: CubicSegment[];
-  /** Wavy belly edge, far tip -> bottom tip, traced from waves-3.svg. */
-  bellySegments: CubicSegment[];
-  /** Mirrors ripple direction so left/right blobs bow the same visual way. */
-  waveSign: 1 | -1;
-}
+/**
+ * The whole ribbon as one filled path in local space (x right, y down).
+ * Left edge:  x = waveOffset(y)
+ * Right edge: x = waveOffset(y + BAND_PHASE_SHIFT) + BAND_WIDTH
+ * Both are the same wave, so segment k's edges line up with segment k+1's —
+ * the stack has no seam and advancing y by WAVE_PERIOD is invisible.
+ */
+function buildRibbonPath(): string {
+  const yStart = -WAVE_PERIOD;
+  const yEnd = yStart + SEGMENTS * WAVE_PERIOD;
+  const step = WAVE_PERIOD / SAMPLES_PER_PERIOD;
 
-function buildFrames(config: BlobConfig): string[] {
-  const topNearToFar = flattenSegments(config.topSegments);
-  const bellyFarToNear = flattenSegments(config.bellySegments);
-
-  const sideTip = config.topSegments[0][0];
-  const farTip = config.topSegments[config.topSegments.length - 1][3];
-  const bottomTip =
-    config.bellySegments[config.bellySegments.length - 1][3];
-
-  const frames: string[] = [];
-  for (let i = 0; i <= FRAME_COUNT; i += 1) {
-    const phase = (i / FRAME_COUNT) * 2 * Math.PI;
-    const { top, belly } = rippleMass(
-      topNearToFar,
-      bellyFarToNear,
-      sideTip,
-      farTip,
-      bottomTip,
-      phase,
-      config.waveSign,
-    );
-    frames.push(toSmoothPath([...top, ...belly]));
+  const left: Vec[] = [];
+  const right: Vec[] = [];
+  for (let y = yStart; y <= yEnd + 0.001; y += step) {
+    left.push({ x: waveOffset(y), y });
+    right.push({ x: waveOffset(y + BAND_PHASE_SHIFT) + BAND_WIDTH, y });
   }
-  return frames;
+
+  return `${spline(left, "M")} ${spline([...right].reverse(), "L")} Z`;
 }
 
-const LEFT_TOP_SEGMENTS: CubicSegment[] = [
-  [
-    { x: -215.855, y: 87.2208 },
-    { x: -215.855, y: 87.2208 },
-    { x: -130.968, y: 28.3702 },
-    { x: -68.263, y: 21.7643 },
-  ],
-  [
-    { x: -68.263, y: 21.7643 },
-    { x: -12.572, y: 15.8973 },
-    { x: 17.6142, y: 54.3318 },
-    { x: 73.0265, y: 46.2461 },
-  ],
-  [
-    { x: 73.0265, y: 46.2461 },
-    { x: 122.839, y: 38.9775 },
-    { x: 138.576, y: -17.2567 },
-    { x: 191.367, y: -38.0671 },
-  ],
-  [
-    { x: 191.367, y: -38.0671 },
-    { x: 287.987, y: -76.1547 },
-    { x: 456.421, y: -16.3914 },
-    { x: 456.421, y: -16.3914 },
-  ],
-];
-
-const LEFT_BELLY_SEGMENTS: CubicSegment[] = [
-  [
-    { x: 456.421, y: -16.3914 },
-    { x: 456.421, y: -16.3914 },
-    { x: 325.486, y: 2.94459 },
-    { x: 273.32, y: 51.2807 },
-  ],
-  [
-    { x: 273.32, y: 51.2807 },
-    { x: 222.857, y: 98.0382 },
-    { x: 248.486, y: 172.794 },
-    { x: 198.023, y: 219.552 },
-  ],
-  [
-    { x: 198.023, y: 219.552 },
-    { x: 145.857, y: 267.888 },
-    { x: 67.0883, y: 238.888 },
-    { x: 14.922, y: 287.224 },
-  ],
-  [
-    { x: 14.922, y: 287.224 },
-    { x: -35.5407, y: 333.982 },
-    { x: -60.3751, y: 455.495 },
-    { x: -60.3751, y: 455.495 },
-  ],
-];
-
-function mirrorSegmentsX(
-  segments: CubicSegment[],
-  axisX: number,
-): CubicSegment[] {
-  const mirrorPoint = (p: Point): Point => ({ x: 2 * axisX - p.x, y: p.y });
-  return segments.map((seg) => seg.map(mirrorPoint) as CubicSegment);
+interface RibbonConfig {
+  /** SVG-space translation applied to the ribbon's local origin. */
+  offsetX: number;
+  /** true => mirror horizontally so the band hugs the right corner. */
+  mirror: boolean;
+  gradientId: string;
 }
 
-// The right blob is the left blob's mirror image (see waves-3.svg),
-// reflected across the panel's vertical center at x = 639.767.
-const PANEL_CENTER_X = 639.767;
-const RIGHT_TOP_SEGMENTS = mirrorSegmentsX(LEFT_TOP_SEGMENTS, PANEL_CENTER_X);
-const RIGHT_BELLY_SEGMENTS = mirrorSegmentsX(
-  LEFT_BELLY_SEGMENTS,
-  PANEL_CENTER_X,
-);
+function Ribbon({
+  config,
+  animate,
+  maskId,
+}: {
+  config: RibbonConfig;
+  animate: boolean;
+  maskId: string;
+}) {
+  const { offsetX, mirror, gradientId } = config;
+  const ribbonPath = useMemo(() => buildRibbonPath(), []);
 
-const LEFT_CONFIG: BlobConfig = {
-  topSegments: LEFT_TOP_SEGMENTS,
-  bellySegments: LEFT_BELLY_SEGMENTS,
-  waveSign: 1,
-};
+  const sx = mirror ? -1 : 1;
+  const shape = (
+    <g transform={`translate(${offsetX} 0) scale(${sx} 1)`}>
+      <path d={ribbonPath} fill="#fff" />
+    </g>
+  );
 
-const RIGHT_CONFIG: BlobConfig = {
-  topSegments: RIGHT_TOP_SEGMENTS,
-  bellySegments: RIGHT_BELLY_SEGMENTS,
-  waveSign: -1,
-};
+  return (
+    <>
+      <mask
+        id={maskId}
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width={VIEW_W}
+        height={VIEW_H}
+      >
+        {animate ? (
+          <motion.g
+            initial={{ y: 0 }}
+            animate={{ y: WAVE_PERIOD }}
+            transition={{
+              duration: LOOP_DURATION_SECONDS,
+              ease: "linear",
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
+          >
+            {shape}
+          </motion.g>
+        ) : (
+          shape
+        )}
+      </mask>
+      {/* Stationary gradient wash, revealed only through the moving ribbon. */}
+      <rect
+        x="0"
+        y="0"
+        width={VIEW_W}
+        height={VIEW_H}
+        fill={`url(#${gradientId})`}
+        mask={`url(#${maskId})`}
+      />
+    </>
+  );
+}
 
 export interface AnimatedWavesProps {
   className?: string;
   style?: CSSProperties;
 }
 
-export default function AnimatedWaves({
-  className,
-  style,
-}: AnimatedWavesProps) {
+export default function AnimatedWaves({ className, style }: AnimatedWavesProps) {
   const prefersReducedMotion = useReducedMotion();
+  const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const leftMaskId = `waves-mask-l-${rawId}`;
+  const rightMaskId = `waves-mask-r-${rawId}`;
 
-  const leftFrames = useMemo(() => buildFrames(LEFT_CONFIG), []);
-  const rightFrames = useMemo(() => buildFrames(RIGHT_CONFIG), []);
+  const animate = !prefersReducedMotion;
+
+  // Local band spans x in [~0, BAND_WIDTH]; place the left one so its outer
+  // edge sits past the left panel edge (waves-3.svg's wedge starts near
+  // x = -215), the right one mirrored.
+  const leftConfig: RibbonConfig = {
+    offsetX: -215,
+    mirror: false,
+    gradientId: "paint0_linear_1464_3679",
+  };
+  const rightConfig: RibbonConfig = {
+    offsetX: VIEW_W + 215,
+    mirror: true,
+    gradientId: "paint1_linear_1464_3679",
+  };
 
   return (
     <svg
-      width="1320"
-      height="440"
-      viewBox="0 0 1320 440"
+      width={VIEW_W}
+      height={VIEW_H}
+      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={style}
       aria-hidden
     >
-      <motion.path
-        initial={{ d: leftFrames[0] }}
-        animate={prefersReducedMotion ? undefined : { d: leftFrames }}
-        transition={{
-          duration: WAVE_LOOP_DURATION,
-          ease: "linear",
-          repeat: Infinity,
-          repeatType: "loop",
-        }}
-        fill="url(#paint0_linear_1464_3679)"
-      />
-      <motion.path
-        initial={{ d: rightFrames[0] }}
-        animate={prefersReducedMotion ? undefined : { d: rightFrames }}
-        transition={{
-          duration: WAVE_LOOP_DURATION,
-          ease: "linear",
-          repeat: Infinity,
-          repeatType: "loop",
-        }}
-        fill="url(#paint1_linear_1464_3679)"
-      />
       <defs>
         <linearGradient
           id="paint0_linear_1464_3679"
@@ -319,6 +228,9 @@ export default function AnimatedWaves({
           <stop offset="1" stopColor="#E595E4" />
         </linearGradient>
       </defs>
+
+      <Ribbon config={leftConfig} animate={animate} maskId={leftMaskId} />
+      <Ribbon config={rightConfig} animate={animate} maskId={rightMaskId} />
     </svg>
   );
 }
