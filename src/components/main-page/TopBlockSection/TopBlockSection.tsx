@@ -9,7 +9,16 @@ export interface TopBlockSectionProps {
 
 export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
   return (
-    <section id="top-block" className={styles.topBlock}>
+    <section
+      id="top-block"
+      className={styles.topBlock}
+      style={{
+        // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
+        // it blurs whatever the page paints behind this panel, within its bounds.
+        backdropFilter: "blur(12.5px)",
+        WebkitBackdropFilter: "blur(12.5px)",
+      }}
+    >
       <div className={styles.background} aria-hidden>
         <div className={styles.backgroundTint} />
         <Image

@@ -64,7 +64,15 @@ export default function CategoryTopBlock({
 
   return (
     <section className={styles.section}>
-      <div className={`${styles.panel} ${isConfirmed ? styles.panelConfirmed : ""}`}>
+      <div
+        className={`${styles.panel} ${isConfirmed ? styles.panelConfirmed : ""}`}
+        style={{
+          // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
+          // it blurs whatever the page paints behind this panel, within its bounds.
+          backdropFilter: "blur(12.5px)",
+          WebkitBackdropFilter: "blur(12.5px)",
+        }}
+      >
         {isConfirmed && (
           <Image
             src="/images/backgrounds/pattern-categories-top-block.svg"
