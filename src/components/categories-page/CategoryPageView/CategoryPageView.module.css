@@ -22,18 +22,6 @@
   z-index: 0;
 }
 
-.patternCategories {
-  position: absolute;
-  top: 98px;
-  left: 55.4%;
-
- 
-  max-width: none;
-  transform: translateX(calc(-50% - 4.9%));
-  pointer-events: none;
-  z-index: 0;
-}
-
 .content {
   position: relative;
   display: flex;

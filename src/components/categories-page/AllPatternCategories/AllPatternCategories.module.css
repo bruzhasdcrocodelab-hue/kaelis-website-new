@@ -1,0 +1,11 @@
+.pattern {
+  position: absolute;
+  top: 98px;
+  left: 55.4%;
+  display: block;
+  max-width: none;
+  transform: translateX(calc(-50% - 4.9%));
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}

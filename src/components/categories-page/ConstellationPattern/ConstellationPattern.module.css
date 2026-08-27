@@ -1,0 +1,81 @@
+.pattern {
+  position: absolute;
+  top: 98px;
+  left: 55.4%;
+  display: block;
+  max-width: none;
+  transform: translateX(calc(-50% - 4.9%));
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.glow {
+  animation: constellationPulse var(--pattern-pulse-duration) ease-in-out infinite;
+}
+
+.spinClockwise {
+  animation: constellationSpin var(--constellation-spin-duration) linear infinite;
+}
+
+.spinCounterClockwise {
+  animation: constellationSpinReverse var(--constellation-ring-spin-duration-reverse) linear infinite;
+}
+
+/*
+ * Counter-rotates at the "beat" rate between the clockwise glyph frame and the
+ * counter-clockwise ring frame: 1 / (1/spinDuration + 1/ringSpinDurationReverse).
+ * Used to move a mask hole that lives inside the counter-clockwise ring's own local
+ * space so that, once composed with that ring's ambient rotation, the hole's absolute
+ * position matches the clockwise-spinning glyph it needs to stay under.
+ */
+.spinClockwiseRelativeToCounterRing {
+  animation: constellationSpin var(--constellation-spin-relative-to-counter-ring-duration) linear infinite;
+}
+
+.orbitClockwise {
+  animation: constellationSpin var(--constellation-orbit-duration) linear infinite;
+}
+
+.orbitCounterClockwise {
+  animation: constellationSpinReverse var(--constellation-orbit-duration-reverse) linear infinite;
+}
+
+@keyframes constellationSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes constellationSpinReverse {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes constellationPulse {
+  0%,
+  100% {
+    opacity: var(--pattern-pulse-opacity-max);
+  }
+  50% {
+    opacity: var(--pattern-pulse-opacity-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .spinClockwise,
+  .spinCounterClockwise,
+  .spinClockwiseRelativeToCounterRing,
+  .orbitClockwise,
+  .orbitCounterClockwise {
+    animation: none;
+  }
+}
