@@ -35,14 +35,15 @@ const VIEW_W = 1320;
 const VIEW_H = 440;
 
 // --- ribbon centre-line wave, in the local diagonal frame (x across, y along) ---
-const WAVE_LENGTH = 340;
-const WAVE_AMPLITUDE = 20;
-const WAVE_HARMONIC_AMPLITUDE = 15;
+// A single sine per WAVE_LENGTH: one clean wave per segment that flows back into
+// itself on the loop. (No second harmonic — that read as a smaller extra wave.)
+const WAVE_LENGTH = 280;
+const WAVE_AMPLITUDE = 30;
 
 // --- band width + perspective taper (both in the local frame) ---
 // Half-width near the narrow (top-centre) end and out toward the wide edge.
 const HALF_NARROW = 36;
-const HALF_WIDE = 86;
+const HALF_WIDE = 88;
 // Local-y span over which the half-width eases from narrow to wide. The visible
 // diagonal of the left ribbon runs from y ~= 0 (top edge) to y ~= 280 (exits
 // the panel side), so the ramp resolves within that.
@@ -67,7 +68,7 @@ const SAMPLES_PER_WAVE = 44;
 
 // Wave-phase keyframes over exactly one period (last == first for a clean loop).
 const PHASE_FRAMES = 24;
-const LOOP_DURATION_SECONDS = 6;
+const LOOP_DURATION_SECONDS = 3;
 
 interface Vec {
   x: number;
@@ -87,10 +88,7 @@ function halfWidthAt(y: number): number {
 /** Periodic centre-line offset (across the axis) at along-axis `y`, given phase. */
 function waveOffset(y: number, phase: number): number {
   const k = (2 * Math.PI) / WAVE_LENGTH;
-  return (
-    Math.sin(y * k + phase) * WAVE_AMPLITUDE +
-    Math.sin(y * k * 2 + phase * 2 + Math.PI / 3) * WAVE_HARMONIC_AMPLITUDE
-  );
+  return Math.sin(y * k + phase) * WAVE_AMPLITUDE;
 }
 
 /** Smooth Catmull-Rom -> cubic-Bezier through `pts`. */
