@@ -38,7 +38,7 @@
   inset: 0;
   border-radius: var(--radius-card);
   overflow: hidden;
-  box-shadow: var(--shadow-default);
+  /* box-shadow: var(--shadow-default); */
 }
 
 .cardSideInner img {
