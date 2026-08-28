@@ -75,6 +75,7 @@
   height: 62px;
   pointer-events: none;
   translate: -50% 0;
+  z-index: 10;
 }
 
 .ctaButtonWrap {
