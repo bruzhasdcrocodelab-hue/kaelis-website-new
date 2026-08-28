@@ -83,11 +83,11 @@
 }
 
 .ctaLabelWrap {
-  position: relative;
   display: inline-flex;
 }
 
 .ctaLabel {
   display: inline-block;
   white-space: nowrap;
+  will-change: opacity;
 }
