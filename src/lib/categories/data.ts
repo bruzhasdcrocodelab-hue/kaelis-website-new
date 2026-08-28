@@ -130,7 +130,7 @@ const love: CategoryNode = {
     leaf(
       "compatibility",
       "filled-star",
-      { en: "Compatibility", ru: "Совместимость", uk: "Сумісність" },
+      { en: "Compati-bility", ru: "Совмести-мость", uk: "Сумісність" },
       loveDescription,
       5,
     ),
