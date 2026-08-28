@@ -86,8 +86,32 @@
   display: inline-flex;
 }
 
+/* Kept as inline-block (not flex): MainButton centres this via the button's
+   own `items-center`, and inline-block baseline-aligns cleanly there. A flex
+   context here shifts the glyphs up and the button's top edge clips them. */
 .ctaLabel {
   display: inline-block;
   white-space: nowrap;
   will-change: opacity;
+}
+
+/* Arrow shown after the hover label. inline-block + vertical-align keeps it on
+   the same line as the text without turning the label into a flex row. Sized
+   and recoloured to match MainButton's own "stroke"-variant icon (pink-purple
+   gradient via mask-image), so label + arrow read as one hover state. */
+.ctaIcon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  /* nudge up to optically centre against the text's x-height */
+  margin: 0 -8px 0 8px;
+  background-image: var(--gradient-pink-purple);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 24px 24px;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 24px 24px;
 }
