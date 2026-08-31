@@ -38,7 +38,7 @@ export default function CategoryHeroSection({
               {dictionary.categoryLabel}
             </p>
             <div className={styles.titleWrap}>
-              <CategoryTitle title={current.title[locale]} />
+              <CategoryTitle title={current.title[locale]} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
                 {current.description[locale]}
               </p>
