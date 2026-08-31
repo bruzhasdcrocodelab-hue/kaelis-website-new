@@ -25,6 +25,7 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
           label={subcategory.title[locale]}
           icon={subcategory.icon}
           position={positions[index]}
+          locale={locale}
         />
       ))}
     </div>

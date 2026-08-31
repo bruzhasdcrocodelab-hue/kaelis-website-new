@@ -4,12 +4,14 @@ import Link from "next/link";
 import type { CategoryIcon } from "@/lib/categories/data";
 import type { SubcategoryPosition } from "@/lib/categories/subcategoryLayout";
 import styles from "./SubcategoryNode.module.css";
+import { Locale } from "@/lang";
 
 export interface SubcategoryNodeProps {
   href: string;
   label: string;
   icon: CategoryIcon;
   position: SubcategoryPosition;
+  locale: Locale;
 }
 
 const ICON_SRC: Record<CategoryIcon, string> = {
@@ -30,7 +32,7 @@ function seededUnit(seed: string): number {
 const NODE_FLOAT_DURATION_S = 6;
 const NODE_ICON_PULSE_DURATION_S = 2.2;
 
-export default function SubcategoryNode({ href, label, icon, position }: SubcategoryNodeProps) {
+export default function SubcategoryNode({ href, label, icon, position, locale }: SubcategoryNodeProps) {
   const floatDelay = -(seededUnit(`${href}:float`) * NODE_FLOAT_DURATION_S).toFixed(2);
   const pulseDelay = -(seededUnit(`${href}:pulse`) * NODE_ICON_PULSE_DURATION_S).toFixed(2);
 
@@ -50,7 +52,7 @@ export default function SubcategoryNode({ href, label, icon, position }: Subcate
         }
       >
         <Image src={ICON_SRC[icon]} alt="" width={50} height={62} className={styles.icon} />
-        <span className={`font-instrument-lg-emphasized ${styles.label}`}>{label}</span>
+        <span className={`font-instrument-lg-emphasized ${styles.label}`} lang={locale}>{label}</span>
       </span>
     </Link>
   );

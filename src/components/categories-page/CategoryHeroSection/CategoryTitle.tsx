@@ -2,13 +2,15 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./CategoryHeroSection.module.css";
+import { Locale } from "@/lang";
 
 export interface CategoryTitleProps {
   title: string;
+  locale: Locale;
 }
 
 /** Detects whether `title` wraps onto a second line so we can apply the tighter two-line styling. */
-export default function CategoryTitle({ title }: CategoryTitleProps) {
+export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
   const ref = useRef<HTMLParagraphElement>(null);
   const [wrapped, setWrapped] = useState(false);
 
@@ -33,6 +35,7 @@ export default function CategoryTitle({ title }: CategoryTitleProps) {
     <p
       ref={ref}
       className={`font-bona-category-title ${styles.title} ${wrapped ? styles.titleWrapped : ""}`}
+      lang={locale}
     >
       {title}
     </p>
