@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { CategoryIcon } from "@/lib/categories/data";
 import type { SubcategoryPosition } from "@/lib/categories/subcategoryLayout";
 import styles from "./SubcategoryNode.module.css";
-import { Locale } from "@/lang";
+import { htmlLang, Locale } from "@/lang";
 
 export interface SubcategoryNodeProps {
   href: string;
@@ -52,7 +52,7 @@ export default function SubcategoryNode({ href, label, icon, position, locale }:
         }
       >
         <Image src={ICON_SRC[icon]} alt="" width={50} height={62} className={styles.icon} />
-        <span className={`font-instrument-lg-emphasized ${styles.label}`} lang={locale}>{label}</span>
+        <span className={`font-instrument-lg-emphasized ${styles.label}`} lang={htmlLang[locale]}>{label}</span>
       </span>
     </Link>
   );

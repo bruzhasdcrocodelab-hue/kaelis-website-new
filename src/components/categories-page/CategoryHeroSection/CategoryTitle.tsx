@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./CategoryHeroSection.module.css";
-import { Locale } from "@/lang";
+import { htmlLang, Locale } from "@/lang";
 
 export interface CategoryTitleProps {
   title: string;
@@ -35,7 +35,7 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
     <p
       ref={ref}
       className={`font-bona-category-title ${styles.title} ${wrapped ? styles.titleWrapped : ""}`}
-      lang={locale}
+      lang={htmlLang[locale]}
     >
       {title}
     </p>
