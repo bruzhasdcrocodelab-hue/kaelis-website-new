@@ -9,6 +9,12 @@ export const defaultLocale: Locale = "en";
 
 export const dictionaries: Record<Locale, Dictionary> = { en, ru, uk };
 
+export const htmlLang: Record<Locale, string> = {
+  en: "en-US",
+  ru: "ru-RU",
+  uk: "uk-UA",
+};
+
 export type { Dictionary };
 
 export function pluralizeCardCount(
