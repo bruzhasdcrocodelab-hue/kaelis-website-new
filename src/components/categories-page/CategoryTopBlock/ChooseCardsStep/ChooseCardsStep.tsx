@@ -6,9 +6,9 @@ import {
   CARD_TRUE_WIDTH,
   FAN_CONTAINER_HEIGHT,
   FAN_CONTAINER_WIDTH,
-} from "./cardFan";
-import FanCard from "./FanCard";
-import styles from "./CategoryTopBlock.module.css";
+} from "../cardFan";
+import FanCard from "../FanCard/FanCard";
+import styles from "./ChooseCardsStep.module.css";
 
 export interface ChooseCardsStepProps {
   selectedIds: string[];

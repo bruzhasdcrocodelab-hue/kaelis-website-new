@@ -5,11 +5,11 @@ import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
 import { pluralizeCardCount, type Dictionary, type Locale } from "@/lang";
-import AnimatedWaves from "./AnimatedWaves";
-import AnswerStep from "./AnswerStep";
-import AskQuestionStep from "./AskQuestionStep";
-import ChooseCardsStep from "./ChooseCardsStep";
-import RevealCardsStep from "./RevealCardsStep";
+import AnimatedWaves from "./AnimatedWaves/AnimatedWaves";
+import AnswerStep from "./AnswerStep/AnswerStep";
+import AskQuestionStep from "./AskQuestionStep/AskQuestionStep";
+import ChooseCardsStep from "./ChooseCardsStep/ChooseCardsStep";
+import RevealCardsStep from "./RevealCardsStep/RevealCardsStep";
 import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {

@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import type { FanCardSpec } from "./cardFan";
-import styles from "./CategoryTopBlock.module.css";
+import type { FanCardSpec } from "../cardFan";
+import styles from "./FanCard.module.css";
 
 /**
  * Push distance (px, along the card's radial fan direction) applied on hover

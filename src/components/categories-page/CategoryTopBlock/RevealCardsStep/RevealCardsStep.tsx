@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
 import { frameOverlayImage, tarotDeck, type TarotCard } from "@/lib/tarotDeck";
-import { CARD_TRUE_HEIGHT, CARD_TRUE_WIDTH } from "./cardFan";
-import styles from "./CategoryTopBlock.module.css";
+import { CARD_TRUE_HEIGHT, CARD_TRUE_WIDTH } from "../cardFan";
+import styles from "./RevealCardsStep.module.css";
 
 export interface RevealCardsStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
@@ -49,6 +49,9 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
   const nameRef = useRef<HTMLParagraphElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  const cardName = card.name[locale];
+  const isSingleWord = cardName.trim().split(/\s+/).length === 1;
+
   useEffect(() => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(
@@ -79,11 +82,13 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
     <div className={`${styles.revealCardCol} ${nameWrapped ? styles.revealCardColWrapped : ""}`}>
       <motion.p
         ref={nameRef}
+        lang={locale}
         className={`font-instrument-xs-emphasized ${styles.revealCardName} ${isRevealed ? styles.revealCardNameVisible : ""}`}
+        style={isSingleWord ? { hyphens: "auto", WebkitHyphens: "auto", overflowWrap: "break-word" } : undefined}
         animate={{ y: isSelected ? -NAME_RISE + 6 : 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
       >
-        {card.name[locale]}
+        {cardName}
       </motion.p>
       <motion.button
         type="button"

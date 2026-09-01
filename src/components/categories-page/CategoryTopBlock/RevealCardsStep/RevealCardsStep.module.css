@@ -1,0 +1,218 @@
+.revealArea {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 10px; */
+  /* margin-top: 10px */
+  /* bottom: -15px; */
+}
+
+.revealLabel {
+  color: var(--color-black-75);
+  opacity: 1;
+  height: auto;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.revealLabelHidden {
+  opacity: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.revealRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 40px;
+}
+
+.revealCardCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.revealCardColWrapped {
+  gap: 6px;
+}
+
+.revealCardName {
+  color: var(--color-black-75);
+  text-align: center;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+  width: 98px;
+  text-wrap: balance;
+  line-height: normal;
+}
+
+.revealCardNameVisible {
+  opacity: 1;
+  height: auto;
+}
+
+.revealCard {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-default);
+}
+
+.revealCard :global(img) {
+  object-fit: cover;
+}
+
+.revealCardFace {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.revealCardArt {
+  position: absolute;
+  max-width: none;
+}
+
+.revealCardFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: lighten;
+  pointer-events: none;
+}
+
+.revealCardHoverOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  text-align: center;
+  background: var(--color-black-50);
+  color: var(--color-white);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.revealCard:hover .revealCardHoverOverlay {
+  opacity: 1;
+}
+
+.cardDetailArt {
+  position: absolute;
+  left: 130px;
+  top: 112px;
+  width: 226px;
+  height: 404px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 96px;
+  overflow: hidden;
+  border-radius: 8;
+  z-index: 6;
+}
+
+.cardDetailArtImage {
+  position: absolute;
+  max-width: none;
+}
+
+.cardDetailArtFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: lighten;
+  pointer-events: none;
+}
+
+.cardDetailArtLabel {
+  position: relative;
+  padding: 6px 16px;
+  border-radius: 30px;
+  background: var(--color-white-75);
+  color: var(--color-black-75);
+  white-space: nowrap;
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.cardDetailInfo {
+  position: absolute;
+  right: 130px;
+  top: calc(50% - 108px);
+  width: 226px;
+  height: 404px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8px;
+  overflow: hidden;
+  border-radius: 8;
+  z-index: 6;
+}
+
+.cardDetailInfoBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.cardDetailInfoText {
+  position: relative;
+  max-height: 80%;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--color-white-75);
+  color: var(--color-black-75);
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+  overflow-y: auto;
+}
+
+.answerWrap {
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.answerWrapVisible {
+  opacity: 1;
+  height: auto;
+  pointer-events: auto;
+  border: 4px solid var(--color-white);
+  border-radius: 30px;
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
