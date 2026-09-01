@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
 import { frameOverlayImage, tarotDeck, type TarotCard } from "@/lib/tarotDeck";
-import { CARD_TRUE_HEIGHT, CARD_TRUE_WIDTH } from "./cardFan";
-import styles from "./CategoryTopBlock.module.css";
+import { CARD_TRUE_HEIGHT, CARD_TRUE_WIDTH } from "../cardFan";
+import styles from "./RevealCardsStep.module.css";
 
 export interface RevealCardsStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];

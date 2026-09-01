@@ -2,7 +2,7 @@
 
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary } from "@/lang";
-import styles from "./CategoryTopBlock.module.css";
+import styles from "./AnswerStep.module.css";
 
 export interface AnswerStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];

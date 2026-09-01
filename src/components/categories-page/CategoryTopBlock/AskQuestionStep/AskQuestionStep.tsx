@@ -3,7 +3,7 @@
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary } from "@/lang";
-import styles from "./CategoryTopBlock.module.css";
+import styles from "./AskQuestionStep.module.css";
 
 export interface AskQuestionStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];

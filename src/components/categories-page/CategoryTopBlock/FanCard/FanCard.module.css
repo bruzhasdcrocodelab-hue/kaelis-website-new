@@ -1,0 +1,19 @@
+.fanCard {
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 8;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.fanCard:disabled {
+  cursor: default;
+}
+
+.fanCard :global(img) {
+  object-fit: cover;
+}
