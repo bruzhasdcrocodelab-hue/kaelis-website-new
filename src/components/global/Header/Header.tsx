@@ -4,6 +4,7 @@ import LanguageSelector from "@/components/global/LanguageSelector";
 import type { Dictionary, Locale } from "@/lang";
 import styles from "./Header.module.css";
 import OurAppLink from "./OurAppLink";
+import MobileMenu from "./MobileMenu";
 
 export interface HeaderProps {
   dictionary: Dictionary["header"];
@@ -26,10 +27,18 @@ export default function Header({ dictionary, locale }: HeaderProps) {
         </Link>
       </nav>
       <div className={styles.actions}>
-        <MainButton variant="stroke" size="medium" type="button">
+        <MainButton
+          variant="stroke"
+          size="medium"
+          type="button"
+          className={styles.downloadApp}
+        >
           {dictionary.downloadApp}
         </MainButton>
         <LanguageSelector locale={locale} />
+        <div className={styles.menu}>
+          <MobileMenu dictionary={dictionary} />
+        </div>
       </div>
     </header>
   );

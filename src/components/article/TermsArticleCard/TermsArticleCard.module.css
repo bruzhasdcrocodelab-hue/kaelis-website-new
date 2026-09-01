@@ -97,3 +97,28 @@
   color: var(--color-black-75);
   line-height: normal;
 }
+
+@media (max-width: 768px) {
+  .card {
+    gap: 16px;
+    padding: 24px 24px 32px;
+    border-radius: var(--radius-panel-mobile);
+  }
+
+  .marker {
+    font-size: var(--text-xxs);
+  }
+
+  .sections {
+    gap: 32px;
+  }
+
+  .section {
+    gap: 8px;
+  }
+
+  .paragraph,
+  .note {
+    font-size: var(--text-sm);
+  }
+}

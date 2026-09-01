@@ -6,12 +6,16 @@ import Link from "next/link";
 export interface OurAppLinkProps {
   className?: string;
   children: React.ReactNode;
+  role?: string;
+  onClick?: () => void;
 }
 
-export default function OurAppLink({ className, children }: OurAppLinkProps) {
+export default function OurAppLink({ className, children, role, onClick }: OurAppLinkProps) {
   const router = useRouter();
 
   function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    onClick?.();
+
     if (window.location.pathname !== "/") return;
 
     event.preventDefault();
@@ -23,7 +27,7 @@ export default function OurAppLink({ className, children }: OurAppLinkProps) {
   }
 
   return (
-    <Link href="/#top-block" className={className} onClick={handleClick}>
+    <Link href="/#top-block" className={className} role={role} onClick={handleClick}>
       {children}
     </Link>
   );

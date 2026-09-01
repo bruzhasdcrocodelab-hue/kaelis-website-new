@@ -64,3 +64,41 @@
   text-align: right;
   text-decoration: none;
 }
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px 16px;
+    background-color: var(--color-white);
+  }
+
+  .social {
+    order: 2;
+    flex: 0 0 auto;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .socialLink {
+    width: 52px;
+    height: 52px;
+    border: 1px solid #d3aced;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .links {
+    order: 1;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .logo {
+    order: 3;
+    flex: 0 0 auto;
+    color: var(--color-black-30);
+    text-align: center;
+    font-size: var(--text-base);
+  }
+}
