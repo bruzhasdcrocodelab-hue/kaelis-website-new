@@ -3,20 +3,21 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./CategoryHeroSection.module.css";
 import { htmlLang, Locale } from "@/lang";
+import { isSingleWord } from "@/lib/hyphenate";
 
 export interface CategoryTitleProps {
   title: string;
   locale: Locale;
 }
 
-/** Detects whether `title` wraps onto a second line so we can apply the tighter two-line styling. */
 export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
   const ref = useRef<HTMLParagraphElement>(null);
   const [wrapped, setWrapped] = useState(false);
+  const singleWord = isSingleWord(title);
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || singleWord) return;
 
     const checkWrap = () => {
       const range = document.createRange();
@@ -29,12 +30,12 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
     const observer = new ResizeObserver(checkWrap);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [title]);
+  }, [title, singleWord]);
 
   return (
     <p
       ref={ref}
-      className={`font-bona-category-title ${styles.title} ${wrapped ? styles.titleWrapped : ""}`}
+      className={`font-bona-category-title ${styles.title} ${singleWord ? styles.titleSingleWord : ""} ${!singleWord && wrapped ? styles.titleWrapped : ""}`}
       lang={htmlLang[locale]}
     >
       {title}
