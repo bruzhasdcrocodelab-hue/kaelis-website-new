@@ -45,7 +45,7 @@
 
 .title {
   margin-bottom: -6px;
-  max-width: 480px;
+  max-width: 500px;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
@@ -56,6 +56,14 @@
   padding-right: 10px;
   margin-left: 10px;
   hyphens: auto;
+}
+
+.title.titleSingleWord {
+  max-width: none;
+  white-space: nowrap;
+  text-wrap: nowrap;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 
 .title.titleWrapped {
