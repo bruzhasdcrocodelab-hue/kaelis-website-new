@@ -13,11 +13,14 @@
   flex: 1 0 0;
   min-width: 0;
   color: var(--color-white);
+  white-space: nowrap;
   text-decoration: none;
 }
 
 .nav {
   display: flex;
+  flex-shrink: 1;
+  min-width: 0;
   gap: 42px;
   align-items: center;
   justify-content: center;
@@ -27,6 +30,7 @@
 
 .navLink {
   color: inherit;
+  text-align: center;
   text-decoration: none;
 }
 
@@ -47,35 +51,31 @@
   display: none;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
   .header {
-    flex-wrap: wrap;
-    gap: 16px 16px;
+    gap: 16px;
     padding: 32px;
   }
 
   .logo,
   .actions {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
   }
 
   .nav {
-    order: 3;
-    flex: 1 0 100%;
-    flex-wrap: wrap;
-    gap: 8px 20px;
+    flex: 1 1 1;
+    justify-content: space-around;
+    gap: 10px;
     white-space: normal;
   }
 
   .navLink {
     overflow-wrap: break-word;
-    text-align: center;
   }
 }
 
 @media (max-width: 768px) {
   .header {
-    flex-wrap: nowrap;
     gap: 10px;
     padding: 16px;
   }
@@ -83,6 +83,14 @@
   .logo {
     font-size: var(--text-base);
   }
+  .actions {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
 
   .nav,
   .downloadApp {

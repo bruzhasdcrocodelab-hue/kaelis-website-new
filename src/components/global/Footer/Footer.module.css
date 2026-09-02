@@ -26,6 +26,8 @@
 
 .links {
   display: flex;
+  flex-shrink: 1;
+  min-width: 0;
   gap: 42px;
   align-items: center;
   justify-content: center;
@@ -35,6 +37,7 @@
 
 .link {
   color: inherit;
+  text-align: center;
   text-decoration: none;
 }
 
@@ -52,26 +55,22 @@
 
 @media (max-width: 1200px) {
   .footer {
-    flex-wrap: wrap;
-    gap: 16px 16px;
+    gap: 16px;
   }
 
   .social,
   .logo {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
   }
 
   .links {
-    order: 3;
-    flex: 1 0 100%;
-    flex-wrap: wrap;
-    gap: 8px 24px;
+    flex: 1 1 auto;
+    gap: 20px;
     white-space: normal;
   }
 
   .link {
     overflow-wrap: break-word;
-    text-align: center;
   }
 }
 
