@@ -132,7 +132,7 @@
     width: 100%;
     height: 520px;
     padding: 48px 16px;
-    margin-top: -40px;
+    margin-top: -120px;
     border-radius: var(--radius-page-mobile) var(--radius-page-mobile) 0 0;
     box-shadow: none;
   }
@@ -158,9 +158,16 @@
   }
 
   .backgroundImage {
-    object-fit: cover;
+    /* object-fit: cover;
     backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    -webkit-backdrop-filter: none; */
+    position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
   }
 
   .textPanel {

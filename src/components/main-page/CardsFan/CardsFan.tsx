@@ -249,13 +249,21 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
  * Mobile: two synchronised fans (back row + front row) mirroring the desktop
  * deal + hover-flip animation. Rendered alongside the desktop fan and toggled
  * by CSS at the 768px breakpoint.
+ *
+ * The fan is laid out in a fixed design coordinate space (MOBILE_STAGE_W wide)
+ * and the whole stage is scaled down by CSS on narrower screens, so cards are
+ * never clipped by the viewport — the fan just shrinks.
  * ------------------------------------------------------------------------- */
 
+const MOBILE_STAGE_W = 390;
+const MOBILE_STAGE_H = 360;
 const MOBILE_CARD_W = 121;
 const MOBILE_CARD_H = 220;
-const MOBILE_STAGE_W = 390;
+const MOBILE_ROW_GAP = 116;
 const MOBILE_LIFT = 32;
 const MOBILE_DEAL_DURATION = 900;
+/** Horizontal breathing room kept between the fan's outer cards and the screen edges. */
+const MOBILE_STAGE_MARGIN = 12;
 
 interface MobileCardSpec {
   key: string;
@@ -263,9 +271,9 @@ interface MobileCardSpec {
   srcBack: string;
   srcFront?: string;
   alt: string;
-  /** card centre X within the 390px stage */
+  /** card centre X within the MOBILE_STAGE_W design space */
   cx: number;
-  /** card centre Y within its row */
+  /** card centre Y within its row's design space */
   cy: number;
   rotate: number;
 }
@@ -274,96 +282,59 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   back: MobileCardSpec[];
   front: MobileCardSpec[];
 } {
+  const half = MOBILE_STAGE_W / 2;
+  const backPitch = 92;
+  const frontPitch = 104;
+  const cardBack = (
+    key: string,
+    slug: string,
+    alt: string,
+    slot: number,
+    rotate: number,
+    dy: number,
+  ): MobileCardSpec => ({
+    key,
+    slug,
+    srcBack: `/images/cards-turned/${key}Turned.png`,
+    srcFront: `/images/cards/${key}.png`,
+    alt,
+    cx: half + slot * backPitch,
+    cy: MOBILE_CARD_H / 2 + dy,
+    rotate,
+  });
+
   const back: MobileCardSpec[] = [
-    {
-      key: "love",
-      slug: "love",
-      srcBack: "/images/cards-turned/LoveTurned.png",
-      srcFront: "/images/cards/Love.png",
-      alt: dictionary.love,
-      cx: 49.6,
-      cy: 128.6,
-      rotate: -5.42,
-    },
-    {
-      key: "yesNo",
-      slug: "yes-no",
-      srcBack: "/images/cards-turned/YesNoTurned.png",
-      srcFront: "/images/cards/YesNo.png",
-      alt: dictionary.yesNo,
-      cx: 146.3,
-      cy: 116.3,
-      rotate: -2,
-    },
-    {
-      key: "oneCard",
-      slug: "one-card",
-      srcBack: "/images/cards-turned/OneCardTurned.png",
-      srcFront: "/images/cards/OneCard.png",
-      alt: dictionary.oneCard,
-      cx: 254.3,
-      cy: 112.3,
-      rotate: 2,
-    },
-    {
-      key: "threeCards",
-      slug: "three-cards",
-      srcBack: "/images/cards-turned/ThreeCardsTurned.png",
-      srcFront: "/images/cards/ThreeCards.png",
-      alt: dictionary.threeCards,
-      cx: 359.9,
-      cy: 117.9,
-      rotate: 5.52,
-    },
+    cardBack("Love", "love", dictionary.love, -1.5, -8, 14),
+    cardBack("YesNo", "yes-no", dictionary.yesNo, -0.5, -3, 3),
+    cardBack("OneCard", "one-card", dictionary.oneCard, 0.5, 3, 3),
+    cardBack("ThreeCards", "three-cards", dictionary.threeCards, 1.5, 8, 14),
   ];
 
+  const frontCard = (
+    key: string,
+    slug: string | undefined,
+    src: string,
+    alt: string,
+    slot: number,
+    rotate: number,
+    dy: number,
+  ): MobileCardSpec => ({
+    key,
+    slug,
+    srcBack: slug ? `/images/cards-turned/${src}Turned.png` : "/images/cards/default-card.png",
+    srcFront: slug ? `/images/cards/${src}.png` : undefined,
+    alt,
+    cx: half + slot * frontPitch,
+    cy: MOBILE_CARD_H / 2 + dy,
+    rotate,
+  });
+
   const front: MobileCardSpec[] = [
-    {
-      key: "deck-8",
-      srcBack: "/images/cards/default-card.png",
-      alt: "",
-      cx: -25.2,
-      cy: 157.6,
-      rotate: -10.67,
-    },
-    {
-      key: "work",
-      slug: "work",
-      srcBack: "/images/cards-turned/WorkTurned.png",
-      srcFront: "/images/cards/Work.png",
-      alt: dictionary.work,
-      cx: 83.3,
-      cy: 127.3,
-      rotate: -5.42,
-    },
-    {
-      key: "family",
-      slug: "family",
-      srcBack: "/images/cards-turned/FamilyTurned.png",
-      srcFront: "/images/cards/Family.png",
-      alt: dictionary.family,
-      cx: 194.3,
-      cy: 110.2,
-      rotate: 0.17,
-    },
-    {
-      key: "money",
-      slug: "money",
-      srcBack: "/images/cards-turned/MoneyTurned.png",
-      srcFront: "/images/cards/Money.png",
-      alt: dictionary.money,
-      cx: 325.05,
-      cy: 115.96,
-      rotate: 5.52,
-    },
-    {
-      key: "deck-9",
-      srcBack: "/images/cards/default-card.png",
-      alt: "",
-      cx: 456.4,
-      cy: 134.3,
-      rotate: 11.57,
-    },
+    frontCard("deck-8", undefined, "", "", -2, -13, 30),
+    frontCard("Work", "work", "Work", dictionary.work, -1, -6, 8),
+    frontCard("Family", "family", "Family", dictionary.family, 0, 0, 0),
+    frontCard("Money", "money", "Money", dictionary.money, 1, 6, 8),
+    frontCard("deck-9", undefined, "", "", 2, 13, 30),
   ];
 
   return { back, front };
@@ -432,7 +403,7 @@ function MobileFlippableCard({
             src={showFront && card.srcFront ? card.srcFront : card.srcBack}
             alt={card.alt}
             fill
-            sizes="121px"
+            sizes="116px"
           />
         </div>
       </motion.div>
@@ -462,6 +433,8 @@ function MobileFlippableCard({
       style={style}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
+      onFocus={onHoverStart}
+      onBlur={onHoverEnd}
     >
       {inner}
     </Link>
@@ -471,28 +444,50 @@ function MobileFlippableCard({
 function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
   const { back, front } = buildMobileRows(dictionary);
   const [isDealt, setIsDealt] = useState(false);
+  const fanRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsDealt(true), MOBILE_DEAL_DURATION);
     return () => clearTimeout(timeoutId);
   }, []);
 
+  // Scale the whole fan down to the available width so its outer cards are
+  // never clipped by the screen — the fan shrinks instead.
+  useEffect(() => {
+    const el = fanRef.current;
+    if (!el) return;
+    const update = () => {
+      const available = el.clientWidth - MOBILE_STAGE_MARGIN * 2;
+      setScale(Math.min(1, Math.max(0, available) / MOBILE_STAGE_W));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const rowCenterCx = MOBILE_STAGE_W / 2;
 
-  const renderRow = (row: MobileCardSpec[], rowOffset: number) =>
+  /**
+   * Stacking is fixed and never changes on hover/flip: the centre card of each
+   * row sits highest, the outer cards lowest, and the whole front row sits
+   * above the whole back row. A hovered card lifts + flips in place at its own
+   * level, so it stays behind whatever overlaps it in the fan.
+   */
+  const renderRow = (row: MobileCardSpec[], rowOffset: number, rowBaseZ: number) =>
     row.map((card, i) => {
       const globalIndex = rowOffset + i;
       const midpoint = (row.length - 1) / 2;
-      const stackZ = row.length - Math.round(Math.abs(i - midpoint));
-      const isHovered = hoveredIndex === globalIndex;
+      const stackZ = rowBaseZ + (row.length - Math.round(Math.abs(i - midpoint)));
       return (
         <MobileFlippableCard
           key={card.key}
           card={card}
           rowCenterCx={rowCenterCx}
-          isHovered={isHovered}
+          isHovered={hoveredIndex === globalIndex}
           isDealt={isDealt}
-          zIndex={isHovered ? 100 : stackZ}
+          zIndex={stackZ}
           onHoverStart={() => onCardHoverChange(globalIndex)}
           onHoverEnd={() => onCardHoverChange(null)}
         />
@@ -500,9 +495,27 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFa
     });
 
   return (
-    <div className={styles.mobileFan}>
-      <div className={styles.mobileBackRow}>{renderRow(back, 0)}</div>
-      <div className={styles.mobileFrontRow}>{renderRow(front, back.length)}</div>
+    <div
+      ref={fanRef}
+      className={styles.mobileFan}
+      style={{ height: MOBILE_STAGE_H * scale }}
+    >
+      <div
+        className={styles.mobileFanStage}
+        style={{
+          width: MOBILE_STAGE_W,
+          height: MOBILE_STAGE_H,
+          transform: `scale(${scale})`,
+        }}
+      >
+        <div className={styles.mobileBackRow}>{renderRow(back, 0, 0)}</div>
+        <div
+          className={styles.mobileFrontRow}
+          style={{ marginTop: MOBILE_ROW_GAP - MOBILE_CARD_H }}
+        >
+          {renderRow(front, back.length, 10)}
+        </div>
+      </div>
     </div>
   );
 }

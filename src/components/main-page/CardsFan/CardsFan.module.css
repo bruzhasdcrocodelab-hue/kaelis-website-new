@@ -36,7 +36,7 @@
 .cardSideInner {
   position: absolute;
   inset: 0;
-  border-radius: var(--radius-card);
+  border-radius: 12;
   overflow: hidden;
   /* box-shadow: var(--shadow-default); */
 }
@@ -67,7 +67,7 @@
 @media (max-width: 768px) {
   .cardsFan {
     height: auto;
-    padding-top: 8px;
+    margin-top: 64;
   }
 
   .inner {
@@ -75,22 +75,30 @@
   }
 
   .mobileFan {
-    display: block;
+    display: flex;
     position: relative;
-    width: 390px;
-    max-width: 390px;
+    justify-content: center;
+    width: 100%;
+    /* height is set inline to the scaled stage height */
+  }
+
+  .mobileFanStage {
+    position: relative;
+    flex: none;
+    transform-origin: top center;
+    /* width / height / transform are set inline */
   }
 
   .mobileBackRow {
     position: relative;
     width: 100%;
-    height: 180px;
+    height: 211px;
   }
 
   .mobileFrontRow {
     position: relative;
     width: 100%;
-    height: 180px;
-    margin-top: -60px;
+    height: 211px;
+    /* margin-top set inline to overlap the back row */
   }
 }
