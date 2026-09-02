@@ -12,6 +12,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -22,12 +24,22 @@
 }
 
 .title {
+  max-width: 100%;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  white-space: nowrap;
+  font-size: clamp(
+    var(--text-terms-title-mobile),
+    5.5vw + 1rem,
+    var(--text-terms-title)
+  );
+  text-align: center;
   line-height: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .lastUpdated {
@@ -50,14 +62,7 @@
   }
 
   .title {
-    max-width: 100%;
-    white-space: normal;
-    text-align: center;
-    font-size: var(--text-terms-title-mobile);
     letter-spacing: var(--tracking-terms-title-mobile);
-    overflow-wrap: break-word;
-    hyphens: auto;
-    -webkit-hyphens: auto;
   }
 
   .lastUpdated {

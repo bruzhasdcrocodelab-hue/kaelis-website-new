@@ -1,6 +1,6 @@
 import type { Dictionary, Locale } from "@/lang";
 import { htmlLang } from "@/lang";
-import { isSingleWord, withSoftHyphens } from "@/lib/hyphenate";
+import { withSoftHyphens } from "@/lib/hyphenate";
 import styles from "./TermsHeroSection.module.css";
 
 export interface TermsHeroSectionProps {
@@ -9,12 +9,10 @@ export interface TermsHeroSectionProps {
 }
 
 export default function TermsHeroSection({ dictionary, locale }: TermsHeroSectionProps) {
-  const title = isSingleWord(dictionary.title)
-    ? withSoftHyphens(dictionary.title)
-    : dictionary.title
-        .split(/(\s+)/)
-        .map((part) => (part.trim() ? withSoftHyphens(part) : part))
-        .join("");
+  const title = dictionary.title
+    .split(/(\s+)/)
+    .map((part) => (part.trim() ? withSoftHyphens(part) : part))
+    .join("");
 
   return (
     <section className={styles.section}>
