@@ -172,14 +172,19 @@ export default function MainButton({
 
   if (href) {
     return (
-      <Link href={href} className={buttonClasses} style={blurStyle}>
+      <Link
+        href={href}
+        className={buttonClasses}
+        // style={blurStyle}
+        aria-label={rest["aria-label"]}
+      >
         {content}
       </Link>
     );
   }
 
   return (
-    <button type={type} className={buttonClasses} style={blurStyle} {...rest}>
+    <button type={type} className={buttonClasses} {...rest}>
       {content}
     </button>
   );

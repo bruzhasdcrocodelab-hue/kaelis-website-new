@@ -32,7 +32,7 @@ export default function TermsPageView({ dictionary, locale }: TermsPageViewProps
       />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
-        <TermsHeroSection dictionary={dictionary.termsOfUse} />
+        <TermsHeroSection dictionary={dictionary.termsOfUse} locale={locale} />
         <div className={styles.articleWrap}>
           <TermsArticleCard dictionary={dictionary.termsOfUse} />
         </div>

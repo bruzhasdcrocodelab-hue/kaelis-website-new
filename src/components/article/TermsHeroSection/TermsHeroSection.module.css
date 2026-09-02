@@ -50,10 +50,14 @@
   }
 
   .title {
+    max-width: 100%;
     white-space: normal;
     text-align: center;
     font-size: var(--text-terms-title-mobile);
     letter-spacing: var(--tracking-terms-title-mobile);
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
   }
 
   .lastUpdated {
