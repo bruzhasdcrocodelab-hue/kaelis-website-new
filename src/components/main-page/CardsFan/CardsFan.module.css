@@ -45,3 +45,52 @@
   object-fit: cover;
   pointer-events: none;
 }
+
+/* ---- Mobile: two synchronised fans ---- */
+.mobileFan {
+  display: none;
+}
+
+.mobileCardWrap {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileCard {
+  position: relative;
+  width: 121px;
+  height: 220px;
+}
+
+@media (max-width: 768px) {
+  .cardsFan {
+    height: auto;
+    padding-top: 8px;
+  }
+
+  .inner {
+    display: none;
+  }
+
+  .mobileFan {
+    display: block;
+    position: relative;
+    width: 390px;
+    max-width: 390px;
+  }
+
+  .mobileBackRow {
+    position: relative;
+    width: 100%;
+    height: 180px;
+  }
+
+  .mobileFrontRow {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    margin-top: -60px;
+  }
+}

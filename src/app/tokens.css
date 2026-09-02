@@ -55,6 +55,20 @@
     var(--color-gold) 31.76%,
     rgba(245, 208, 176, 0) 59.05%
   );
+  --gradient-topblock-mobile: linear-gradient(
+    180deg,
+    var(--color-white-75) 0%,
+    var(--color-white) 100%
+  );
+  --gradient-main-bg-mobile: linear-gradient(
+    180deg,
+    #241b3f 0%,
+    #3a2a6b 22%,
+    #5a3fa0 46%,
+    #7b5cc0 66%,
+    #9878cf 82%,
+    #b49ad9 100%
+  );
 
   /* ---- Effects: shadows (layered, shallow -> deep) ---- */
   --shadow-color: 145 145 145;
@@ -140,6 +154,11 @@
   /* --tracking-category-title: -4.5px; */
   --text-topblock-title: 56px;
   --tracking-topblock-title: -3px;
+
+  /* ---- Typography: main-page hero mobile (one-off, node-id=1888-7553) ---- */
+  --text-hero-mobile: 48px;
+  --text-hero-guide-mobile: 32px;
+  --tracking-hero-mobile: -3px;
 
   /* ---- Typography: Terms of Use hero title (one-off, node-id=1507-1475) ---- */
   --text-terms-title: 80px;

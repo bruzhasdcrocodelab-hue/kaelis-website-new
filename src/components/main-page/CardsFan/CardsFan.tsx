@@ -236,6 +236,273 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
           );
         })}
       </div>
+      <MobileCardsFan
+        dictionary={dictionary}
+        hoveredIndex={hoveredIndex}
+        onCardHoverChange={onCardHoverChange}
+      />
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * Mobile: two synchronised fans (back row + front row) mirroring the desktop
+ * deal + hover-flip animation. Rendered alongside the desktop fan and toggled
+ * by CSS at the 768px breakpoint.
+ * ------------------------------------------------------------------------- */
+
+const MOBILE_CARD_W = 121;
+const MOBILE_CARD_H = 220;
+const MOBILE_STAGE_W = 390;
+const MOBILE_LIFT = 32;
+const MOBILE_DEAL_DURATION = 900;
+
+interface MobileCardSpec {
+  key: string;
+  slug?: string;
+  srcBack: string;
+  srcFront?: string;
+  alt: string;
+  /** card centre X within the 390px stage */
+  cx: number;
+  /** card centre Y within its row */
+  cy: number;
+  rotate: number;
+}
+
+function buildMobileRows(dictionary: Dictionary["cards"]): {
+  back: MobileCardSpec[];
+  front: MobileCardSpec[];
+} {
+  const back: MobileCardSpec[] = [
+    {
+      key: "love",
+      slug: "love",
+      srcBack: "/images/cards-turned/LoveTurned.png",
+      srcFront: "/images/cards/Love.png",
+      alt: dictionary.love,
+      cx: 49.6,
+      cy: 128.6,
+      rotate: -5.42,
+    },
+    {
+      key: "yesNo",
+      slug: "yes-no",
+      srcBack: "/images/cards-turned/YesNoTurned.png",
+      srcFront: "/images/cards/YesNo.png",
+      alt: dictionary.yesNo,
+      cx: 146.3,
+      cy: 116.3,
+      rotate: -2,
+    },
+    {
+      key: "oneCard",
+      slug: "one-card",
+      srcBack: "/images/cards-turned/OneCardTurned.png",
+      srcFront: "/images/cards/OneCard.png",
+      alt: dictionary.oneCard,
+      cx: 254.3,
+      cy: 112.3,
+      rotate: 2,
+    },
+    {
+      key: "threeCards",
+      slug: "three-cards",
+      srcBack: "/images/cards-turned/ThreeCardsTurned.png",
+      srcFront: "/images/cards/ThreeCards.png",
+      alt: dictionary.threeCards,
+      cx: 359.9,
+      cy: 117.9,
+      rotate: 5.52,
+    },
+  ];
+
+  const front: MobileCardSpec[] = [
+    {
+      key: "deck-8",
+      srcBack: "/images/cards/default-card.png",
+      alt: "",
+      cx: -25.2,
+      cy: 157.6,
+      rotate: -10.67,
+    },
+    {
+      key: "work",
+      slug: "work",
+      srcBack: "/images/cards-turned/WorkTurned.png",
+      srcFront: "/images/cards/Work.png",
+      alt: dictionary.work,
+      cx: 83.3,
+      cy: 127.3,
+      rotate: -5.42,
+    },
+    {
+      key: "family",
+      slug: "family",
+      srcBack: "/images/cards-turned/FamilyTurned.png",
+      srcFront: "/images/cards/Family.png",
+      alt: dictionary.family,
+      cx: 194.3,
+      cy: 110.2,
+      rotate: 0.17,
+    },
+    {
+      key: "money",
+      slug: "money",
+      srcBack: "/images/cards-turned/MoneyTurned.png",
+      srcFront: "/images/cards/Money.png",
+      alt: dictionary.money,
+      cx: 325.05,
+      cy: 115.96,
+      rotate: 5.52,
+    },
+    {
+      key: "deck-9",
+      srcBack: "/images/cards/default-card.png",
+      alt: "",
+      cx: 456.4,
+      cy: 134.3,
+      rotate: 11.57,
+    },
+  ];
+
+  return { back, front };
+}
+
+interface MobileFlippableCardProps {
+  card: MobileCardSpec;
+  rowCenterCx: number;
+  isHovered: boolean;
+  isDealt: boolean;
+  zIndex: number;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
+}
+
+function MobileFlippableCard({
+  card,
+  rowCenterCx,
+  isHovered,
+  isDealt,
+  zIndex,
+  onHoverStart,
+  onHoverEnd,
+}: MobileFlippableCardProps) {
+  const [showFront, setShowFront] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const flippable = Boolean(card.slug && card.srcFront);
+
+  useEffect(() => {
+    if (!flippable) return;
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(
+      () => setShowFront(isHovered),
+      (FLIP_DURATION * 1000) / 2,
+    );
+    return () => clearTimeout(timeoutRef.current);
+  }, [isHovered, flippable]);
+
+  const left = card.cx - MOBILE_CARD_W / 2;
+  const top = card.cy - MOBILE_CARD_H / 2;
+  const dealOffsetX = rowCenterCx - card.cx;
+  const dealOffsetY = -top;
+
+  const inner = (
+    <motion.div
+      className={styles.mobileCard}
+      initial={{ x: dealOffsetX, y: dealOffsetY, rotate: 0 }}
+      animate={{
+        x: 0,
+        rotate: card.rotate,
+        y: isDealt && isHovered && flippable ? -MOBILE_LIFT : 0,
+      }}
+      transition={
+        isDealt
+          ? { type: "spring", stiffness: 300, damping: 24 }
+          : { type: "spring", stiffness: 190, damping: 22 }
+      }
+    >
+      <motion.div
+        className={styles.cardFace}
+        animate={{ scaleX: !flippable || isHovered === showFront ? 1 : 0 }}
+        transition={{ duration: FLIP_DURATION / 2, ease: [0.4, 0, 0.2, 1] }}
+      >
+        <div className={styles.cardSideInner}>
+          <Image
+            src={showFront && card.srcFront ? card.srcFront : card.srcBack}
+            alt={card.alt}
+            fill
+            sizes="121px"
+          />
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+
+  const style = {
+    left,
+    top,
+    width: MOBILE_CARD_W,
+    height: MOBILE_CARD_H,
+    zIndex,
+  } as const;
+
+  if (!flippable) {
+    return (
+      <div className={styles.mobileCardWrap} style={style} aria-hidden>
+        {inner}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={`/categories/${card.slug}`}
+      className={styles.mobileCardWrap}
+      style={style}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+    >
+      {inner}
+    </Link>
+  );
+}
+
+function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
+  const { back, front } = buildMobileRows(dictionary);
+  const [isDealt, setIsDealt] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setIsDealt(true), MOBILE_DEAL_DURATION);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const rowCenterCx = MOBILE_STAGE_W / 2;
+
+  const renderRow = (row: MobileCardSpec[], rowOffset: number) =>
+    row.map((card, i) => {
+      const globalIndex = rowOffset + i;
+      const midpoint = (row.length - 1) / 2;
+      const stackZ = row.length - Math.round(Math.abs(i - midpoint));
+      const isHovered = hoveredIndex === globalIndex;
+      return (
+        <MobileFlippableCard
+          key={card.key}
+          card={card}
+          rowCenterCx={rowCenterCx}
+          isHovered={isHovered}
+          isDealt={isDealt}
+          zIndex={isHovered ? 100 : stackZ}
+          onHoverStart={() => onCardHoverChange(globalIndex)}
+          onHoverEnd={() => onCardHoverChange(null)}
+        />
+      );
+    });
+
+  return (
+    <div className={styles.mobileFan}>
+      <div className={styles.mobileBackRow}>{renderRow(back, 0)}</div>
+      <div className={styles.mobileFrontRow}>{renderRow(front, back.length)}</div>
     </div>
   );
 }

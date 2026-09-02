@@ -20,13 +20,16 @@ export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
       }}
     >
       <div className={styles.background} aria-hidden>
+                <div className={styles.backgroundTintMobile} />
         <div className={styles.backgroundTint} />
-        <Image
-          src="/images/backgrounds/TopBlock.png"
-          alt=""
-          fill
-          className={styles.backgroundImage}
-        />
+        <div className={styles.backgroundImageCrop}>
+          <Image
+            src="/images/backgrounds/TopBlock.png"
+            alt=""
+            fill
+            className={styles.backgroundImage}
+          />
+        </div>
       </div>
       <div className={styles.textPanel}>
         <p className={`font-instrument-sm ${styles.eyebrow}`}>{dictionary.eyebrow}</p>
