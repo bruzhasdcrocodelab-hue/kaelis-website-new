@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   width: 100%;
   height: 420px;
@@ -12,6 +12,8 @@
   position: relative;
   width: 1300px;
   height: 410px;
+  transform-origin: top center;
+  /* width / height / transform are set inline (scaled to fit the viewport) */
 }
 
 .cardWrap {
@@ -67,7 +69,7 @@
 @media (max-width: 768px) {
   .cardsFan {
     height: auto;
-    margin-top: 64;
+    margin-top: 64px;
   }
 
   .inner {
@@ -92,13 +94,13 @@
   .mobileBackRow {
     position: relative;
     width: 100%;
-    height: 211px;
+    height: 220px;
   }
 
   .mobileFrontRow {
     position: relative;
     width: 100%;
-    height: 211px;
+    height: 220px;
     /* margin-top set inline to overlap the back row */
   }
 }

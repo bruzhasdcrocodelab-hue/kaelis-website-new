@@ -13,6 +13,53 @@ export interface CardsFanProps {
   onCardHoverChange: (index: number | null) => void;
 }
 
+/**
+ * Scale a fixed-width fan stage down to the width actually available, so its
+ * outer cards are never clipped by the viewport — the fan just shrinks. Returns
+ * the current scale plus a ref to put on the element whose width is the budget.
+ * `active` gates the observer so the inactive (hidden) fan reports scale 1.
+ */
+function useFanScale(designWidth: number, sideMargin: number, active: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !active) {
+      setScale(1);
+      return;
+    }
+    const update = () => {
+      const available = el.clientWidth - sideMargin * 2;
+      const next = Math.max(0, available) / designWidth;
+      setScale(Math.min(1, next));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [designWidth, sideMargin, active]);
+
+  return { ref, scale };
+}
+
+/** Tracks a media query, SSR-safe (starts false, corrects on mount). */
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const update = () => setMatches(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, [query]);
+
+  return matches;
+}
+
+const MOBILE_QUERY = "(max-width: 768px)";
+
 interface CardSpec {
   key: string;
   slug: string;
@@ -119,15 +166,25 @@ const CARD_LIFT = 40;
 const FLIP_DURATION = 0.5;
 const FAN_CENTER_LEFT = 650;
 const FAN_CENTER_TOP = 205;
-const FAN_CENTER_INDEX = 3;
 const DEAL_DURATION = 900;
+const DESKTOP_STAGE_W = 1300;
+const DESKTOP_STAGE_H = 420;
+const DESKTOP_INNER_H = 410;
+/** Horizontal breathing room kept between the fan's outer cards and the screen edges. */
+const DESKTOP_STAGE_MARGIN = 24;
+/**
+ * The desktop fan's bottom always tucks behind the TopBlock panel (which has a
+ * fixed negative margin). Keep the fan's reserved height from collapsing below
+ * this as it scales down, so the cards stay visible above the panel instead of
+ * being swallowed by it.
+ */
+const DESKTOP_STAGE_MIN_H = 300;
 
 interface FlippableCardProps {
   card: CardSpec;
   isHovered: boolean;
   isDealt: boolean;
-  stackZIndex: number;
-  hoverZIndex: number;
+  zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
 }
@@ -136,8 +193,7 @@ function FlippableCard({
   card,
   isHovered,
   isDealt,
-  stackZIndex,
-  hoverZIndex,
+  zIndex,
   onHoverStart,
   onHoverEnd,
 }: FlippableCardProps) {
@@ -167,7 +223,7 @@ function FlippableCard({
         top: card.top,
         width: card.width,
         height: card.height,
-        zIndex: isDealt ? hoverZIndex : stackZIndex,
+        zIndex,
       }}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
@@ -207,10 +263,8 @@ function FlippableCard({
 export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
   const cards = buildCards(dictionary);
   const [isDealt, setIsDealt] = useState(false);
-
-  const dealOrder = [...cards.keys()].sort(
-    (a, b) => Math.abs(a - FAN_CENTER_INDEX) - Math.abs(b - FAN_CENTER_INDEX),
-  );
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+  const { ref: fanRef, scale } = useFanScale(DESKTOP_STAGE_W, DESKTOP_STAGE_MARGIN, !isMobile);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsDealt(true), DEAL_DURATION);
@@ -218,23 +272,35 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
   }, []);
 
   return (
-    <div className={styles.cardsFan}>
-      <div className={styles.inner}>
-        {cards.map((card, index) => {
-          const dealRank = dealOrder.indexOf(index);
-          return (
-            <FlippableCard
-              key={card.key}
-              card={card}
-              isHovered={hoveredIndex === index}
-              isDealt={isDealt}
-              stackZIndex={dealRank}
-              hoverZIndex={hoveredIndex === index ? 10 : index}
-              onHoverStart={() => onCardHoverChange(index)}
-              onHoverEnd={() => onCardHoverChange(null)}
-            />
-          );
-        })}
+    <div
+      ref={fanRef}
+      className={styles.cardsFan}
+      style={
+        isMobile
+          ? undefined
+          : { height: Math.max(DESKTOP_STAGE_H * scale, DESKTOP_STAGE_MIN_H) }
+      }
+    >
+      <div
+        className={styles.inner}
+        style={{
+          width: DESKTOP_STAGE_W,
+          height: DESKTOP_INNER_H,
+          transform: `scale(${scale})`,
+        }}
+      >
+        {cards.map((card, index) => (
+          <FlippableCard
+            key={card.key}
+            card={card}
+            isHovered={hoveredIndex === index}
+            isDealt={isDealt}
+            /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
+            zIndex={index}
+            onHoverStart={() => onCardHoverChange(index)}
+            onHoverEnd={() => onCardHoverChange(null)}
+          />
+        ))}
       </div>
       <MobileCardsFan
         dictionary={dictionary}
@@ -255,11 +321,17 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
  * never clipped by the viewport — the fan just shrinks.
  * ------------------------------------------------------------------------- */
 
+/**
+ * Design width of the mobile fan measured across the *visual* extent of its
+ * outer (rotated) cards, so at full scale the leftmost / rightmost cards just
+ * touch the screen edges. Narrower screens scale the whole stage down.
+ */
 const MOBILE_STAGE_W = 390;
 const MOBILE_STAGE_H = 360;
 const MOBILE_CARD_W = 121;
 const MOBILE_CARD_H = 220;
-const MOBILE_ROW_GAP = 116;
+/** How far down the back row the front row starts (smaller → more overlap). */
+const MOBILE_ROW_GAP = 126;
 const MOBILE_LIFT = 32;
 const MOBILE_DEAL_DURATION = 900;
 /** Horizontal breathing room kept between the fan's outer cards and the screen edges. */
@@ -284,7 +356,6 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
 } {
   const half = MOBILE_STAGE_W / 2;
   const backPitch = 92;
-  const frontPitch = 104;
   const cardBack = (
     key: string,
     slug: string,
@@ -303,11 +374,12 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
     rotate,
   });
 
+  // Back row: arc curving out toward the ends, tops dipping down at the edges.
   const back: MobileCardSpec[] = [
-    cardBack("Love", "love", dictionary.love, -1.5, -8, 14),
-    cardBack("YesNo", "yes-no", dictionary.yesNo, -0.5, -3, 3),
-    cardBack("OneCard", "one-card", dictionary.oneCard, 0.5, 3, 3),
-    cardBack("ThreeCards", "three-cards", dictionary.threeCards, 1.5, 8, 14),
+    cardBack("Love", "love", dictionary.love, -1.6, -5.5, 10),
+    cardBack("YesNo", "yes-no", dictionary.yesNo, -0.55, -2, 4),
+    cardBack("OneCard", "one-card", dictionary.oneCard, 0.55, 2, 4),
+    cardBack("ThreeCards", "three-cards", dictionary.threeCards, 1.6, 5.5, 10),
   ];
 
   const frontCard = (
@@ -315,7 +387,7 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
     slug: string | undefined,
     src: string,
     alt: string,
-    slot: number,
+    cxOffset: number,
     rotate: number,
     dy: number,
   ): MobileCardSpec => ({
@@ -324,17 +396,19 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
     srcBack: slug ? `/images/cards-turned/${src}Turned.png` : "/images/cards/default-card.png",
     srcFront: slug ? `/images/cards/${src}.png` : undefined,
     alt,
-    cx: half + slot * frontPitch,
+    cx: half + cxOffset,
     cy: MOBILE_CARD_H / 2 + dy,
     rotate,
   });
 
+  // Front row: Work / Family / Money are centred and prominent; the two decks
+  // (8, 9) sit further out so only a sliver peeks past each screen edge.
   const front: MobileCardSpec[] = [
-    frontCard("deck-8", undefined, "", "", -2, -13, 30),
-    frontCard("Work", "work", "Work", dictionary.work, -1, -6, 8),
+    frontCard("deck-8", undefined, "", "", -217, -11.5, 23),
+    frontCard("Work", "work", "Work", dictionary.work, -110, -5.5, 6),
     frontCard("Family", "family", "Family", dictionary.family, 0, 0, 0),
-    frontCard("Money", "money", "Money", dictionary.money, 1, 6, 8),
-    frontCard("deck-9", undefined, "", "", 2, 13, 30),
+    frontCard("Money", "money", "Money", dictionary.money, 110, 5.5, 6),
+    frontCard("deck-9", undefined, "", "", 217, 11.5, 23),
   ];
 
   return { back, front };
@@ -444,42 +518,25 @@ function MobileFlippableCard({
 function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
   const { back, front } = buildMobileRows(dictionary);
   const [isDealt, setIsDealt] = useState(false);
-  const fanRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+  const { ref: fanRef, scale } = useFanScale(MOBILE_STAGE_W, MOBILE_STAGE_MARGIN, isMobile);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsDealt(true), MOBILE_DEAL_DURATION);
     return () => clearTimeout(timeoutId);
   }, []);
 
-  // Scale the whole fan down to the available width so its outer cards are
-  // never clipped by the screen — the fan shrinks instead.
-  useEffect(() => {
-    const el = fanRef.current;
-    if (!el) return;
-    const update = () => {
-      const available = el.clientWidth - MOBILE_STAGE_MARGIN * 2;
-      setScale(Math.min(1, Math.max(0, available) / MOBILE_STAGE_W));
-    };
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const rowCenterCx = MOBILE_STAGE_W / 2;
 
   /**
-   * Stacking is fixed and never changes on hover/flip: the centre card of each
-   * row sits highest, the outer cards lowest, and the whole front row sits
-   * above the whole back row. A hovered card lifts + flips in place at its own
-   * level, so it stays behind whatever overlaps it in the fan.
+   * Stacking runs left → right and never changes on hover/flip: within a row
+   * the leftmost card sits lowest and the rightmost highest, and the whole
+   * front row sits above the whole back row. A hovered card lifts + flips in
+   * place at its own level, so it stays behind whatever overlaps it.
    */
   const renderRow = (row: MobileCardSpec[], rowOffset: number, rowBaseZ: number) =>
     row.map((card, i) => {
       const globalIndex = rowOffset + i;
-      const midpoint = (row.length - 1) / 2;
-      const stackZ = rowBaseZ + (row.length - Math.round(Math.abs(i - midpoint)));
       return (
         <MobileFlippableCard
           key={card.key}
@@ -487,7 +544,7 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFa
           rowCenterCx={rowCenterCx}
           isHovered={hoveredIndex === globalIndex}
           isDealt={isDealt}
-          zIndex={stackZ}
+          zIndex={rowBaseZ + i}
           onHoverStart={() => onCardHoverChange(globalIndex)}
           onHoverEnd={() => onCardHoverChange(null)}
         />
