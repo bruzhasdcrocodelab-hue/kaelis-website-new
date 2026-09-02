@@ -14,25 +14,35 @@ export interface TermsPageViewProps {
 export default function TermsPageView({ dictionary, locale }: TermsPageViewProps) {
   return (
     <div className={styles.page}>
-      <Image
+      {/* <Image
         src="/images/backgrounds/main.png"
         alt=""
         width={1440}
         height={500}
         className={styles.backgroundImage}
         priority
-      />
-      <Image
-        src="/images/backgrounds/pattern-article.svg"
-        alt=""
-        width={1440}
-        height={650}
-        className={styles.patternArticle}
-        priority
-      />
+      /> */}
       <div className={styles.content}>
-        <Header dictionary={dictionary.header} locale={locale} />
-        <TermsHeroSection dictionary={dictionary.termsOfUse} locale={locale} />
+        <div className={styles.hero}>
+          <Image
+            src="/images/backgrounds/main.png"
+            alt=""
+            width={1440}
+            height={500}
+            className={styles.backgroundImage}
+            priority
+          />
+          <Image
+            src="/images/backgrounds/pattern-article.svg"
+            alt=""
+            width={1440}
+            height={650}
+            className={styles.patternArticle}
+            priority
+          />
+          <Header dictionary={dictionary.header} locale={locale} />
+          <TermsHeroSection dictionary={dictionary.termsOfUse} locale={locale} />
+        </div>
         <div className={styles.articleWrap}>
           <TermsArticleCard dictionary={dictionary.termsOfUse} />
         </div>
