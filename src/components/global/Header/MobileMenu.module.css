@@ -1,0 +1,74 @@
+.wrapper {
+  display: flex;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border: 1.1px solid #d3aced;
+  border-radius: 30px;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.toggleActive {
+  border-color: transparent;
+  background: var(--color-white);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.toggleIcon {
+  width: 24px;
+  height: 24px;
+  background-image: var(--gradient-pink);
+  mask-image: url(/icons/menu.svg);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 24px 24px;
+  -webkit-mask-image: url(/icons/menu.svg);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: 24px 24px;
+}
+
+.toggleActive .toggleIcon {
+  background-image: none;
+  background-color: var(--color-black);
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 16px;
+  right: 16px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  padding: 16px;
+  border-radius: var(--radius-panel-mobile);
+  background: var(--color-white);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: 8px 4px;
+  color: var(--color-black);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-grey);
+}

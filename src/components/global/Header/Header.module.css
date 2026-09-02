@@ -13,11 +13,14 @@
   flex: 1 0 0;
   min-width: 0;
   color: var(--color-white);
+  white-space: nowrap;
   text-decoration: none;
 }
 
 .nav {
   display: flex;
+  flex-shrink: 1;
+  min-width: 0;
   gap: 42px;
   align-items: center;
   justify-content: center;
@@ -27,6 +30,7 @@
 
 .navLink {
   color: inherit;
+  text-align: center;
   text-decoration: none;
 }
 
@@ -41,4 +45,59 @@
   gap: 10px;
   align-items: center;
   justify-content: flex-end;
+}
+
+.menu {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .header {
+    gap: 16px;
+    padding: 32px;
+  }
+
+  .logo,
+  .actions {
+    flex: 0 0 auto;
+  }
+
+  .nav {
+    flex: 1 1 1;
+    justify-content: space-around;
+    gap: 10px;
+    white-space: normal;
+  }
+
+  .navLink {
+    overflow-wrap: break-word;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .logo {
+    font-size: var(--text-base);
+  }
+  .actions {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+  .nav,
+  .downloadApp {
+    display: none;
+  }
+
+  .menu {
+    display: flex;
+  }
 }

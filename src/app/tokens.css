@@ -108,7 +108,9 @@
 
   /* ---- Radii ---- */
   --radius-page: 50px;
+  --radius-page-mobile: 30px;
   --radius-panel: 30px;
+  --radius-panel-mobile: 20px;
   --radius-card: 16px;
 
   /* ---- Typography: font families ---- */
@@ -141,6 +143,8 @@
 
   /* ---- Typography: Terms of Use hero title (one-off, node-id=1507-1475) ---- */
   --text-terms-title: 80px;
+  --text-terms-title-mobile: 56px;
+  --tracking-terms-title-mobile: -3px;
 
   /* All type styles use 100% line-height and 400 weight unless noted. */
 
@@ -287,6 +291,14 @@
   font-style: normal;
   font-size: var(--text-terms-title);
   line-height: 1;
+}
+.font-bona-terms-title-mobile {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-terms-title-mobile);
+  line-height: 1;
+  letter-spacing: var(--tracking-terms-title-mobile);
 }
 .font-bona-4xl {
   font-family: var(--font-bona-nova-sc);
