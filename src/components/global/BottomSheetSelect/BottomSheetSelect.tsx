@@ -82,9 +82,12 @@ export default function BottomSheetSelect<T extends string>({
             <div className={styles.list}>
               {options.map((option, index) => {
                 const isActive = option.value === selectedValue;
+                const prev = options[index - 1];
+                const showDivider =
+                  index > 0 && !isActive && prev.value !== selectedValue;
                 return (
                   <div key={option.value} className={styles.optionGroup}>
-                    {index > 0 && <span className={styles.divider} />}
+                    {showDivider && <span className={styles.divider} />}
                     <button
                       type="button"
                       role="option"
