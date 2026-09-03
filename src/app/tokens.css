@@ -55,6 +55,20 @@
     var(--color-gold) 31.76%,
     rgba(245, 208, 176, 0) 59.05%
   );
+  --gradient-topblock-mobile: linear-gradient(
+    180deg,
+    var(--color-white-75) 0%,
+    var(--color-white) 100%
+  );
+  --gradient-main-bg-mobile: linear-gradient(
+    180deg,
+    #241b3f 0%,
+    #3a2a6b 22%,
+    #5a3fa0 46%,
+    #7b5cc0 66%,
+    #9878cf 82%,
+    #b49ad9 100%
+  );
 
   /* ---- Effects: shadows (layered, shallow -> deep) ---- */
   --shadow-color: 145 145 145;
@@ -140,6 +154,39 @@
   /* --tracking-category-title: -4.5px; */
   --text-topblock-title: 56px;
   --tracking-topblock-title: -3px;
+
+  /* ---- Typography: main-page hero mobile (one-off, node-id=1888-7553) ---- */
+  --text-hero-mobile: 48px;
+  --text-hero-guide-mobile: 32px;
+  --tracking-hero-mobile: -3px;
+
+  /*
+   * ---- Typography: main-page hero fluid sizes ----
+   * Font size scales linearly with viewport width between the mobile value
+   * (min, ~375px viewport) and the desktop value (max, ~1440px viewport).
+   * The middle term of each clamp() is the line through those two points:
+   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 375)
+   *   offset   = sizeMin - (vw-coeff / 100) * 375
+   * Letter-spacing interpolates the same way between the mobile and desktop
+   * tracking tokens.
+   */
+  --text-hero-guide-fluid: clamp(
+    var(--text-hero-guide-mobile),
+    1.502vw + 26.37px,
+    var(--text-hero)
+  );
+  --tracking-hero-guide-fluid: clamp(-3px, 0.01127vw - 3.042px, -2.88px);
+
+  --text-hero-word-fluid: clamp(var(--text-lg), 1.315vw + 13.07px, var(--text-3xl));
+
+  --text-hero-highlight-fluid: clamp(
+    var(--text-hero-mobile),
+    6.385vw + 24.06px,
+    var(--text-hero-emphasized)
+  );
+  --tracking-hero-highlight-fluid: clamp(-11.6px, -0.8075vw + 0.028px, -3px);
+
+  --text-hero-description-fluid: clamp(var(--text-xxs), 0.188vw + 11.3px, var(--text-sm));
 
   /* ---- Typography: Terms of Use hero title (one-off, node-id=1507-1475) ---- */
   --text-terms-title: 80px;

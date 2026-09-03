@@ -13,6 +13,7 @@ export default async function Home() {
 
   return (
     <div className={styles.page}>
+      <div className={styles.backgroundGradientMobile} aria-hidden />
       <Image
         src="/images/backgrounds/main.png"
         alt=""
@@ -43,6 +44,30 @@ export default async function Home() {
         width={340}
         height={750}
         className={styles.patternRight}
+        priority
+      />
+      <Image
+        src="/images/backgrounds/mobile/patterns-center.svg"
+        alt=""
+        width={147}
+        height={79}
+        className={styles.patternCenterMobile}
+        priority
+      />
+      <Image
+        src="/images/backgrounds/mobile/patterns-left.svg"
+        alt=""
+        width={108}
+        height={605}
+        className={styles.patternLeftMobile}
+        priority
+      />
+      <Image
+        src="/images/backgrounds/mobile/patterns-right.svg"
+        alt=""
+        width={108}
+        height={605}
+        className={styles.patternRightMobile}
         priority
       />
       <div className={styles.content}>

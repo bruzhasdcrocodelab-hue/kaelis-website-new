@@ -76,15 +76,18 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
               </AnimatePresence>
             </span>
           </MainButton>
+          {/* Anchored to the CTA button (not the section) so it holds the same
+              position relative to the button at every viewport width, regardless
+              of how the fluid headline above changes the section's height. */}
+          <motion.div
+            animate={{ opacity: isCardHovered ? 0 : 1, scale: isCardHovered ? 0.6 : 1 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            className={styles.star}
+          >
+            <Image src="/icons/main-star.svg" alt="" width={50} height={62} />
+          </motion.div>
         </motion.div>
       </div>
-      <motion.div
-        animate={{ opacity: isCardHovered ? 0 : 1, scale: isCardHovered ? 0.6 : 1 }}
-        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className={styles.star}
-      >
-        <Image src="/icons/main-star.svg" alt="" width={50} height={62} />
-      </motion.div>
     </section>
   );
 }

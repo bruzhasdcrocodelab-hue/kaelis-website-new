@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 160px 60px 60px;
+  padding: 11.111vw 60px 4.167vw;
   position: relative;
   overflow: clip;
 }
@@ -34,9 +34,18 @@
   align-items: center;
 }
 
+/*
+ * Hero headline font sizes scale fluidly with viewport width via clamp()
+ * (see the --text-hero-*-fluid tokens): the desktop value is the ceiling,
+ * the mobile value the floor, and the size interpolates smoothly between.
+ * These override the font-size/letter-spacing from the `font-bona-*`
+ * utility classes on the same elements.
+ */
 .titleLine1 {
   color: var(--color-white);
   margin-bottom: -30px;
+  font-size: var(--text-hero-guide-fluid);
+  letter-spacing: var(--tracking-hero-guide-fluid);
 }
 
 .titleRow {
@@ -48,6 +57,7 @@
 
 .titleWord {
   color: var(--color-white);
+  font-size: var(--text-hero-word-fluid);
 }
 
 .titleHighlight {
@@ -59,27 +69,35 @@
   padding-bottom: 11.5px;
   padding-right: 10px;
   margin-left: 10px;
+  font-size: var(--text-hero-highlight-fluid);
+  letter-spacing: var(--tracking-hero-highlight-fluid);
 }
 
 .description {
   color: var(--color-white);
   text-align: center;
   white-space: pre-line;
+  width: 285;
+  font-size: var(--text-hero-description-fluid);
+}
+
+/* Positioning context for the star, which is anchored to the button so it
+   stays put relative to the CTA at any viewport width. */
+.ctaButtonWrap {
+  display: inline-flex;
+  position: relative;
 }
 
 .star {
   position: absolute;
   left: 50%;
-  top: 420px;
-  width: 50px;
-  height: 62px;
+  top: 100%;
+  width: 3.472vw;
+  height: auto;
   pointer-events: none;
-  translate: -50% 0;
+  /* centre horizontally on the button; sit just below its bottom edge */
+  translate: -50% -30%;
   z-index: 10;
-}
-
-.ctaButtonWrap {
-  display: inline-flex;
 }
 
 .ctaLabelWrap {
@@ -114,4 +132,73 @@
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: 24px 24px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    gap: 40px;
+    padding: 30.769vw 16px 8.205vw;
+  }
+
+  .container {
+    gap: 16px;
+  }
+
+  .heading {
+    gap: 0;
+    padding: 0 64px;
+  }
+
+  /*
+   * Below 768px the headline scales almost purely with viewport width so it
+   * occupies the same share of the screen at every width (matches the 390px
+   * reference). The desktop-oriented `--text-hero-*-fluid` tokens grew too
+   * slowly with vw here, leaving the type looking small between 450–768px.
+   * Each middle term is anchored so the size at 390px matches the previous
+   * fluid value; the clamp ceiling is the value reached at 768px.
+   */
+  .titleLine1 {
+    margin-bottom: -10px;
+    font-size: clamp(26px, 8.26vw, 63.4px);
+  }
+
+  .titleRow {
+    gap: 4px;
+    padding-top: 0;
+  }
+
+  .titleRow .titleWord {
+    margin: 0 !important;
+  }
+
+  .titleWord {
+    font-size: clamp(15px, 4.67vw, 35.9px);
+  }
+
+  .titleHighlight {
+    /* letter-spacing still scales via --tracking-hero-highlight-fluid */
+    padding: 0;
+    margin: 0;
+    font-size: clamp(40px, 12.55vw, 96.4px);
+  }
+
+  .description {
+    white-space: normal;
+  }
+
+  .star {
+    /* still anchored to the button (top: 100% / translate from the base rule);
+       only the size shrinks on mobile */
+    width: 7.692vw;
+    height: auto;
+  }
+
+  .ctaButtonWrap :global(button) {
+    height: 40px;
+    padding: 10px 16px;
+  }
+
+  .ctaButtonWrap :global(button) :global(span) {
+    font-size: var(--text-xs);
+  }
 }
