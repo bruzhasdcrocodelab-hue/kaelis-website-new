@@ -13,13 +13,41 @@ export interface CardsFanProps {
   onCardHoverChange: (index: number | null) => void;
 }
 
+const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
 /**
- * Scale a fixed-width fan stage down to the width actually available, so its
- * outer cards are never clipped by the viewport — the fan just shrinks. Returns
- * the current scale plus a ref to put on the element whose width is the budget.
- * `active` gates the observer so the inactive (hidden) fan reports scale 1.
+ * Viewport widths (px) that pin the two ends of the shared card-size ramp.
+ * Between them the target card width scales linearly.
  */
-function useFanScale(designWidth: number, sideMargin: number, active: boolean) {
+const RAMP_MIN_VW = 390;
+const RAMP_MAX_VW = 1440;
+/**
+ * Target card width (px) at each end of the ramp. The minimum matches the mobile
+ * card (see MOBILE_CARD_W); the maximum is the desktop `.card` box at scale 1
+ * (see CardsFan.module.css).
+ */
+const RAMP_MIN_CARD_W = 121;
+const RAMP_MAX_CARD_W = 165;
+
+/**
+ * Target card width for a viewport width. Clamped at the top (never bigger than
+ * the desktop reference) but *not* at the bottom: below RAMP_MIN_VW it keeps
+ * shrinking with the viewport so narrow phones scale the fan down instead of
+ * clipping it.
+ */
+function rampCardWidth(viewportWidth: number) {
+  const t = (viewportWidth - RAMP_MIN_VW) / (RAMP_MAX_VW - RAMP_MIN_VW);
+  return lerp(RAMP_MIN_CARD_W, RAMP_MAX_CARD_W, Math.min(1, t));
+}
+
+/**
+ * Run `computeScale(viewportWidth)` on mount and on every resize. `active` gates
+ * it so the inactive (hidden) fan just reports scale 1. Returns the scale plus a
+ * ref for the element whose box the ResizeObserver watches (layout changes that
+ * don't resize the window, e.g. the page border toggling at the breakpoint).
+ */
+function useFanScale(computeScale: (viewportWidth: number) => number, active: boolean) {
   const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -29,16 +57,16 @@ function useFanScale(designWidth: number, sideMargin: number, active: boolean) {
       setScale(1);
       return;
     }
-    const update = () => {
-      const available = el.clientWidth - sideMargin * 2;
-      const next = Math.max(0, available) / designWidth;
-      setScale(Math.min(1, next));
-    };
+    const update = () => setScale(computeScale(window.innerWidth || el.clientWidth));
     update();
     const observer = new ResizeObserver(update);
     observer.observe(el);
-    return () => observer.disconnect();
-  }, [designWidth, sideMargin, active]);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [computeScale, active]);
 
   return { ref, scale };
 }
@@ -170,8 +198,33 @@ const DEAL_DURATION = 900;
 const DESKTOP_STAGE_W = 1300;
 const DESKTOP_STAGE_H = 420;
 const DESKTOP_INNER_H = 410;
-/** Horizontal breathing room kept between the fan's outer cards and the screen edges. */
-const DESKTOP_STAGE_MARGIN = 24;
+/** The desktop `.card` box width at scale 1 (see CardsFan.module.css). */
+const DESKTOP_REF_CARD_W = RAMP_MAX_CARD_W;
+/**
+ * Visual width (px) of the desktop fan's outer (rotated) cards at scale 1,
+ * centred within the DESKTOP_STAGE_W box. The fan is scaled to keep this within
+ * the viewport (minus DESKTOP_FIT_MARGIN each side) so the outer cards are not
+ * clipped — until the card would drop below DESKTOP_MIN_CARD_W, past which the
+ * fan holds that size and the outer cards are allowed to spill off-screen.
+ */
+const DESKTOP_FAN_EXTENT = 1228;
+const DESKTOP_FIT_MARGIN = 16;
+/**
+ * Floor for the desktop card width. Below the 768px breakpoint the mobile fan
+ * takes over at ~137px cards; the desktop fan is allowed to bottom out smaller
+ * than that near its own lower edge (769px) so its 7-card row still mostly fits.
+ */
+const DESKTOP_MIN_CARD_W = 110;
+
+/**
+ * Desktop fan scale: fit the fan within the viewport, but never smaller than
+ * DESKTOP_MIN_CARD_W and never larger than scale 1.
+ */
+function desktopFanScale(viewportWidth: number) {
+  const fitScale = (viewportWidth - DESKTOP_FIT_MARGIN * 2) / DESKTOP_FAN_EXTENT;
+  return clamp(fitScale, DESKTOP_MIN_CARD_W / DESKTOP_REF_CARD_W, 1);
+}
+
 /**
  * The desktop fan's bottom always tucks behind the TopBlock panel (which has a
  * fixed negative margin). Keep the fan's reserved height from collapsing below
@@ -264,7 +317,7 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
   const cards = buildCards(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
-  const { ref: fanRef, scale } = useFanScale(DESKTOP_STAGE_W, DESKTOP_STAGE_MARGIN, !isMobile);
+  const { ref: fanRef, scale } = useFanScale(desktopFanScale, !isMobile);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsDealt(true), DEAL_DURATION);
@@ -317,25 +370,37 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
  * by CSS at the 768px breakpoint.
  *
  * The fan is laid out in a fixed design coordinate space (MOBILE_STAGE_W wide)
- * and the whole stage is scaled down by CSS on narrower screens, so cards are
- * never clipped by the viewport — the fan just shrinks.
+ * and the whole stage is scaled by CSS to the viewport (see mobileFanScale), so
+ * the composition holds and the fan just shrinks on narrow screens.
  * ------------------------------------------------------------------------- */
 
 /**
- * Design width of the mobile fan measured across the *visual* extent of its
- * outer (rotated) cards, so at full scale the leftmost / rightmost cards just
- * touch the screen edges. Narrower screens scale the whole stage down.
+ * Design width of the mobile fan. At this viewport width the fan sits at scale 1
+ * (card = MOBILE_CARD_W); wider screens grow it along the shared ramp up to the
+ * 768px breakpoint, narrower screens scale the whole stage down with the
+ * viewport.
  */
 const MOBILE_STAGE_W = 390;
 const MOBILE_STAGE_H = 360;
-const MOBILE_CARD_W = 121;
+const MOBILE_CARD_W = RAMP_MIN_CARD_W;
 const MOBILE_CARD_H = 220;
 /** How far down the back row the front row starts (smaller → more overlap). */
 const MOBILE_ROW_GAP = 126;
 const MOBILE_LIFT = 32;
 const MOBILE_DEAL_DURATION = 900;
-/** Horizontal breathing room kept between the fan's outer cards and the screen edges. */
-const MOBILE_STAGE_MARGIN = 12;
+
+/**
+ * Mobile fan scale. At/above MOBILE_STAGE_W the card follows the shared ramp
+ * (121px → ~137px up to the 768px breakpoint). Below MOBILE_STAGE_W the stage
+ * tracks the viewport directly, so the fan shrinks with the screen (cards
+ * smaller than 121px) instead of being clipped — the edge decks keep the same
+ * proportional peek they have at 390px.
+ */
+function mobileFanScale(viewportWidth: number) {
+  const rampScale = rampCardWidth(viewportWidth) / MOBILE_CARD_W;
+  const fitScale = viewportWidth / MOBILE_STAGE_W;
+  return Math.min(rampScale, fitScale);
+}
 
 interface MobileCardSpec {
   key: string;
@@ -519,7 +584,7 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFa
   const { back, front } = buildMobileRows(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
-  const { ref: fanRef, scale } = useFanScale(MOBILE_STAGE_W, MOBILE_STAGE_MARGIN, isMobile);
+  const { ref: fanRef, scale } = useFanScale(mobileFanScale, isMobile);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsDealt(true), MOBILE_DEAL_DURATION);
