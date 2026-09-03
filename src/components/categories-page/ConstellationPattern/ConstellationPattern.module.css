@@ -28,10 +28,6 @@
   }
 }
 
-.glow {
-  animation: constellationPulse var(--pattern-pulse-duration) ease-in-out infinite;
-}
-
 .spinClockwise {
   animation: constellationSpin var(--constellation-spin-duration) linear infinite;
 }
@@ -77,18 +73,7 @@
   }
 }
 
-@keyframes constellationPulse {
-  0%,
-  100% {
-    opacity: var(--pattern-pulse-opacity-max);
-  }
-  50% {
-    opacity: var(--pattern-pulse-opacity-min);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .glow,
   .spinClockwise,
   .spinCounterClockwise,
   .spinClockwiseRelativeToCounterRing,
