@@ -25,19 +25,32 @@
 
 .backgroundImageCrop {
   /*
-   * The source image is 3960x1080 (aspect ratio ~3.667). We size the crop box
-   * to that exact ratio, lock its height to the visible band, and pin it to the
-   * right edge. As the panel narrows, the box overflows past the LEFT edge and
-   * is clipped there -- so the crop always eats the left side of the image
-   * while the phone on the right stays anchored in view. At the wide end the
-   * box width (~1320px) matches the panel width, so almost the whole image
-   * shows, preserving the intended 1440px composition.
+   * The source image is 3960x1080 (aspect ratio ~3.667). The crop box keeps
+   * that exact ratio, its height locked to the visible band, so at the wide end
+   * its width (~1320px) matches the panel and almost the whole image shows --
+   * the intended 1440px composition.
+   *
+   * As the panel narrows below ~1320px the box overflows it. We split that
+   * overflow between the two sides: half of it (capped at --bg-image-hide-right
+   * of the box width, the same 12.5% the mobile layout hides) is spent on the
+   * RIGHT so the phone drifts toward the panel edge without being clipped past
+   * the mobile framing; the rest is spent on the LEFT. So both sides crop on
+   * the way down, but the left always more than the right.
    */
   --bg-image-band: 360px;
+  --bg-image-width: calc(var(--bg-image-band) * 3.667);
+  --bg-image-hide-right: 0.125;
+  --bg-image-overflow: max(var(--bg-image-width) - 100%, 0px);
   position: absolute;
   top: 0;
-  right: 0;
-  width: calc(var(--bg-image-band) * 3.667);
+  left: auto;
+  right: calc(
+    -1 * min(
+      var(--bg-image-overflow) / 2,
+      var(--bg-image-width) * var(--bg-image-hide-right)
+    )
+  );
+  width: var(--bg-image-width);
   height: var(--bg-image-band);
   min-width: 100%;
 }
