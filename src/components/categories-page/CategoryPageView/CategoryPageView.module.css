@@ -55,7 +55,7 @@
        band clears the subcategory rows (which can run to 4 rows deep) and only
        meets the page where the light TopBlock panel takes over. It's a smooth
        vertical gradient, so the vertical stretch is not visible. */
-    height: 1400px;
+    height: 100%;
     object-fit: cover;
     object-position: top;
     pointer-events: none;

@@ -179,7 +179,6 @@
     height: auto;
     padding: 8px 16px 56px;
     border-radius: var(--radius-topblock-panel-mobile) var(--radius-topblock-panel-mobile) 0 0;
-    background: var(--gradient-topblock-mobile);
     box-shadow: none;
   }
 
@@ -213,8 +212,11 @@
     display: none;
   }
 
+  /* Same role as the desktop .panel::before: a fill over the card fan
+     (::before sits at z-index 1, the fan at z-index 0) so the fan reads as
+     behind the block's surface rather than sitting on top of it. */
   .panel::before {
-    background: transparent;
+    background: var(--gradient-topblock-mobile);
   }
 
   .panelConfirmed {
