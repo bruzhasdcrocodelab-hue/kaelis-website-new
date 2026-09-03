@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 160px 60px 60px;
+  padding: 11.111vw 60px 60px;
   position: relative;
   overflow: clip;
 }
@@ -34,9 +34,18 @@
   align-items: center;
 }
 
+/*
+ * Hero headline font sizes scale fluidly with viewport width via clamp()
+ * (see the --text-hero-*-fluid tokens): the desktop value is the ceiling,
+ * the mobile value the floor, and the size interpolates smoothly between.
+ * These override the font-size/letter-spacing from the `font-bona-*`
+ * utility classes on the same elements.
+ */
 .titleLine1 {
   color: var(--color-white);
   margin-bottom: -30px;
+  font-size: var(--text-hero-guide-fluid);
+  letter-spacing: var(--tracking-hero-guide-fluid);
 }
 
 .titleRow {
@@ -48,6 +57,7 @@
 
 .titleWord {
   color: var(--color-white);
+  font-size: var(--text-hero-word-fluid);
 }
 
 .titleHighlight {
@@ -59,6 +69,8 @@
   padding-bottom: 11.5px;
   padding-right: 10px;
   margin-left: 10px;
+  font-size: var(--text-hero-highlight-fluid);
+  letter-spacing: var(--tracking-hero-highlight-fluid);
 }
 
 .description {
@@ -66,6 +78,7 @@
   text-align: center;
   white-space: pre-line;
   width: 285;
+  font-size: var(--text-hero-description-fluid);
 }
 
 .star {
@@ -120,7 +133,7 @@
 @media (max-width: 768px) {
   .hero {
     gap: 40px;
-    padding: 120px 16px 32px;
+    padding: 30.769vw 16px 32px;
   }
 
   .container {
@@ -133,8 +146,7 @@
   }
 
   .titleLine1 {
-    font-size: var(--text-hero-guide-mobile);
-    letter-spacing: var(--tracking-hero-mobile);
+    /* font-size / letter-spacing scale fluidly via --text-hero-guide-fluid */
     margin-bottom: -10px;
   }
 
@@ -144,20 +156,16 @@
   }
 
   .titleRow .titleWord {
-    font-size: var(--text-lg);
-    letter-spacing: var(--tracking-bona-lg-emphasized);
     margin: 0 !important;
   }
 
   .titleHighlight {
-    font-size: var(--text-hero-mobile);
-    letter-spacing: var(--tracking-hero-mobile);
+    /* font-size / letter-spacing scale fluidly via --text-hero-highlight-fluid */
     padding: 0;
     margin: 0;
   }
 
   .description {
-    font-size: var(--text-xxs);
     white-space: normal;
   }
 
