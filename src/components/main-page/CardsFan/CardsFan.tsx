@@ -196,7 +196,6 @@ const FAN_CENTER_LEFT = 650;
 const FAN_CENTER_TOP = 205;
 const DEAL_DURATION = 900;
 const DESKTOP_STAGE_W = 1300;
-const DESKTOP_STAGE_H = 420;
 const DESKTOP_INNER_H = 410;
 /** The desktop `.card` box width at scale 1 (see CardsFan.module.css). */
 const DESKTOP_REF_CARD_W = RAMP_MAX_CARD_W;
@@ -226,12 +225,27 @@ function desktopFanScale(viewportWidth: number) {
 }
 
 /**
- * The desktop fan's bottom always tucks behind the TopBlock panel (which has a
- * fixed negative margin). Keep the fan's reserved height from collapsing below
- * this as it scales down, so the cards stay visible above the panel instead of
- * being swallowed by it.
+ * Anchoring the TopBlock panel to the fan.
+ *
+ * `.inner` sits at the top of `.cardsFan` with `transform-origin: top center`,
+ * so the fan's lowest card bottom is DESKTOP_FAN_BOTTOM * scale below the
+ * container top. TopBlock is pulled up onto the fan by a fixed CSS
+ * `margin-top: -DESKTOP_TOPBLOCK_MARGIN`. To make the panel cover the *same
+ * fraction* of every card regardless of scale, the container height is
+ *
+ *   H = (DESKTOP_FAN_BOTTOM - DESKTOP_TOPBLOCK_OVERLAP) * scale + DESKTOP_TOPBLOCK_MARGIN
+ *
+ * which gives  overlap = fanBottom - (H - margin) = DESKTOP_TOPBLOCK_OVERLAP * scale.
+ * The margin term cancels; it is kept only so H stays 420 (the old fixed height)
+ * at scale 1.
  */
-const DESKTOP_STAGE_MIN_H = 300;
+const DESKTOP_FAN_BOTTOM = 413;
+const DESKTOP_TOPBLOCK_OVERLAP = 162;
+const DESKTOP_TOPBLOCK_MARGIN = 169;
+
+function desktopCardsFanHeight(scale: number) {
+  return (DESKTOP_FAN_BOTTOM - DESKTOP_TOPBLOCK_OVERLAP) * scale + DESKTOP_TOPBLOCK_MARGIN;
+}
 
 interface FlippableCardProps {
   card: CardSpec;
@@ -328,11 +342,7 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
     <div
       ref={fanRef}
       className={styles.cardsFan}
-      style={
-        isMobile
-          ? undefined
-          : { height: Math.max(DESKTOP_STAGE_H * scale, DESKTOP_STAGE_MIN_H) }
-      }
+      style={isMobile ? undefined : { height: desktopCardsFanHeight(scale) }}
     >
       <div
         className={styles.inner}
@@ -400,6 +410,26 @@ function mobileFanScale(viewportWidth: number) {
   const rampScale = rampCardWidth(viewportWidth) / MOBILE_CARD_W;
   const fitScale = viewportWidth / MOBILE_STAGE_W;
   return Math.min(rampScale, fitScale);
+}
+
+/**
+ * Anchoring the TopBlock panel to the mobile fan — same idea as the desktop
+ * `desktopCardsFanHeight` (see there). The front row's lowest card bottom is
+ * MOBILE_FRONT_BOTTOM * scale below the `.mobileFan` top; TopBlock is pulled up
+ * by a fixed CSS `margin-top: -MOBILE_TOPBLOCK_MARGIN`. Setting
+ *
+ *   Hm = (MOBILE_FRONT_BOTTOM - MOBILE_TOPBLOCK_OVERLAP) * scale + MOBILE_TOPBLOCK_MARGIN
+ *
+ * makes the panel cover MOBILE_TOPBLOCK_OVERLAP * scale of every card (≈45% of
+ * the Family card) at any width. The margin term cancels; it is kept so Hm stays
+ * MOBILE_STAGE_H at scale 1.
+ */
+const MOBILE_FRONT_BOTTOM = 346;
+const MOBILE_TOPBLOCK_OVERLAP = 100;
+const MOBILE_TOPBLOCK_MARGIN = 114;
+
+function mobileFanHeight(scale: number) {
+  return (MOBILE_FRONT_BOTTOM - MOBILE_TOPBLOCK_OVERLAP) * scale + MOBILE_TOPBLOCK_MARGIN;
 }
 
 interface MobileCardSpec {
@@ -620,7 +650,7 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFa
     <div
       ref={fanRef}
       className={styles.mobileFan}
-      style={{ height: MOBILE_STAGE_H * scale }}
+      style={{ height: mobileFanHeight(scale) }}
     >
       <div
         className={styles.mobileFanStage}
