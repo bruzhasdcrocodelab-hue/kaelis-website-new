@@ -11,7 +11,8 @@ export interface SubcategoryNodeProps {
   href: string;
   label: string;
   icon: CategoryIcon;
-  position: SubcategoryPosition;
+  /** Absolute position on the desktop arc. Omitted for the in-flow mobile rows. */
+  position?: SubcategoryPosition;
   locale: Locale;
 }
 
@@ -39,8 +40,8 @@ export default function SubcategoryNode({ href, label, icon, position, locale }:
   return (
     <Link
       href={href}
-      className={styles.node}
-      style={{ left: `${position.xPct}%`, top: position.yPx }}
+      className={`${styles.node} ${position ? styles.nodeArc : styles.nodeFlow}`}
+      style={position ? { left: `${position.xPct}%`, top: position.yPx } : undefined}
     >
       <span
         className={styles.float}

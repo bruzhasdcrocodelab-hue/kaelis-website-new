@@ -120,6 +120,25 @@ export interface SubcategoryPosition {
 }
 
 /**
+ * Mobile layout: subcategory tiles stack in centered rows under the copy
+ * instead of arcing over it. Reading the reference maps
+ * (node-id=1888-7843 / 1888-8003 / 1888-8153 / 1888-9230 / 1892-9376 /
+ * 1892-9519), rows hold at most 4 tiles, the number of rows is
+ * `ceil(count / 4)`, and the count is split as evenly as possible across
+ * those rows with any remainder going to the earlier rows — so 5 -> [3, 2],
+ * 6 -> [3, 3], 7 -> [4, 3], 8 -> [4, 4], 12 -> [4, 4, 4].
+ */
+export const SUBCATEGORY_MOBILE_ROW_MAX = 4;
+
+export function computeSubcategoryMobileRows(count: number): number[] {
+  if (count <= 0) return [];
+  const rowCount = Math.ceil(count / SUBCATEGORY_MOBILE_ROW_MAX);
+  const base = Math.floor(count / rowCount);
+  const remainder = count % rowCount;
+  return Array.from({ length: rowCount }, (_, i) => base + (i < remainder ? 1 : 0));
+}
+
+/**
  * Computes tile positions for `count` subcategories, alternating right/left
  * (right gets the extra tile when count is odd) for visual balance. Each
  * side's tiles are spread evenly across that side's full slot range so a

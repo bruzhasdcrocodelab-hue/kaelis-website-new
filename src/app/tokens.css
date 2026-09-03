@@ -125,7 +125,9 @@
   --radius-page-mobile: 30px;
   --radius-panel: 30px;
   --radius-panel-mobile: 20px;
+  --radius-topblock-panel-mobile: 24px;
   --radius-card: 16px;
+  --radius-card-mobile: 12px;
   --radius-sheet: 28px;
 
   /* ---- Typography: font families ---- */

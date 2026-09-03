@@ -25,10 +25,8 @@ export default function CategoryHeroSection({
 }: CategoryHeroSectionProps) {
   return (
     <section className={styles.section}>
-      <SubcategoryRing subcategories={current.subcategories} basePath={path} locale={locale} />
-
       <div className={styles.container}>
-        <MainButton variant="stroke" size="medium" href={returnHref}>
+        <MainButton variant="stroke" size="medium" href={returnHref} className={styles.returnButton}>
           {returnLabel}
         </MainButton>
 
@@ -50,12 +48,14 @@ export default function CategoryHeroSection({
             size="large"
             icon="/icons/right-arrow.svg"
             href="/"
-            className="shadow-default"
+            className={`shadow-default ${styles.readingsButton}`}
             muted
           >
             {dictionary.getYourReadings}
           </MainButton>
         </div>
+
+        <SubcategoryRing subcategories={current.subcategories} basePath={path} locale={locale} />
       </div>
     </section>
   );

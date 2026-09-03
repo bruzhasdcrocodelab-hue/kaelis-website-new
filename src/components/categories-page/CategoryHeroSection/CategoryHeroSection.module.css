@@ -78,3 +78,63 @@
   text-align: center;
   line-height: normal;
 }
+
+@media (max-width: 768px) {
+  .section {
+    padding: 6px 0 12px;
+  }
+
+  .container {
+    gap: 48px;
+    width: 100%;
+  }
+
+  /* Extra clearance so the subcategory rows clear the TopBlock panel that
+     overlaps the hero from below; only present when there are rows. */
+  .container:has(.rows) {
+    padding-bottom: 52px;
+  }
+
+  .content {
+    gap: 24px;
+    width: 358px;
+    max-width: 100%;
+    padding: 0 64px;
+  }
+
+  .eyebrow {
+    margin-bottom: -5px;
+    font-size: var(--text-xs);
+  }
+
+  .description {
+    width: 100%;
+    font-size: var(--text-xs);
+  }
+
+  .returnButton {
+    align-self: center;
+  }
+
+  .title {
+    max-width: none;
+    padding-right: 0;
+    margin-left: 0;
+    font-size: var(--text-topblock-title);
+    letter-spacing: var(--tracking-topblock-title);
+  }
+
+  .title.titleWrapped {
+    margin-top: 0;
+  }
+
+  .readingsButton {
+    height: 44px;
+    gap: 6px;
+    padding: 6px 8px 6px 24px;
+  }
+
+  .readingsButton :global(span:first-child) {
+    font-size: var(--text-sm);
+  }
+}

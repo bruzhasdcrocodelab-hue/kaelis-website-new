@@ -38,6 +38,7 @@ export default function CategoryPageView({
         className={styles.backgroundImage}
         priority
       />
+      <div className={styles.backgroundGradientMobile} aria-hidden />
       <ConstellationPattern />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />

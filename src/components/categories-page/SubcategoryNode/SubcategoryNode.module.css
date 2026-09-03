@@ -1,12 +1,20 @@
 .node {
-  position: absolute;
   display: block;
   width: 88px;
-  transform: translateX(-50%);
   text-decoration: none;
   transition:
     opacity 0.2s ease,
     translate 0.2s ease;
+}
+
+.nodeArc {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.nodeFlow {
+  position: relative;
+  flex-shrink: 0;
 }
 
 .node:hover {
@@ -71,5 +79,16 @@
   .float,
   .icon {
     animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .icon {
+    width: 40px;
+    height: 49px;
+  }
+
+  .label {
+    font-size: var(--text-xs);
   }
 }
