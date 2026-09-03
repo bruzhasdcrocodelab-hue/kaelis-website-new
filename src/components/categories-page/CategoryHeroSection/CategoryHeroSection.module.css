@@ -64,6 +64,8 @@
   text-wrap: nowrap;
   hyphens: none;
   -webkit-hyphens: none;
+  padding-right: 20px;
+  margin-left: 20px;
 }
 
 .title.titleWrapped {
@@ -89,10 +91,10 @@
     width: 100%;
   }
 
-  /* Extra clearance so the subcategory rows clear the TopBlock panel that
-     overlaps the hero from below; only present when there are rows. */
-  .container:has(.rows) {
-    padding-bottom: 52px;
+  /* Extra clearance so the subcategory rows sit clear of the TopBlock panel
+     below; only applied when subcategory rows are present. */
+  .containerWithRows {
+    padding-bottom: 40px;
   }
 
   .content {
@@ -125,7 +127,7 @@
   }
 
   .title.titleWrapped {
-    margin-top: 0;
+    margin-top: 8px;
   }
 
   .readingsButton {

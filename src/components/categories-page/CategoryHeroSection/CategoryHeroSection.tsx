@@ -23,9 +23,11 @@ export default function CategoryHeroSection({
   returnHref,
   returnLabel,
 }: CategoryHeroSectionProps) {
+  const hasSubcategories = current.subcategories.length > 0;
+
   return (
     <section className={styles.section}>
-      <div className={styles.container}>
+      <div className={`${styles.container} ${hasSubcategories ? styles.containerWithRows : ""}`}>
         <MainButton variant="stroke" size="medium" href={returnHref} className={styles.returnButton}>
           {returnLabel}
         </MainButton>

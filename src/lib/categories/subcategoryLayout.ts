@@ -121,21 +121,33 @@ export interface SubcategoryPosition {
 
 /**
  * Mobile layout: subcategory tiles stack in centered rows under the copy
- * instead of arcing over it. Reading the reference maps
- * (node-id=1888-7843 / 1888-8003 / 1888-8153 / 1888-9230 / 1892-9376 /
- * 1892-9519), rows hold at most 4 tiles, the number of rows is
- * `ceil(count / 4)`, and the count is split as evenly as possible across
- * those rows with any remainder going to the earlier rows — so 5 -> [3, 2],
- * 6 -> [3, 3], 7 -> [4, 3], 8 -> [4, 4], 12 -> [4, 4, 4].
+ * instead of arcing over it.
+ *
+ * A row holds at most SUBCATEGORY_MOBILE_ROW_MAX (4) tiles and, once there is
+ * more than one row, at least 2. Rows are filled greedily with 4 tiles each;
+ * the final two rows are then re-balanced evenly (larger half first) so the
+ * layout never ends on a lone straggler. This gives:
+ *   1 -> [1]        5 -> [3, 2]     8  -> [4, 4]
+ *   2 -> [2]        6 -> [3, 3]     12 -> [4, 4, 4]
+ *   3 -> [3]        7 -> [4, 3]     13 -> [4, 4, 3, 2]
+ *   4 -> [4]
  */
 export const SUBCATEGORY_MOBILE_ROW_MAX = 4;
 
 export function computeSubcategoryMobileRows(count: number): number[] {
   if (count <= 0) return [];
+  if (count <= SUBCATEGORY_MOBILE_ROW_MAX) return [count];
+
   const rowCount = Math.ceil(count / SUBCATEGORY_MOBILE_ROW_MAX);
-  const base = Math.floor(count / rowCount);
-  const remainder = count % rowCount;
-  return Array.from({ length: rowCount }, (_, i) => base + (i < remainder ? 1 : 0));
+  const rows = Array.from({ length: rowCount }, (_, i) =>
+    i < rowCount - 1 ? SUBCATEGORY_MOBILE_ROW_MAX : count - SUBCATEGORY_MOBILE_ROW_MAX * (rowCount - 1),
+  );
+
+  const tail = rows[rowCount - 2] + rows[rowCount - 1];
+  rows[rowCount - 2] = Math.ceil(tail / 2);
+  rows[rowCount - 1] = Math.floor(tail / 2);
+
+  return rows;
 }
 
 /**

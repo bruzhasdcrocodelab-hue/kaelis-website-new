@@ -22,7 +22,7 @@
   z-index: 0;
 }
 
-.backgroundGradientMobile {
+.backgroundImageMobile {
   display: none;
 }
 
@@ -45,14 +45,19 @@
     display: none;
   }
 
-  .backgroundGradientMobile {
+  .backgroundImageMobile {
     display: block;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 1000px;
-    background: var(--gradient-main-bg-mobile);
+    /* Stretched taller than its native 1000px so the gradient's light lower
+       band clears the subcategory rows (which can run to 4 rows deep) and only
+       meets the page where the light TopBlock panel takes over. It's a smooth
+       vertical gradient, so the vertical stretch is not visible. */
+    height: 1400px;
+    object-fit: cover;
+    object-position: top;
     pointer-events: none;
     z-index: 0;
   }

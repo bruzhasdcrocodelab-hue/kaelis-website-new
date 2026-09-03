@@ -175,11 +175,26 @@
 
   .panel {
     max-width: none;
-    height: 520px;
-    padding: 8px 16px 96px;
+    min-height: 440px;
+    height: auto;
+    padding: 8px 16px 56px;
     border-radius: var(--radius-topblock-panel-mobile) var(--radius-topblock-panel-mobile) 0 0;
     background: var(--gradient-topblock-mobile);
     box-shadow: none;
+  }
+
+  /*
+   * Wash the decorative fan out toward the copy: transparent above the card
+   * arc, ramping to the panel's own bottom colour (--color-white, which the
+   * footer also uses) so the fan fades cleanly and the panel meets the footer
+   * with no visible seam.
+   */
+
+  .fadeOverlay {
+    /* inset: auto 0 0 0;
+    height: 260px;
+    rotate: none; */
+    background: linear-gradient(0deg, transparent 0%, var(--color-white) 82%);
   }
 
   .pattern {
