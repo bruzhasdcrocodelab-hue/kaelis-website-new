@@ -8,6 +8,11 @@ const en = {
     },
     downloadApp: "Download App",
     language: "EN",
+    languageNames: {
+      en: "En",
+      ru: "Rus",
+      uk: "Ua",
+    },
   },
   hero: {
     titleLine1: "Your AI Guide",

@@ -10,6 +10,11 @@ const uk: Dictionary = {
     },
     downloadApp: "Завантажити додаток",
     language: "UK",
+    languageNames: {
+      en: "En",
+      ru: "Rus",
+      uk: "Ua",
+    },
   },
   hero: {
     titleLine1: "Ваш ШІ-провідник",

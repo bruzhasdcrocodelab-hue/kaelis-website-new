@@ -1,6 +1,7 @@
 .wrapper {
   position: relative;
   display: inline-flex;
+  align-items: center;
   width: 76px;
   height: 44px;
 }
@@ -19,6 +20,28 @@
   border: 1.2px solid #d3aced;
   background: transparent;
   overflow: hidden;
+}
+
+.shellCollapsed {
+  height: 44px;
+  padding-top: 0;
+  padding-bottom: 0;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 40px;
+  }
+
+  .shell {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .shellCollapsed {
+    height: 40px;
+  }
 }
 
 .row {

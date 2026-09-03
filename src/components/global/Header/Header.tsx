@@ -35,7 +35,7 @@ export default function Header({ dictionary, locale }: HeaderProps) {
         >
           {dictionary.downloadApp}
         </MainButton>
-        <LanguageSelector locale={locale} />
+        <LanguageSelector locale={locale} languageNames={dictionary.languageNames} />
         <div className={styles.menu}>
           <MobileMenu dictionary={dictionary} />
         </div>

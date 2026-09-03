@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { motion } from "motion/react";
-import type { Locale } from "@/lang";
+import type { Dictionary, Locale } from "@/lang";
 import { setLocale } from "@/lib/locale-actions";
+import BottomSheetSelect from "@/components/global/BottomSheetSelect";
 import styles from "./LanguageSelector.module.css";
 
 export interface LanguageSelectorProps {
   locale: Locale;
+  languageNames: Dictionary["header"]["languageNames"];
 }
 
 const LOCALE_ORDER: Locale[] = ["en", "ru", "uk"];
@@ -18,15 +20,33 @@ const LOCALE_LABEL: Record<Locale, string> = {
   uk: "UA",
 };
 
+const MOBILE_QUERY = "(max-width: 768px)";
+
 const TRANSITION = { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const };
 
-export default function LanguageSelector({ locale }: LanguageSelectorProps) {
+/** Tracks a media query, SSR-safe (starts false, corrects on mount). */
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const update = () => setMatches(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, [query]);
+
+  return matches;
+}
+
+export default function LanguageSelector({ locale, languageNames }: LanguageSelectorProps) {
   const [open, setOpen] = useState(false);
   const [, startTransition] = useTransition();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || isMobile) return;
 
     function handlePointerDown(event: PointerEvent) {
       if (!wrapperRef.current?.contains(event.target as Node)) {
@@ -44,7 +64,7 @@ export default function LanguageSelector({ locale }: LanguageSelectorProps) {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+  }, [open, isMobile]);
 
   function handleSelect(next: Locale) {
     setOpen(false);
@@ -54,26 +74,28 @@ export default function LanguageSelector({ locale }: LanguageSelectorProps) {
     });
   }
 
+  const expanded = open && !isMobile;
+
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
       <motion.div
-        className={styles.shell}
+        className={`${styles.shell} ${expanded ? "" : styles.shellCollapsed}`}
         layout
         initial={false}
-        animate={{ borderRadius: open ? 12 : 30 }}
+        animate={{ borderRadius: expanded ? 12 : 30 }}
         transition={TRANSITION}
-        role={open ? "listbox" : undefined}
+        role={expanded ? "listbox" : undefined}
         // style={{
         //   backdropFilter: "blur(12.5px)",
         //   WebkitBackdropFilter: "blur(12.5px)",
         // }}
       >
-        {(open ? LOCALE_ORDER : [locale]).map((item, index) => {
+        {(expanded ? LOCALE_ORDER : [locale]).map((item, index) => {
           const isActive = item === locale;
-          const isTrigger = !open;
+          const isTrigger = !expanded;
           return (
             <motion.div key={item} layout>
-              {open && index > 0 && <div className={styles.divider} />}
+              {expanded && index > 0 && <div className={styles.divider} />}
               <motion.button
                 layout
                 type="button"
@@ -107,6 +129,18 @@ export default function LanguageSelector({ locale }: LanguageSelectorProps) {
           );
         })}
       </motion.div>
+      {isMobile && (
+        <BottomSheetSelect<Locale>
+          open={open}
+          onClose={() => setOpen(false)}
+          options={LOCALE_ORDER.map((item) => ({
+            value: item,
+            label: languageNames[item],
+          }))}
+          selectedValue={locale}
+          onSelect={handleSelect}
+        />
+      )}
     </div>
   );
 }
