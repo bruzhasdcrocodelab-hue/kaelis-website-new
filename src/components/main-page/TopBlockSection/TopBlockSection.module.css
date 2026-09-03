@@ -24,8 +24,22 @@
 }
 
 .backgroundImageCrop {
+  /*
+   * The source image is 3960x1080 (aspect ratio ~3.667). We size the crop box
+   * to that exact ratio, lock its height to the visible band, and pin it to the
+   * right edge. As the panel narrows, the box overflows past the LEFT edge and
+   * is clipped there -- so the crop always eats the left side of the image
+   * while the phone on the right stays anchored in view. At the wide end the
+   * box width (~1320px) matches the panel width, so almost the whole image
+   * shows, preserving the intended 1440px composition.
+   */
+  --bg-image-band: 360px;
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  width: calc(var(--bg-image-band) * 3.667);
+  height: var(--bg-image-band);
+  min-width: 100%;
 }
 
 .backgroundTint {
@@ -40,6 +54,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: right center;
   backdrop-filter: blur(var(--blur-shadow));
   -webkit-backdrop-filter: blur(var(--blur-shadow));
 }
@@ -144,11 +159,24 @@
   }
 
   .backgroundImageCrop {
-    position: absolute;
+    /*
+     * Aspect-locked crop box (image ratio ~3.667) whose height is the visible
+     * top band of the panel -- the image occupies that strip, the text card
+     * fills the rest. The box is pushed right by --bg-image-hide-right of its
+     * width so the far-right 12.5% of the image (empty decoration) stays out of
+     * frame: at 390px this reproduces the intended composition (window ~44% to
+     * ~87.5% of the image, phone centred). Because the box width is fixed while
+     * the panel widens toward 768px, the extra room is revealed on the LEFT --
+     * the right framing is pinned, the crop only ever eats the left side.
+     */
+    --bg-image-band: 243px;
+    --bg-image-width: calc(var(--bg-image-band) * 3.667);
+    --bg-image-hide-right: 0.125;
     top: 0;
-    left: -99.76%;
-    width: 228.46%;
-    height: 46.73%;
+    left: auto;
+    right: calc(var(--bg-image-width) * var(--bg-image-hide-right) * -1);
+    width: var(--bg-image-width);
+    height: var(--bg-image-band);
   }
 
   .backgroundTint {
@@ -179,7 +207,6 @@
 
   .eyebrow {
     font-size: var(--text-xs);
-    text-align: center;
   }
 
   .heading {
