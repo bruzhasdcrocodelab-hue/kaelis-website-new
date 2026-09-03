@@ -24,7 +24,7 @@ export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
         <div className={styles.backgroundTint} />
         <div className={styles.backgroundImageCrop}>
           <Image
-            src="/images/backgrounds/TopBlock.png"
+            src="/images/backgrounds/TopBlock-3.png"
             alt=""
             fill
             className={styles.backgroundImage}
