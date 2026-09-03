@@ -10,6 +10,11 @@ const ru: Dictionary = {
     },
     downloadApp: "Скачать приложение",
     language: "RU",
+    languageNames: {
+      en: "En",
+      ru: "Rus",
+      uk: "Ua",
+    },
   },
   hero: {
     titleLine1: "Ваш ИИ-проводник",
