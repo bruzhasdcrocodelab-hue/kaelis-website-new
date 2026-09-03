@@ -149,9 +149,17 @@
     padding: 0 64px;
   }
 
+  /*
+   * Below 768px the headline scales almost purely with viewport width so it
+   * occupies the same share of the screen at every width (matches the 390px
+   * reference). The desktop-oriented `--text-hero-*-fluid` tokens grew too
+   * slowly with vw here, leaving the type looking small between 450–768px.
+   * Each middle term is anchored so the size at 390px matches the previous
+   * fluid value; the clamp ceiling is the value reached at 768px.
+   */
   .titleLine1 {
-    /* font-size / letter-spacing scale fluidly via --text-hero-guide-fluid */
     margin-bottom: -10px;
+    font-size: clamp(26px, 8.26vw, 63.4px);
   }
 
   .titleRow {
@@ -163,10 +171,15 @@
     margin: 0 !important;
   }
 
+  .titleWord {
+    font-size: clamp(15px, 4.67vw, 35.9px);
+  }
+
   .titleHighlight {
-    /* font-size / letter-spacing scale fluidly via --text-hero-highlight-fluid */
+    /* letter-spacing still scales via --tracking-hero-highlight-fluid */
     padding: 0;
     margin: 0;
+    font-size: clamp(40px, 12.55vw, 96.4px);
   }
 
   .description {
