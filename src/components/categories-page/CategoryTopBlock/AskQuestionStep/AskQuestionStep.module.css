@@ -53,9 +53,10 @@
 
   .inputBox {
     width: 100%;
+    max-width: 358px;
     margin-top: 44px;
     border-radius: var(--radius-card-mobile);
-    font-size: var(--text-xs);
+    font-size: var(--text-xs); 
   }
 
   .inputStar {

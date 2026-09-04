@@ -78,8 +78,10 @@
   position: absolute;
   left: 50%;
   top: -210;
-  width: 125.5%;
-  height: auto;
+  /* width: 125.5%;
+  height: auto; */
+  width: 1627px;
+  height: 731px;
   max-width: none;
   transform: translateX(-50%);
   pointer-events: none;
@@ -190,9 +192,6 @@
    */
 
   .fadeOverlay {
-    /* inset: auto 0 0 0;
-    height: 260px;
-    rotate: none; */
     background: linear-gradient(0deg, transparent 0%, var(--color-white) 82%);
   }
 
@@ -200,8 +199,10 @@
     position: absolute;
     left: calc(50% - 0.23px);
     top: -20;
-    width: 240.5%;
-    height: auto;
+    /* width: 240.5%;
+    height: auto; */
+    width: 990px;
+    height: 445px;
     max-width: none;
     transform: translateX(-50%);
     pointer-events: none;
@@ -212,11 +213,9 @@
     display: none;
   }
 
-  /* Same role as the desktop .panel::before: a fill over the card fan
-     (::before sits at z-index 1, the fan at z-index 0) so the fan reads as
-     behind the block's surface rather than sitting on top of it. */
   .panel::before {
     background: var(--gradient-topblock-mobile);
+   
   }
 
   .panelConfirmed {

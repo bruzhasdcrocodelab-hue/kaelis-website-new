@@ -30,37 +30,40 @@ export const MOBILE_FAN_CONTAINER_HEIGHT = 390.99;
 export const MOBILE_CARD_TRUE_WIDTH = 60;
 export const MOBILE_CARD_TRUE_HEIGHT = 110;
 
-const OX = 170.07;
-const OY = 97.99;
+const OX = 159;
+const OY = 108;
 
 export const cardFanMobile: MobileFanCardSpec[] = [
-  { id: "1", left: 447.6 + OX, top: -86.46 + OY, width: 111.981, height: 63.715, rotate: 91.95 },
-  { id: "22", left: 437.62 + OX, top: -47.81 + OY, width: 119.548, height: 80.174, rotate: 101.18 },
-  { id: "21", left: 422.24 + OX, top: -8.68 + OY, width: 123.677, height: 93.051, rotate: 109.36 },
-  { id: "20", left: 401.22 + OX, top: 28.2 + OY, width: 125.306, height: 104.951, rotate: 118.29 },
-  { id: "19", left: 375.38 + OX, top: 62.83 + OY, width: 123.931, height: 114.197, rotate: 127.09 },
-  { id: "18", left: 345.33 + OX, top: 94.35 + OY, width: 119.677, height: 120.713, rotate: 135.84 },
-  { id: "17", left: 311.78 + OX, top: 121.97 + OY, width: 112.617, height: 124.422, rotate: 144.62 },
-  { id: "16", left: 275.58 + OX, top: 145.02 + OY, width: 102.787, height: 125.203, rotate: 153.51 },
-  { id: "15", left: 237.63 + OX, top: 162.99 + OY, width: 90.247, height: 122.916, rotate: 162.56 },
-  { id: "14", left: 198.89 + OX, top: 175.52 + OY, width: 75.174, height: 117.471, rotate: 171.75 },
+  // { id: "1", left: 447.6 + OX, top: -86.46 + OY, width: 60, height: 110, rotate: 91.95 },
+  // { id: "22", left: 437.62 + OX, top: -47.81 + OY, width: 60, height: 110, rotate: 101.18 },
+  // { id: "21", left: 422.24 + OX, top: -8.68 + OY, width: 60, height: 110, rotate: 109.36 },
+  // { id: "20", left: 401.22 + OX, top: 28.2 + OY, width: 60, height: 110, rotate: 118.29 },
+
+  { id: "19", left: 412.38 + OX, top: 59.83 + OY, width: 60, height: 110, rotate: 127.09 },
+
+  { id: "18", left: 375.33 + OX, top: 100.3 + OY, width: 60, height: 110, rotate: 135.84 },
+  { id: "17", left: 338.98 + OX, top: 128.8 + OY, width: 60, height: 110, rotate: 144.62 },
+  { id: "16", left: 298.58 + OX, top: 152.7 + OY, width: 60, height: 110, rotate: 153.51 },
+  { id: "15", left: 254.63 + OX, top: 169.5 + OY, width: 60, height: 110, rotate: 162.56 },
+  { id: "14", left: 208.89 + OX, top: 179.52 + OY, width: 60, height: 110, rotate: 171.75 },
   {
     id: "13",
-    left: MOBILE_FAN_CONTAINER_WIDTH / 2 - 1.91 - 60.958 / 2,
-    top: 181.79 + OY,
-    width: 60.958,
-    height: 110.519,
-    rotate: 0.5,
+    left: 165 + OX,
+    top: 182.79 + OY,
+    width: 60,
+    height: 110,
+    rotate: -0.5,
     flipY: true,
   },
-  { id: "12", left: 104.14 + OX, top: 173.73 + OY, width: 75.469, height: 117.598, rotate: -171.58 },
-  { id: "10", left: 50.86 + OX, top: 159.34 + OY, width: 90.393, height: 122.956, rotate: -162.46 },
-  { id: "9", left: 1.11 + OX, top: 139.6 + OY, width: 102.805, height: 125.204, rotate: -153.5 },
-  { id: "8", left: -43.97 + OX, top: 114.92 + OY, width: 112.57, height: 124.435, rotate: -144.67 },
-  { id: "7", left: -83.41 + OX, top: 85.86 + OY, width: 119.629, height: 120.757, rotate: -135.91 },
-  { id: "6", left: -116.35 + OX, top: 53.12 + OY, width: 123.913, height: 114.248, rotate: -127.15 },
-  { id: "5", left: -141.97 + OX, top: 17.52 + OY, width: 125.306, height: 104.951, rotate: -118.29 },
-  { id: "4", left: -159.58 + OX, top: -20.06 + OY, width: 123.648, height: 92.934, rotate: -109.28 },
-  { id: "3", left: -169.09 + OX, top: -59.58 + OY, width: 119.45, height: 79.923, rotate: -101.03 },
-  { id: "2", left: -170.07 + OX, top: -97.99 + OY, width: 112.693, height: 65.091, rotate: -92.69 },
+  { id: "12", left: 114.0 + OX, top: 178.2 + OY, width: 60, height: 110, rotate: -171.58 },
+  { id: "10", left: 67.5 + OX, top: 166.8 + OY, width: 60, height: 110, rotate: -162.46 },
+  { id: "9", left: 24.11 + OX, top: 148.0 + OY, width: 60, height: 110, rotate: -153.5 },
+  { id: "8", left: -15.97 + OX, top: 123.5 + OY, width: 60, height: 110, rotate: -144.67 },
+  { id: "7", left: -51.41 + OX, top: 92.86 + OY, width: 60, height: 110, rotate: -135.91 },
+  { id: "6", left: -84.35 + OX, top: 55.12 + OY, width: 60, height: 110, rotate: -127.15 },
+
+  // { id: "5", left: -141.97 + OX, top: 17.52 + OY,width: 60, height: 110, rotate: -118.29 },
+  // { id: "4", left: -159.58 + OX, top: -20.06 + OY, width: 60, height: 110, rotate: -109.28 },
+  // { id: "3", left: -169.09 + OX, top: -59.58 + OY, width: 60, height: 110, rotate: -101.03 },
+  // { id: "2", left: -170.07 + OX, top: -97.99 + OY, width: 60, height: 110, rotate: -92.69 },
 ];
