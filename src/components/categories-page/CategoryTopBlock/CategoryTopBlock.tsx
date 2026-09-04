@@ -75,7 +75,7 @@ export default function CategoryTopBlock({
       >
         {isConfirmed && (
           <Image
-            src="/images/backgrounds/pattern-categories-top-block.svg"
+            src="/images/backgrounds/pattern-categories-top-block-2.svg"
             alt=""
             width={1627}
             height={731}
@@ -114,7 +114,7 @@ export default function CategoryTopBlock({
               style={{zIndex: 2}}
             />
             <Image
-              src="/images/backgrounds/pattern-categories-top-block.svg"
+              src="/images/backgrounds/pattern-categories-top-block-2.svg"
               alt=""
               width={1627}
               height={731}
@@ -171,7 +171,11 @@ export default function CategoryTopBlock({
 
           <div className={styles.side}>
             <div className={styles.sideEnd}>
-              {(step === "choose" || step === "ask") && <TriggerButton dictionary={dictionary.guides} />}
+              {(step === "choose" || step === "ask") && (
+                <div className={styles.triggerDesktop}>
+                  <TriggerButton dictionary={dictionary.guides} />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -198,6 +202,18 @@ export default function CategoryTopBlock({
           />
         )}
       </div>
+
+      {(step === "choose" || step === "ask") && (
+        <div className={styles.triggerMobile}>
+          <MainButton
+            variant="default"
+            size="large"
+            icon="/icons/analyst.svg"
+            aria-label={dictionary.guides.analyst}
+            muted
+          />
+        </div>
+      )}
     </section>
   );
 }

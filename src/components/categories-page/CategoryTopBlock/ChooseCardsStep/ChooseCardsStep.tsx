@@ -7,6 +7,13 @@ import {
   FAN_CONTAINER_HEIGHT,
   FAN_CONTAINER_WIDTH,
 } from "../cardFan";
+import {
+  cardFanMobile,
+  MOBILE_CARD_TRUE_HEIGHT,
+  MOBILE_CARD_TRUE_WIDTH,
+  MOBILE_FAN_CONTAINER_HEIGHT,
+  MOBILE_FAN_CONTAINER_WIDTH,
+} from "../cardFanMobile";
 import FanCard from "../FanCard/FanCard";
 import styles from "./ChooseCardsStep.module.css";
 
@@ -24,34 +31,69 @@ export default function ChooseCardsStep({
   isInteractive = true,
 }: ChooseCardsStepProps) {
   return (
-    <div className={styles.fan}>
-      {cardFan.map((card) => {
-        const isSelected = selectedIds.includes(card.id);
-        const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
-        return (
+    <>
+      <div className={styles.fan}>
+        {cardFan.map((card) => {
+          const isSelected = selectedIds.includes(card.id);
+          const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
+          return (
+            <div
+              key={card.id}
+              className={styles.fanCardBox}
+              style={{
+                left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
+                top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
+                width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
+                height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
+                zIndex: isSelected ? cardFan.length + 1 : undefined,
+              }}
+            >
+              <FanCard
+                card={card}
+                width={CARD_TRUE_WIDTH}
+                height={CARD_TRUE_HEIGHT}
+                isSelected={isSelected}
+                isDisabled={selectionDisabled}
+                isInteractive={isInteractive}
+                onToggle={() => onToggleCard(card.id)}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      <div
+        className={styles.fanMobile}
+        style={{
+          width: MOBILE_FAN_CONTAINER_WIDTH,
+          height: MOBILE_FAN_CONTAINER_HEIGHT,
+        }}
+        aria-hidden
+      >
+        {cardFanMobile.map((card) => (
           <div
             key={card.id}
             className={styles.fanCardBox}
             style={{
-              left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
-              top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
-              width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
-              height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
-              zIndex: isSelected ? cardFan.length + 1 : undefined,
+              left: card.left,
+              top: card.top,
+              width: card.width,
+              height: card.height,
             }}
           >
             <FanCard
               card={card}
-              width={CARD_TRUE_WIDTH}
-              height={CARD_TRUE_HEIGHT}
-              isSelected={isSelected}
-              isDisabled={selectionDisabled}
-              isInteractive={isInteractive}
+              width={MOBILE_CARD_TRUE_WIDTH}
+              height={MOBILE_CARD_TRUE_HEIGHT}
+              isSelected={false}
+              isDisabled
+              isInteractive={false}
               onToggle={() => onToggleCard(card.id)}
+              flipY={card.flipY}
             />
           </div>
-        );
-      })}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }

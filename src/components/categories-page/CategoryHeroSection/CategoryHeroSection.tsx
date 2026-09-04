@@ -23,12 +23,12 @@ export default function CategoryHeroSection({
   returnHref,
   returnLabel,
 }: CategoryHeroSectionProps) {
+  const hasSubcategories = current.subcategories.length > 0;
+
   return (
     <section className={styles.section}>
-      <SubcategoryRing subcategories={current.subcategories} basePath={path} locale={locale} />
-
-      <div className={styles.container}>
-        <MainButton variant="stroke" size="medium" href={returnHref}>
+      <div className={`${styles.container} ${hasSubcategories ? styles.containerWithRows : ""}`}>
+        <MainButton variant="stroke" size="medium" href={returnHref} className={styles.returnButton}>
           {returnLabel}
         </MainButton>
 
@@ -50,12 +50,14 @@ export default function CategoryHeroSection({
             size="large"
             icon="/icons/right-arrow.svg"
             href="/"
-            className="shadow-default"
+            className={`shadow-default ${styles.readingsButton}`}
             muted
           >
             {dictionary.getYourReadings}
           </MainButton>
         </div>
+
+        <SubcategoryRing subcategories={current.subcategories} basePath={path} locale={locale} />
       </div>
     </section>
   );

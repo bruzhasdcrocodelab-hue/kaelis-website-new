@@ -25,6 +25,8 @@ export interface FanCardProps {
   isDisabled: boolean;
   isInteractive: boolean;
   onToggle: () => void;
+  /** Mirror the card vertically (mobile fan's front-facing center card). */
+  flipY?: boolean;
 }
 
 export default function FanCard({
@@ -35,6 +37,7 @@ export default function FanCard({
   isDisabled,
   isInteractive,
   onToggle,
+  flipY,
 }: FanCardProps) {
   const rad = (card.rotate * Math.PI) / 180;
   const push = isSelected ? SELECTED_PUSH : HOVER_PUSH;
@@ -49,6 +52,7 @@ export default function FanCard({
         width,
         height,
         rotate: card.rotate,
+        scaleY: flipY ? -1 : undefined,
       }}
       animate={{
         x: isSelected ? pushX : 0,

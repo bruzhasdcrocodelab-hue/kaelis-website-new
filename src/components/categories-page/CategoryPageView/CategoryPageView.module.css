@@ -15,11 +15,15 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
+  height: 85%;
   object-fit: cover;
   object-position: top;
   pointer-events: none;
   z-index: 0;
+}
+
+.backgroundImageMobile {
+  display: none;
 }
 
 .content {
@@ -29,4 +33,39 @@
   align-items: center;
   width: 100%;
   z-index: 1;
+}
+
+@media (min-width: 1440px) {
+  .backgroundImage {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    border: none;
+    border-radius: 0;
+  }
+
+  .backgroundImage {
+    display: none;
+  }
+
+  .backgroundImageMobile {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Stretched taller than its native 1000px so the gradient's light lower
+       band clears the subcategory rows (which can run to 4 rows deep) and only
+       meets the page where the light TopBlock panel takes over. It's a smooth
+       vertical gradient, so the vertical stretch is not visible. */
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    pointer-events: none;
+    z-index: 0;
+  }
 }

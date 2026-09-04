@@ -109,6 +109,16 @@
   --node-icon-pulse-opacity-max: 1;
 
   /* ---- Effects: categories constellation pattern rotation (node-id=1494-744) ---- */
+  /*
+   * Rendered width of the constellation pattern. At the 1440px design width it
+   * resolves to 1580px (the SVG's native width); it scales with the viewport
+   * between a 900px floor (matching the mobile ceiling) and that 1580px cap.
+   * SubcategoryRing keys its arc geometry off this so the nodes stay pinned to
+   * the pattern's rings at every width.
+   */
+  --constellation-pattern-width: clamp(900px, 109.722vw, 1580px);
+  /* SubcategoryRing keys its arc geometry to the pattern width so the nodes stay pinned to the pattern's rings. */
+  --subcategory-ring-width: var(--constellation-pattern-width);
   --constellation-spin-duration: 120s;
   --constellation-ring-spin-duration-reverse: 95s;
   --constellation-orbit-duration: 70s;
@@ -125,7 +135,9 @@
   --radius-page-mobile: 30px;
   --radius-panel: 30px;
   --radius-panel-mobile: 20px;
+  --radius-topblock-panel-mobile: 24px;
   --radius-card: 16px;
+  --radius-card-mobile: 12px;
   --radius-sheet: 28px;
 
   /* ---- Typography: font families ---- */
@@ -155,6 +167,27 @@
   /* --tracking-category-title: -4.5px; */
   --text-topblock-title: 56px;
   --tracking-topblock-title: -3px;
+
+  /*
+   * ---- Typography: category page fluid sizes ----
+   * Same construction as the main-page hero fluid tokens, but the line runs
+   * through the mobile ceiling value (at the 769px breakpoint) and the desktop
+   * value (at 1440px):
+   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 769)
+   *   offset   = sizeMin - (vw-coeff / 100) * 769
+   * Below 768px each component's own media query takes over with the fixed
+   * mobile token, keeping the 390px layout pixel-identical.
+   */
+  --text-category-eyebrow-fluid: clamp(var(--text-xs), 0.447vw + 9.56px, var(--text-base));
+  --text-category-title-fluid: clamp(var(--text-topblock-title), 4.471vw + 21.62px, var(--text-category-title));
+  --tracking-category-title-fluid: clamp(-3px, 0.447vw - 6.44px, 0px);
+  --text-category-description-fluid: clamp(var(--text-xs), 0.149vw + 11.85px, var(--text-sm));
+  --text-topblock-title-fluid: clamp(var(--text-4xl), 2.385vw + 21.66px, var(--text-topblock-title));
+
+  /* Subcategory node icon + label, same 769px->1440px fluid construction. */
+  --subcategory-node-icon-width-fluid: clamp(40px, 1.49vw + 28.54px, 50px);
+  --subcategory-node-icon-height-fluid: clamp(49px, 1.937vw + 34.1px, 62px);
+  --subcategory-node-label-fluid: clamp(var(--text-xs), 0.745vw + 7.27px, var(--text-lg));
 
   /* ---- Typography: main-page hero mobile (one-off, node-id=1888-7553) ---- */
   --text-hero-mobile: 48px;
