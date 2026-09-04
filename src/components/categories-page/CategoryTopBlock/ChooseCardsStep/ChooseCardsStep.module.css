@@ -26,7 +26,7 @@
     display: block;
     position: absolute;
     left: calc(50% - 355px);
-    top: -90px;
+    top: -97px;
     z-index: 0;
     pointer-events: none;
   }
