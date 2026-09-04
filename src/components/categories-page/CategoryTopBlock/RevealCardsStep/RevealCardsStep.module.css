@@ -61,8 +61,8 @@
 .revealCard {
   position: relative;
   flex-shrink: 0;
-  width: 100%;
-  height: 100%;
+  width: 96.749px;
+  height: 175.908px;
   border-radius: 8;
   overflow: hidden;
   border: none;
@@ -215,4 +215,105 @@
   bottom: -30px;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.mobileSheetRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.mobileSheetBackdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--color-black-40);
+}
+
+.mobileSheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-height: calc(100dvh - 148px);
+  padding: 16px 16px 24px;
+  background: var(--color-greyish-blue);
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  box-shadow: var(--shadow-medium);
+  touch-action: none;
+  overflow: hidden;
+}
+
+.mobileSheetGrabberRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+}
+
+.mobileSheetGrabber {
+  width: 80px;
+  height: 3px;
+  border-radius: 1000px;
+  background: var(--color-black-15);
+}
+
+.mobileSheetTitle {
+  flex-shrink: 0;
+  color: var(--color-black);
+  text-align: center;
+}
+
+.mobileSheetDivider {
+  flex-shrink: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-grey);
+}
+
+.mobileSheetDescription {
+  flex: 1 0 0;
+  min-height: 0;
+  width: 100%;
+  padding: 0 12px;
+  color: var(--color-black-75);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .revealRow {
+    gap: 16px;
+  }
+
+  .revealCardCol {
+    gap: 10px;
+  }
+
+  .revealCardName {
+    width: 100px;
+    font-size: var(--text-xs);
+  }
+
+  .revealCard {
+    width: 100px;
+    height: 180px;
+    border-radius: 8px;
+  }
+
+  .cardDetailArt,
+  .cardDetailInfo {
+    display: none;
+  }
+
+  .mobileSheetRoot {
+    display: flex;
+  }
+
+  .answerWrapVisible {
+    bottom: -20px;
+  }
 }
