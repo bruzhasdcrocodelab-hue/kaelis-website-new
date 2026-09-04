@@ -34,4 +34,8 @@
     z-index: 0;
     pointer-events: none;
   }
+
+  .fanMobileForeground {
+    z-index: 4;
+  }
 }

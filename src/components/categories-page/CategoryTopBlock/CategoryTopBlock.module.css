@@ -215,12 +215,13 @@
     display: none;
   }
 
-  .panel::before {
+  .panel::before,
+  .panelConfirmed::before {
     background: var(--gradient-topblock-mobile);
   }
 
   .panelConfirmed {
-    background: var(--color-greyish-blue);
+    background: transparent;
   }
 
   .row {

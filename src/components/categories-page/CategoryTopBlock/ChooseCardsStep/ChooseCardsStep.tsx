@@ -63,7 +63,7 @@ export default function ChooseCardsStep({
       </div>
 
       <div
-        className={styles.fanMobile}
+        className={`${styles.fanMobile} ${isInteractive ? styles.fanMobileForeground : ""}`}
         style={{
           width: MOBILE_FAN_CONTAINER_WIDTH,
           height: MOBILE_FAN_CONTAINER_HEIGHT,
@@ -94,6 +94,7 @@ export default function ChooseCardsStep({
                 isInteractive={isInteractive}
                 onToggle={() => onToggleCard(card.id)}
                 flipY={card.flipY}
+                mobile
               />
             </div>
           );

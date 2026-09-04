@@ -16,6 +16,8 @@ import styles from "./FanCard.module.css";
  */
 const HOVER_PUSH = 11;
 const SELECTED_PUSH = 22;
+const HOVER_PUSH_MOBILE = 6;
+const SELECTED_PUSH_MOBILE = 11;
 
 export interface FanCardProps {
   card: FanCardSpec;
@@ -27,6 +29,7 @@ export interface FanCardProps {
   onToggle: () => void;
   /** Mirror the card vertically (mobile fan's front-facing center card). */
   flipY?: boolean;
+  mobile?: boolean;
 }
 
 export default function FanCard({
@@ -38,9 +41,12 @@ export default function FanCard({
   isInteractive,
   onToggle,
   flipY,
+  mobile,
 }: FanCardProps) {
   const rad = (card.rotate * Math.PI) / 180;
-  const push = isSelected ? SELECTED_PUSH : HOVER_PUSH;
+  const hoverPush = mobile ? HOVER_PUSH_MOBILE : HOVER_PUSH;
+  const selectedPush = mobile ? SELECTED_PUSH_MOBILE : SELECTED_PUSH;
+  const push = isSelected ? selectedPush : hoverPush;
   const pushSign = flipY ? -1 : 1;
   const pushX = Math.sin(rad) * push * pushSign;
   const pushY = -Math.cos(rad) * push * pushSign;
