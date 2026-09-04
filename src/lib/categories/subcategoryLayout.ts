@@ -104,18 +104,38 @@ function sampleEvenly(slots: Slot[], count: number): Slot[] {
   return picked;
 }
 
-function slotToPoint(slot: Slot): { xPct: number; yPx: number } {
+/**
+ * The reference frame's width matches DESIGN_WIDTH, but `.ring` is laid out
+ * inside the hero section's padded container (see CategoryHeroSection's
+ * `.section` padding), which at DESIGN_WIDTH is CONTAINER_WIDTH wide. The
+ * historical `xPct` placement was a percentage of that container, so a design
+ * offset of `d` px landed at `d * CONTAINER_WIDTH / DESIGN_WIDTH` from centre —
+ * that ratio is folded into `xOffset` here to keep the 1440px layout identical.
+ */
+const CONTAINER_WIDTH = 1320;
+
+/** The constellation pattern's native width; --subcategory-ring-width resolves to this at DESIGN_WIDTH. */
+const PATTERN_NATIVE_WIDTH = 1580;
+
+function slotToPoint(slot: Slot): { xOffset: number; yOffset: number } {
   const rad = (slot.angle * Math.PI) / 180;
-  const x = SLOT_PIVOT.x + Math.sin(rad) * slot.distance;
+  const dx = Math.sin(rad) * slot.distance;
   const y = SLOT_PIVOT.y - Math.cos(rad) * slot.distance;
-  return { xPct: (x / DESIGN_WIDTH) * 100, yPx: y };
+  return {
+    xOffset: (dx * (CONTAINER_WIDTH / DESIGN_WIDTH)) / PATTERN_NATIVE_WIDTH,
+    yOffset: y / PATTERN_NATIVE_WIDTH,
+  };
 }
 
 export interface SubcategoryPosition {
-  /** Horizontal position as a percentage of the page width (scales with viewport). */
-  xPct: number;
-  /** Vertical position in px from the top of the hero section's arc container. */
-  yPx: number;
+  /**
+   * Horizontal offset from the arc's centre as a multiple of
+   * --subcategory-ring-width, so the node tracks the pattern's rings as that
+   * width scales with the viewport.
+   */
+  xOffset: number;
+  /** Vertical position as a multiple of --subcategory-ring-width, from the arc container's top. */
+  yOffset: number;
   side: "left" | "right";
   /** Index of the slot within its side, 0 = closest to the pivot (top of the arc). */
   slotIndex: number;

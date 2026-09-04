@@ -41,7 +41,14 @@ export default function SubcategoryNode({ href, label, filled, position, locale 
     <Link
       href={href}
       className={`${styles.node} ${position ? styles.nodeArc : styles.nodeFlow}`}
-      style={position ? { left: `${position.xPct}%`, top: position.yPx } : undefined}
+      style={
+        position
+          ? {
+              left: `calc(50% + (${position.xOffset} * var(--subcategory-ring-width)))`,
+              top: `calc(${position.yOffset} * var(--subcategory-ring-width))`,
+            }
+          : undefined
+      }
     >
       <span
         className={styles.float}

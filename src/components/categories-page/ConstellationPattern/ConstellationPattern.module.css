@@ -1,12 +1,12 @@
 .pattern {
   position: absolute;
   top: 98px;
-  left: 55.4%;
+  left: 50%;
   display: block;
-  width: clamp(900px, 109.722vw, 1580px);
+  width: var(--constellation-pattern-width);
   height: auto;
   max-width: none;
-  transform: translateX(calc(-50% - 4.9%));
+  transform: translateX(-50%);
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
