@@ -117,6 +117,8 @@ export interface SubcategoryPosition {
   /** Vertical position in px from the top of the hero section's arc container. */
   yPx: number;
   side: "left" | "right";
+  /** Index of the slot within its side, 0 = closest to the pivot (top of the arc). */
+  slotIndex: number;
 }
 
 /**
@@ -169,8 +171,25 @@ export function computeSubcategoryPositions(count: number): SubcategoryPosition[
   const positions: SubcategoryPosition[] = [];
   for (let i = 0; i < count; i++) {
     const isRight = i % 2 === 0;
-    const slot = isRight ? rightSlots[i / 2] : leftSlots[(i - 1) / 2];
-    positions.push({ ...slotToPoint(slot), side: isRight ? "right" : "left" });
+    const slotIndex = isRight ? i / 2 : (i - 1) / 2;
+    const slot = isRight ? rightSlots[slotIndex] : leftSlots[slotIndex];
+    positions.push({ ...slotToPoint(slot), side: isRight ? "right" : "left", slotIndex });
   }
   return positions;
+}
+
+/**
+ * Whether a subcategory tile should use the filled star icon, based purely on
+ * its position (a checkerboard, per the design references) rather than any
+ * per-tile data. Desktop arc: each side alternates starting with the right
+ * side's pivot-closest slot filled and the left side's pivot-closest slot
+ * plain. Mobile rows: alternates by (row + column) parity.
+ */
+export function isFilledStarSlot(position: { side: "left" | "right"; slotIndex: number }): boolean {
+  const isEven = position.slotIndex % 2 === 0;
+  return position.side === "right" ? isEven : !isEven;
+}
+
+export function isFilledStarCell(rowIndex: number, colIndex: number): boolean {
+  return (rowIndex + colIndex) % 2 === 0;
 }

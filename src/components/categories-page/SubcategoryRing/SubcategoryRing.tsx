@@ -3,6 +3,8 @@ import type { CategoryNode } from "@/lib/categories/data";
 import {
   computeSubcategoryMobileRows,
   computeSubcategoryPositions,
+  isFilledStarCell,
+  isFilledStarSlot,
 } from "@/lib/categories/subcategoryLayout";
 import SubcategoryNode from "@/components/categories-page/SubcategoryNode";
 import styles from "./SubcategoryRing.module.css";
@@ -37,7 +39,7 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
             key={subcategory.slug}
             href={hrefFor(subcategory)}
             label={subcategory.title[locale]}
-            icon={subcategory.icon}
+            filled={isFilledStarSlot(positions[index])}
             position={positions[index]}
             locale={locale}
           />
@@ -47,12 +49,12 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
       <div className={styles.rows}>
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className={styles.row}>
-            {row.map((subcategory) => (
+            {row.map((subcategory, colIndex) => (
               <SubcategoryNode
                 key={subcategory.slug}
                 href={hrefFor(subcategory)}
                 label={subcategory.title[locale]}
-                icon={subcategory.icon}
+                filled={isFilledStarCell(rowIndex, colIndex)}
                 locale={locale}
               />
             ))}
