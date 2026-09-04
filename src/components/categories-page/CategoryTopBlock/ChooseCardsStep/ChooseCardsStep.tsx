@@ -45,7 +45,6 @@ export default function ChooseCardsStep({
                 top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
                 width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
                 height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
-                zIndex: isSelected ? cardFan.length + 1 : undefined,
               }}
             >
               <FanCard
@@ -82,7 +81,6 @@ export default function ChooseCardsStep({
                 top: card.top,
                 width: card.width,
                 height: card.height,
-                zIndex: isSelected ? cardFanMobile.length + 1 : undefined,
               }}
             >
               <FanCard
