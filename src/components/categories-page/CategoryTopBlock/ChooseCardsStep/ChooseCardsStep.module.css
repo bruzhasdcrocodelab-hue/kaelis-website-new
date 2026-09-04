@@ -1,7 +1,11 @@
 .fan {
   position: absolute;
-  inset: 0;
-  overflow: hidden;
+  left: 50%;
+  top: 0;
+  width: 1320px;
+  height: 440px;
+  transform: translateX(-50%);
+  overflow: visible;
   z-index: 0;
 }
 

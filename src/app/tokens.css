@@ -158,6 +158,22 @@
   --text-topblock-title: 56px;
   --tracking-topblock-title: -3px;
 
+  /*
+   * ---- Typography: category page fluid sizes ----
+   * Same construction as the main-page hero fluid tokens, but the line runs
+   * through the mobile ceiling value (at the 769px breakpoint) and the desktop
+   * value (at 1440px):
+   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 769)
+   *   offset   = sizeMin - (vw-coeff / 100) * 769
+   * Below 768px each component's own media query takes over with the fixed
+   * mobile token, keeping the 390px layout pixel-identical.
+   */
+  --text-category-eyebrow-fluid: clamp(var(--text-xs), 0.447vw + 9.56px, var(--text-base));
+  --text-category-title-fluid: clamp(var(--text-topblock-title), 4.471vw + 21.62px, var(--text-category-title));
+  --tracking-category-title-fluid: clamp(-3px, 0.447vw - 6.44px, 0px);
+  --text-category-description-fluid: clamp(var(--text-xs), 0.149vw + 11.85px, var(--text-sm));
+  --text-topblock-title-fluid: clamp(var(--text-4xl), 2.385vw + 21.66px, var(--text-topblock-title));
+
   /* ---- Typography: main-page hero mobile (one-off, node-id=1888-7553) ---- */
   --text-hero-mobile: 48px;
   --text-hero-guide-mobile: 32px;
