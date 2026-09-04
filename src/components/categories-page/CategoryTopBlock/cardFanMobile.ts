@@ -35,12 +35,12 @@ const OY = 108;
 
 export const cardFanMobile: MobileFanCardSpec[] = [
   // { id: "1", left: 447.6 + OX, top: -86.46 + OY, width: 60, height: 110, rotate: 91.95 },
-  // { id: "22", left: 437.62 + OX, top: -47.81 + OY, width: 60, height: 110, rotate: 101.18 },
-  // { id: "21", left: 422.24 + OX, top: -8.68 + OY, width: 60, height: 110, rotate: 109.36 },
-  // { id: "20", left: 401.22 + OX, top: 28.2 + OY, width: 60, height: 110, rotate: 118.29 },
 
-  { id: "19", left: 412.38 + OX, top: 59.83 + OY, width: 60, height: 110, rotate: 127.09 },
+  { id: "22", left: 462.9 + OX, top: -61.81 + OY, width: 60, height: 110, rotate: 101.18 },
 
+  { id: "21", left: 450.24 + OX, top: -16.68 + OY, width: 60, height: 110, rotate: 109.36 },
+  { id: "20", left: 432.22 + OX, top: 26.2 + OY, width: 60, height: 110, rotate: 118.29 },
+  { id: "19", left: 406.38 + OX, top: 65.83 + OY, width: 60, height: 110, rotate: 127.09 },
   { id: "18", left: 375.33 + OX, top: 100.3 + OY, width: 60, height: 110, rotate: 135.84 },
   { id: "17", left: 338.98 + OX, top: 128.8 + OY, width: 60, height: 110, rotate: 144.62 },
   { id: "16", left: 298.58 + OX, top: 152.7 + OY, width: 60, height: 110, rotate: 153.51 },
@@ -60,10 +60,10 @@ export const cardFanMobile: MobileFanCardSpec[] = [
   { id: "9", left: 24.11 + OX, top: 148.0 + OY, width: 60, height: 110, rotate: -153.5 },
   { id: "8", left: -15.97 + OX, top: 123.5 + OY, width: 60, height: 110, rotate: -144.67 },
   { id: "7", left: -51.41 + OX, top: 92.86 + OY, width: 60, height: 110, rotate: -135.91 },
-  { id: "6", left: -84.35 + OX, top: 55.12 + OY, width: 60, height: 110, rotate: -127.15 },
+  { id: "6", left: -81.35 + OX, top: 57.12 + OY, width: 60, height: 110, rotate: -127.15 },
+  { id: "5", left: -105.97 + OX, top: 17.52 + OY,width: 60, height: 110, rotate: -118.29 },
+  { id: "4", left: -123.58 + OX, top: -24.06 + OY, width: 60, height: 110, rotate: -109.28 },
+  { id: "3", left: -134.09 + OX, top: -69.58 + OY, width: 60, height: 110, rotate: -101.03 },
 
-  // { id: "5", left: -141.97 + OX, top: 17.52 + OY,width: 60, height: 110, rotate: -118.29 },
-  // { id: "4", left: -159.58 + OX, top: -20.06 + OY, width: 60, height: 110, rotate: -109.28 },
-  // { id: "3", left: -169.09 + OX, top: -59.58 + OY, width: 60, height: 110, rotate: -101.03 },
   // { id: "2", left: -170.07 + OX, top: -97.99 + OY, width: 60, height: 110, rotate: -92.69 },
 ];
