@@ -37,7 +37,6 @@ export const cardFanMobile: MobileFanCardSpec[] = [
   // { id: "1", left: 447.6 + OX, top: -86.46 + OY, width: 60, height: 110, rotate: 91.95 },
 
   { id: "22", left: 462.9 + OX, top: -61.81 + OY, width: 60, height: 110, rotate: 101.18 },
-
   { id: "21", left: 450.24 + OX, top: -16.68 + OY, width: 60, height: 110, rotate: 109.36 },
   { id: "20", left: 432.22 + OX, top: 26.2 + OY, width: 60, height: 110, rotate: 118.29 },
   { id: "19", left: 406.38 + OX, top: 65.83 + OY, width: 60, height: 110, rotate: 127.09 },
@@ -57,7 +56,7 @@ export const cardFanMobile: MobileFanCardSpec[] = [
   },
   { id: "12", left: 114.0 + OX, top: 178.2 + OY, width: 60, height: 110, rotate: -171.58 },
   { id: "10", left: 67.5 + OX, top: 166.8 + OY, width: 60, height: 110, rotate: -162.46 },
-  { id: "9", left: 24.11 + OX, top: 148.0 + OY, width: 60, height: 110, rotate: -153.5 },
+  { id: "9", left: 23.11 + OX, top: 149.0 + OY, width: 60, height: 110, rotate: -153.5 },
   { id: "8", left: -15.97 + OX, top: 123.5 + OY, width: 60, height: 110, rotate: -144.67 },
   { id: "7", left: -51.41 + OX, top: 92.86 + OY, width: 60, height: 110, rotate: -135.91 },
   { id: "6", left: -81.35 + OX, top: 57.12 + OY, width: 60, height: 110, rotate: -127.15 },

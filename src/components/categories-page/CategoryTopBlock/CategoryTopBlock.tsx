@@ -32,6 +32,11 @@ export default function CategoryTopBlock({
   const [step, setStep] = useState<Step>("ask");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
+  const changeQuestion = () => {
+    setSelectedIds([]);
+    setStep("ask");
+  };
+
   const toggleCard = (id: string) => {
     if (selectedIds.includes(id)) {
       if (selectedIds.length >= maxSelectableCards) {
@@ -142,7 +147,7 @@ export default function CategoryTopBlock({
                 size="medium"
                 muted
                 icon="/icons/edit.svg"
-                onClick={() => setStep("ask")}
+                onClick={changeQuestion}
               >
                 {dictionary.changeQuestion}
               </MainButton>
@@ -205,6 +210,16 @@ export default function CategoryTopBlock({
 
       {(step === "choose" || step === "ask") && (
         <div className={styles.triggerMobile}>
+          {step === "choose" && (
+            <MainButton
+              variant="default"
+              size="large"
+              icon="/icons/edit.svg"
+              aria-label={dictionary.changeQuestion}
+              onClick={changeQuestion}
+              muted
+            />
+          )}
           <MainButton
             variant="default"
             size="large"

@@ -45,7 +45,6 @@ export default function ChooseCardsStep({
                 top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
                 width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
                 height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
-                zIndex: isSelected ? cardFan.length + 1 : undefined,
               }}
             >
               <FanCard
@@ -63,36 +62,41 @@ export default function ChooseCardsStep({
       </div>
 
       <div
-        className={styles.fanMobile}
+        className={`${styles.fanMobile} ${isInteractive ? styles.fanMobileForeground : ""}`}
         style={{
           width: MOBILE_FAN_CONTAINER_WIDTH,
           height: MOBILE_FAN_CONTAINER_HEIGHT,
         }}
-        aria-hidden
+        aria-hidden={!isInteractive}
       >
-        {cardFanMobile.map((card) => (
-          <div
-            key={card.id}
-            className={styles.fanCardBox}
-            style={{
-              left: card.left,
-              top: card.top,
-              width: card.width,
-              height: card.height,
-            }}
-          >
-            <FanCard
-              card={card}
-              width={MOBILE_CARD_TRUE_WIDTH}
-              height={MOBILE_CARD_TRUE_HEIGHT}
-              isSelected={false}
-              isDisabled
-              isInteractive={false}
-              onToggle={() => onToggleCard(card.id)}
-              flipY={card.flipY}
-            />
-          </div>
-        ))}
+        {cardFanMobile.map((card) => {
+          const isSelected = selectedIds.includes(card.id);
+          const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
+          return (
+            <div
+              key={card.id}
+              className={styles.fanCardBox}
+              style={{
+                left: card.left,
+                top: card.top,
+                width: card.width,
+                height: card.height,
+              }}
+            >
+              <FanCard
+                card={card}
+                width={MOBILE_CARD_TRUE_WIDTH}
+                height={MOBILE_CARD_TRUE_HEIGHT}
+                isSelected={isSelected}
+                isDisabled={selectionDisabled}
+                isInteractive={isInteractive}
+                onToggle={() => onToggleCard(card.id)}
+                flipY={card.flipY}
+                mobile
+              />
+            </div>
+          );
+        })}
       </div>
     </>
   );
