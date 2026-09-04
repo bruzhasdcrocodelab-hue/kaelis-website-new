@@ -41,8 +41,9 @@ export default function FanCard({
 }: FanCardProps) {
   const rad = (card.rotate * Math.PI) / 180;
   const push = isSelected ? SELECTED_PUSH : HOVER_PUSH;
-  const pushX = Math.sin(rad) * push;
-  const pushY = -Math.cos(rad) * push;
+  const pushSign = flipY ? -1 : 1;
+  const pushX = Math.sin(rad) * push * pushSign;
+  const pushY = -Math.cos(rad) * push * pushSign;
 
   return (
     <motion.button

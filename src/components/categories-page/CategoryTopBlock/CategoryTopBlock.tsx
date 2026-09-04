@@ -205,6 +205,16 @@ export default function CategoryTopBlock({
 
       {(step === "choose" || step === "ask") && (
         <div className={styles.triggerMobile}>
+          {step === "choose" && (
+            <MainButton
+              variant="default"
+              size="large"
+              icon="/icons/edit.svg"
+              aria-label={dictionary.changeQuestion}
+              onClick={() => setStep("ask")}
+              muted
+            />
+          )}
           <MainButton
             variant="default"
             size="large"

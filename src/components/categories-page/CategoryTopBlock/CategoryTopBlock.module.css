@@ -217,7 +217,6 @@
 
   .panel::before {
     background: var(--gradient-topblock-mobile);
-   
   }
 
   .panelConfirmed {
@@ -252,18 +251,22 @@
     font-size: var(--text-xs);
   }
 
-  .triggerMobile {
-    display: contents;
-  }
-
   /* Pinned to the lower-right of the screen per the mock (node-id=1873-5522),
-     floating above the scrolling page. */
-  .triggerMobile :global(a),
-  .triggerMobile :global(button) {
+     floating above the scrolling page. On the choose step a "Change Question"
+     button stacks above the guides trigger (node-id=1873-6211). */
+  .triggerMobile {
     position: fixed;
     right: 20px;
     bottom: 26px;
     z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 19px;
+  }
+
+  .triggerMobile :global(a),
+  .triggerMobile :global(button) {
     background: var(--color-white-50);
     box-shadow: var(--shadow-default);
     backdrop-filter: blur(var(--blur-shadow));

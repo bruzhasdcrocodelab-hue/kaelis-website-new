@@ -68,31 +68,36 @@ export default function ChooseCardsStep({
           width: MOBILE_FAN_CONTAINER_WIDTH,
           height: MOBILE_FAN_CONTAINER_HEIGHT,
         }}
-        aria-hidden
+        aria-hidden={!isInteractive}
       >
-        {cardFanMobile.map((card) => (
-          <div
-            key={card.id}
-            className={styles.fanCardBox}
-            style={{
-              left: card.left,
-              top: card.top,
-              width: card.width,
-              height: card.height,
-            }}
-          >
-            <FanCard
-              card={card}
-              width={MOBILE_CARD_TRUE_WIDTH}
-              height={MOBILE_CARD_TRUE_HEIGHT}
-              isSelected={false}
-              isDisabled
-              isInteractive={false}
-              onToggle={() => onToggleCard(card.id)}
-              flipY={card.flipY}
-            />
-          </div>
-        ))}
+        {cardFanMobile.map((card) => {
+          const isSelected = selectedIds.includes(card.id);
+          const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
+          return (
+            <div
+              key={card.id}
+              className={styles.fanCardBox}
+              style={{
+                left: card.left,
+                top: card.top,
+                width: card.width,
+                height: card.height,
+                zIndex: isSelected ? cardFanMobile.length + 1 : undefined,
+              }}
+            >
+              <FanCard
+                card={card}
+                width={MOBILE_CARD_TRUE_WIDTH}
+                height={MOBILE_CARD_TRUE_HEIGHT}
+                isSelected={isSelected}
+                isDisabled={selectionDisabled}
+                isInteractive={isInteractive}
+                onToggle={() => onToggleCard(card.id)}
+                flipY={card.flipY}
+              />
+            </div>
+          );
+        })}
       </div>
     </>
   );
