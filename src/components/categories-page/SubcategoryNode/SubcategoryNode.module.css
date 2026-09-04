@@ -33,6 +33,8 @@
 
 .icon {
   flex-shrink: 0;
+  width: var(--subcategory-node-icon-width-fluid);
+  height: var(--subcategory-node-icon-height-fluid);
   animation: nodeIconPulse var(--node-icon-pulse-duration, 2.2s) ease-in-out infinite;
   animation-delay: var(--node-icon-pulse-delay, 0s);
 }
@@ -43,6 +45,7 @@
   hyphens: auto;
   -webkit-hyphens: auto;
   overflow-wrap: break-word;
+  font-size: var(--subcategory-node-label-fluid);
 }
 
 @keyframes nodeFloat {

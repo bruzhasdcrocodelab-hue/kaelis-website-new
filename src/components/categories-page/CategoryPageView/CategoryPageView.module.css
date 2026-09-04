@@ -35,6 +35,13 @@
   z-index: 1;
 }
 
+@media (min-width: 1440px) {
+  .backgroundImage {
+    width: 100%;
+    height: auto;
+  }
+}
+
 @media (max-width: 768px) {
   .page {
     border: none;
