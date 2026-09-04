@@ -17,3 +17,9 @@
 .fanCard :global(img) {
   object-fit: cover;
 }
+
+@media (max-width: 768px) {
+  .fanCard {
+    border-radius: 4;
+  }
+}

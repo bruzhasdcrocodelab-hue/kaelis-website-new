@@ -1,6 +1,11 @@
 import type { Locale } from "@/lang";
 import type { CategoryNode } from "@/lib/categories/data";
-import { computeSubcategoryPositions } from "@/lib/categories/subcategoryLayout";
+import {
+  computeSubcategoryMobileRows,
+  computeSubcategoryPositions,
+  isFilledStarCell,
+  isFilledStarSlot,
+} from "@/lib/categories/subcategoryLayout";
 import SubcategoryNode from "@/components/categories-page/SubcategoryNode";
 import styles from "./SubcategoryRing.module.css";
 
@@ -15,19 +20,47 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
   if (subcategories.length === 0) return null;
 
   const positions = computeSubcategoryPositions(subcategories.length);
+  const hrefFor = (subcategory: CategoryNode) =>
+    `/categories/${[...basePath, subcategory.slug].join("/")}`;
+
+  const rowSizes = computeSubcategoryMobileRows(subcategories.length);
+  const rows: CategoryNode[][] = [];
+  let cursor = 0;
+  for (const size of rowSizes) {
+    rows.push(subcategories.slice(cursor, cursor + size));
+    cursor += size;
+  }
 
   return (
-    <div className={styles.ring}>
-      {subcategories.map((subcategory, index) => (
-        <SubcategoryNode
-          key={subcategory.slug}
-          href={`/categories/${[...basePath, subcategory.slug].join("/")}`}
-          label={subcategory.title[locale]}
-          icon={subcategory.icon}
-          position={positions[index]}
-          locale={locale}
-        />
-      ))}
-    </div>
+    <>
+      <div className={styles.ring}>
+        {subcategories.map((subcategory, index) => (
+          <SubcategoryNode
+            key={subcategory.slug}
+            href={hrefFor(subcategory)}
+            label={subcategory.title[locale]}
+            filled={isFilledStarSlot(positions[index])}
+            position={positions[index]}
+            locale={locale}
+          />
+        ))}
+      </div>
+
+      <div className={styles.rows}>
+        {rows.map((row, rowIndex) => (
+          <div key={rowIndex} className={styles.row}>
+            {row.map((subcategory, colIndex) => (
+              <SubcategoryNode
+                key={subcategory.slug}
+                href={hrefFor(subcategory)}
+                label={subcategory.title[locale]}
+                filled={isFilledStarCell(rowIndex, colIndex)}
+                locale={locale}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

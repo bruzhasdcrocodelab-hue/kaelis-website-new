@@ -35,6 +35,7 @@
   color: var(--color-white);
   white-space: nowrap;
   line-height: normal;
+  font-size: var(--text-category-eyebrow-fluid);
 }
 
 .titleWrap {
@@ -56,6 +57,8 @@
   padding-right: 10px;
   margin-left: 10px;
   hyphens: auto;
+  font-size: var(--text-category-title-fluid);
+  letter-spacing: var(--tracking-category-title-fluid);
 }
 
 .title.titleSingleWord {
@@ -64,6 +67,8 @@
   text-wrap: nowrap;
   hyphens: none;
   -webkit-hyphens: none;
+  padding-right: 20px;
+  margin-left: 20px;
 }
 
 .title.titleWrapped {
@@ -77,4 +82,65 @@
   color: var(--color-white-60);
   text-align: center;
   line-height: normal;
+  font-size: var(--text-category-description-fluid);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 6px 0 12px;
+  }
+
+  .container {
+    gap: 12.308vw;
+    width: 100%;
+  }
+
+  /* Extra clearance so the subcategory rows sit clear of the TopBlock panel
+     below; only applied when subcategory rows are present. */
+  .containerWithRows {
+    padding-bottom: 40px;
+  }
+
+  .content {
+    gap: 24px;
+    width: 358px;
+    max-width: 100%;
+    padding: 0 64px;
+  }
+
+  .eyebrow {
+    margin-bottom: -5px;
+    font-size: var(--text-xs);
+  }
+
+  .description {
+    width: 100%;
+    font-size: var(--text-xs);
+  }
+
+  .returnButton {
+    align-self: center;
+  }
+
+  .title {
+    max-width: none;
+    padding-right: 0;
+    margin-left: 0;
+    font-size: var(--text-topblock-title);
+    letter-spacing: var(--tracking-topblock-title);
+  }
+
+  .title.titleWrapped {
+    margin-top: 8px;
+  }
+
+  .readingsButton {
+    height: 44px;
+    gap: 6px;
+    padding: 6px 8px 6px 24px;
+  }
+
+  .readingsButton :global(span:first-child) {
+    font-size: var(--text-sm);
+  }
 }

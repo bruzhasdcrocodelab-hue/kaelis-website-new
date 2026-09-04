@@ -156,11 +156,20 @@ export default function ConstellationPattern() {
           <stop stopColor="var(--color-gold)" />
           <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
         </linearGradient>
-        <radialGradient id="constellationGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${CENTER_X} ${744.264}) scale(522.53 522.53)`}>
-          <stop offset="0.05" stopColor="var(--color-gold)" stopOpacity="0" />
-          <stop offset="0.35" stopColor="var(--color-gold)" stopOpacity="0.18" />
-          <stop offset="0.502" stopColor="var(--color-gold)" stopOpacity="0" />
-        </radialGradient>
+
+        {/*
+          Fades the pattern out toward the bottom edge of the viewBox instead of
+          hard-clipping it there, matching pattern-categories.svg's soft cut-off.
+          Vertical alpha ramp: fully opaque through the upper band, easing to
+          transparent over the last stretch before y=764.
+        */}
+        <linearGradient id="constellationBottomFade" x1="0" y1="0" x2="0" y2="764" gradientUnits="userSpaceOnUse">
+          <stop offset="0.55" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+        </linearGradient>
+        <mask id="constellationBottomFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="764">
+          <rect x="0" y="0" width="1580" height="764" fill="url(#constellationBottomFade)" />
+        </mask>
 
         {/*
           Cuts a soft hole behind the title/description block so the animated rings and
@@ -199,6 +208,8 @@ export default function ConstellationPattern() {
         {renderGlyphHoleMask("spinningGlyphsDashedRingHoleMask", SPINNING_GLYPHS, styles.spinClockwiseRelativeToCounterRing)}
       </defs>
 
+      <g mask="url(#constellationBottomFadeMask)">
+
       {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
       <g className={styles.static} opacity="1">
         <path
@@ -226,9 +237,6 @@ export default function ConstellationPattern() {
         <clipPath id="constellationClip">
           <circle cx={CENTER_X} cy="744.264" r="522.53" strokeWidth={1.5} />
         </clipPath>
-
-        {/* Soft glow, revealed only through the ring/line strokes drawn above it. */}
-        <circle cx={CENTER_X} cy="744.264" r="522.53" fill="url(#constellationGlow)" className={styles.glow} strokeWidth={1.5} />
 
         {/* Vector 1 + Vector 2 (minus the two rings that carry Ellipse 7 and Ellipse 10) spin together, clockwise. */}
         <g className={styles.spinClockwise} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
@@ -335,6 +343,7 @@ export default function ConstellationPattern() {
           transform={`rotate(${ellipse9Orbit.startAngle} ${CENTER_X} ${CENTER_Y})`}
           strokeWidth={1.5}
         />
+      </g>
       </g>
       </g>
     </svg>

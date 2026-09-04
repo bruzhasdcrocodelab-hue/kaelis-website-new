@@ -104,19 +104,72 @@ function sampleEvenly(slots: Slot[], count: number): Slot[] {
   return picked;
 }
 
-function slotToPoint(slot: Slot): { xPct: number; yPx: number } {
+/**
+ * The reference frame's width matches DESIGN_WIDTH, but `.ring` is laid out
+ * inside the hero section's padded container (see CategoryHeroSection's
+ * `.section` padding), which at DESIGN_WIDTH is CONTAINER_WIDTH wide. The
+ * historical `xPct` placement was a percentage of that container, so a design
+ * offset of `d` px landed at `d * CONTAINER_WIDTH / DESIGN_WIDTH` from centre —
+ * that ratio is folded into `xOffset` here to keep the 1440px layout identical.
+ */
+const CONTAINER_WIDTH = 1320;
+
+/** The constellation pattern's native width; --subcategory-ring-width resolves to this at DESIGN_WIDTH. */
+const PATTERN_NATIVE_WIDTH = 1580;
+
+function slotToPoint(slot: Slot): { xOffset: number; yOffset: number } {
   const rad = (slot.angle * Math.PI) / 180;
-  const x = SLOT_PIVOT.x + Math.sin(rad) * slot.distance;
+  const dx = Math.sin(rad) * slot.distance;
   const y = SLOT_PIVOT.y - Math.cos(rad) * slot.distance;
-  return { xPct: (x / DESIGN_WIDTH) * 100, yPx: y };
+  return {
+    xOffset: (dx * (CONTAINER_WIDTH / DESIGN_WIDTH)) / PATTERN_NATIVE_WIDTH,
+    yOffset: y / PATTERN_NATIVE_WIDTH,
+  };
 }
 
 export interface SubcategoryPosition {
-  /** Horizontal position as a percentage of the page width (scales with viewport). */
-  xPct: number;
-  /** Vertical position in px from the top of the hero section's arc container. */
-  yPx: number;
+  /**
+   * Horizontal offset from the arc's centre as a multiple of
+   * --subcategory-ring-width, so the node tracks the pattern's rings as that
+   * width scales with the viewport.
+   */
+  xOffset: number;
+  /** Vertical position as a multiple of --subcategory-ring-width, from the arc container's top. */
+  yOffset: number;
   side: "left" | "right";
+  /** Index of the slot within its side, 0 = closest to the pivot (top of the arc). */
+  slotIndex: number;
+}
+
+/**
+ * Mobile layout: subcategory tiles stack in centered rows under the copy
+ * instead of arcing over it.
+ *
+ * A row holds at most SUBCATEGORY_MOBILE_ROW_MAX (4) tiles and, once there is
+ * more than one row, at least 2. Rows are filled greedily with 4 tiles each;
+ * the final two rows are then re-balanced evenly (larger half first) so the
+ * layout never ends on a lone straggler. This gives:
+ *   1 -> [1]        5 -> [3, 2]     8  -> [4, 4]
+ *   2 -> [2]        6 -> [3, 3]     12 -> [4, 4, 4]
+ *   3 -> [3]        7 -> [4, 3]     13 -> [4, 4, 3, 2]
+ *   4 -> [4]
+ */
+export const SUBCATEGORY_MOBILE_ROW_MAX = 4;
+
+export function computeSubcategoryMobileRows(count: number): number[] {
+  if (count <= 0) return [];
+  if (count <= SUBCATEGORY_MOBILE_ROW_MAX) return [count];
+
+  const rowCount = Math.ceil(count / SUBCATEGORY_MOBILE_ROW_MAX);
+  const rows = Array.from({ length: rowCount }, (_, i) =>
+    i < rowCount - 1 ? SUBCATEGORY_MOBILE_ROW_MAX : count - SUBCATEGORY_MOBILE_ROW_MAX * (rowCount - 1),
+  );
+
+  const tail = rows[rowCount - 2] + rows[rowCount - 1];
+  rows[rowCount - 2] = Math.ceil(tail / 2);
+  rows[rowCount - 1] = Math.floor(tail / 2);
+
+  return rows;
 }
 
 /**
@@ -138,8 +191,25 @@ export function computeSubcategoryPositions(count: number): SubcategoryPosition[
   const positions: SubcategoryPosition[] = [];
   for (let i = 0; i < count; i++) {
     const isRight = i % 2 === 0;
-    const slot = isRight ? rightSlots[i / 2] : leftSlots[(i - 1) / 2];
-    positions.push({ ...slotToPoint(slot), side: isRight ? "right" : "left" });
+    const slotIndex = isRight ? i / 2 : (i - 1) / 2;
+    const slot = isRight ? rightSlots[slotIndex] : leftSlots[slotIndex];
+    positions.push({ ...slotToPoint(slot), side: isRight ? "right" : "left", slotIndex });
   }
   return positions;
+}
+
+/**
+ * Whether a subcategory tile should use the filled star icon, based purely on
+ * its position (a checkerboard, per the design references) rather than any
+ * per-tile data. Desktop arc: each side alternates starting with the right
+ * side's pivot-closest slot filled and the left side's pivot-closest slot
+ * plain. Mobile rows: alternates by (row + column) parity.
+ */
+export function isFilledStarSlot(position: { side: "left" | "right"; slotIndex: number }): boolean {
+  const isEven = position.slotIndex % 2 === 0;
+  return position.side === "right" ? isEven : !isEven;
+}
+
+export function isFilledStarCell(rowIndex: number, colIndex: number): boolean {
+  return (rowIndex + colIndex) % 2 === 0;
 }

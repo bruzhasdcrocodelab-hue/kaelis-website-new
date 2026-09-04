@@ -1,17 +1,33 @@
 .pattern {
   position: absolute;
   top: 98px;
-  left: 55.4%;
+  left: 50%;
   display: block;
+  width: var(--constellation-pattern-width);
+  height: auto;
   max-width: none;
-  transform: translateX(calc(-50% - 4.9%));
+  transform: translateX(-50%);
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
 }
 
-.glow {
-  animation: constellationPulse var(--pattern-pulse-duration) ease-in-out infinite;
+/*
+ * Mobile: the "Celestial Rings Group" from the mock (node-id=1873-5400) is a
+ * ~690px-wide band, dimmed and pushed above the hero copy. Width scales with
+ * the viewport so the composition holds on narrower/wider phones; height
+ * follows from the SVG's own aspect ratio. Only size/position/opacity change —
+ * the rotation animations are resolution-independent and keep running.
+ */
+@media (max-width: 768px) {
+  .pattern {
+    top: 120px;
+    left: 50%;
+    width: clamp(560px, 176.923vw, 900px);
+    height: auto;
+    transform: translateX(-50%);
+    opacity: 0.65;
+  }
 }
 
 .spinClockwise {
@@ -59,18 +75,7 @@
   }
 }
 
-@keyframes constellationPulse {
-  0%,
-  100% {
-    opacity: var(--pattern-pulse-opacity-max);
-  }
-  50% {
-    opacity: var(--pattern-pulse-opacity-min);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .glow,
   .spinClockwise,
   .spinCounterClockwise,
   .spinClockwiseRelativeToCounterRing,

@@ -38,6 +38,14 @@ export default function CategoryPageView({
         className={styles.backgroundImage}
         priority
       />
+      <Image
+        src="/images/backgrounds/mobile/background-celestial.png"
+        alt=""
+        width={390}
+        height={1000}
+        className={styles.backgroundImageMobile}
+        priority
+      />
       <ConstellationPattern />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />

@@ -9,3 +9,26 @@
 .ring > * {
   pointer-events: auto;
 }
+
+.rows {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .ring {
+    display: none;
+  }
+
+  .rows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: center;
+    gap: clamp(-14px, calc((100vw - 352px) / 3 - 2.67px), 32px);
+  }
+}

@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { CategoryIcon } from "@/lib/categories/data";
 import type { SubcategoryPosition } from "@/lib/categories/subcategoryLayout";
 import styles from "./SubcategoryNode.module.css";
 import { htmlLang, Locale } from "@/lang";
@@ -10,15 +9,17 @@ import { isSingleWord, withSoftHyphens } from "@/lib/hyphenate";
 export interface SubcategoryNodeProps {
   href: string;
   label: string;
-  icon: CategoryIcon;
-  position: SubcategoryPosition;
+  /** Whether this tile uses the filled star icon, chosen by its position (checkerboard). */
+  filled: boolean;
+  /** Absolute position on the desktop arc. Omitted for the in-flow mobile rows. */
+  position?: SubcategoryPosition;
   locale: Locale;
 }
 
-const ICON_SRC: Record<CategoryIcon, string> = {
-  star: "/icons/main-star.svg",
-  "filled-star": "/icons/filled-main-star.svg",
-};
+const ICON_SRC = {
+  plain: "/icons/main-star.svg",
+  filled: "/icons/filled-main-star.svg",
+} as const;
 
 function seededUnit(seed: string): number {
   let hash = 0;
@@ -31,7 +32,7 @@ function seededUnit(seed: string): number {
 const NODE_FLOAT_DURATION_S = 6;
 const NODE_ICON_PULSE_DURATION_S = 2.2;
 
-export default function SubcategoryNode({ href, label, icon, position, locale }: SubcategoryNodeProps) {
+export default function SubcategoryNode({ href, label, filled, position, locale }: SubcategoryNodeProps) {
   const floatDelay = -(seededUnit(`${href}:float`) * NODE_FLOAT_DURATION_S).toFixed(2);
   const pulseDelay = -(seededUnit(`${href}:pulse`) * NODE_ICON_PULSE_DURATION_S).toFixed(2);
   const displayLabel = isSingleWord(label) ? withSoftHyphens(label) : label;
@@ -39,8 +40,15 @@ export default function SubcategoryNode({ href, label, icon, position, locale }:
   return (
     <Link
       href={href}
-      className={styles.node}
-      style={{ left: `${position.xPct}%`, top: position.yPx }}
+      className={`${styles.node} ${position ? styles.nodeArc : styles.nodeFlow}`}
+      style={
+        position
+          ? {
+              left: `calc(50% + (${position.xOffset} * var(--subcategory-ring-width)))`,
+              top: `calc(${position.yOffset} * var(--subcategory-ring-width))`,
+            }
+          : undefined
+      }
     >
       <span
         className={styles.float}
@@ -51,7 +59,13 @@ export default function SubcategoryNode({ href, label, icon, position, locale }:
           } as CSSProperties
         }
       >
-        <Image src={ICON_SRC[icon]} alt="" width={50} height={62} className={styles.icon} />
+        <Image
+          src={filled ? ICON_SRC.filled : ICON_SRC.plain}
+          alt=""
+          width={50}
+          height={62}
+          className={styles.icon}
+        />
         <span className={`font-instrument-lg-emphasized ${styles.label}`} lang={htmlLang[locale]}>{displayLabel}</span>
       </span>
     </Link>

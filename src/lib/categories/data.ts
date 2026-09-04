@@ -1,12 +1,9 @@
 import type { Locale } from "@/lang";
 
-export type CategoryIcon = "star" | "filled-star";
-
 export interface CategoryNode {
   slug: string;
   title: Record<Locale, string>;
   description: Record<Locale, string>;
-  icon: CategoryIcon;
   /**
    * Number of fan cards the user may select for this category/subcategory
    * on the CategoryTopBlock (e.g. Family = "Choose 3 Cards"). Not yet backed
@@ -18,12 +15,11 @@ export interface CategoryNode {
 
 function leaf(
   slug: string,
-  icon: CategoryIcon,
   title: Record<Locale, string>,
   description: Record<Locale, string>,
   maxSelectableCards: number,
 ): CategoryNode {
-  return { slug, icon, title, description, maxSelectableCards, subcategories: [] };
+  return { slug, title, description, maxSelectableCards, subcategories: [] };
 }
 
 /**
@@ -38,39 +34,19 @@ const familyDescription: Record<Locale, string> = {
 
 const family: CategoryNode = {
   slug: "family",
-  icon: "star",
   title: { en: "Family", ru: "Семья", uk: "Родина" },
   description: familyDescription,
   maxSelectableCards: 3,
   subcategories: [
-    leaf(
-      "pregnancy",
-      "star",
-      { en: "Pregnancy", ru: "Беременность", uk: "Вагітність" },
-      familyDescription,
-      2,
-    ),
-    leaf(
-      "children",
-      "filled-star",
-      { en: "Children", ru: "Дети", uk: "Діти" },
-      familyDescription,
-      4,
-    ),
+    leaf("pregnancy", { en: "Pregnancy", ru: "Беременность", uk: "Вагітність" }, familyDescription, 2),
+    leaf("children", { en: "Children", ru: "Дети", uk: "Діти" }, familyDescription, 4),
     leaf(
       "what-will-happen",
-      "filled-star",
       { en: "What Will Happen?", ru: "Что будет?", uk: "Що буде?" },
       familyDescription,
       1,
     ),
-    leaf(
-      "my-family",
-      "star",
-      { en: "My Family", ru: "Моя семья", uk: "Моя родина" },
-      familyDescription,
-      5,
-    ),
+    leaf("my-family", { en: "My Family", ru: "Моя семья", uk: "Моя родина" }, familyDescription, 5),
   ],
 };
 
@@ -82,72 +58,38 @@ const loveDescription: Record<Locale, string> = {
 
 const love: CategoryNode = {
   slug: "love",
-  icon: "star",
   title: { en: "Love", ru: "Любовь", uk: "Кохання" },
   description: loveDescription,
   maxSelectableCards: 4,
   subcategories: [
-    leaf("abuse", "star", { en: "Abuse", ru: "Абьюз", uk: "Абʼюз" }, loveDescription, 2),
-    leaf("destiny-1", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 3),
-    leaf(
-      "argument",
-      "filled-star",
-      { en: "Argument", ru: "Ссора", uk: "Сварка" },
-      loveDescription,
-      1,
-    ),
-    leaf(
-      "choice",
-      "filled-star",
-      { en: "Choice", ru: "Выбор", uk: "Вибір" },
-      loveDescription,
-      5,
-    ),
+    leaf("abuse", { en: "Abuse", ru: "Абьюз", uk: "Абʼюз" }, loveDescription, 2),
+    leaf("destiny-1", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 3),
+    leaf("argument", { en: "Argument", ru: "Ссора", uk: "Сварка" }, loveDescription, 1),
+    leaf("choice", { en: "Choice", ru: "Выбор", uk: "Вибір" }, loveDescription, 5),
     leaf(
       "mutual-feelings",
-      "star",
       { en: "Mutual Feelings", ru: "Взаимные чувства", uk: "Взаємні почуття" },
       loveDescription,
       4,
     ),
-    leaf("destiny-2", "star", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 2),
-    leaf(
-      "cheating",
-      "filled-star",
-      { en: "Cheating", ru: "Измена", uk: "Зрада" },
-      loveDescription,
-      3,
-    ),
-    leaf(
-      "breakup",
-      "filled-star",
-      { en: "Breakup", ru: "Расставание", uk: "Розставання" },
-      loveDescription,
-      1,
-    ),
-    leaf("parting", "star", { en: "Parting", ru: "Разлука", uk: "Розлука" }, loveDescription, 4),
-    leaf("union", "star", { en: "Union", ru: "Союз", uk: "Союз" }, loveDescription, 2),
+    leaf("destiny-2", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 2),
+    leaf("cheating", { en: "Cheating", ru: "Измена", uk: "Зрада" }, loveDescription, 3),
+    leaf("breakup", { en: "Breakup", ru: "Расставание", uk: "Розставання" }, loveDescription, 1),
+    leaf("parting", { en: "Parting", ru: "Разлука", uk: "Розлука" }, loveDescription, 4),
+    leaf("union", { en: "Union", ru: "Союз", uk: "Союз" }, loveDescription, 2),
     leaf(
       "compatibility",
-      "filled-star",
       { en: "Compatibility", ru: "Совместимость", uk: "Сумісність" },
       loveDescription,
       5,
     ),
-    leaf(
-      "between-us",
-      "filled-star",
-      { en: "Between Us", ru: "Между нами", uk: "Між нами" },
-      loveDescription,
-      3,
-    ),
-    leaf("karma", "star", { en: "Karma", ru: "Карма", uk: "Карма" }, loveDescription, 1),
+    leaf("between-us", { en: "Between Us", ru: "Между нами", uk: "Між нами" }, loveDescription, 3),
+    leaf("karma", { en: "Karma", ru: "Карма", uk: "Карма" }, loveDescription, 1),
   ],
 };
 
 const yesNo: CategoryNode = {
   slug: "yes-no",
-  icon: "star",
   title: { en: "Yes/No", ru: "Да/Нет", uk: "Так/Ні" },
   description: {
     en: "Get a clear, direct answer to the question on your mind",
@@ -160,7 +102,6 @@ const yesNo: CategoryNode = {
 
 const oneCard: CategoryNode = {
   slug: "one-card",
-  icon: "star",
   title: { en: "One Card", ru: "Одна карта", uk: "Одна карта" },
   description: {
     en: "A single card reading for quick clarity and guidance",
@@ -173,7 +114,6 @@ const oneCard: CategoryNode = {
 
 const threeCards: CategoryNode = {
   slug: "three-cards",
-  icon: "star",
   title: { en: "Three Cards", ru: "Три карты", uk: "Три карти" },
   description: {
     en: "Past, present, and future revealed across three cards",
@@ -186,7 +126,6 @@ const threeCards: CategoryNode = {
 
 const work: CategoryNode = {
   slug: "work",
-  icon: "star",
   title: { en: "Work", ru: "Работа", uk: "Робота" },
   description: {
     en: "Navigate your career path, opportunities, and challenges",
@@ -199,7 +138,6 @@ const work: CategoryNode = {
 
 const money: CategoryNode = {
   slug: "money",
-  icon: "star",
   title: { en: "Money", ru: "Деньги", uk: "Гроші" },
   description: {
     en: "Gain insight into your finances, stability, and abundance",
