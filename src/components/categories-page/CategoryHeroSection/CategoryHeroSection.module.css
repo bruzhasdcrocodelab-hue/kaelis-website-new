@@ -46,7 +46,8 @@
 
 .title {
   margin-bottom: -6px;
-  max-width: 400px;
+  margin-top: 10px;
+  max-width: 500px;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
@@ -54,8 +55,8 @@
   text-align: center;
   text-wrap: balance;
   line-height: normal;
-  padding-right: 20px;
-  margin-left: 20px;
+  padding-right: 10px;
+  margin-left: 10px;
   hyphens: auto;
   font-size: var(--text-category-title-fluid);
   letter-spacing: var(--tracking-category-title-fluid);
@@ -72,7 +73,7 @@
 }
 
 .title.titleWrapped {
-  margin-top: 10px;
+  margin-top: 25px;
   margin-bottom: 10px;
   line-height: 90%;
 }
@@ -87,7 +88,7 @@
 
 @media (max-width: 900px) {
   .title.titleSingleWord {
-    max-width: 350px;
+    max-width: 400px;
   }
 }
 
@@ -130,11 +131,13 @@
 
   .title {
     max-width: 300px;
-    padding-right: 0;
-    margin-left: 0;
     font-size: var(--text-topblock-title);
     letter-spacing: var(--tracking-topblock-title);
     hyphens: auto;
+  }
+
+  .title.titleWrapped {
+    margin-top: 10px;
   }
 
   .readingsButton {
