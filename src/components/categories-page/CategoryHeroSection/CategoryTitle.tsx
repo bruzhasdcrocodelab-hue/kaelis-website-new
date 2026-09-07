@@ -35,7 +35,7 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
   return (
     <p
       ref={ref}
-      className={`font-bona-category-title ${styles.title} ${singleWord ? styles.titleSingleWord : ""} ${!singleWord && wrapped ? styles.titleWrapped : ""}`}
+      className={`font-bona-category-title ${styles.title} ${singleWord ? styles.titleSingleWord : ""} ${!singleWord && wrapped ? styles.titleWrapped : ""} ${singleWord && wrapped ? styles.titleSingleWrapped : ""}`}
       lang={htmlLang[locale]}
     >
       {title}

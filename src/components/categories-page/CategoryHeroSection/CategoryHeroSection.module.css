@@ -46,7 +46,7 @@
 
 .title {
   margin-bottom: -6px;
-  max-width: 500px;
+  max-width: 400px;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
@@ -114,7 +114,7 @@
   }
 
   .description {
-    width: 100%;
+    width: 300px;
     font-size: var(--text-xs);
   }
 
@@ -123,15 +123,28 @@
   }
 
   .title {
-    max-width: none;
+    max-width: 300px;
     padding-right: 0;
     margin-left: 0;
     font-size: var(--text-topblock-title);
     letter-spacing: var(--tracking-topblock-title);
+    hyphens: auto;
   }
 
   .title.titleWrapped {
     margin-top: 8px;
+  }
+
+  .title.titleSingleWord {
+    max-width: 300px;
+    text-wrap: balance;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  .titleSingleWrapped{
+    line-height: 90%;
+    margin-top: 10px;
   }
 
   .readingsButton {
