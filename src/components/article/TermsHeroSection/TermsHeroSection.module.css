@@ -3,15 +3,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 1.389vw;
   width: 100%;
-  padding: clamp(40px, 5.5vw, 80px) 60px 104px;
-}
-
-@media (min-width: 1440px) {
-  .section {
-    padding: 80px 60px;
-  }
+  padding: 5.556vw 60px 160px;
 }
 
 .titleBlock {
@@ -23,7 +17,7 @@
 }
 
 .eyebrow {
-  margin-bottom: -20px;
+  margin-bottom: -1.389vw;
   color: var(--color-white);
   white-space: nowrap;
   line-height: normal;
@@ -54,10 +48,21 @@
   line-height: normal;
 }
 
+@media (min-width: 1440px) {
+  .section {
+    padding: 80px 60px;
+    gap: 20px;
+  }
+
+  .eyebrow {
+    margin-bottom: -20px;
+  }
+}
+
 @media (max-width: 768px) {
   .section {
     gap: 12px;
-    padding: 32px 16px 80px;
+    padding: 32px 16px 110px;
   }
 
   .eyebrow {
