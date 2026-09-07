@@ -74,6 +74,12 @@ const uk: Dictionary = {
         psychologist: "Психолог",
         friend: "Друг",
       },
+      guideDescriptions: {
+        analyst: "Точний логічний розбір на основі даних",
+        witch: "Підсвідомі архетипи та синхронії",
+        psychologist: "Когнітивно-поведінкові моделі та настанови",
+        friend: "Щирий, теплий та чуйний відгук",
+      },
     },
   },
   footer: {

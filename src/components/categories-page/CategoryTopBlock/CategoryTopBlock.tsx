@@ -3,7 +3,12 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
-import TriggerButton from "@/components/categories-page/TriggerButton";
+import TriggerButton, {
+  GUIDE_ICON,
+  GUIDE_ORDER,
+  type GuideId,
+} from "@/components/categories-page/TriggerButton";
+import BottomSheetSelect from "@/components/global/BottomSheetSelect";
 import { pluralizeCardCount, type Dictionary, type Locale } from "@/lang";
 import AnimatedWaves from "./AnimatedWaves/AnimatedWaves";
 import AnswerStep from "./AnswerStep/AnswerStep";
@@ -31,6 +36,8 @@ export default function CategoryTopBlock({
 }: CategoryTopBlockProps) {
   const [step, setStep] = useState<Step>("ask");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedGuide, setSelectedGuide] = useState<GuideId>("analyst");
+  const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   const changeQuestion = () => {
@@ -225,12 +232,26 @@ export default function CategoryTopBlock({
           <MainButton
             variant="default"
             size="large"
-            icon="/icons/analyst.svg"
-            aria-label={dictionary.guides.analyst}
+            icon={GUIDE_ICON[selectedGuide]}
+            aria-label={dictionary.guides[selectedGuide]}
+            onClick={() => setGuideSheetOpen(true)}
             muted
           />
         </div>
       )}
+
+      <BottomSheetSelect<GuideId>
+        open={guideSheetOpen}
+        onClose={() => setGuideSheetOpen(false)}
+        options={GUIDE_ORDER.map((guide) => ({
+          value: guide,
+          label: dictionary.guides[guide],
+          description: dictionary.guideDescriptions[guide],
+          icon: GUIDE_ICON[guide],
+        }))}
+        selectedValue={selectedGuide}
+        onSelect={setSelectedGuide}
+      />
     </section>
   );
 }
