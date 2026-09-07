@@ -39,14 +39,14 @@ const family: CategoryNode = {
   maxSelectableCards: 3,
   subcategories: [
     leaf("pregnancy", { en: "Pregnancy", ru: "Беременность", uk: "Вагітність" }, familyDescription, 2),
-    leaf("children", { en: "Children", ru: "Дети", uk: "Діти" }, familyDescription, 4),
+    leaf("children", { en: "Children", ru: "Дети", uk: "Діти" }, familyDescription, 1),
     leaf(
       "what-will-happen",
       { en: "What Will Happen?", ru: "Что будет?", uk: "Що буде?" },
       familyDescription,
       1,
     ),
-    leaf("my-family", { en: "My Family", ru: "Моя семья", uk: "Моя родина" }, familyDescription, 5),
+    leaf("my-family", { en: "My Family", ru: "Моя семья", uk: "Моя родина" }, familyDescription, 2),
   ],
 };
 
@@ -60,28 +60,28 @@ const love: CategoryNode = {
   slug: "love",
   title: { en: "Love", ru: "Любовь", uk: "Кохання" },
   description: loveDescription,
-  maxSelectableCards: 4,
+  maxSelectableCards: 3,
   subcategories: [
     leaf("abuse", { en: "Abuse", ru: "Абьюз", uk: "Абʼюз" }, loveDescription, 2),
     leaf("destiny-1", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 3),
     leaf("argument", { en: "Argument", ru: "Ссора", uk: "Сварка" }, loveDescription, 1),
-    leaf("choice", { en: "Choice", ru: "Выбор", uk: "Вибір" }, loveDescription, 5),
+    leaf("choice", { en: "Choice", ru: "Выбор", uk: "Вибір" }, loveDescription, 1),
     leaf(
       "mutual-feelings",
       { en: "Mutual Feelings", ru: "Взаимные чувства", uk: "Взаємні почуття" },
       loveDescription,
-      4,
+      2,
     ),
     leaf("destiny-2", { en: "Destiny", ru: "Судьба", uk: "Доля" }, loveDescription, 2),
     leaf("cheating", { en: "Cheating", ru: "Измена", uk: "Зрада" }, loveDescription, 3),
     leaf("breakup", { en: "Breakup", ru: "Расставание", uk: "Розставання" }, loveDescription, 1),
-    leaf("parting", { en: "Parting", ru: "Разлука", uk: "Розлука" }, loveDescription, 4),
+    leaf("parting", { en: "Parting", ru: "Разлука", uk: "Розлука" }, loveDescription, 1),
     leaf("union", { en: "Union", ru: "Союз", uk: "Союз" }, loveDescription, 2),
     leaf(
       "compatibility",
       { en: "Compatibility", ru: "Совместимость", uk: "Сумісність" },
       loveDescription,
-      5,
+      2,
     ),
     leaf("between-us", { en: "Between Us", ru: "Между нами", uk: "Між нами" }, loveDescription, 3),
     leaf("karma", { en: "Karma", ru: "Карма", uk: "Карма" }, loveDescription, 1),
@@ -132,7 +132,7 @@ const work: CategoryNode = {
     ru: "Разберитесь в карьерном пути, возможностях и трудностях",
     uk: "Розберіться в кар'єрному шляху, можливостях і труднощах",
   },
-  maxSelectableCards: 4,
+  maxSelectableCards: 3,
   subcategories: [],
 };
 

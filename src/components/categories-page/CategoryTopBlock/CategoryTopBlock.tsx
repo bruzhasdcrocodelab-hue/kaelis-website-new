@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton from "@/components/categories-page/TriggerButton";
@@ -31,6 +31,7 @@ export default function CategoryTopBlock({
 }: CategoryTopBlockProps) {
   const [step, setStep] = useState<Step>("ask");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   const changeQuestion = () => {
     setSelectedIds([]);
@@ -170,7 +171,7 @@ export default function CategoryTopBlock({
             </div>
             <div className={styles.askBlock}>
               <p className={`font-bona-topblock-title ${styles.askTitle}`}>{stepTitle[step]}</p>
-              <p className={`font-instrument-xs ${styles.askDescription}`}>{stepDescription[step]}</p>
+              <p ref={subtitleRef} className={`font-instrument-xs ${styles.askDescription}`}>{stepDescription[step]}</p>
             </div>
           </div>
 
@@ -194,6 +195,7 @@ export default function CategoryTopBlock({
             locale={locale}
             cardCount={maxSelectableCards}
             onAnswerQuestion={() => setStep("answer")}
+            mobileSheetTopRef={subtitleRef}
           />
         )}
         {step === "answer" && (
@@ -208,9 +210,9 @@ export default function CategoryTopBlock({
         )}
       </div>
 
-      {(step === "choose" || step === "ask") && (
+      {(step === "choose" || step === "reveal" || step === "ask") && (
         <div className={styles.triggerMobile}>
-          {step === "choose" && (
+          {(step === "choose" || step === "reveal") && (
             <MainButton
               variant="default"
               size="large"

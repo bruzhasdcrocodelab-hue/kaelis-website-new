@@ -189,6 +189,27 @@
   --subcategory-node-icon-height-fluid: clamp(49px, 1.937vw + 34.1px, 62px);
   --subcategory-node-label-fluid: clamp(var(--text-xs), 0.745vw + 7.27px, var(--text-lg));
 
+  /*
+   * ---- RevealCardsStep ----
+   * cardDetailArt / cardDetailInfo inset: linear from 0px at the 769px
+   * breakpoint to 130px at 1440px and above.
+   *   vw-coeff = 100 * (130 - 0) / (1440 - 769)
+   *   offset   = 0 - (vw-coeff / 100) * 769
+   */
+  --reveal-card-detail-inset-fluid: clamp(0px, 19.374vw - 148.98px, 130px);
+
+  /*
+   * Below 390px the three reveal cards + labels no longer fit the mobile
+   * panel, so card box, row gap and label shrink linearly from their 390px
+   * values down to a size that clears the 320px viewport:
+   *   vw-coeff = 100 * (valueMax - valueMin) / (390 - 320)
+   *   offset   = valueMin - (vw-coeff / 100) * 320
+   */
+  --reveal-card-width-mobile-fluid: clamp(84px, 22.857vw + 10.86px, 100px);
+  --reveal-card-height-mobile-fluid: clamp(151.2px, 41.143vw + 19.54px, 180px);
+  --reveal-row-gap-mobile-fluid: clamp(8px, 11.429vw - 28.57px, 16px);
+  --reveal-card-name-mobile-fluid: clamp(11px, 2.857vw + 1.86px, 13px);
+
   /* ---- Typography: main-page hero mobile (one-off, node-id=1888-7553) ---- */
   --text-hero-mobile: 48px;
   --text-hero-guide-mobile: 32px;
