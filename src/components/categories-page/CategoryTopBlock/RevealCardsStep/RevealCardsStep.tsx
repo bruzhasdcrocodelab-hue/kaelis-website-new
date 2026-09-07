@@ -262,8 +262,30 @@ export default function RevealCardsStep({
   const [isRevealed, setIsRevealed] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const isMobile = useMediaQuery(MOBILE_QUERY);
+  const revealAreaRef = useRef<HTMLDivElement>(null);
+  const cardDetailArtRef = useRef<HTMLDivElement>(null);
+  const cardDetailInfoRef = useRef<HTMLDivElement>(null);
 
   const selectedCard = cards.find((card) => card.slug === selectedSlug) ?? null;
+
+  useEffect(() => {
+    if (isMobile || !selectedCard) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (
+        revealAreaRef.current?.contains(target) ||
+        cardDetailArtRef.current?.contains(target) ||
+        cardDetailInfoRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setSelectedSlug(null);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [isMobile, selectedCard]);
 
   const handleCardClick = (slug: string) => {
     if (!isRevealed) {
@@ -275,7 +297,7 @@ export default function RevealCardsStep({
 
   return (
     <>
-      <div className={`${styles.revealArea} ${isRevealed ? 'bottom-[-10px]' : 'bottom-[-20px]'}`} onClick={() => setSelectedSlug(null)}>
+      <div ref={revealAreaRef} className={`${styles.revealArea} ${isRevealed ? 'bottom-[-10px]' : 'bottom-[-20px]'}`} onClick={() => setSelectedSlug(null)}>
         <p
           className={`font-instrument-xxs-emphasized ${styles.revealLabel} ${isRevealed ? styles.revealLabelHidden : ""}`}
         >
@@ -311,6 +333,7 @@ export default function RevealCardsStep({
         {!isMobile && selectedCard && (
           <motion.div
             key="art"
+            ref={cardDetailArtRef}
             className={styles.cardDetailArt}
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
@@ -355,6 +378,7 @@ export default function RevealCardsStep({
         {!isMobile && selectedCard && (
           <motion.div
             key="info"
+            ref={cardDetailInfoRef}
             className={styles.cardDetailInfo}
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}

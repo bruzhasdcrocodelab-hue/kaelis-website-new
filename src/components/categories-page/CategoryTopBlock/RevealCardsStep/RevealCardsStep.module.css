@@ -117,7 +117,7 @@
 
 .cardDetailArt {
   position: absolute;
-  left: 0px;
+  left: var(--reveal-card-detail-inset-fluid);
   top: 112px;
   width: 226px;
   height: 404px;
@@ -160,7 +160,7 @@
 
 .cardDetailInfo {
   position: absolute;
-  right: 0px;
+  right: var(--reveal-card-detail-inset-fluid);
   top: calc(50% - 108px);
   width: 226px;
   height: 404px;
@@ -286,7 +286,7 @@
 
 @media (max-width: 768px) {
   .revealRow {
-    gap: 16px;
+    gap: var(--reveal-row-gap-mobile-fluid);
   }
 
   .revealCardCol {
@@ -294,8 +294,8 @@
   }
 
   .revealCardName {
-    width: 100px;
-    font-size: var(--text-xs);
+    width: var(--reveal-card-width-mobile-fluid);
+    font-size: var(--reveal-card-name-mobile-fluid);
   }
 
   .revealLabel{
@@ -303,8 +303,8 @@
   }
 
   .revealCard {
-    width: 100px;
-    height: 180px;
+    width: var(--reveal-card-width-mobile-fluid);
+    height: var(--reveal-card-height-mobile-fluid);
     border-radius: 8px;
   }
 
