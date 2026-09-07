@@ -142,5 +142,6 @@
 
   .readingsButton :global(span:first-child) {
     font-size: var(--text-sm);
+    color: var(--color-black) !important;
   }
 }

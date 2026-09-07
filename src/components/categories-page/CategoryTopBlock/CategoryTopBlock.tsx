@@ -210,7 +210,7 @@ export default function CategoryTopBlock({
         )}
       </div>
 
-      {(step === "choose" || step === "reveal" || step === "ask") && (
+      {(step === "choose" || step === "reveal" || step === "ask" || step === "answer") && (
         <div className={styles.triggerMobile}>
           {(step === "choose" || step === "reveal") && (
             <MainButton
