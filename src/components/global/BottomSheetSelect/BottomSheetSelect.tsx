@@ -8,6 +8,8 @@ import styles from "./BottomSheetSelect.module.css";
 export interface BottomSheetOption<T extends string> {
   value: T;
   label: string;
+  description?: string;
+  icon?: string;
 }
 
 export interface BottomSheetSelectProps<T extends string> {
@@ -85,6 +87,7 @@ export default function BottomSheetSelect<T extends string>({
                 const prev = options[index - 1];
                 const showDivider =
                   index > 0 && !isActive && prev.value !== selectedValue;
+                const hasDetail = Boolean(option.icon || option.description);
                 return (
                   <div key={option.value} className={styles.optionGroup}>
                     {showDivider && <span className={styles.divider} />}
@@ -92,18 +95,44 @@ export default function BottomSheetSelect<T extends string>({
                       type="button"
                       role="option"
                       aria-selected={isActive}
-                      className={`${styles.option} ${isActive ? styles.optionActive : ""}`}
+                      className={`${styles.option} ${
+                        hasDetail ? styles.optionDetail : ""
+                      } ${isActive ? styles.optionActive : ""}`}
                       onClick={() => {
                         onSelect(option.value);
                         onClose();
                       }}
                     >
-                      <span
-                        className={`font-instrument-lg-emphasized ${styles.optionLabel} ${
-                          isActive ? styles.optionLabelActive : ""
-                        }`}
-                      >
-                        {option.label}
+                      {option.icon && (
+                        <span className={styles.optionIconWrap}>
+                          <span
+                            className={`${styles.optionIcon} ${
+                              isActive ? styles.optionIconActive : ""
+                            }`}
+                            style={{
+                              maskImage: `url(${option.icon})`,
+                              WebkitMaskImage: `url(${option.icon})`,
+                            }}
+                          />
+                        </span>
+                      )}
+                      <span className={styles.optionText}>
+                        <span
+                          className={`font-instrument-lg-emphasized ${styles.optionLabel} ${
+                            isActive ? styles.optionLabelActive : ""
+                          }`}
+                        >
+                          {option.label}
+                        </span>
+                        {option.description && (
+                          <span
+                            className={`font-instrument-xxs ${styles.optionDescription} ${
+                              isActive ? styles.optionDescriptionActive : ""
+                            }`}
+                          >
+                            {option.description}
+                          </span>
+                        )}
                       </span>
                     </button>
                   </div>

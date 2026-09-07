@@ -68,10 +68,53 @@
   text-align: left;
 }
 
+.optionDetail {
+  gap: 12px;
+  padding: 12px;
+}
+
 .optionActive {
   padding: 16px;
   border-radius: 8px;
   background-image: var(--gradient-pink);
+}
+
+.optionDetail.optionActive {
+  padding: 16px 12px;
+}
+
+.optionIconWrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 1000px;
+}
+
+.optionIcon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-black-50);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.optionIconActive {
+  background-color: var(--color-white);
+}
+
+.optionText {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
 }
 
 .optionLabel {
@@ -81,6 +124,15 @@
 
 .optionLabelActive {
   color: var(--color-white);
+}
+
+.optionDescription {
+  color: var(--color-black-50);
+  line-height: normal;
+}
+
+.optionDescriptionActive {
+  color: var(--color-white-75);
 }
 
 .divider {

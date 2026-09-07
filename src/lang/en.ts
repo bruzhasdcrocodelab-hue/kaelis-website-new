@@ -72,6 +72,12 @@ const en = {
         psychologist: "Psychologist",
         friend: "Friend",
       },
+      guideDescriptions: {
+        analyst: "Data-driven, precise logical breakdowns",
+        witch: "Subconscious archetypes & syncs",
+        psychologist: "Cognitive behavioral & mindset models",
+        friend: "Sincere, warm empathetic feedback",
+      },
     },
   },
   footer: {

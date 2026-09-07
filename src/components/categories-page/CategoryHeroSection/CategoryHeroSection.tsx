@@ -9,7 +9,6 @@ export interface CategoryHeroSectionProps {
   dictionary: Dictionary["categoryPage"];
   locale: Locale;
   current: CategoryNode;
-  /** Slug path to the currently viewed node, used to build subcategory links. */
   path: string[];
   returnHref: string;
   returnLabel: string;

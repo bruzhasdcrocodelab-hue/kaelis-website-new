@@ -13,9 +13,9 @@ export interface TriggerButtonProps {
   onChange?: (guide: GuideId) => void;
 }
 
-const GUIDE_ORDER: GuideId[] = ["analyst", "witch", "psychologist", "friend"];
+export const GUIDE_ORDER: GuideId[] = ["analyst", "witch", "psychologist", "friend"];
 
-const GUIDE_ICON: Record<GuideId, string> = {
+export const GUIDE_ICON: Record<GuideId, string> = {
   analyst: "/icons/analyst.svg",
   witch: "/icons/witch.svg",
   psychologist: "/icons/psychologist.svg",
