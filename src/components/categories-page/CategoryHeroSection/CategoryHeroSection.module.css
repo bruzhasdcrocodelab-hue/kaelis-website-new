@@ -67,12 +67,11 @@
 
 .title.titleSingleWord {
   max-width: 450px;
-  /* white-space: nowrap;
-  text-wrap: nowrap;
-  hyphens: none;
-  -webkit-hyphens: none;
-  padding-right: 20px;
-  margin-left: 20px; */
+  /* A long single word wraps at the soft-hyphen points inserted by
+     withSoftHyphens(); only fall back to a mid-character break if even a
+     hyphenated segment is still too wide for the column. */
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .title.titleWrapped {
