@@ -16,7 +16,12 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-height: 500px;
+  /* Height is driven by content (Header + TermsHeroSection). The min-height is
+     ONLY a floor for the background art on the shortest possible title — it must
+     stay below `header + section` for a normal title, otherwise the surplus
+     shows up as empty space between the title block and the card (the card sits
+     at `hero.bottom - 80px`, so any slack added here becomes a visible gap). */
+  min-height: 34.722vw;
   isolation: isolate;
 }
 
@@ -61,7 +66,12 @@
   align-items: center;
   width: 100%;
   padding: 0 60px 50px;
-  margin-top: -80;
+  /* Fixed overlap at every width — the card always tucks 80px under the hero's
+     rounded bottom. The hero absorbs adaptivity instead: TermsHeroSection has a
+     fixed >=80px bottom padding so this overlap never reaches the title/subtitle,
+     and .hero has no min-height slack below 1440px so the hero bottom tracks the
+     text height (no empty band above the card). */
+  margin-top: -80px;
   z-index: 10;
 }
 
@@ -69,6 +79,16 @@
   .page {
     border: 10px solid var(--color-greyish-blue);
   border-radius: var(--radius-page);
+  }
+}
+
+/* At the design width and above, restore the original fixed hero height so the
+   1440px comp is pixel-identical (there the 500px min-height + 80px section
+   padding produce the intended generous gap). Below this the hero height tracks
+   the fluid title instead. The -80px card overlap is the same at every width. */
+@media (min-width: 1440px) {
+  .hero {
+    min-height: 500px;
   }
 }
 
@@ -83,7 +103,9 @@
   }
 
   .hero {
-    min-height: 340px;
+    /* Floor only — kept below `header + section` for a 1-line mobile title so it
+       never adds slack above the card. */
+    min-height: 220px;
   }
 
   .backgroundImage {

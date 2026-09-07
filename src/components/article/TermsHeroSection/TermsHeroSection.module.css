@@ -5,7 +5,13 @@
   justify-content: center;
   gap: 20px;
   width: 100%;
-  padding: 80px 60px;
+  padding: clamp(40px, 5.5vw, 80px) 60px 104px;
+}
+
+@media (min-width: 1440px) {
+  .section {
+    padding: 80px 60px;
+  }
 }
 
 .titleBlock {
@@ -51,7 +57,7 @@
 @media (max-width: 768px) {
   .section {
     gap: 12px;
-    padding: 32px 16px 24px;
+    padding: 32px 16px 80px;
   }
 
   .eyebrow {
