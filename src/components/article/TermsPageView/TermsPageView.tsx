@@ -14,14 +14,6 @@ export interface TermsPageViewProps {
 export default function TermsPageView({ dictionary, locale }: TermsPageViewProps) {
   return (
     <div className={styles.page}>
-      {/* <Image
-        src="/images/backgrounds/main.png"
-        alt=""
-        width={1440}
-        height={500}
-        className={styles.backgroundImage}
-        priority
-      /> */}
       <div className={styles.content}>
         <div className={styles.hero}>
           <Image

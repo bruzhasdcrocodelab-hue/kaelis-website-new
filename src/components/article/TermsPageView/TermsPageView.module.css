@@ -4,8 +4,6 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  /* border: 10px solid var(--color-greyish-blue);
-  border-radius: var(--radius-page); */
   overflow: clip;
   background: var(--color-greyish-blue);
 }
@@ -16,7 +14,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-height: 500px;
+  min-height: 34.722vw;
   isolation: isolate;
 }
 
@@ -61,7 +59,7 @@
   align-items: center;
   width: 100%;
   padding: 0 60px 50px;
-  margin-top: -80;
+  margin-top: -80px;
   z-index: 10;
 }
 
@@ -69,6 +67,12 @@
   .page {
     border: 10px solid var(--color-greyish-blue);
   border-radius: var(--radius-page);
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero {
+    min-height: 500px;
   }
 }
 
@@ -83,7 +87,7 @@
   }
 
   .hero {
-    min-height: 340px;
+    min-height: 220px;
   }
 
   .backgroundImage {
