@@ -117,7 +117,7 @@
 
 .cardDetailArt {
   position: absolute;
-  left: 130px;
+  left: 0px;
   top: 112px;
   width: 226px;
   height: 404px;
@@ -160,7 +160,7 @@
 
 .cardDetailInfo {
   position: absolute;
-  right: 130px;
+  right: 0px;
   top: calc(50% - 108px);
   width: 226px;
   height: 404px;
@@ -296,6 +296,10 @@
   .revealCardName {
     width: 100px;
     font-size: var(--text-xs);
+  }
+
+  .revealLabel{
+    margin-top: 10px;
   }
 
   .revealCard {
