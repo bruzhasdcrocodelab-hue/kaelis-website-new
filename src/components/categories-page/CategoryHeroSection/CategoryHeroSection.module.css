@@ -58,6 +58,9 @@
   padding-right: 10px;
   margin-left: 10px;
   hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
   font-size: var(--text-category-title-fluid);
   letter-spacing: var(--tracking-category-title-fluid);
 }
@@ -100,12 +103,6 @@
   .container {
     gap: 12.308vw;
     width: 100%;
-  }
-
-  /* Extra clearance so the subcategory rows sit clear of the TopBlock panel
-     below; only applied when subcategory rows are present. */
-  .containerWithRows {
-    padding-bottom: 40px;
   }
 
   .content {

@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./CategoryHeroSection.module.css";
 import { htmlLang, Locale } from "@/lang";
-import { isSingleWord } from "@/lib/hyphenate";
+import { isSingleWord, withSoftHyphens } from "@/lib/hyphenate";
 
 export interface CategoryTitleProps {
   title: string;
@@ -14,6 +14,10 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
   const ref = useRef<HTMLParagraphElement>(null);
   const [wrapped, setWrapped] = useState(false);
   const singleWord = isSingleWord(title);
+  const hyphenatedTitle = title
+    .split(/(\s+)/)
+    .map((part) => (part.trim() ? withSoftHyphens(part) : part))
+    .join("");
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -30,7 +34,7 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
     const observer = new ResizeObserver(checkWrap);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [title]);
+  }, [hyphenatedTitle]);
 
   return (
     <p
@@ -38,7 +42,7 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
       className={`font-bona-category-title ${styles.title} ${singleWord ? styles.titleSingleWord : ""} ${wrapped ? styles.titleWrapped : ""}`}
       lang={htmlLang[locale]}
     >
-      {title}
+      {hyphenatedTitle}
     </p>
   );
 }
