@@ -17,7 +17,7 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el || singleWord) return;
+    if (!el) return;
 
     const checkWrap = () => {
       const range = document.createRange();
@@ -30,12 +30,12 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
     const observer = new ResizeObserver(checkWrap);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [title, singleWord]);
+  }, [title]);
 
   return (
     <p
       ref={ref}
-      className={`font-bona-category-title ${styles.title} ${singleWord ? styles.titleSingleWord : ""} ${!singleWord && wrapped ? styles.titleWrapped : ""} ${singleWord && wrapped ? styles.titleSingleWrapped : ""}`}
+      className={`font-bona-category-title ${styles.title} ${singleWord ? styles.titleSingleWord : ""} ${wrapped ? styles.titleWrapped : ""}`}
       lang={htmlLang[locale]}
     >
       {title}

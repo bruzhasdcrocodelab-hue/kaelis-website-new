@@ -54,27 +54,27 @@
   text-align: center;
   text-wrap: balance;
   line-height: normal;
-  padding-right: 10px;
-  margin-left: 10px;
+  padding-right: 20px;
+  margin-left: 20px;
   hyphens: auto;
   font-size: var(--text-category-title-fluid);
   letter-spacing: var(--tracking-category-title-fluid);
 }
 
 .title.titleSingleWord {
-  max-width: none;
-  white-space: nowrap;
+  max-width: 450px;
+  /* white-space: nowrap;
   text-wrap: nowrap;
   hyphens: none;
   -webkit-hyphens: none;
   padding-right: 20px;
-  margin-left: 20px;
+  margin-left: 20px; */
 }
 
 .title.titleWrapped {
-  margin-top: 20px;
-  margin-bottom: 0;
-  line-height: 90%; /* 77.4px */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  line-height: 90%;
 }
 
 .description {
@@ -83,6 +83,12 @@
   text-align: center;
   line-height: normal;
   font-size: var(--text-category-description-fluid);
+}
+
+@media (max-width: 900px) {
+  .title.titleSingleWord {
+    max-width: 350px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -129,22 +135,6 @@
     font-size: var(--text-topblock-title);
     letter-spacing: var(--tracking-topblock-title);
     hyphens: auto;
-  }
-
-  .title.titleWrapped {
-    margin-top: 8px;
-  }
-
-  .title.titleSingleWord {
-    max-width: 300px;
-    text-wrap: balance;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-  }
-
-  .titleSingleWrapped{
-    line-height: 90%;
-    margin-top: 10px;
   }
 
   .readingsButton {
