@@ -47,7 +47,7 @@ export default function CategoriesListView({
           locale={locale}
           categories={categories}
         />
-        <Footer dictionary={dictionary.footer} />
+        <Footer dictionary={dictionary.footer} variant="on-dark" />
       </div>
     </div>
   );

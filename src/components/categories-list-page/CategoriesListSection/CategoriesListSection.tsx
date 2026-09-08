@@ -24,19 +24,24 @@ export default function CategoriesListSection({
 
       <div className={styles.grid}>
         {categories.map((category, index) => {
-          const isTrailingPair = categories.length % 3 === 2 && index === categories.length - 1;
+          const isTrailingPair =
+            categories.length % 3 === 2 && index === categories.length - 1;
+          const column = isTrailingPair ? 2 : index % 3;
+          const row = Math.floor(index / 3);
 
           return (
             <div
               key={category.slug}
-              className={`${styles.cell} ${isTrailingPair ? styles.cellLastColumn : ""}`}
+              className={`${styles.cell} ${column === 1 ? styles.cellLowered : ""} ${
+                isTrailingPair ? styles.cellLastColumn : ""
+              }`}
             >
               <CategoryCard
                 href={`/categories/${category.slug}`}
                 title={category.title[locale]}
                 description={category.description[locale]}
                 locale={locale}
-                filled={index % 2 === 0}
+                filled={(row + column) % 2 === 0}
                 starDelay={-((index * 0.53) % 2.6)}
               />
             </div>

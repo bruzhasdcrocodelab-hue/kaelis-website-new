@@ -148,6 +148,116 @@ const money: CategoryNode = {
   subcategories: [],
 };
 
+const dreams = leaf(
+  "dreams",
+  { en: "Dreams", ru: "Сны", uk: "Сни" },
+  {
+    en: "Decode the hidden messages within your dreams and subconscious visions",
+    ru: "Расшифруйте скрытые послания снов и образы подсознания",
+    uk: "Розшифруйте приховані послання снів та образи підсвідомості",
+  },
+  3,
+);
+
+const education = leaf(
+  "education",
+  { en: "Education", ru: "Образование", uk: "Освіта" },
+  {
+    en: "Gain clarity on learning paths, skills to develop, and intellectual growth",
+    ru: "Проясните пути обучения, навыки для развития и интеллектуальный рост",
+    uk: "Проясніть шляхи навчання, навички для розвитку та інтелектуальне зростання",
+  },
+  3,
+);
+
+const personality = leaf(
+  "personality",
+  { en: "Personality", ru: "Личность", uk: "Особистість" },
+  {
+    en: "Uncover your core traits, strengths, and the essence of who you truly are",
+    ru: "Раскройте свои ключевые черты, сильные стороны и суть того, кто вы есть",
+    uk: "Розкрийте свої ключові риси, сильні сторони та суть того, ким ви є",
+  },
+  3,
+);
+
+const health = leaf(
+  "health",
+  { en: "Health", ru: "Здоровье", uk: "Здоровʼя" },
+  {
+    en: "Receive guidance on physical and emotional well-being and vitality",
+    ru: "Получите подсказки о физическом и эмоциональном благополучии и жизненной силе",
+    uk: "Отримайте підказки про фізичне та емоційне благополуччя і життєву силу",
+  },
+  2,
+);
+
+const travel = leaf(
+  "travel",
+  { en: "Travel", ru: "Путешествия", uk: "Подорожі" },
+  {
+    en: "Discover what journeys and adventures await you on the road ahead",
+    ru: "Узнайте, какие путешествия и приключения ждут вас впереди",
+    uk: "Дізнайтеся, які подорожі та пригоди чекають на вас попереду",
+  },
+  3,
+);
+
+const decision = leaf(
+  "decision",
+  { en: "Decision", ru: "Решение", uk: "Рішення" },
+  {
+    en: "Get clarity when facing a crossroads and choose the right path forward",
+    ru: "Обретите ясность на перепутье и выберите верный путь вперёд",
+    uk: "Здобудьте ясність на роздоріжжі та оберіть правильний шлях уперед",
+  },
+  1,
+);
+
+const hidden = leaf(
+  "hidden",
+  { en: "Hidden", ru: "Скрытое", uk: "Приховане" },
+  {
+    en: "Reveal what lies beneath the surface — secrets, blind spots, and unseen forces",
+    ru: "Раскройте то, что скрыто под поверхностью — тайны, слепые зоны и незримые силы",
+    uk: "Розкрийте те, що приховане під поверхнею — таємниці, сліпі зони та незримі сили",
+  },
+  3,
+);
+
+const forecast = leaf(
+  "forecast",
+  { en: "Forecast", ru: "Прогноз", uk: "Прогноз" },
+  {
+    en: "See what the near future holds and prepare for what's coming your way",
+    ru: "Узнайте, что готовит ближайшее будущее, и подготовьтесь к переменам",
+    uk: "Дізнайтеся, що готує найближче майбутнє, і підготуйтеся до змін",
+  },
+  3,
+);
+
+const soulPath = leaf(
+  "soul-path",
+  { en: "Soul Path", ru: "Путь души", uk: "Шлях душі" },
+  {
+    en: "Connect with your deeper purpose and the spiritual journey of your soul",
+    ru: "Соединитесь со своим глубинным предназначением и духовным путём души",
+    uk: "Зʼєднайтеся зі своїм глибинним призначенням та духовним шляхом душі",
+  },
+  3,
+);
+
+const answer = leaf(
+  "answer",
+  { en: "Answer", ru: "Ответ", uk: "Відповідь" },
+  {
+    en: "Ask any question and receive a direct, intuitive answer from the cards",
+    ru: "Задайте любой вопрос и получите прямой, интуитивный ответ от карт",
+    uk: "Поставте будь-яке запитання й отримайте пряму, інтуїтивну відповідь від карт",
+  },
+  1,
+);
+
 export const categoryTree: CategoryNode[] = [
   love,
   yesNo,
@@ -156,6 +266,16 @@ export const categoryTree: CategoryNode[] = [
   work,
   family,
   money,
+  dreams,
+  education,
+  personality,
+  health,
+  travel,
+  decision,
+  hidden,
+  forecast,
+  soulPath,
+  answer,
 ];
 
 export function findCategoryPath(slugPath: string[]): CategoryNode[] | null {

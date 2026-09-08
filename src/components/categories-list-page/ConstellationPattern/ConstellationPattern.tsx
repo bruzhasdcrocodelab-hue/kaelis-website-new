@@ -137,9 +137,17 @@ export default function ConstellationPattern() {
         {renderGlyphHoleMask("listSpinningGlyphsHoleMask", SPINNING_GLYPHS)}
         {renderGlyphHoleMask("listStaticGlyphsHoleMask", [...STATIC_SPIN_GLYPHS, ...STATIC_GLYPHS])}
         {renderGlyphHoleMask("listSpinningGlyphsDashedRingHoleMask", SPINNING_GLYPHS, styles.spinClockwiseRelativeToCounterRing)}
+
+        <linearGradient id="constellationListFade" x1={CENTER_X} y1="1313.5" x2={CENTER_X} y2="360" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffffff" stopOpacity="0" />
+          <stop offset="0.45" stopColor="#ffffff" />
+        </linearGradient>
+        <mask id="constellationListFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1580">
+          <rect x="0" y="0" width="1580" height="1580" fill="url(#constellationListFade)" />
+        </mask>
       </defs>
 
-      <g className={styles.mirror}>
+      <g className={styles.mirror} mask="url(#constellationListFadeMask)">
 
         <g clipPath="url(#constellationListClip)">
           <clipPath id="constellationListClip">

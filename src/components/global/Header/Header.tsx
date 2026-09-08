@@ -19,7 +19,7 @@ export default function Header({ dictionary, locale }: HeaderProps) {
         {dictionary.logo}
       </Link>
       <nav className={`font-instrument-base ${styles.nav}`}>
-        <TarotSpreadsLink className={styles.navLink}>
+        <TarotSpreadsLink className={styles.navLink} locale={locale}>
           {dictionary.nav.tarotSpreads}
         </TarotSpreadsLink>
         <OurAppLink className={styles.navLink}>{dictionary.nav.ourApp}</OurAppLink>

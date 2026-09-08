@@ -5,6 +5,7 @@ import styles from "./Footer.module.css";
 
 export interface FooterProps {
   dictionary: Dictionary["footer"];
+  variant?: "default" | "on-dark";
 }
 
 const SOCIAL_LINKS = [
@@ -12,9 +13,9 @@ const SOCIAL_LINKS = [
   { href: "/", label: "Instagram", icon: "/icons/instagram.svg" },
 ];
 
-export default function Footer({ dictionary }: FooterProps) {
+export default function Footer({ dictionary, variant = "default" }: FooterProps) {
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} ${variant === "on-dark" ? styles.onDark : ""}`}>
       <div className={styles.social}>
         {SOCIAL_LINKS.map(({ href, label, icon }) => (
           <span key={label} className={styles.socialButton}>
