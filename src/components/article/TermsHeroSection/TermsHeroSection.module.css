@@ -42,6 +42,12 @@
   -webkit-hyphens: auto;
 }
 
+.title.titleWrapped {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  line-height: 90%;
+}
+
 .lastUpdated {
   color: var(--color-white-50);
   white-space: nowrap;

@@ -46,6 +46,7 @@
 
 .title {
   margin-bottom: -6px;
+  margin-top: 10px;
   max-width: 500px;
   background-image: var(--gradient-pink);
   background-clip: text;
@@ -57,24 +58,26 @@
   padding-right: 10px;
   margin-left: 10px;
   hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
   font-size: var(--text-category-title-fluid);
   letter-spacing: var(--tracking-category-title-fluid);
 }
 
 .title.titleSingleWord {
-  max-width: none;
-  white-space: nowrap;
-  text-wrap: nowrap;
-  hyphens: none;
-  -webkit-hyphens: none;
-  padding-right: 20px;
-  margin-left: 20px;
+  max-width: 450px;
+  /* A long single word wraps at the soft-hyphen points inserted by
+     withSoftHyphens(); only fall back to a mid-character break if even a
+     hyphenated segment is still too wide for the column. */
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .title.titleWrapped {
-  margin-top: 20px;
-  margin-bottom: 0;
-  line-height: 90%; /* 77.4px */
+  margin-top: 25px;
+  margin-bottom: 10px;
+  line-height: 90%;
 }
 
 .description {
@@ -85,6 +88,12 @@
   font-size: var(--text-category-description-fluid);
 }
 
+@media (max-width: 900px) {
+  .title.titleSingleWord {
+    max-width: 400px;
+  }
+}
+
 @media (max-width: 768px) {
   .section {
     padding: 6px 0 12px;
@@ -93,12 +102,6 @@
   .container {
     gap: 12.308vw;
     width: 100%;
-  }
-
-  /* Extra clearance so the subcategory rows sit clear of the TopBlock panel
-     below; only applied when subcategory rows are present. */
-  .containerWithRows {
-    padding-bottom: 40px;
   }
 
   .content {
@@ -114,7 +117,7 @@
   }
 
   .description {
-    width: 100%;
+    width: 300px;
     font-size: var(--text-xs);
   }
 
@@ -123,15 +126,14 @@
   }
 
   .title {
-    max-width: none;
-    padding-right: 0;
-    margin-left: 0;
+    max-width: 300px;
     font-size: var(--text-topblock-title);
     letter-spacing: var(--tracking-topblock-title);
+    hyphens: auto;
   }
 
   .title.titleWrapped {
-    margin-top: 8px;
+    margin-top: 10px;
   }
 
   .readingsButton {

@@ -180,6 +180,7 @@
     padding: 8px 16px 96px;
     border-radius: var(--radius-topblock-panel-mobile) var(--radius-topblock-panel-mobile) 0 0;
     box-shadow: none;
+    margin-top: 40px;
   }
 
   /*
