@@ -19,6 +19,7 @@
   color: var(--color-white);
   line-height: normal;
   white-space: nowrap;
+  margin-bottom: -25px;
 }
 
 .title {
@@ -32,7 +33,7 @@
 
 .description {
   width: 300px;
-  margin-top: 2px;
+  margin-top: -6px;
   color: var(--color-white-60);
   line-height: normal;
 }
@@ -43,6 +44,7 @@
   column-gap: 60px;
   row-gap: 0px;
   padding-bottom: 48px;
+  margin-top: -64px;
 }
 
 /* Odd columns sit raised; the middle column drops so the stars interleave

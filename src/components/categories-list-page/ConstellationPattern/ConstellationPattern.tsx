@@ -140,25 +140,6 @@ export default function ConstellationPattern() {
       </defs>
 
       <g className={styles.mirror}>
-        {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
-        <g className={styles.static} opacity="1">
-          <path
-            d="M481 279.953C328.28 380.661 227.5 553.762 227.5 750.404C227.5 1061.39 479.564 1313.5 790.5 1313.5C1101.44 1313.5 1353.5 1061.39 1353.5 750.404C1353.5 553.762 1252.72 380.661 1100 279.953"
-            stroke="url(#constellationListFadeOuter)"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            d="M478.5 309.963C340.538 407.865 250.5 568.956 250.5 751.093C250.5 1049.55 492.266 1291.5 790.5 1291.5C1088.73 1291.5 1330.5 1049.55 1330.5 751.093C1330.5 568.956 1240.46 407.865 1102.5 309.963"
-            stroke="url(#constellationListFadeMid)"
-            strokeLinecap="round"
-          />
-          <path
-            d="M518.785 0.5C216.337 111.424 0.5 402.216 0.5 743.485C0.5 1180.35 354.195 1534.5 790.5 1534.5C1226.81 1534.5 1580.5 1180.35 1580.5 743.485C1580.5 402.216 1364.66 111.424 1062.21 0.5"
-            stroke="url(#constellationListFadeWide)"
-            strokeLinecap="round"
-          />
-        </g>
 
         <g clipPath="url(#constellationListClip)">
           <clipPath id="constellationListClip">

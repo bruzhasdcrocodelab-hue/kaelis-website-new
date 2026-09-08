@@ -25,6 +25,7 @@ export default function CategoryCard({
 }: CategoryCardProps) {
   return (
     <Link href={href} className={styles.card} lang={htmlLang[locale]}>
+      {!filled ?
       <svg className={styles.border} preserveAspectRatio="none" aria-hidden focusable="false">
         <defs>
           <linearGradient id="categoryCardBorder" x1="0" y1="0" x2="0" y2="1">
@@ -42,7 +43,7 @@ export default function CategoryCard({
           fill="none"
           stroke="url(#categoryCardBorder)"
         />
-      </svg>
+      </svg> : <></>}
       <span className={`font-instrument-lg-emphasized ${styles.title}`}>{title}</span>
       <span className={`font-instrument-xs ${styles.description}`}>{description}</span>
       <span
