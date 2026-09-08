@@ -60,7 +60,7 @@ export default function SubcategoryNode({ href, label, filled, position, locale 
         }
       >
         <Image
-          src={filled ? ICON_SRC.filled : ICON_SRC.plain}
+          src={filled ? ICON_SRC.plain : ICON_SRC.filled}
           alt=""
           width={50}
           height={62}
