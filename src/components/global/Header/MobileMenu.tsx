@@ -50,7 +50,7 @@ export default function MobileMenu({ dictionary }: MobileMenuProps) {
       {open && (
         <div className={`shadow-medium ${styles.menu}`} role="menu">
           <Link
-            href="/"
+            href="/categories"
             role="menuitem"
             className={`font-instrument-sm-emphasized ${styles.item}`}
             onClick={() => setOpen(false)}

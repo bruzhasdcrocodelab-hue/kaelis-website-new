@@ -4,6 +4,7 @@ import LanguageSelector from "@/components/global/LanguageSelector";
 import type { Dictionary, Locale } from "@/lang";
 import styles from "./Header.module.css";
 import OurAppLink from "./OurAppLink";
+import TarotSpreadsLink from "./TarotSpreadsLink";
 import MobileMenu from "./MobileMenu";
 
 export interface HeaderProps {
@@ -18,9 +19,9 @@ export default function Header({ dictionary, locale }: HeaderProps) {
         {dictionary.logo}
       </Link>
       <nav className={`font-instrument-base ${styles.nav}`}>
-        <Link href="/" className={styles.navLink}>
+        <TarotSpreadsLink className={styles.navLink}>
           {dictionary.nav.tarotSpreads}
-        </Link>
+        </TarotSpreadsLink>
         <OurAppLink className={styles.navLink}>{dictionary.nav.ourApp}</OurAppLink>
         <Link href="/terms-of-use" className={styles.navLink}>
           {dictionary.nav.termsOfUse}
