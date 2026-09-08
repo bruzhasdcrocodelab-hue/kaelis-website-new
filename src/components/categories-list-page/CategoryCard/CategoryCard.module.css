@@ -1,4 +1,5 @@
 .card {
+  --category-card-blur: 0px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -91,8 +92,36 @@
   }
 }
 
+/* Desktop resolves the checkerboard from the 3-column grid; hide the border
+   svg on the cards that carry a filled star there. */
+@media (min-width: 769px) {
+  .borderHiddenDesktop {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .card {
+    --category-card-blur: var(--blur-default);
     width: 100%;
+    height: 140px;
+    gap: 8px;
+    padding: 24px 16px;
+    justify-content: center;
+  }
+
+  /* Mobile resolves the checkerboard from the 2-column grid instead, so a
+     different subset of cards drops the border. */
+  .borderHiddenMobile {
+    display: none;
+  }
+
+  .description {
+    font-size: var(--text-xxs);
+    line-height: 1.3;
+  }
+
+  .star {
+    display: none;
   }
 }

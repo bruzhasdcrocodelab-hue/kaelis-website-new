@@ -29,6 +29,9 @@ export default function CategoriesListSection({
           const column = isTrailingPair ? 2 : index % 3;
           const row = Math.floor(index / 3);
 
+          const mobileColumn = index % 2;
+          const mobileRow = Math.floor(index / 2);
+
           return (
             <div
               key={category.slug}
@@ -42,6 +45,7 @@ export default function CategoriesListSection({
                 description={category.description[locale]}
                 locale={locale}
                 filled={(row + column) % 2 === 0}
+                mobileFilled={(mobileRow + mobileColumn) % 2 !== 0}
                 starDelay={-((index * 0.53) % 2.6)}
               />
             </div>

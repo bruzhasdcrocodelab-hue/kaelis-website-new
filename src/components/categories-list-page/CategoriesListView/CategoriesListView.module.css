@@ -39,6 +39,10 @@
   right: 20px;
 }
 
+.patternMobile {
+  display: none;
+}
+
 @keyframes patternFloatSide {
   0%,
   100% {
@@ -76,8 +80,8 @@
 }
 
 @media (max-width: 1200px) {
-  .patternLeft,
-  .patternRight {
+  .patternDesktop.patternLeft,
+  .patternDesktop.patternRight {
     width: 26%;
   }
 }
@@ -88,21 +92,24 @@
     border-radius: 0;
   }
 
-  .backgroundGradient {
-    background: var(--gradient-main-bg-mobile);
+
+  .patternDesktop {
+    display: none;
   }
 
-  .patternLeft,
-  .patternRight {
-    width: 30%;
+  .patternMobile {
+    display: block;
     top: 84px;
+    width: 20%;
+    height: auto;
   }
 
-  .patternLeft {
-    left: 6px;
+  .patternMobile.patternLeft {
+    left: 1.5%;
   }
 
-  .patternRight {
-    right: 6px;
+  .patternMobile.patternRight {
+    left: auto;
+    right: 1.5%;
   }
 }

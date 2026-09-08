@@ -11,6 +11,8 @@ export interface CategoryCardProps {
   locale: Locale;
   /** Checkerboard choice: filled star vs. outline star, decided by the grid position. */
   filled: boolean;
+  /** Same checkerboard choice for the 2-column mobile grid, which resolves the card positions differently. */
+  mobileFilled: boolean;
   /** Negative index used to stagger the twinkle of the card's star. */
   starDelay: number;
 }
@@ -21,14 +23,36 @@ export default function CategoryCard({
   description,
   locale,
   filled,
+  mobileFilled,
   starDelay,
 }: CategoryCardProps) {
+  // Unique per card so the always-rendered <defs> gradients never collide when
+  // one card's border svg is display:none for the current breakpoint.
+  const gradientId = `categoryCardBorder-${href.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+
+  const borderClassName = [
+    styles.border,
+    filled ? styles.borderHiddenDesktop : "",
+    mobileFilled ? styles.borderHiddenMobile : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <Link href={href} className={styles.card} lang={htmlLang[locale]}>
-      {!filled ?
-      <svg className={styles.border} preserveAspectRatio="none" aria-hidden focusable="false">
+    <Link
+      href={href}
+      className={styles.card}
+      lang={htmlLang[locale]}
+      style={{
+        // Inline so the build's CSS pipeline doesn't drop the unprefixed property.
+        // --category-card-blur is 0 on desktop and --blur-default on mobile.
+        backdropFilter: "blur(var(--category-card-blur))",
+        WebkitBackdropFilter: "blur(var(--category-card-blur))",
+      }}
+    >
+      <svg className={borderClassName} preserveAspectRatio="none" aria-hidden focusable="false">
         <defs>
-          <linearGradient id="categoryCardBorder" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="var(--color-gold)" stopOpacity="0" />
             <stop offset="1" stopColor="var(--color-gold)" />
           </linearGradient>
@@ -41,9 +65,9 @@ export default function CategoryCard({
           rx="20"
           ry="20"
           fill="none"
-          stroke="url(#categoryCardBorder)"
+          stroke={`url(#${gradientId})`}
         />
-      </svg> : <></>}
+      </svg>
       <span className={`font-instrument-lg-emphasized ${styles.title}`}>{title}</span>
       <span className={`font-instrument-xs ${styles.description}`}>{description}</span>
       <span

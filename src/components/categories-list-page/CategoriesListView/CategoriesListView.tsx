@@ -28,7 +28,7 @@ export default function CategoriesListView({
         alt=""
         width={340}
         height={750}
-        className={styles.patternLeft}
+        className={`${styles.patternLeft} ${styles.patternDesktop}`}
         priority
       />
       <Image
@@ -36,7 +36,23 @@ export default function CategoriesListView({
         alt=""
         width={340}
         height={750}
-        className={styles.patternRight}
+        className={`${styles.patternRight} ${styles.patternDesktop}`}
+        priority
+      />
+      <Image
+        src="/images/backgrounds/mobile/patterns-left-gradient.svg"
+        alt=""
+        width={78}
+        height={1234}
+        className={`${styles.patternLeft} ${styles.patternMobile}`}
+        priority
+      />
+      <Image
+        src="/images/backgrounds/mobile/patterns-right-gradient.svg"
+        alt=""
+        width={78}
+        height={1234}
+        className={`${styles.patternRight} ${styles.patternMobile}`}
         priority
       />
       <StarField />
