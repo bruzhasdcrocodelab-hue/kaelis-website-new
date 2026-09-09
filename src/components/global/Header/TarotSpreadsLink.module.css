@@ -43,8 +43,8 @@
 }
 
 .dropdown {
-  position: absolute;
-  top: 152px;
+  position: fixed;
+  top: var(--header-dropdown-top);
   left: 50%;
   z-index: 20;
   display: flex;
@@ -59,6 +59,17 @@
   visibility: hidden;
   transform: translate(-50%, -6px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+}
+
+/* Invisible bridge so moving the pointer from the trigger down into the panel
+ * doesn't cross a dead zone and close it. */
+.dropdown::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 28px;
 }
 
 .dropdown[data-open] {
@@ -121,22 +132,7 @@
   }
 }
 
-@media (max-width: 1200px) {
-  .dropdown {
-    top: 134px;
-  }
-}
-
 @media (max-width: 900px) {
-  /* .dropdown {
-    max-width: calc(100vw - 32px);
-    flex-wrap: wrap;
-  }
-
-  .separator {
-    display: none;
-  } */
-
   .column {
     width: 80px;
   }

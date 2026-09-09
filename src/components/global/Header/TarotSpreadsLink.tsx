@@ -14,6 +14,7 @@ export interface TarotSpreadsLinkProps {
 }
 
 const DROPDOWN_COLUMN_SIZE = 3;
+const CLOSE_DELAY_MS = 150;
 
 function chunk<T>(items: T[], size: number): T[][] {
   const columns: T[][] = [];
@@ -38,9 +39,29 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
   const [open, setOpen] = useState(false);
   const isClient = useIsClient();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const menuId = useId();
   const categories = getCategoryList();
   const columns = chunk(categories, DROPDOWN_COLUMN_SIZE);
+
+  function cancelClose() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function openNow() {
+    cancelClose();
+    setOpen(true);
+  }
+
+  function scheduleClose() {
+    cancelClose();
+    closeTimer.current = setTimeout(() => setOpen(false), CLOSE_DELAY_MS);
+  }
+
+  useEffect(() => () => cancelClose(), []);
 
   useEffect(() => {
     if (!open) return;
@@ -48,38 +69,28 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
     }
-    function handlePointerDown(event: PointerEvent) {
-      const target = event.target as Node;
-      if (
-        !wrapperRef.current?.contains(target) &&
-        !document.getElementById(menuId)?.contains(target)
-      ) {
-        setOpen(false);
-      }
-    }
 
     document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, [open, menuId]);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   return (
     <div
       ref={wrapperRef}
       className={styles.wrapper}
       data-header-dropdown-open={open || undefined}
+      onMouseEnter={openNow}
+      onMouseLeave={scheduleClose}
     >
-      <button
-        type="button"
+      <Link
+        href="/categories"
         className={`${styles.link} ${className ?? ""}`}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
         data-open={open || undefined}
-        onClick={() => setOpen((value) => !value)}
+        onFocus={openNow}
+        onClick={() => setOpen(false)}
       >
         <span>{children}</span>
         <span
@@ -90,7 +101,7 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
           }}
           aria-hidden
         />
-      </button>
+      </Link>
 
       {isClient &&
         createPortal(
@@ -103,6 +114,8 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
               backdropFilter: "blur(25px)",
               WebkitBackdropFilter: "blur(25px)",
             }}
+            onMouseEnter={openNow}
+            onMouseLeave={scheduleClose}
           >
             <span className={styles.dropdownGlow} aria-hidden />
             {columns.map((column, columnIndex) => (

@@ -18,10 +18,11 @@ export default function Header({ dictionary, locale }: HeaderProps) {
       <div
         className={styles.pill}
         style={{
-          // Inline so the build's CSS pipeline keeps the unprefixed property,
-          // matching TopBlockSection's blur scheme.
-          backdropFilter: "blur(12.5px)",
-          WebkitBackdropFilter: "blur(12.5px)",
+          // Inline so the build's CSS pipeline doesn't drop the unprefixed
+          // property (same scheme as TopBlockSection); --pill-blur is toggled to
+          // `none` on mobile by the stylesheet.
+          backdropFilter: "var(--pill-blur)",
+          WebkitBackdropFilter: "var(--pill-blur)",
         }}
       >
         <span className={styles.glowClip} aria-hidden>

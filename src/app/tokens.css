@@ -82,6 +82,20 @@
     rgba(98, 62, 229, 0.24) 50%,
     rgba(92, 99, 231, 0) 70%
   );
+  /*
+   * LanguageSelector dropdown fill glow (node-id=2053-291): the same purple
+   * radial as the header glow, but its hot-spot sits off the panel's
+   * bottom-left corner so the fill reads bright at the bottom-left and fades to
+   * near-black at the top-right. Ellipse radii/position are in the panel's own
+   * 110x182 coordinate space.
+   */
+  --gradient-language-dropdown-glow: radial-gradient(
+    ellipse 330px 313px at -88% 72%,
+    rgba(197, 143, 231, 1) 0%,
+    rgba(147, 102, 230, 0.62) 25%,
+    rgba(98, 62, 229, 0.24) 50%,
+    rgba(92, 99, 231, 0) 70%
+  );
   --gradient-main-bg-mobile: linear-gradient(
     180deg,
     #241b3f 0%,
@@ -180,6 +194,14 @@
   --radius-card-mobile: 12px;
   --radius-sheet: 28px;
   --radius-header-pill: 60px;
+
+  /*
+   * Viewport Y of the top edge of the header dropdown panels (Tarot Spreads and
+   * LanguageSelector), so both open at the same height at any desktop width.
+   * = header padding-top (40px) + pill height (82px) + 20px gap; drops by 8px
+   *   below 1300px where the header padding-top becomes 32px.
+   */
+  --header-dropdown-top: 142px;
 
   /* ---- Typography: font families ---- */
   --font-bona-nova-sc: "Bona Nova SC", serif;
@@ -322,6 +344,12 @@
 
   /* Instrument Sans letter-spacing is 0 across all sizes/weights */
   --tracking-instrument: 0px;
+}
+
+@media (max-width: 1300px) {
+  :root {
+    --header-dropdown-top: 134px;
+  }
 }
 
 @theme inline {

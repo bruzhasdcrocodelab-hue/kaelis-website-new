@@ -20,6 +20,7 @@
   padding: 20px;
   border-radius: var(--radius-header-pill);
   background: var(--color-white-5);
+  --pill-blur: blur(var(--blur-shadow));
 }
 
 .glowClip {
@@ -137,6 +138,7 @@
     padding: 0;
     border-radius: 0;
     background: transparent;
+    --pill-blur: none;
   }
 
   .glowClip {
