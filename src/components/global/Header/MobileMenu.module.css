@@ -49,7 +49,8 @@
   align-items: stretch;
   padding: 16px;
   border-radius: var(--radius-panel-mobile);
-  background: var(--color-white-5);
+  /* background: var(--color-white-5); */
+  background: var(--color-overlay-dark);
   box-shadow: var(--shadow-mobile-menu-panel);
   overflow: clip;
 }
