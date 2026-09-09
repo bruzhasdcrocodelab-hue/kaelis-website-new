@@ -163,6 +163,7 @@
     margin-top: -114px;
     border-radius: var(--radius-page-mobile) var(--radius-page-mobile) 0 0;
     box-shadow: none;
+    z-index: 5;
   }
 
   .background {

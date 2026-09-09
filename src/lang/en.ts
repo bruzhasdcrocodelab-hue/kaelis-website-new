@@ -6,6 +6,7 @@ const en = {
       ourApp: "Our App",
       termsOfUse: "Terms of Use",
     },
+    allTarotSpreads: "All Tarot Spreads",
     downloadApp: "Download App",
     language: "EN",
     languageNames: {

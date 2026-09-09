@@ -55,7 +55,7 @@ export default function Header({ dictionary, locale }: HeaderProps) {
             languageShort={dictionary.languageShort}
           />
           <div className={styles.menu}>
-            <MobileMenu dictionary={dictionary} />
+            <MobileMenu dictionary={dictionary} locale={locale} />
           </div>
         </div>
       </div>

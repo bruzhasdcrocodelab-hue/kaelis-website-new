@@ -8,6 +8,7 @@ const ru: Dictionary = {
       ourApp: "Наше приложение",
       termsOfUse: "Условия использования",
     },
+    allTarotSpreads: "Все расклады Таро",
     downloadApp: "Скачать приложение",
     language: "RU",
     languageNames: {

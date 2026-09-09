@@ -8,6 +8,7 @@ const uk: Dictionary = {
       ourApp: "Наш додаток",
       termsOfUse: "Умови використання",
     },
+    allTarotSpreads: "Всі розклади Таро",
     downloadApp: "Завантажити додаток",
     language: "UK",
     languageNames: {

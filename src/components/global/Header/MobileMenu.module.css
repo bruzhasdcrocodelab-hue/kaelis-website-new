@@ -14,14 +14,14 @@
   background: transparent;
   cursor: pointer;
   appearance: none;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  --menu-toggle-blur: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .toggleActive {
-  border-color: transparent;
-  background: var(--color-white);
-  backdrop-filter: blur(var(--blur-shadow));
-  -webkit-backdrop-filter: blur(var(--blur-shadow));
+  background: var(--color-white-7);
+  box-shadow: var(--shadow-mobile-menu-button);
+  --menu-toggle-blur: blur(var(--blur-panel));
 }
 
 .toggleIcon {
@@ -38,16 +38,11 @@
   -webkit-mask-size: 24px 24px;
 }
 
-.toggleActive .toggleIcon {
-  background-image: none;
-  background-color: var(--color-black);
-}
-
 .menu {
   position: absolute;
-  top: 100%;
-  left: 16px;
-  right: 16px;
+  top: calc(100% + 8px);
+  left: 0px;
+  right: 0px;
   z-index: 30;
   display: flex;
   flex-direction: column;
@@ -55,20 +50,101 @@
   align-items: stretch;
   padding: 16px;
   border-radius: var(--radius-panel-mobile);
-  background: var(--color-white);
+  background: var(--color-white-5);
+  box-shadow: var(--shadow-mobile-menu-panel);
+  overflow: clip;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .item {
   display: flex;
   align-items: center;
   padding: 8px 4px;
-  color: var(--color-black);
+  color: var(--color-white);
   white-space: nowrap;
   text-decoration: none;
+}
+
+.trigger {
+  gap: 6px;
+  justify-content: flex-start;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  text-align: left;
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background-color: var(--color-white);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.collapsible {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.collapsibleOpen {
+  grid-template-rows: 1fr;
+}
+
+.collapsibleInner {
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 8px;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.gridItem {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  color: var(--color-white-60);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.gridItem:hover {
+  color: var(--color-white);
 }
 
 .divider {
   width: 100%;
   height: 1px;
-  background: var(--color-grey);
+  background: var(--color-white-15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .collapsible {
+    transition: none;
+  }
 }

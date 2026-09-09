@@ -141,6 +141,10 @@
     -27px 66px 29px 0px rgba(145, 145, 145, 0.01),
     -42px 103px 31px 0px rgba(145, 145, 145, 0);
 
+  /* ---- Effects: header mobile menu (node-id=2039-3122 / 1975-3569) ---- */
+  --shadow-mobile-menu-button: 0px 4px 6px 0px rgba(0, 0, 0, 0.08);
+  --shadow-mobile-menu-panel: 0px 4px 12px 0px rgba(0, 0, 0, 0.08);
+
   /* ---- Effects: blur ---- */
   --blur-default: 10.25px;
   --blur-shadow: 12.5px;
