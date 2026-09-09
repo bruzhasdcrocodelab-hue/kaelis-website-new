@@ -12,6 +12,7 @@
   text-align: center;
   text-decoration: none;
   transition: transform 0.25s ease;
+  z-index: 1;
 }
 
 /* Gradient stroke: a stretched SVG rect with a non-scaling stroke, so the gold
