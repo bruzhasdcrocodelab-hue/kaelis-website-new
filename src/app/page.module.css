@@ -28,7 +28,7 @@
 
 .patternCenter {
   position: absolute;
-  top: 105px;
+  top: 140px;
   left: 50%;
   transform: translateX(-50%);
   width: 68%;
@@ -43,7 +43,7 @@
 .patternLeft,
 .patternRight {
   position: absolute;
-  top: 120px;
+  top: 155px;
   width: 23%;
   height: auto;
   max-width: none;

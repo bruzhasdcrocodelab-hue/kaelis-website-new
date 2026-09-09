@@ -15,6 +15,11 @@ const uk: Dictionary = {
       ru: "Rus",
       uk: "Ua",
     },
+    languageShort: {
+      en: "EN",
+      ru: "RU",
+      uk: "UA",
+    },
   },
   hero: {
     titleLine1: "Ваш ШІ-провідник",

@@ -13,6 +13,11 @@ const en = {
       ru: "Rus",
       uk: "Ua",
     },
+    languageShort: {
+      en: "EN",
+      ru: "RU",
+      uk: "UA",
+    },
   },
   hero: {
     titleLine1: "Your AI Guide",

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { Locale } from "@/lang";
 import { getCategoryList } from "@/lib/categories/list";
@@ -22,8 +23,20 @@ function chunk<T>(items: T[], size: number): T[][] {
   return columns;
 }
 
+const noop = () => () => {};
+
+/** SSR-safe: false on the server, true once mounted in the browser. */
+function useIsClient() {
+  return useSyncExternalStore(
+    noop,
+    () => true,
+    () => false
+  );
+}
+
 export default function TarotSpreadsLink({ className, locale, children }: TarotSpreadsLinkProps) {
   const [open, setOpen] = useState(false);
+  const isClient = useIsClient();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const categories = getCategoryList();
@@ -36,7 +49,13 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
       if (event.key === "Escape") setOpen(false);
     }
     function handlePointerDown(event: PointerEvent) {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
+      const target = event.target as Node;
+      if (
+        !wrapperRef.current?.contains(target) &&
+        !document.getElementById(menuId)?.contains(target)
+      ) {
+        setOpen(false);
+      }
     }
 
     document.addEventListener("keydown", handleKeyDown);
@@ -45,22 +64,22 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [open]);
+  }, [open, menuId]);
 
   return (
     <div
       ref={wrapperRef}
       className={styles.wrapper}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      data-header-dropdown-open={open || undefined}
     >
-      <Link
-        href="/categories"
+      <button
+        type="button"
         className={`${styles.link} ${className ?? ""}`}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
-        onFocus={() => setOpen(true)}
+        data-open={open || undefined}
+        onClick={() => setOpen((value) => !value)}
       >
         <span>{children}</span>
         <span
@@ -71,27 +90,42 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
           }}
           aria-hidden
         />
-      </Link>
+      </button>
 
-      <div id={menuId} className={styles.dropdown} role="menu" data-open={open || undefined}>
-        <div className={styles.dropdownInner}>
-          {columns.map((column, columnIndex) => (
-            <div key={column[0]?.slug ?? columnIndex} className={styles.column}>
-              {column.map((category) => (
-                <Link
-                  key={category.slug}
-                  href={`/categories/${category.slug}`}
-                  role="menuitem"
-                  className={`font-instrument-sm-emphasized ${styles.item}`}
-                  onClick={() => setOpen(false)}
-                >
-                  {category.title[locale]}
-                </Link>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
+      {isClient &&
+        createPortal(
+          <div
+            id={menuId}
+            className={styles.dropdown}
+            role="menu"
+            data-open={open || undefined}
+            style={{
+              backdropFilter: "blur(25px)",
+              WebkitBackdropFilter: "blur(25px)",
+            }}
+          >
+            <span className={styles.dropdownGlow} aria-hidden />
+            {columns.map((column, columnIndex) => (
+              <div key={column[0]?.slug ?? columnIndex} className={styles.columnGroup}>
+                {columnIndex > 0 && <div className={styles.separator} aria-hidden />}
+                <div className={styles.column}>
+                  {column.map((category) => (
+                    <Link
+                      key={category.slug}
+                      href={`/categories/${category.slug}`}
+                      role="menuitem"
+                      className={`font-instrument-base ${styles.item}`}
+                      onClick={() => setOpen(false)}
+                    >
+                      {category.title[locale]}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
