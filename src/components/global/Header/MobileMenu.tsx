@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { Dictionary, Locale } from "@/lang";
 import { getCategoryList } from "@/lib/categories/list";
@@ -12,17 +13,51 @@ export interface MobileMenuProps {
   locale: Locale;
 }
 
+const noop = () => () => {};
+
+function useIsClient() {
+  return useSyncExternalStore(
+    noop,
+    () => true,
+    () => false
+  );
+}
+
 export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
   const [spreadsOpen, setSpreadsOpen] = useState(false);
+  const [menuTop, setMenuTop] = useState(0);
+  const isClient = useIsClient();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const categories = getCategoryList();
 
   useEffect(() => {
     if (!open) return;
 
+    function updatePosition() {
+      const button = wrapperRef.current?.getBoundingClientRect();
+      if (button) setMenuTop(button.bottom + 8);
+    }
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
     function handlePointerDown(event: PointerEvent) {
-      if (!wrapperRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (
+        !wrapperRef.current?.contains(target) &&
+        !menuRef.current?.contains(target)
+      ) {
         setOpen(false);
         setSpreadsOpen(false);
       }
@@ -50,7 +85,12 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
 
   function toggleMenu() {
     setOpen((value) => {
-      if (value) setSpreadsOpen(false);
+      if (value) {
+        setSpreadsOpen(false);
+      } else {
+        const button = wrapperRef.current?.getBoundingClientRect();
+        if (button) setMenuTop(button.bottom + 8);
+      }
       return !value;
     });
   }
@@ -71,80 +111,85 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
       >
         <span className={styles.toggleIcon} />
       </button>
-      {open && (
-        <div
-          className={styles.menu}
-          role="menu"
-          style={{
-            backdropFilter: "blur(var(--blur-panel))",
-            WebkitBackdropFilter: "blur(var(--blur-panel))",
-          }}
-        >
-          <div className={styles.section}>
-            <button
-              type="button"
-              aria-expanded={spreadsOpen}
-              className={`font-instrument-sm-emphasized ${styles.item} ${styles.trigger}`}
-              onClick={() => setSpreadsOpen((value) => !value)}
-            >
-              <span>{dictionary.nav.tarotSpreads}</span>
-              <span
-                className={`${styles.chevron} ${spreadsOpen ? styles.chevronOpen : ""}`}
-                style={{
-                  maskImage: "url(/icons/chevron-down.svg)",
-                  WebkitMaskImage: "url(/icons/chevron-down.svg)",
-                }}
-                aria-hidden
-              />
-            </button>
-            <div
-              className={`${styles.collapsible} ${spreadsOpen ? styles.collapsibleOpen : ""}`}
-            >
-              <div className={styles.collapsibleInner}>
-                <div className={styles.divider} />
-                <div className={styles.grid}>
-                  <Link
-                    href="/categories"
-                    role="menuitem"
-                    className={`font-instrument-sm-emphasized ${styles.gridItem}`}
-                    onClick={closeMenu}
-                  >
-                    {dictionary.allTarotSpreads}
-                  </Link>
-                  {categories.map((category) => (
+      {open &&
+        isClient &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className={styles.menu}
+            role="menu"
+            style={{
+              top: menuTop,
+              backdropFilter: "blur(var(--blur-panel))",
+              WebkitBackdropFilter: "blur(var(--blur-panel))",
+            }}
+          >
+            <div className={styles.section}>
+              <button
+                type="button"
+                aria-expanded={spreadsOpen}
+                className={`font-instrument-sm-emphasized ${styles.item} ${styles.trigger}`}
+                onClick={() => setSpreadsOpen((value) => !value)}
+              >
+                <span>{dictionary.nav.tarotSpreads}</span>
+                <span
+                  className={`${styles.chevron} ${spreadsOpen ? styles.chevronOpen : ""}`}
+                  style={{
+                    maskImage: "url(/icons/chevron-down.svg)",
+                    WebkitMaskImage: "url(/icons/chevron-down.svg)",
+                  }}
+                  aria-hidden
+                />
+              </button>
+              <div
+                className={`${styles.collapsible} ${spreadsOpen ? styles.collapsibleOpen : ""}`}
+              >
+                <div className={styles.collapsibleInner}>
+                  <div className={styles.divider} />
+                  <div className={styles.grid}>
                     <Link
-                      key={category.slug}
-                      href={`/categories/${category.slug}`}
+                      href="/categories"
                       role="menuitem"
                       className={`font-instrument-sm-emphasized ${styles.gridItem}`}
                       onClick={closeMenu}
                     >
-                      {category.title[locale]}
+                      {dictionary.allTarotSpreads}
                     </Link>
-                  ))}
+                    {categories.map((category) => (
+                      <Link
+                        key={category.slug}
+                        href={`/categories/${category.slug}`}
+                        role="menuitem"
+                        className={`font-instrument-sm-emphasized ${styles.gridItem}`}
+                        onClick={closeMenu}
+                      >
+                        {category.title[locale]}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className={styles.divider} />
-          <OurAppLink
-            role="menuitem"
-            className={`font-instrument-sm-emphasized ${styles.item}`}
-            onClick={closeMenu}
-          >
-            {dictionary.nav.ourApp}
-          </OurAppLink>
-          <div className={styles.divider} />
-          <Link
-            href="/terms-of-use"
-            role="menuitem"
-            className={`font-instrument-sm-emphasized ${styles.item}`}
-            onClick={closeMenu}
-          >
-            {dictionary.nav.termsOfUse}
-          </Link>
-        </div>
-      )}
+            <div className={styles.divider} />
+            <OurAppLink
+              role="menuitem"
+              className={`font-instrument-sm-emphasized ${styles.item}`}
+              onClick={closeMenu}
+            >
+              {dictionary.nav.ourApp}
+            </OurAppLink>
+            <div className={styles.divider} />
+            <Link
+              href="/terms-of-use"
+              role="menuitem"
+              className={`font-instrument-sm-emphasized ${styles.item}`}
+              onClick={closeMenu}
+            >
+              {dictionary.nav.termsOfUse}
+            </Link>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
