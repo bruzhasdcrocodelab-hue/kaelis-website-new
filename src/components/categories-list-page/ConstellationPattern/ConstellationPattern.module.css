@@ -1,0 +1,81 @@
+.pattern {
+  position: absolute;
+  top: clamp(-820px, -56.944vw, -467.1px);
+  left: 50%;
+  display: block;
+  width: var(--constellation-pattern-width);
+  height: auto;
+  max-width: none;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+/*
+ * The mock flips the pattern: -rotate-180 combined with -scale-x-100 is a plain
+ * vertical mirror, so the ring cluster's dense bottom arc points up toward the
+ * header. Applied on an inner <g> so the rotation animations underneath keep
+ * their own transform-origin math intact.
+ */
+.mirror {
+  transform: scaleY(-1);
+  transform-origin: 790px 764px;
+}
+
+@media (max-width: 768px) {
+  .pattern {
+    top: clamp(-495.7px, -97.436vw, -308.4px);
+    width: clamp(560px, 176.923vw, 900px);
+    opacity: 0.4;
+  }
+}
+
+.spinClockwise {
+  animation: constellationSpin var(--constellation-spin-duration) linear infinite;
+}
+
+.spinCounterClockwise {
+  animation: constellationSpinReverse var(--constellation-ring-spin-duration-reverse) linear infinite;
+}
+
+.spinClockwiseRelativeToCounterRing {
+  animation: constellationSpin var(--constellation-spin-relative-to-counter-ring-duration) linear infinite;
+}
+
+.orbitClockwise {
+  animation: constellationSpin var(--constellation-orbit-duration) linear infinite;
+}
+
+.orbitCounterClockwise {
+  animation: constellationSpinReverse var(--constellation-orbit-duration-reverse) linear infinite;
+}
+
+@keyframes constellationSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes constellationSpinReverse {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinClockwise,
+  .spinCounterClockwise,
+  .spinClockwiseRelativeToCounterRing,
+  .orbitClockwise,
+  .orbitCounterClockwise {
+    animation: none;
+  }
+}

@@ -39,6 +39,11 @@ const en = {
     description:
       "Understand your thoughts, emotions, and patterns with AI-guided reflections, personalized readings, and mindful tools designed for self-discovery",
   },
+  categoriesList: {
+    eyebrow: "Explore",
+    title: "Categories",
+    description: "Strengthen emotional bonds, find harmony, and protect your loved ones",
+  },
   categoryPage: {
     categoryLabel: "Category",
     returnToMain: "Return to Main",

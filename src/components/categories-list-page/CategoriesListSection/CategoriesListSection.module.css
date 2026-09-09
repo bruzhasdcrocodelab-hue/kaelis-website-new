@@ -1,0 +1,123 @@
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8.333vw;
+  width: 100%;
+  padding: 4.167vw 60px 30px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--color-white);
+  line-height: normal;
+  white-space: nowrap;
+  margin-bottom: -25px;
+  font-size: var(--text-categories-list-eyebrow-fluid);
+}
+
+.title {
+  margin-top: 6px;
+  background-image: var(--gradient-pink);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  line-height: normal;
+  padding-right: 20px;
+  margin-left: 20px;
+  font-size: var(--text-categories-list-title-fluid);
+  letter-spacing: var(--tracking-categories-list-title-fluid);
+}
+
+.description {
+  width: var(--width-categories-list-description-fluid);
+  margin-top: -6px;
+  color: var(--color-white-60);
+  line-height: normal;
+  font-size: var(--text-categories-list-description-fluid);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 230px);
+  column-gap: 60px;
+  row-gap: 0px;
+  padding-bottom: 48px;
+  margin-top: -4.444vw;
+}
+
+/* Odd columns sit raised; the middle column drops so the stars interleave
+   between rows, matching the mock's staggered brick layout. */
+.cellLowered {
+  margin-top: 64px;
+}
+
+.cellLastColumn {
+  grid-column-start: 3;
+}
+
+/* Desktop adaptivity: below the 3-column layout's natural width the grid drops
+   to two even-height columns. The bordered/borderless (and matching star)
+   checkerboard follows the 2-column mobile split, resolved in CategoryCard. */
+@media (min-width: 769px) and (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 230px));
+    column-gap: 60px;
+    row-gap: 64px;
+    margin-top: 0;
+  }
+
+  .cellLowered,
+  .cellLastColumn {
+    margin-top: 0;
+    grid-column-start: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    gap: 32px;
+    padding: 46px 16px 30px;
+  }
+
+  .eyebrow {
+    margin-bottom: -5px;
+    font-weight: 400;
+    opacity: 0.9;
+  }
+
+  .title {
+    margin-top: 0;
+  }
+
+  .description {
+    margin-top: 0;
+    color: var(--color-white-60);
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 24px;
+    padding-bottom: 0;
+    margin-top: 0;
+    /* width: 100%; */
+  }
+
+  .cell {
+    display: flex;
+  }
+
+  .cellLowered,
+  .cellLastColumn {
+    margin-top: 0;
+    grid-column-start: auto;
+  }
+}

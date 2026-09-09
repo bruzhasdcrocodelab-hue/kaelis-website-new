@@ -70,6 +70,23 @@
     #b49ad9 100%
   );
 
+  /* ---- Gradients: categories-list page (node-id=1975-2963) ---- */
+  --gradient-categories-list-bg:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(102, 102, 102, 0) 100%),
+    linear-gradient(180deg, #120f31 0%, #4d2ca8 33.11%, #a567d5 94.59%);
+  /* Card fill: #EAADDD ramping from transparent at the top to a faint tint at the bottom. */
+  --gradient-category-card: linear-gradient(
+    180deg,
+    rgba(234, 173, 221, 0) 0%,
+    rgba(234, 173, 221, 0.08) 100%
+  );
+  /* Card border: gold ramping from transparent at the top to solid at the bottom. */
+  --gradient-category-card-border: linear-gradient(
+    180deg,
+    rgba(245, 208, 176, 0) 0%,
+    var(--color-gold) 100%
+  );
+
   /* ---- Effects: shadows (layered, shallow -> deep) ---- */
   --shadow-color: 145 145 145;
   --shadow-default:
@@ -183,6 +200,20 @@
   --tracking-category-title-fluid: clamp(-3px, 0.447vw - 6.44px, 0px);
   --text-category-description-fluid: clamp(var(--text-xs), 0.149vw + 11.85px, var(--text-sm));
   --text-topblock-title-fluid: clamp(var(--text-4xl), 2.385vw + 21.66px, var(--text-topblock-title));
+
+  /*
+   * ---- Typography: categories-list heading fluid sizes ----
+   * Line through the 390px value (min) and the 1440px value (max):
+   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 390)
+   *   offset   = sizeMin - (vw-coeff / 100) * 390
+   * One continuous clamp() covers both the 390-768 and 769-1440 ranges so the
+   * heading keeps growing with the viewport instead of stepping at 768px.
+   */
+  --text-categories-list-eyebrow-fluid: clamp(var(--text-xs), 0.286vw + 11.89px, var(--text-base));
+  --text-categories-list-title-fluid: clamp(var(--text-4xl), 4.381vw + 22.91px, var(--text-category-title));
+  --tracking-categories-list-title-fluid: clamp(-3px, 0.286vw - 4.11px, 0px);
+  --text-categories-list-description-fluid: clamp(var(--text-xxs), 0.19vw + 11.26px, var(--text-sm));
+  --width-categories-list-description-fluid: clamp(230px, 6.667vw + 204px, 300px);
 
   /* Subcategory node icon + label, same 769px->1440px fluid construction. */
   --subcategory-node-icon-width-fluid: clamp(40px, 1.49vw + 28.54px, 50px);

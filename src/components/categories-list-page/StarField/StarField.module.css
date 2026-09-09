@@ -1,0 +1,49 @@
+.field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/*
+ * Twinkle: opacity + scale pulse on a loop with a per-star delay, matching the
+ * CodePen reference (codepen.io/CumaKaradash/pen/XJJrgOG). The star art itself
+ * is public/icons/star.svg (a solid --color-gold dot) pulled in as a mask so the
+ * colour stays token-driven; the box-shadow gives the soft glow.
+ */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background-color: var(--color-gold);
+  box-shadow: 0 0 4px 1px var(--color-gold);
+  opacity: 0.5;
+  mask-image: url(/icons/star.svg);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url(/icons/star.svg);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  animation: starTwinkle 4s ease-in-out infinite;
+}
+
+@keyframes starTwinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star {
+    animation: none;
+    opacity: 0.5;
+  }
+}
