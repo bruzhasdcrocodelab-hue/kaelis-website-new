@@ -100,6 +100,30 @@
   }
 }
 
+/* Between 769px and 900px the grid drops to two even-height columns, so the
+   border/star checkerboard follows the 2-column mobile split instead: the
+   3-column hide is reverted and the mobile one takes over. Card visuals stay
+   desktop (star stays visible). */
+@media (min-width: 769px) and (max-width: 900px) {
+  .borderHiddenDesktop {
+    display: block;
+  }
+
+  .borderHiddenMobile {
+    display: none;
+  }
+
+  .starFilledMobile {
+    mask-image: url(/icons/filled-main-star.svg);
+    -webkit-mask-image: url(/icons/filled-main-star.svg);
+  }
+
+  .starOutlineMobile {
+    mask-image: url(/icons/main-star.svg);
+    -webkit-mask-image: url(/icons/main-star.svg);
+  }
+}
+
 @media (max-width: 768px) {
   .card {
     --category-card-blur: var(--blur-default);

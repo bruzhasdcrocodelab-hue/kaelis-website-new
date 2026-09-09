@@ -1,6 +1,6 @@
 .pattern {
   position: absolute;
-  top: -56.944vw;
+  top: clamp(-820px, -56.944vw, -467.1px);
   left: 50%;
   display: block;
   width: var(--constellation-pattern-width);
@@ -26,7 +26,7 @@
 
 @media (max-width: 768px) {
   .pattern {
-    top: -380px;
+    top: clamp(-495.7px, -97.436vw, -308.4px);
     width: clamp(560px, 176.923vw, 900px);
     opacity: 0.4;
   }

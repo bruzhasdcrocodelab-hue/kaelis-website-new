@@ -71,7 +71,9 @@ export default function CategoryCard({
       <span className={`font-instrument-lg-emphasized ${styles.title}`}>{title}</span>
       <span className={`font-instrument-xs ${styles.description}`}>{description}</span>
       <span
-        className={`${styles.star} ${filled ? styles.starFilled : styles.starOutline}`}
+        className={`${styles.star} ${filled ? styles.starFilled : styles.starOutline} ${
+          mobileFilled ? styles.starFilledMobile : styles.starOutlineMobile
+        }`}
         style={{ "--star-delay": `${starDelay}s` } as CSSProperties}
         aria-hidden
       />

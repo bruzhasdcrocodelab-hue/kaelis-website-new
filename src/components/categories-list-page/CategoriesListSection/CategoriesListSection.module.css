@@ -3,9 +3,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 120px;
+  gap: 8.333vw;
   width: 100%;
-  padding: 60px 60px 30px;
+  padding: 4.167vw 60px 30px;
 }
 
 .heading {
@@ -20,6 +20,7 @@
   line-height: normal;
   white-space: nowrap;
   margin-bottom: -25px;
+  font-size: var(--text-categories-list-eyebrow-fluid);
 }
 
 .title {
@@ -31,13 +32,16 @@
   line-height: normal;
   padding-right: 20px;
   margin-left: 20px;
+  font-size: var(--text-categories-list-title-fluid);
+  letter-spacing: var(--tracking-categories-list-title-fluid);
 }
 
 .description {
-  width: 300px;
+  width: var(--width-categories-list-description-fluid);
   margin-top: -6px;
   color: var(--color-white-60);
   line-height: normal;
+  font-size: var(--text-categories-list-description-fluid);
 }
 
 .grid {
@@ -46,7 +50,7 @@
   column-gap: 60px;
   row-gap: 0px;
   padding-bottom: 48px;
-  margin-top: -64px;
+  margin-top: -4.444vw;
 }
 
 /* Odd columns sit raised; the middle column drops so the stars interleave
@@ -60,22 +64,19 @@
 }
 
 /* Desktop adaptivity: below the 3-column layout's natural width the grid drops
-   to two columns while keeping the raised/lowered brick stagger. */
+   to two even-height columns. The bordered/borderless (and matching star)
+   checkerboard follows the 2-column mobile split, resolved in CategoryCard. */
 @media (min-width: 769px) and (max-width: 900px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 230px));
+    column-gap: 60px;
+    row-gap: 64px;
     margin-top: 0;
   }
 
-  .cellLowered {
-    margin-top: 0;
-  }
-
-  .cell:nth-child(2n) {
-    margin-top: 64px;
-  }
-
+  .cellLowered,
   .cellLastColumn {
+    margin-top: 0;
     grid-column-start: auto;
   }
 }
@@ -88,21 +89,16 @@
 
   .eyebrow {
     margin-bottom: -5px;
-    font-size: var(--text-xs);
     font-weight: 400;
     opacity: 0.9;
   }
 
   .title {
     margin-top: 0;
-    font-size: var(--text-4xl);
-    letter-spacing: var(--tracking-bona-4xl);
   }
 
   .description {
-    width: 230px;
     margin-top: 0;
-    font-size: var(--text-xxs);
     color: var(--color-white-60);
   }
 
