@@ -104,6 +104,7 @@
   .card {
     --category-card-blur: var(--blur-default);
     width: 100%;
+    max-width: 230px;
     height: 140px;
     gap: 8px;
     padding: 24px 16px;
