@@ -1,7 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
-import { motion } from "motion/react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  useTransition,
+} from "react";
+import { createPortal } from "react-dom";
 import type { Dictionary, Locale } from "@/lang";
 import { setLocale } from "@/lib/locale-actions";
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
@@ -10,19 +19,24 @@ import styles from "./LanguageSelector.module.css";
 export interface LanguageSelectorProps {
   locale: Locale;
   languageNames: Dictionary["header"]["languageNames"];
+  languageShort: Dictionary["header"]["languageShort"];
 }
 
 const LOCALE_ORDER: Locale[] = ["en", "ru", "uk"];
 
-const LOCALE_LABEL: Record<Locale, string> = {
-  en: "EN",
-  ru: "RU",
-  uk: "UA",
-};
-
 const MOBILE_QUERY = "(max-width: 768px)";
+const DROPDOWN_WIDTH = 110;
 
-const TRANSITION = { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const };
+const noop = () => () => {};
+
+/** SSR-safe: false on the server, true once mounted in the browser. */
+function useIsClient() {
+  return useSyncExternalStore(
+    noop,
+    () => true,
+    () => false
+  );
+}
 
 /** Tracks a media query, SSR-safe (starts false, corrects on mount). */
 function useMediaQuery(query: string) {
@@ -39,17 +53,50 @@ function useMediaQuery(query: string) {
   return matches;
 }
 
-export default function LanguageSelector({ locale, languageNames }: LanguageSelectorProps) {
+export default function LanguageSelector({
+  locale,
+  languageNames,
+  languageShort,
+}: LanguageSelectorProps) {
   const [open, setOpen] = useState(false);
   const [, startTransition] = useTransition();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
+  const isClient = useIsClient();
   const isMobile = useMediaQuery(MOBILE_QUERY);
+  const [left, setLeft] = useState(0);
+
+  const expanded = open && !isMobile;
+
+  const reposition = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    setLeft(rect.left + rect.width / 2 - DROPDOWN_WIDTH / 2);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!expanded) return;
+    reposition();
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, true);
+    return () => {
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition, true);
+    };
+  }, [expanded, reposition]);
 
   useEffect(() => {
     if (!open || isMobile) return;
 
     function handlePointerDown(event: PointerEvent) {
-      if (!wrapperRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (
+        !wrapperRef.current?.contains(target) &&
+        !dropdownRef.current?.contains(target)
+      ) {
         setOpen(false);
       }
     }
@@ -74,61 +121,74 @@ export default function LanguageSelector({ locale, languageNames }: LanguageSele
     });
   }
 
-  const expanded = open && !isMobile;
-
   return (
-    <div className={styles.wrapper} ref={wrapperRef}>
-      <motion.div
-        className={`${styles.shell} ${expanded ? "" : styles.shellCollapsed}`}
-        layout
-        initial={false}
-        animate={{ borderRadius: expanded ? 12 : 30 }}
-        transition={TRANSITION}
-        role={expanded ? "listbox" : undefined}
-        // style={{
-        //   backdropFilter: "blur(12.5px)",
-        //   WebkitBackdropFilter: "blur(12.5px)",
-        // }}
+    <div
+      className={styles.wrapper}
+      ref={wrapperRef}
+      data-header-dropdown-open={expanded || undefined}
+    >
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={menuId}
+        className={`${styles.trigger} ${expanded ? styles.triggerOpen : ""}`}
+        onClick={() => setOpen((value) => !value)}
       >
-        {(expanded ? LOCALE_ORDER : [locale]).map((item, index) => {
-          const isActive = item === locale;
-          const isTrigger = !expanded;
-          return (
-            <motion.div key={item} layout>
-              {expanded && index > 0 && <div className={styles.divider} />}
-              <motion.button
-                layout
-                type="button"
-                role={isTrigger ? undefined : "option"}
-                aria-haspopup={isTrigger ? "listbox" : undefined}
-                aria-expanded={isTrigger ? open : undefined}
-                aria-selected={isTrigger ? undefined : isActive}
-                className={`${styles.row} ${isTrigger ? styles.rowTrigger : styles.rowOption}`}
-                onClick={() => (isTrigger ? setOpen(true) : handleSelect(item))}
-              >
-                <span
-                  className={`font-instrument-sm-emphasized ${styles.label} ${
-                    isActive ? styles.labelActive : ""
-                  }`}
-                >
-                  {LOCALE_LABEL[item]}
-                </span>
-                {(isTrigger || isActive) && (
-                  <span className={styles.iconWrap}>
-                    <span
-                      className={styles.icon}
-                      style={{
-                        maskImage: `url(/icons/right-arrow.svg)`,
-                        WebkitMaskImage: `url(/icons/right-arrow.svg)`,
-                      }}
-                    />
-                  </span>
-                )}
-              </motion.button>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+        <span className={`font-instrument-sm-emphasized ${styles.triggerLabel}`}>
+          {languageShort[locale]}
+        </span>
+        <span className={styles.chevronWrap}>
+          <span
+            className={styles.chevron}
+            style={{
+              maskImage: "url(/icons/chevron-down.svg)",
+              WebkitMaskImage: "url(/icons/chevron-down.svg)",
+            }}
+            aria-hidden
+          />
+        </span>
+      </button>
+
+      {isClient &&
+        createPortal(
+          <div
+            id={menuId}
+            ref={dropdownRef}
+            className={styles.dropdown}
+            role="listbox"
+            data-open={expanded || undefined}
+            style={{
+              left: `${left}px`,
+              backdropFilter: "blur(25px)",
+              WebkitBackdropFilter: "blur(25px)",
+            }}
+          >
+            <span className={styles.dropdownGlow} aria-hidden />
+            {LOCALE_ORDER.map((item, index) => {
+              const isActive = item === locale;
+              return (
+                <div key={item} className={styles.optionGroup}>
+                  {index > 0 && <div className={styles.divider} aria-hidden />}
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={isActive}
+                    className={`font-instrument-base ${styles.option} ${
+                      isActive ? styles.optionActive : ""
+                    }`}
+                    onClick={() => handleSelect(item)}
+                  >
+                    {languageShort[item]}
+                  </button>
+                </div>
+              );
+            })}
+          </div>,
+          document.body
+        )}
+
       {isMobile && (
         <BottomSheetSelect<Locale>
           open={open}

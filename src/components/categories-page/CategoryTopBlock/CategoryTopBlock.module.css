@@ -23,7 +23,7 @@
   box-shadow: var(--shadow-medium);
   backdrop-filter: blur(var(--blur-shadow));
   -webkit-backdrop-filter: blur(var(--blur-shadow));
-  z-index: 10;
+  z-index: 9;
 }
 
 .panel::before {

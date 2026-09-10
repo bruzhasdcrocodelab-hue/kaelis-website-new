@@ -2,88 +2,41 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  width: 76px;
-  height: 44px;
 }
 
-.shell {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 76px;
+.trigger {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+  height: 44px;
   padding: 6px 6px 6px 16px;
   border: 1.2px solid #d3aced;
-  background: transparent;
-  overflow: hidden;
-}
-
-.shellCollapsed {
-  height: 44px;
-  padding-top: 0;
-  padding-bottom: 0;
-  justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .wrapper {
-    height: 40px;
-  }
-
-  .shell {
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .shellCollapsed {
-    height: 40px;
-  }
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border: none;
+  border-radius: 30px;
   background: transparent;
   cursor: pointer;
   appearance: none;
-  text-align: left;
-  padding: 0;
+  transition: background 0.3s ease;
 }
 
-.rowTrigger {
-  justify-content: space-between;
-  height: 32px;
-  gap: 2px;
+.triggerOpen {
+  background: var(--color-white-7);
 }
 
-.rowOption {
-  justify-content: flex-start;
-  height: 29px;
-  padding: 6px 0;
-}
-
-.label {
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+.triggerLabel {
   white-space: nowrap;
   background-image: var(--gradient-pink);
-}
-
-.labelActive {
-  background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
+  transition: color 0.3s ease;
 }
 
-.iconWrap {
+.triggerOpen .triggerLabel {
+  background-image: none;
+  color: var(--color-white);
+}
+
+.chevronWrap {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,23 +47,122 @@
   flex-shrink: 0;
 }
 
-.icon {
-  width: 24px;
-  height: 24px;
+.chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
   background-image: var(--gradient-pink);
   mask-repeat: no-repeat;
   mask-position: center;
-  mask-size: 24px 24px;
+  mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
-  -webkit-mask-size: 24px 24px;
-  transform: rotate(90deg);
+  -webkit-mask-size: contain;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.triggerOpen .chevron {
+  background-image: none;
+  background-color: var(--color-white);
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: var(--header-dropdown-top);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 110px;
+  padding: 20px 16px;
+  border-radius: var(--radius-card-mobile);
+  background: var(--color-overlay-dark);
+  overflow: clip;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.dropdown[data-open] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
+}
+
+.dropdownGlow {
+  position: absolute;
+  background-image: var(--gradient-header-glow);
+  opacity: 0.5;
+  pointer-events: none;
+  width: 276px;
+  height: 177px;
+  margin-left: -65px;
+  margin-top: 5px;
+  rotate: -90deg;
+  z-index: 0;
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  z-index: 1;
 }
 
 .divider {
-  width: 44px;
+  width: 100%;
   height: 1px;
-  background: var(--gradient-pink);
-  flex-shrink: 0;
-  opacity: 0.2;
+  background: var(--color-white-15);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  color: var(--color-white-75);
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.option:hover {
+  color: var(--color-white);
+}
+
+.optionActive {
+  background-image: var(--gradient-pink);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .dropdown,
+  .trigger {
+    transition: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .trigger {
+    height: 40px;
+    padding: 4px 4px 4px 12px;
+  }
+
+  .dropdown {
+    display: none;
+  }
 }

@@ -6,12 +6,18 @@ const en = {
       ourApp: "Our App",
       termsOfUse: "Terms of Use",
     },
+    allTarotSpreads: "All Tarot Spreads",
     downloadApp: "Download App",
     language: "EN",
     languageNames: {
       en: "En",
       ru: "Rus",
       uk: "Ua",
+    },
+    languageShort: {
+      en: "EN",
+      ru: "RU",
+      uk: "UA",
     },
   },
   hero: {
