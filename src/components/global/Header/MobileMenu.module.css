@@ -15,7 +15,7 @@
   cursor: pointer;
   appearance: none;
   --menu-toggle-blur: none;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .toggleActive {
@@ -36,6 +36,13 @@
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: 24px 24px;
+
+  transition: background-color 0.3s ease;
+}
+
+.toggleIconActive {
+  background-image: none;
+  background-color: var(--color-white);
 }
 
 .menu {

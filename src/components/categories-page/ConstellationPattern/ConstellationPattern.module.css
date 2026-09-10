@@ -12,13 +12,6 @@
   overflow: hidden;
 }
 
-/*
- * Mobile: the "Celestial Rings Group" from the mock (node-id=1873-5400) is a
- * ~690px-wide band, dimmed and pushed above the hero copy. Width scales with
- * the viewport so the composition holds on narrower/wider phones; height
- * follows from the SVG's own aspect ratio. Only size/position/opacity change —
- * the rotation animations are resolution-independent and keep running.
- */
 @media (max-width: 768px) {
   .pattern {
     top: 120px;
@@ -38,13 +31,6 @@
   animation: constellationSpinReverse var(--constellation-ring-spin-duration-reverse) linear infinite;
 }
 
-/*
- * Counter-rotates at the "beat" rate between the clockwise glyph frame and the
- * counter-clockwise ring frame: 1 / (1/spinDuration + 1/ringSpinDurationReverse).
- * Used to move a mask hole that lives inside the counter-clockwise ring's own local
- * space so that, once composed with that ring's ambient rotation, the hole's absolute
- * position matches the clockwise-spinning glyph it needs to stay under.
- */
 .spinClockwiseRelativeToCounterRing {
   animation: constellationSpin var(--constellation-spin-relative-to-counter-ring-duration) linear infinite;
 }
