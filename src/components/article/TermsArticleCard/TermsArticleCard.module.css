@@ -35,7 +35,7 @@
 .sectionHeader {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   color: var(--color-black);
   line-height: normal;
