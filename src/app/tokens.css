@@ -96,7 +96,8 @@
     rgba(98, 62, 229, 0.24) 50%,
     rgba(92, 99, 231, 0) 70%
   );
-  --gradient-main-bg-mobile: linear-gradient(
+
+  /* --gradient-main-bg-mobile: linear-gradient(
     180deg,
     #241b3f 0%,
     #3a2a6b 22%,
@@ -104,6 +105,14 @@
     #7b5cc0 66%,
     #9878cf 82%,
     #b49ad9 100%
+  ); */
+
+  --gradient-main-bg-mobile: linear-gradient(
+    180deg,
+    #110D2B 0%,
+    #54338C 35%,
+    #BA85CF 65%,
+    #F3F3F8 90%
   );
 
   /* ---- Gradients: categories-list page (node-id=1975-2963) ---- */

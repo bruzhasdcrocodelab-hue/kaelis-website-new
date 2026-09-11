@@ -31,7 +31,7 @@ export default function CategoryPageView({
   return (
     <div className={styles.page}>
       <Image
-        src="/images/backgrounds/main.png"
+        src="/images/backgrounds/2.png"
         alt=""
         width={1440}
         height={990}

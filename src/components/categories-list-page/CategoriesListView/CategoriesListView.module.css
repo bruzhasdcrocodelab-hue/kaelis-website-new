@@ -102,6 +102,8 @@
     top: 84px;
     width: 20%;
     height: auto;
+    max-height: 1390px;
+    max-width: 86px;
   }
 
   .patternMobile.patternLeft {

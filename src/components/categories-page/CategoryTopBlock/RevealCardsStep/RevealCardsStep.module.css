@@ -52,6 +52,7 @@
   width: 98px;
   text-wrap: balance;
   line-height: normal;
+  font-weight: 400;
 }
 
 .revealCardNameVisible {
