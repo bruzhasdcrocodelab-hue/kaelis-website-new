@@ -17,14 +17,6 @@ export default function TermsPageView({ dictionary, locale }: TermsPageViewProps
       <div className={styles.content}>
         <div className={styles.hero}>
           <Image
-            src="/images/backgrounds/2.png"
-            alt=""
-            width={1440}
-            height={500}
-            className={styles.backgroundImage}
-            priority
-          />
-          <Image
             src="/images/backgrounds/pattern-article.svg"
             alt=""
             width={1440}
