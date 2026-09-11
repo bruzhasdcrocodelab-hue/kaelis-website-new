@@ -11,6 +11,8 @@ import TriggerButton, {
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
 import { pluralizeCardCount, type Dictionary, type Locale } from "@/lang";
 import AnimatedWaves from "./AnimatedWaves/AnimatedWaves";
+import WavesLineFrame from "./WavesLineFrame/WavesLineFrame";
+import GradientWavesLineFrame from "./GradientWavesLineFrame/GradientWavesLineFrame";
 import AnswerStep from "./AnswerStep/AnswerStep";
 import AskQuestionStep from "./AskQuestionStep/AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep/ChooseCardsStep";
@@ -117,15 +119,7 @@ export default function CategoryTopBlock({
         <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
         {hasFan ? (
           <>
-            <Image
-              src="/images/backgrounds/line-waves.svg"
-              alt=""
-              width={1285}
-              height={400}
-              className={styles.wavesLine}
-              aria-hidden
-              style={{zIndex: 2}}
-            />
+            <WavesLineFrame className={styles.wavesLine} style={{ zIndex: 2 }} />
             <Image
               src="/images/backgrounds/pattern-categories-top-block-2.svg"
               alt=""
@@ -136,15 +130,7 @@ export default function CategoryTopBlock({
             />
           </>
         ):(
-          <Image
-            src="/images/backgrounds/gradient-line-waves.svg"
-            alt=""
-            width={1285}
-            height={400}
-            className={styles.wavesLine}
-            aria-hidden
-            style={{zIndex: -2}}
-          />
+          <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />
         )}
 
         <div className={styles.row}>

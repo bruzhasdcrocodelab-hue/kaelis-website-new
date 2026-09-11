@@ -12,6 +12,10 @@
   overflow: hidden;
 }
 
+.ellipse7OuterFade {
+  mask: url(#ellipse7TopFadeMask);
+}
+
 @media (max-width: 768px) {
   .pattern {
     top: 120px;
@@ -20,6 +24,10 @@
     height: auto;
     transform: translateX(-50%);
     opacity: 0.65;
+  }
+
+  .ellipse7OuterFade {
+    mask: none;
   }
 }
 

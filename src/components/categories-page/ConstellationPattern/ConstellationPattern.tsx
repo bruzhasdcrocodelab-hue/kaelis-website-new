@@ -157,6 +157,14 @@ export default function ConstellationPattern() {
           <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
         </linearGradient>
 
+        <linearGradient id="ellipse7TopFade" x1={CENTER_X} y1="0.5" x2={CENTER_X} y2="1534.5" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#000000" />
+          <stop offset="0.1" stopColor="#ffffff" />
+        </linearGradient>
+        <mask id="ellipse7TopFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1580">
+          <rect x="0" y="0" width="1580" height="1580" fill="url(#ellipse7TopFade)" />
+        </mask>
+
         {/*
           Fades the pattern out toward the bottom edge of the viewBox instead of
           hard-clipping it there, matching pattern-categories.svg's soft cut-off.
@@ -223,11 +231,13 @@ export default function ConstellationPattern() {
           stroke="url(#constellationFadeMid)"
           strokeLinecap="round"
         />
-        <path
-          d="M518.785 0.5C216.337 111.424 0.5 402.216 0.5 743.485C0.5 1180.35 354.195 1534.5 790.5 1534.5C1226.81 1534.5 1580.5 1180.35 1580.5 743.485C1580.5 402.216 1364.66 111.424 1062.21 0.5"
-          stroke="url(#constellationFadeWide)"
-          strokeLinecap="round"
-        />
+        <g className={styles.ellipse7OuterFade} mask="url(#ellipse7TopFadeMask)">
+          <path
+            d="M518.785 0.5C216.337 111.424 0.5 402.216 0.5 743.485C0.5 1180.35 354.195 1534.5 790.5 1534.5C1226.81 1534.5 1580.5 1180.35 1580.5 743.485C1580.5 402.216 1364.66 111.424 1062.21 0.5"
+            stroke="url(#constellationFadeWide)"
+            strokeLinecap="round"
+          />
+        </g>
       </g>
 
       <g mask="url(#titleCutout)">

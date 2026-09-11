@@ -61,7 +61,7 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
         <motion.div layout className={styles.ctaButtonWrap} transition={CTA_LAYOUT_TRANSITION}>
           <MainButton variant="stroke" size="large" type="button">
             <span className={styles.ctaLabelWrap}>
-              <AnimatePresence initial={false} mode="wait">
+              {/* <AnimatePresence initial={false} mode="wait">
                 <motion.span
                   key={isCardHovered ? "hover" : "idle"}
                   initial={prefersReducedMotion ? false : { opacity: 0 }}
@@ -73,7 +73,8 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
                   {isCardHovered ? dictionary.ctaHover : dictionary.cta}
                   {isCardHovered && <CtaArrowIcon />}
                 </motion.span>
-              </AnimatePresence>
+              </AnimatePresence> */}
+              {dictionary.cta}
             </span>
           </MainButton>
           {/* Anchored to the CTA button (not the section) so it holds the same

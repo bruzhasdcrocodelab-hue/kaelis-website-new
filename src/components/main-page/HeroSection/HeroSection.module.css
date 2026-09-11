@@ -95,9 +95,9 @@
   width: 3.472vw;
   height: auto;
   pointer-events: none;
-  /* centre horizontally on the button; sit just below its bottom edge */
   translate: -50% -30%;
   z-index: 10;
+  display: none;
 }
 
 .ctaLabelWrap {
@@ -191,6 +191,7 @@
        only the size shrinks on mobile */
     width: 7.692vw;
     height: auto;
+    display: block;
   }
 
   .ctaButtonWrap :global(button) {
