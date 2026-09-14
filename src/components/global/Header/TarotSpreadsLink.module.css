@@ -120,6 +120,7 @@
   color: var(--color-white-75);
   white-space: nowrap;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .item:hover {

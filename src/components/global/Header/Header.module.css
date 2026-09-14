@@ -78,6 +78,7 @@
   text-align: center;
   text-decoration: none;
   hyphens: auto;
+  transition: color 0.2s ease;
 }
 
 .navLink:hover {
