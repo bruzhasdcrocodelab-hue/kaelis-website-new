@@ -6,7 +6,8 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
 import styles from "./CardsFan.module.css";
-import FamilyCardFront from "./FamilyCardFront";
+import AnimatedCardFront from "./AnimatedCardFront";
+import { getCardFrontAssets } from "./cardFrontAssets";
 
 export interface CardsFanProps {
   dictionary: Dictionary["cards"];
@@ -265,6 +266,7 @@ function FlippableCard({
   onHoverStart,
   onHoverEnd,
 }: FlippableCardProps) {
+  const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
   const [frontReady, setFrontReady] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -286,7 +288,7 @@ function FlippableCard({
   return (
     <Link
       href={`/categories/${card.slug}`}
-      aria-label={card.slug === "family" ? card.alt : undefined}
+      aria-label={frontAssets ? card.alt : undefined}
       className={styles.cardWrap}
       style={{
         left: card.left,
@@ -321,17 +323,17 @@ function FlippableCard({
           animate={{ scaleX: isHovered === showFront ? 1 : 0 }}
           transition={{ duration: FLIP_DURATION / 2, ease: [0.4, 0, 0.2, 1] }}
           onAnimationStart={() => {
-            if (card.slug === "family") setFrontReady(false);
+            if (frontAssets) setFrontReady(false);
           }}
           onAnimationComplete={(target) => {
-            if (card.slug === "family" && typeof target === "object" && "scaleX" in target) {
+            if (frontAssets && typeof target === "object" && "scaleX" in target) {
               setFrontReady(target.scaleX === 1 && showFront && isHovered);
             }
           }}
         >
           <div className={styles.cardSideInner}>
-            {showFront && card.slug === "family" ? (
-              <FamilyCardFront active={frontReady && isHovered} />
+            {showFront && frontAssets ? (
+              <AnimatedCardFront active={frontReady && isHovered} assets={frontAssets} />
             ) : (
               <Image src={showFront ? card.srcFront : card.srcBack} alt={card.alt} fill sizes="165px" />
             )}
@@ -543,6 +545,7 @@ function MobileFlippableCard({
   onHoverStart,
   onHoverEnd,
 }: MobileFlippableCardProps) {
+  const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
   const [frontReady, setFrontReady] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -583,17 +586,17 @@ function MobileFlippableCard({
         animate={{ scaleX: !flippable || isHovered === showFront ? 1 : 0 }}
         transition={{ duration: FLIP_DURATION / 2, ease: [0.4, 0, 0.2, 1] }}
         onAnimationStart={() => {
-          if (card.slug === "family") setFrontReady(false);
+          if (frontAssets) setFrontReady(false);
         }}
         onAnimationComplete={(target) => {
-          if (card.slug === "family" && typeof target === "object" && "scaleX" in target) {
+          if (frontAssets && typeof target === "object" && "scaleX" in target) {
             setFrontReady(target.scaleX === 1 && showFront && isHovered);
           }
         }}
       >
         <div className={styles.cardSideInner}>
-          {showFront && card.slug === "family" ? (
-            <FamilyCardFront active={frontReady && isHovered} />
+          {showFront && frontAssets ? (
+            <AnimatedCardFront active={frontReady && isHovered} assets={frontAssets} />
           ) : (
             <Image
               src={showFront && card.srcFront ? card.srcFront : card.srcBack}
@@ -627,7 +630,7 @@ function MobileFlippableCard({
     <Link
       href={`/categories/${card.slug}`}
       className={styles.mobileCardWrap}
-      aria-label={card.slug === "family" ? card.alt : undefined}
+      aria-label={frontAssets ? card.alt : undefined}
       style={style}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}

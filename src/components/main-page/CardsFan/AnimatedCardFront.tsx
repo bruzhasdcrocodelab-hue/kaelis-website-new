@@ -2,11 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import styles from "./FamilyCardFront.module.css";
+import type { CardFrontAssets } from "./cardFrontAssets";
+import styles from "./AnimatedCardFront.module.css";
 
-const ASSET_ROOT = "/images/cards/family-motion";
-
-export default function FamilyCardFront({ active }: { active: boolean }) {
+export default function AnimatedCardFront({ active, assets }: { active: boolean; assets: CardFrontAssets }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -23,7 +22,7 @@ export default function FamilyCardFront({ active }: { active: boolean }) {
 
     const update = () => {
       if (inView && !reducedMotion.matches && !video.getAttribute("src")) {
-        video.src = `${ASSET_ROOT}/family-motion.mp4`;
+        video.src = assets.video;
       }
       const shouldPlay = active && inView && !document.hidden && !reducedMotion.matches;
       if (!inView || document.hidden || reducedMotion.matches) video.style.visibility = "hidden";
@@ -62,13 +61,13 @@ export default function FamilyCardFront({ active }: { active: boolean }) {
       document.removeEventListener("visibilitychange", update);
       reducedMotion.removeEventListener("change", update);
     };
-  }, [active]);
+  }, [active, assets.video]);
 
   return (
     <div ref={rootRef} className={styles.front} aria-hidden="true">
       <Image
         className={styles.layer}
-        src={`${ASSET_ROOT}/family-poster.png`}
+        src={assets.poster}
         alt=""
         fill
         sizes="165px"
@@ -77,7 +76,7 @@ export default function FamilyCardFront({ active }: { active: boolean }) {
       <video
         ref={videoRef}
         className={`${styles.layer} ${styles.video}`}
-        poster={`${ASSET_ROOT}/family-poster.png`}
+        poster={assets.poster}
         width={618}
         height={1098}
         preload="auto"
@@ -89,7 +88,7 @@ export default function FamilyCardFront({ active }: { active: boolean }) {
       />
       <Image
         className={styles.layer}
-        src={`${ASSET_ROOT}/family-title.svg`}
+        src={assets.title}
         alt=""
         fill
         unoptimized
