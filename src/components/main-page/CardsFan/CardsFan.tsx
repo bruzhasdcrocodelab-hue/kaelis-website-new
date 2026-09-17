@@ -6,6 +6,8 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
 import styles from "./CardsFan.module.css";
+import AnimatedCardFront from "./AnimatedCardFront";
+import { getCardFrontAssets } from "./cardFrontAssets";
 
 export interface CardsFanProps {
   dictionary: Dictionary["cards"];
@@ -264,7 +266,9 @@ function FlippableCard({
   onHoverStart,
   onHoverEnd,
 }: FlippableCardProps) {
+  const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
+  const [frontReady, setFrontReady] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
@@ -284,6 +288,7 @@ function FlippableCard({
   return (
     <Link
       href={`/categories/${card.slug}`}
+      aria-label={frontAssets ? card.alt : undefined}
       className={styles.cardWrap}
       style={{
         left: card.left,
@@ -317,9 +322,21 @@ function FlippableCard({
           className={styles.cardFace}
           animate={{ scaleX: isHovered === showFront ? 1 : 0 }}
           transition={{ duration: FLIP_DURATION / 2, ease: [0.4, 0, 0.2, 1] }}
+          onAnimationStart={() => {
+            if (frontAssets) setFrontReady(false);
+          }}
+          onAnimationComplete={(target) => {
+            if (frontAssets && typeof target === "object" && "scaleX" in target) {
+              setFrontReady(target.scaleX === 1 && showFront && isHovered);
+            }
+          }}
         >
           <div className={styles.cardSideInner}>
-            <Image src={showFront ? card.srcFront : card.srcBack} alt={card.alt} fill sizes="165px" />
+            {showFront && frontAssets ? (
+              <AnimatedCardFront active={frontReady && isHovered} assets={frontAssets} />
+            ) : (
+              <Image src={showFront ? card.srcFront : card.srcBack} alt={card.alt} fill sizes="165px" />
+            )}
           </div>
         </motion.div>
       </motion.div>
@@ -528,7 +545,9 @@ function MobileFlippableCard({
   onHoverStart,
   onHoverEnd,
 }: MobileFlippableCardProps) {
+  const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
+  const [frontReady, setFrontReady] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const flippable = Boolean(card.slug && card.srcFront);
 
@@ -566,14 +585,26 @@ function MobileFlippableCard({
         className={styles.cardFace}
         animate={{ scaleX: !flippable || isHovered === showFront ? 1 : 0 }}
         transition={{ duration: FLIP_DURATION / 2, ease: [0.4, 0, 0.2, 1] }}
+        onAnimationStart={() => {
+          if (frontAssets) setFrontReady(false);
+        }}
+        onAnimationComplete={(target) => {
+          if (frontAssets && typeof target === "object" && "scaleX" in target) {
+            setFrontReady(target.scaleX === 1 && showFront && isHovered);
+          }
+        }}
       >
         <div className={styles.cardSideInner}>
-          <Image
-            src={showFront && card.srcFront ? card.srcFront : card.srcBack}
-            alt={card.alt}
-            fill
-            sizes="116px"
-          />
+          {showFront && frontAssets ? (
+            <AnimatedCardFront active={frontReady && isHovered} assets={frontAssets} />
+          ) : (
+            <Image
+              src={showFront && card.srcFront ? card.srcFront : card.srcBack}
+              alt={card.alt}
+              fill
+              sizes="116px"
+            />
+          )}
         </div>
       </motion.div>
     </motion.div>
@@ -599,6 +630,7 @@ function MobileFlippableCard({
     <Link
       href={`/categories/${card.slug}`}
       className={styles.mobileCardWrap}
+      aria-label={frontAssets ? card.alt : undefined}
       style={style}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
