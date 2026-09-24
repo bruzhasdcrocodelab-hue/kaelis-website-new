@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bona_Nova_SC, Instrument_Sans } from "next/font/google";
 import "./globals.css";
+import GuestAuth from "@/components/GuestAuth";
 
 const bonaNovaSC = Bona_Nova_SC({
   variable: "--font-bona-nova-sc",
@@ -27,7 +28,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${bonaNovaSC.variable} ${instrumentSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <GuestAuth />
+        {children}
+      </body>
     </html>
   );
 }
