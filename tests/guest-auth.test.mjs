@@ -46,6 +46,7 @@ test("creates, persists and reuses a guest; concurrent calls share one request",
   assert.equal(calls.length, 1);
   assert.equal(calls[0].url, "/api/kaelis/user/anonymous");
   assert.equal(calls[0].init.method, "POST");
+  assert.equal(calls[0].init.credentials, "same-origin");
   assert.equal(calls[0].init.body, undefined);
 });
 
@@ -72,6 +73,7 @@ test("API requests carry the stored bearer token and preserve caller headers", a
   assert.equal(calls[0].url, "/api/kaelis/test?value=1");
   assert.equal(calls[0].init.headers.get("Authorization"), "Bearer existing");
   assert.equal(calls[0].init.headers.get("Accept-Language"), "ru");
+  assert.equal(calls[0].init.credentials, "same-origin");
   await assert.rejects(api.apiFetch("https://example.com"));
   await assert.rejects(api.apiFetch("/../../outside"));
   assert.equal(calls.length, 1);

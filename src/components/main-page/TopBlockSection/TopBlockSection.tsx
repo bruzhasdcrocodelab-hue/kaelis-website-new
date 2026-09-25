@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Dictionary } from "@/lang";
 import styles from "./TopBlockSection.module.css";
 import MainButton from "@/components/global/MainButton";
@@ -46,14 +45,14 @@ export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
               <MainButton
                 icon="/icons/apple.svg"
                 size="medium"
-                href="/icons/apple.svg"
-                aria-label="/icons/apple.svg"
+                disabled
+                aria-label="App Store"
               />
               <MainButton
                 icon="/icons/google-play.svg"
                 size="medium"
-                href="/icons/google-play.svg"
-                aria-label="/icons/google-play.svg"
+                href="https://play.google.com/store/apps/details?id=io.kaelsi.app"
+                aria-label="Google Play"
               />
            
         {/* <Link href="/" className={styles.actionButton} aria-label="App Store">

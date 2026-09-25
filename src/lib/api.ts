@@ -34,7 +34,8 @@ async function createSession(): Promise<string> {
     method: "POST",
     headers: { Accept: "application/json" },
     cache: "no-store",
-    credentials: "omit",
+    // Protected previews require the site's access cookie as well.
+    credentials: "same-origin",
     signal: AbortSignal.timeout(30_000),
   });
   if (!response.ok) {
@@ -109,7 +110,7 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
   const response = await fetch(`${url.pathname}${url.search}`, {
     ...init,
     headers,
-    credentials: "omit",
+    credentials: "same-origin",
     cache: "no-store",
   });
   if (response.status === 401 && readSession()?.token === token) {
