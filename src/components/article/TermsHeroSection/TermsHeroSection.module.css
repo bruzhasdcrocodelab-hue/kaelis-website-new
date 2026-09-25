@@ -14,6 +14,7 @@
   align-items: center;
   max-width: 100%;
   min-width: 0;
+  width: 100%;
 }
 
 .eyebrow {
@@ -24,6 +25,7 @@
 }
 
 .title {
+  width: 100%;
   max-width: 100%;
   background-image: var(--gradient-pink);
   background-clip: text;
@@ -35,17 +37,19 @@
     var(--text-terms-title)
   );
   text-align: center;
-  line-height: normal;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
-  -webkit-hyphens: auto;
+  line-height: .95;
+  text-wrap: balance;
+  padding-inline: .15em;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
+
+.titleWord { white-space: nowrap; }
 
 .title.titleWrapped {
   margin-top: 10px;
   margin-bottom: 10px;
-  line-height: 90%;
 }
 
 .lastUpdated {
