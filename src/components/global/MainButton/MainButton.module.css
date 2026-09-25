@@ -7,6 +7,24 @@
 .gradient-black { --hover-brightness: .94; --pressed-brightness: .87; }
 .stroke { --hover-brightness: .92; --pressed-brightness: .84; }
 
+.stroke .label,
+.stroke .icon {
+  transition: color .3s;
+}
+
+.stroke .icon {
+  position: relative;
+  color: transparent;
+}
+
+/* Overlay the gradient fill inside the existing SVG mask. */
+.stroke .icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+}
+
 @media (hover: hover) {
   .button:not(:disabled):not([aria-disabled="true"]):hover {
     filter: brightness(var(--hover-brightness));
@@ -17,15 +35,20 @@
     transition: background-color .3s;
     
   }
+
+  .stroke:not(:disabled):not([aria-disabled="true"]):hover .label,
+  .stroke:not(:disabled):not([aria-disabled="true"]):hover .icon {
+    color: var(--color-white) !important;
+  }
 }
 
 .button:not(:disabled):not([aria-disabled="true"]):active {
   filter: brightness(var(--pressed-brightness));
 }
 
-.stroke:not(:disabled):not([aria-disabled="true"]):active {
+/* .stroke:not(:disabled):not([aria-disabled="true"]):active {
   background-color: #ecdcf3;
-}
+} */
 
 .button:focus-visible {
   outline: 2px solid #9863b5;
@@ -47,5 +70,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button { transition: none; }
+  .button,
+  .stroke .label,
+  .stroke .icon { transition: none; }
 }

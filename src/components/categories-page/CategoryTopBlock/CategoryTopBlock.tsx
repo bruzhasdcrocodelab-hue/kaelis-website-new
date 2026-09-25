@@ -62,7 +62,7 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section className={styles.section}>
+    <section id="category-top-block" className={styles.section}>
       <div
         className={`${styles.panel} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{

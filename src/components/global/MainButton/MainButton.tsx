@@ -90,7 +90,7 @@ function Icon({
 }) {
   return (
     <span
-      className={muted ? ICON_BOX : `${ICON_BOX} ${ICON_FILL_CLASS[variant]}`}
+      className={`${styles.icon} ${muted ? ICON_BOX : `${ICON_BOX} ${ICON_FILL_CLASS[variant]}`}`}
       style={{
         maskImage: `url(${src})`,
         maskRepeat: "no-repeat",
@@ -160,7 +160,7 @@ export default function MainButton({
   const content = (
     <>
       {hasLabel && (
-        <span className={`${TEXT_SIZE[size]} ${labelColorClasses}`} style={labelColorStyle}>
+        <span className={`${styles.label} ${TEXT_SIZE[size]} ${labelColorClasses}`} style={labelColorStyle}>
           {children}
         </span>
       )}

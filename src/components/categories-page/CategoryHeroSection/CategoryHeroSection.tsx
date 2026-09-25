@@ -50,7 +50,7 @@ export default function CategoryHeroSection({
             variant="gradient-black"
             size="large"
             icon="/icons/right-arrow.svg"
-            href="/"
+            href="#category-top-block"
             className={`shadow-default ${styles.readingsButton}`}
             muted
           >
