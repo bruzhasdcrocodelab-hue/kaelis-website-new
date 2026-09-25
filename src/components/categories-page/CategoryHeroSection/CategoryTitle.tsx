@@ -16,13 +16,25 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const wordElements = el.querySelectorAll<HTMLElement>(`.${styles.titleWord}`);
     let disposed = false;
     const fit = () => {
       if (disposed) return;
       el.style.removeProperty("font-size");
       const base = parseFloat(getComputedStyle(el).fontSize);
       const maxHeight = base * .95 * (words.length > 1 ? 2 : 1) + 1;
-      const fits = () => el.scrollWidth <= el.clientWidth && el.getBoundingClientRect().height <= maxHeight;
+      const fits = () => {
+        const box = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        const left = box.left + parseFloat(style.paddingLeft) + 1;
+        const right = box.right - parseFloat(style.paddingRight) - 1;
+        // scrollWidth includes padding and rounds to whole pixels. Measure the
+        // words themselves so fitting cannot consume the glyph overhang gutter.
+        return box.height <= maxHeight && Array.from(wordElements).every(word => {
+          const bounds = word.getBoundingClientRect();
+          return bounds.left >= left && bounds.right <= right;
+        });
+      };
       if (fits()) return;
       let low = 1, high = base;
       for (let i = 0; i < 14; i++) {

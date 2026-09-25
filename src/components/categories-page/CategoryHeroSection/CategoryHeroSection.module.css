@@ -58,8 +58,8 @@
   text-align: center;
   text-wrap: balance;
   line-height: .95;
-  padding-right: 10px;
-  margin-left: 10px;
+  /* Keep serifs and glyph overhangs inside the gradient's paint area. */
+  padding-inline: .15em;
   hyphens: none;
   overflow-wrap: normal;
   word-break: normal;
