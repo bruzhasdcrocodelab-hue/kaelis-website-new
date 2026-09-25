@@ -27,7 +27,7 @@ export function presentCards(reading: Reading, locale: Locale): PresentedCard[] 
   return reading.cards.map(card => {
     const key = normalize(card.name ?? "");
     const art = artFromImage(card.image) ?? artByName.get(key) ?? artByName.get(normalize(aliases[key] ?? ""));
-    const name = card.name ?? art?.name[locale] ?? card.position;
+    const name = art?.name[locale] ?? card.name ?? card.position;
     const [x, y] = reading.tarot.matrix[card.position];
     return { slug: card.position, position: card.position, name: { en: name, ru: name, uk: name },
       image: art?.image ?? "/images/cards/default-card.png",

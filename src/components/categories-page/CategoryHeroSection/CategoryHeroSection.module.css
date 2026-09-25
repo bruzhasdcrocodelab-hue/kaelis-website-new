@@ -3,9 +3,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   padding: 60px 60px 30px;
+  min-height: var(--arc-min-height, 0px);
 }
 
 .container {
@@ -42,61 +43,44 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: min(500px, calc(100vw - 64px));
 }
 
 .title {
   margin-bottom: -6px;
   margin-top: 10px;
-  max-width: 500px;
+  width: 100%;
+  min-width: 0;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   text-align: center;
   text-wrap: balance;
-  line-height: normal;
+  line-height: .95;
   padding-right: 10px;
   margin-left: 10px;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  hyphens: none;
+  overflow-wrap: normal;
+  word-break: normal;
   font-size: var(--text-category-title-fluid);
   letter-spacing: var(--tracking-category-title-fluid);
 }
 
-.title.titleSingleWord {
-  max-width: 450px;
-  /* A long single word wraps at the soft-hyphen points inserted by
-     withSoftHyphens(); only fall back to a mid-character break if even a
-     hyphenated segment is still too wide for the column. */
-  overflow-wrap: break-word;
-  word-break: normal;
-}
-
-.title.titleWrapped {
-  margin-top: 25px;
-  margin-bottom: 10px;
-  line-height: 90%;
-}
+.titleWord { white-space: nowrap; }
 
 .description {
-  width: 300px;
+  width: min(300px, 100%);
   color: var(--color-white-60);
   text-align: center;
   line-height: normal;
   font-size: var(--text-category-description-fluid);
 }
 
-@media (max-width: 900px) {
-  .title.titleSingleWord {
-    max-width: 400px;
-  }
-}
-
 @media (max-width: 768px) {
   .section {
     padding: 6px 0 12px;
+    min-height: 0;
   }
 
   .container {
@@ -117,7 +101,7 @@
   }
 
   .description {
-    width: 300px;
+    width: min(300px, 100%);
     font-size: var(--text-xs);
   }
 
@@ -126,14 +110,8 @@
   }
 
   .title {
-    max-width: 300px;
     font-size: var(--text-topblock-title);
     letter-spacing: var(--tracking-topblock-title);
-    hyphens: auto;
-  }
-
-  .title.titleWrapped {
-    margin-top: 10px;
   }
 
   .readingsButton {

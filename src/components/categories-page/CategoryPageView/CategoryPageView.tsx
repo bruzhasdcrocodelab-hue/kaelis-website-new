@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
 import type { Dictionary, Locale } from "@/lang";
-import { cardCount, categoryHref, resolveCatalogPath } from "@/lib/categories/catalog";
+import { cardCount, categoryHref, resolveCatalogPath, type CatalogState } from "@/lib/categories/catalog";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import Header from "@/components/global/Header";
@@ -19,14 +20,27 @@ export interface CategoryPageViewProps {
   path: string[];
 }
 
+// Keep the mounted reading while its translated catalog is loading (or retrying).
+// Never reuse a snapshot when navigating to a different category/spread.
+function useLastCatalog<T>(state: CatalogState<T>, scope: string) {
+  const [last, setLast] = useState({ scope, state });
+  if (last.scope !== scope || (state.status === "success" && last.state !== state)) {
+    setLast({ scope, state });
+  }
+  return state.status !== "success" && last.scope === scope && last.state.status === "success" ? last.state : state;
+}
+
 export default function CategoryPageView({
   dictionary,
   locale,
   path,
 }: CategoryPageViewProps) {
-  const categories = useCategories();
+  const pathKey = path.join("/");
+  const categoryRequest = useCategories();
+  const categories = { ...categoryRequest, state: useLastCatalog(categoryRequest.state, pathKey) };
   const category = categories.state.status === "success" ? categories.state.data.find((item) => item.slug === path[0]) : undefined;
-  const spreads = useSpreads(category?.id);
+  const spreadRequest = useSpreads(category?.id);
+  const spreads = { ...spreadRequest, state: useLastCatalog(spreadRequest.state, `${pathKey}:${category?.id}`) };
   const resolved = categories.state.status === "success" && spreads.state.status === "success"
     ? resolveCatalogPath(categories.state.data, spreads.state.data, path) : null;
   const current = path.length === 2 ? resolved?.spread : category;
@@ -60,6 +74,9 @@ export default function CategoryPageView({
       <ConstellationPattern />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
+        {!status && (categoryRequest.state.status === "error" || spreadRequest.state.status === "error") && (
+          <CatalogStatus locale={locale} status="error" retry={categoryRequest.state.status === "error" ? categoryRequest.retry : spreadRequest.retry} />
+        )}
         {status && (
           <>
             {status === "notFound" && <meta name="robots" content="noindex" />}
@@ -85,7 +102,7 @@ export default function CategoryPageView({
           <>
             {count !== null ? (
               <CategoryTopBlock
-                key={`${locale}:${category?.id}:${resolved.spread.id}:${count}`}
+                key={`${category?.id}:${resolved.spread.id}`}
                 dictionary={dictionary.categoryPage.topBlock}
                 locale={locale}
                 categoryLabel={resolved.category.name}

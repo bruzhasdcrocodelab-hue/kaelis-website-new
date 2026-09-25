@@ -1,3 +1,6 @@
+"use client";
+
+import { useLayoutEffect, useRef } from "react";
 import type { Locale } from "@/lang";
 import { spreadHref, type TarotSpread } from "@/lib/categories/catalog";
 import {
@@ -17,6 +20,30 @@ export interface SubcategoryRingProps {
 }
 
 export default function SubcategoryRing({ subcategories, basePath, locale }: SubcategoryRingProps) {
+  const ringRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const ring = ringRef.current;
+    const section = ring?.closest("section");
+    if (!ring || !section) return;
+    const measure = () => {
+      const bottom = Math.max(0, ...Array.from(ring.children, node => {
+        const el = node as HTMLElement;
+        return ring.offsetTop + el.offsetTop + el.offsetHeight;
+      }));
+      // Reserve the whole arc, including float/hover motion and breathing room.
+      section.style.setProperty("--arc-min-height", `${bottom + 32}px`);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(ring);
+    Array.from(ring.children).forEach(node => observer.observe(node));
+    window.addEventListener("resize", measure);
+    measure();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      section.style.removeProperty("--arc-min-height");
+    };
+  }, [subcategories, locale]);
   if (subcategories.length === 0) return null;
 
   const positions = computeSubcategoryPositions(subcategories.length);
@@ -32,7 +59,7 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
 
   return (
     <>
-      <div className={styles.ring}>
+      <div ref={ringRef} className={styles.ring}>
         {subcategories.map((subcategory, index) => (
           <SubcategoryNode
             key={subcategory.slug}

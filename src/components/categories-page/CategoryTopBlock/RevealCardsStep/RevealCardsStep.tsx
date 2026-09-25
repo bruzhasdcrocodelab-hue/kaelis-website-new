@@ -276,6 +276,35 @@ export default function RevealCardsStep({
 
   const selectedCard = cards.find((card) => card.slug === selectedSlug) ?? null;
 
+  useLayoutEffect(() => {
+    if (isMobile || !selectedCard) return;
+    const panel = revealAreaRef.current?.parentElement;
+    if (!panel) return;
+    let frame = 0;
+    const position = () => {
+      frame = 0;
+      const rect = panel.getBoundingClientRect();
+      const detailHeight = cardDetailArtRef.current?.offsetHeight ?? 404;
+      // The panel clips the original 74px overhang. Lift both blocks together
+      // to the viewport bottom, bounded by the panel's own top and bottom.
+      const bottom = Math.min(rect.height - detailHeight, Math.max(-74, rect.bottom - window.innerHeight - 74));
+      panel.style.setProperty("--detail-bottom", `${bottom}px`);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(position); };
+    position();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    const observer = new ResizeObserver(schedule);
+    observer.observe(panel);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      // Keep the last position during the exit animation.
+    };
+  }, [isMobile, selectedCard]);
+
   useEffect(() => {
     if (isMobile || !selectedCard) return;
 

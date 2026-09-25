@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <GuestAuth />
-        <CatalogProvider key={locale} locale={locale}>{children}</CatalogProvider>
+        <CatalogProvider locale={locale}>{children}</CatalogProvider>
       </body>
     </html>
   );

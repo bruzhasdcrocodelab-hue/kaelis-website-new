@@ -1,13 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 import type { Locale } from "@/lang";
 import { createCatalogStore, INITIAL_STATE, type CatalogState, type TarotCategory, type TarotSpread } from "@/lib/categories/catalog";
 
 const CatalogContext = createContext<ReturnType<typeof createCatalogStore> | null>(null);
 
 export default function CatalogProvider({ locale, children }: { locale: Locale; children: React.ReactNode }) {
-  const [store] = useState(() => createCatalogStore(locale));
+  const store = useMemo(() => createCatalogStore(locale), [locale]);
   return <CatalogContext.Provider value={store}>{children}</CatalogContext.Provider>;
 }
 
