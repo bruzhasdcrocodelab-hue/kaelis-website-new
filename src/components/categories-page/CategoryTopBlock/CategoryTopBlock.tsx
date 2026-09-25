@@ -57,7 +57,7 @@ export default function CategoryTopBlock({
   };
   const stepDescription: Record<Step, string> = {
     ask: dictionary.askDescription,
-    reveal: flow.reading?.question ?? "",
+    reveal: flow.reading?.question ? `“${flow.reading.question}”` : "",
     answer: dictionary.truthDescription,
   };
 

@@ -39,7 +39,7 @@
   background: var(--color-greyish-blue);
 }
 
-.panel.panelReading { height: auto; min-height: 570px; padding-bottom: 32px; }
+.panel.panelReading { height: auto; min-height: 570px; padding-bottom: 56px; }
 .flowError { position: relative; z-index: 5; max-width: 450px; text-align: center; }
 .flowError button { text-decoration: underline; }
 
@@ -176,6 +176,7 @@
 }
 
 @media (max-width: 768px) {
+  .panel.panelReading { padding-bottom: 72px; }
   .section {
     padding: 0;
   }

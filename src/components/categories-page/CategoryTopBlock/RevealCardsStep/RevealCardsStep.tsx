@@ -35,8 +35,8 @@ const SELECT_ROTATION_RAD = (Math.abs(SELECT_ROTATION) * Math.PI) / 180;
  * above the card — has to rise by that same delta to hold the gap steady.
  */
 const NAME_RISE =
-  CARD_TRUE_WIDTH * Math.sin(SELECT_ROTATION_RAD) -
-  CARD_TRUE_HEIGHT * (1 - Math.cos(SELECT_ROTATION_RAD));
+  (CARD_TRUE_WIDTH * Math.sin(SELECT_ROTATION_RAD) -
+  CARD_TRUE_HEIGHT * (1 - Math.cos(SELECT_ROTATION_RAD))) * (120 / 98);
 
 const MOBILE_QUERY = "(max-width: 768px)";
 const SHEET_BACKDROP_TRANSITION = { duration: 0.25, ease: [0.4, 0, 0.2, 1] as const };
@@ -133,6 +133,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
         >
           {showFront ? (
             <>
+              <div className={styles.cardArtWindow} style={{ transform: card.reversed ? "rotate(180deg)" : undefined }}>
               <Image
                 src={card.image}
                 alt=""
@@ -145,9 +146,9 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
                   top: card.art.top,
                   width: card.art.width,
                   height: card.art.height,
-                  transform: card.reversed ? "rotate(180deg)" : undefined,
                 }}
               />
+              </div>
               <Image
                 src={frameOverlayImage}
                 alt=""
@@ -264,8 +265,8 @@ export default function RevealCardsStep({
 }: RevealCardsStepProps) {
   const cards = useMemo(() => presentCards(reading, locale), [reading, locale]);
   const text = readingMessages[locale];
-  const width = Math.max(...cards.map(c => c.x)) * 140 + 160;
-  const height = Math.max(...cards.map(c => c.y)) * 250 + 280;
+  const width = Math.max(...cards.map(c => c.x)) * 160 + 180;
+  const height = Math.max(...cards.map(c => c.y)) * 280 + 300;
   const [isRevealed, setIsRevealed] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -304,7 +305,7 @@ export default function RevealCardsStep({
 
   return (
     <>
-      <div ref={revealAreaRef} className={`${styles.revealArea} ${isRevealed ? 'bottom-[-10px]' : 'bottom-[-20px]'}`} onClick={() => setSelectedSlug(null)}>
+      <div ref={revealAreaRef} className={styles.revealArea} onClick={() => setSelectedSlug(null)}>
         <p
           className={`font-instrument-xxs-emphasized ${styles.revealLabel} ${isRevealed ? styles.revealLabelHidden : ""}`}
         >
@@ -312,7 +313,7 @@ export default function RevealCardsStep({
         </p>
         <SpreadViewport width={width} height={height} locale={locale}>
           {cards.map((card) => (
-            <div key={card.position} className={styles.positionedCard} style={{ left: card.x * 140 + 30, top: card.y * 250 + 30 }}>
+            <div key={card.position} className={styles.positionedCard} style={{ left: card.x * 160 + 30, top: card.y * 280 + 20 }}>
             <RevealCard
               card={card}
               locale={locale}
@@ -344,12 +345,13 @@ export default function RevealCardsStep({
             key="art"
             ref={cardDetailArtRef}
             className={styles.cardDetailArt}
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 404 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 60 }}
+            exit={{ opacity: 0, y: 404 }}
             transition={DETAIL_TRANSITION}
             onClick={(event) => event.stopPropagation()}
           >
+            <div className={styles.cardArtWindow} style={{ transform: selectedCard.reversed ? "rotate(180deg)" : undefined }}>
             <Image
               src={selectedCard.image}
               alt=""
@@ -362,9 +364,9 @@ export default function RevealCardsStep({
                 top: selectedCard.art.top,
                 width: selectedCard.art.width,
                 height: selectedCard.art.height,
-                transform: selectedCard.reversed ? "rotate(180deg)" : undefined,
               }}
             />
+            </div>
             <Image
               src={frameOverlayImage}
               alt=""
@@ -390,9 +392,9 @@ export default function RevealCardsStep({
             key="info"
             ref={cardDetailInfoRef}
             className={styles.cardDetailInfo}
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 404 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 60 }}
+            exit={{ opacity: 0, y: 404 }}
             transition={DETAIL_TRANSITION}
             onClick={(event) => event.stopPropagation()}
           >

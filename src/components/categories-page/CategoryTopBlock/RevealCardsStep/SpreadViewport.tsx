@@ -30,7 +30,7 @@ export default function SpreadViewport({ width, height, locale, children }: { wi
     controls.current = change;
     const resize = () => {
       vw = el.clientWidth;
-      vh = Math.max(280, Math.min(680, height * Math.min(1, vw / width)));
+      vh = Math.max(280, Math.min(840, height * Math.min(1, vw / width)));
       el.style.height = `${vh}px`;
       fit = Math.min(1, vw / width, vh / height); scale = fit; x = 0; y = 0; paint();
     };
