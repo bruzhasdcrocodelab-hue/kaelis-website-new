@@ -6,14 +6,20 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, type PanInfo } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
-import { frameOverlayImage, tarotDeck, type TarotCard } from "@/lib/tarotDeck";
+import { frameOverlayImage } from "@/lib/tarotDeck";
+import { presentCards, type PresentedCard as TarotCard } from "@/lib/tarot/cardPresentation";
+import type { Reading } from "@/lib/tarot/reading";
+import { readingMessages } from "@/lib/tarot/messages";
+import SpreadViewport from "./SpreadViewport";
 import { CARD_TRUE_HEIGHT, CARD_TRUE_WIDTH } from "../cardFan";
 import styles from "./RevealCardsStep.module.css";
 
 export interface RevealCardsStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
   locale: Locale;
-  cardCount: number;
+  reading: Reading;
+  error: string;
+  onRetry: () => void;
   onAnswerQuestion: () => void;
   /** CategoryTopBlock's subtitle paragraph — the mobile detail sheet rises to meet its bottom edge. */
   mobileSheetTopRef?: RefObject<HTMLParagraphElement | null>;
@@ -51,11 +57,6 @@ function useMediaQuery(query: string) {
   }, [query]);
 
   return matches;
-}
-
-function pickRandomCards(count: number): TarotCard[] {
-  const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
 }
 
 interface RevealCardProps {
@@ -117,6 +118,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
       <motion.button
         type="button"
         className={styles.revealCard}
+        aria-label={cardName}
         animate={{ rotate: isSelected ? SELECT_ROTATION : 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
         onClick={(event) => {
@@ -143,6 +145,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
                   top: card.art.top,
                   width: card.art.width,
                   height: card.art.height,
+                  transform: card.reversed ? "rotate(180deg)" : undefined,
                 }}
               />
               <Image
@@ -152,6 +155,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
                 sizes="200px"
                 className={styles.revealCardFrame}
               />
+              {card.missingArt && <span className={styles.missingArt}>{readingMessages[locale].noArt}</span>}
               {!isSelected && (
                 <div className={styles.revealCardHoverOverlay}>
                   <p className="font-instrument-xs-emphasized">{moreInfoLabel}</p>
@@ -254,11 +258,14 @@ function MobileCardDetailSheet({ card, locale, description, onClose, topRef }: M
 export default function RevealCardsStep({
   dictionary,
   locale,
-  cardCount,
+  reading, error, onRetry,
   onAnswerQuestion,
   mobileSheetTopRef,
 }: RevealCardsStepProps) {
-  const cards = useMemo(() => pickRandomCards(cardCount), [cardCount]);
+  const cards = useMemo(() => presentCards(reading, locale), [reading, locale]);
+  const text = readingMessages[locale];
+  const width = Math.max(...cards.map(c => c.x)) * 140 + 160;
+  const height = Math.max(...cards.map(c => c.y)) * 250 + 280;
   const [isRevealed, setIsRevealed] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -303,10 +310,10 @@ export default function RevealCardsStep({
         >
           {dictionary.tapToReveal}
         </p>
-        <div className={styles.revealRow}>
+        <SpreadViewport width={width} height={height} locale={locale}>
           {cards.map((card) => (
+            <div key={card.position} className={styles.positionedCard} style={{ left: card.x * 140 + 30, top: card.y * 250 + 30 }}>
             <RevealCard
-              key={card.slug}
               card={card}
               locale={locale}
               isRevealed={isRevealed}
@@ -314,18 +321,20 @@ export default function RevealCardsStep({
               moreInfoLabel={dictionary.moreInfo}
               onCardClick={() => handleCardClick(card.slug)}
             />
+            </div>
           ))}
-        </div>
+        </SpreadViewport>
         <div className={`${styles.answerWrap} ${isRevealed ? styles.answerWrapVisible : ""}`}>
-          <MainButton variant="gradient" size="small" onClick={onAnswerQuestion}>
-            {dictionary.answerQuestion}
+          <MainButton variant="gradient" size="small" onClick={onAnswerQuestion} disabled={!reading.reading} aria-busy={!reading.reading && !error}>
+            {reading.reading ? dictionary.answerQuestion : text.generating}
           </MainButton>
         </div>
+        {error && <div className={styles.readingError} role="alert">{error} <button type="button" onClick={onRetry}>{text.retry}</button></div>}
       </div>
       <MobileCardDetailSheet
         card={isMobile ? selectedCard : null}
         locale={locale}
-        description={dictionary.cardDescription}
+        description={selectedCard?.description || text.noDescription}
         onClose={() => setSelectedSlug(null)}
         topRef={mobileSheetTopRef}
       />
@@ -353,6 +362,7 @@ export default function RevealCardsStep({
                 top: selectedCard.art.top,
                 width: selectedCard.art.width,
                 height: selectedCard.art.height,
+                transform: selectedCard.reversed ? "rotate(180deg)" : undefined,
               }}
             />
             <Image
@@ -400,7 +410,7 @@ export default function RevealCardsStep({
                 WebkitBackdropFilter: "blur(12.5px)",
               }}
             >
-              {dictionary.cardDescription}
+              {selectedCard.description || text.noDescription}
             </p>
           </motion.div>
         )}

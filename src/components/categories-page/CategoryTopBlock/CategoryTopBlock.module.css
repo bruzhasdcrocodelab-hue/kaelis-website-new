@@ -39,6 +39,10 @@
   background: var(--color-greyish-blue);
 }
 
+.panel.panelReading { height: auto; min-height: 570px; padding-bottom: 32px; }
+.flowError { position: relative; z-index: 5; max-width: 450px; text-align: center; }
+.flowError button { text-decoration: underline; }
+
 .panelConfirmed::before {
   background: transparent;
 }
@@ -156,6 +160,7 @@
 }
 
 .askDescription {
+  overflow-wrap: anywhere;
   width: 240px;
   color: var(--color-black-75);
   text-align: center;

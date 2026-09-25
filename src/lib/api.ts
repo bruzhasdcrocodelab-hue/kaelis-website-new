@@ -3,7 +3,7 @@ const STORAGE_KEY = "kaelis.guest-session";
 // The API supplies an opaque token with no expiry. This is a client retention policy.
 const TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 
-type GuestSession = { token: string; expiresAt: number };
+type GuestSession = { token: string; expiresAt: number; guestId: string };
 
 let pendingSession: Promise<string> | undefined;
 
@@ -16,6 +16,7 @@ function readSession(): GuestSession | null {
     if (
       typeof session?.token === "string" &&
       session.token.trim() &&
+      typeof session.guestId === "string" && !!session.guestId.trim() &&
       Number.isFinite(session.expiresAt) &&
       session.expiresAt > Date.now()
     ) {
@@ -44,13 +45,16 @@ async function createSession(): Promise<string> {
   if (
     body?.data?.token_type !== "Bearer" ||
     typeof body.data.access_token !== "string" ||
-    !body.data.access_token.trim()
+    !body.data.access_token.trim() ||
+    !["string", "number"].includes(typeof body.data.guest?.id) ||
+    !String(body.data.guest.id).trim()
   ) {
     throw new Error("Guest authorization returned an invalid token");
   }
 
   const session: GuestSession = {
     token: body.data.access_token,
+    guestId: String(body.data.guest.id),
     expiresAt: Date.now() + TOKEN_TTL_MS,
   };
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
@@ -79,6 +83,13 @@ export async function getGuestToken(): Promise<string> {
     });
   }
   return pendingSession;
+}
+
+export async function getGuestSession(): Promise<GuestSession> {
+  await getGuestToken();
+  const session = readSession();
+  if (!session) throw new Error("Guest session unavailable");
+  return session;
 }
 
 /** Relative Kaelis API paths only; returns the Response for the caller to handle. */

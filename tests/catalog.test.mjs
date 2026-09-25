@@ -18,7 +18,7 @@ let catalog, storage, calls;
 
 beforeEach(async () => {
   calls = [];
-  storage = new Map([["kaelis.guest-session", JSON.stringify({ token: "existing", expiresAt: Date.now() + 60000 })]]);
+  storage = new Map([["kaelis.guest-session", JSON.stringify({ token: "existing", guestId: "1", expiresAt: Date.now() + 60000 })]]);
   globalThis.window = {
     location: { origin: "http://localhost:3000" },
     localStorage: { getItem: (k) => storage.get(k) ?? null, setItem: (k, v) => storage.set(k, v), removeItem: (k) => storage.delete(k) },
@@ -97,7 +97,7 @@ test("401 clears the existing session; retry obtains one guest before fetching a
   assert.equal(storage.has("kaelis.guest-session"), false);
   globalThis.fetch = async (url, init) => {
     calls.push({ url, init });
-    if (url.endsWith("/user/anonymous")) return Response.json({ data: { token_type: "Bearer", access_token: "renewed" } });
+    if (url.endsWith("/user/anonymous")) return Response.json({ data: { token_type: "Bearer", access_token: "renewed", guest: { id: 2 } } });
     assert.equal(init.headers.get("Authorization"), "Bearer renewed");
     return response([item(1)]);
   };

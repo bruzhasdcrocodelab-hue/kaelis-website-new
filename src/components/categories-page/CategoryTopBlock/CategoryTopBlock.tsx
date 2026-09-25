@@ -5,11 +5,9 @@ import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton, {
   GUIDE_ICON,
-  GUIDE_ORDER,
-  type GuideId,
 } from "@/components/categories-page/TriggerButton";
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
-import { pluralizeCardCount, type Dictionary, type Locale } from "@/lang";
+import { type Dictionary, type Locale } from "@/lang";
 import AnimatedWaves from "./AnimatedWaves/AnimatedWaves";
 import WavesLineFrame from "./WavesLineFrame/WavesLineFrame";
 import GradientWavesLineFrame from "./GradientWavesLineFrame/GradientWavesLineFrame";
@@ -17,6 +15,8 @@ import AnswerStep from "./AnswerStep/AnswerStep";
 import AskQuestionStep from "./AskQuestionStep/AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep/ChooseCardsStep";
 import RevealCardsStep from "./RevealCardsStep/RevealCardsStep";
+import { useReading } from "@/lib/tarot/useReading";
+import { readingMessages } from "@/lib/tarot/messages";
 import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {
@@ -24,63 +24,47 @@ export interface CategoryTopBlockProps {
   locale: Locale;
   /** Always the top-level category name, even when viewing a nested subcategory. */
   categoryLabel: string;
-  /** How many fan cards the user may select for the current category/subcategory. */
+  /** Spread size used by the decorative fan. The API selects the actual cards. */
   maxSelectableCards: number;
+  categoryId: string;
+  spreadId: string;
 }
 
-type Step = "ask" | "choose" | "reveal" | "answer";
+type Step = "ask" | "reveal" | "answer";
 
 export default function CategoryTopBlock({
   dictionary,
   locale,
   categoryLabel,
-  maxSelectableCards,
+  maxSelectableCards, categoryId, spreadId,
 }: CategoryTopBlockProps) {
-  const [step, setStep] = useState<Step>("ask");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [selectedGuide, setSelectedGuide] = useState<GuideId>("analyst");
+  const flow = useReading(locale, categoryId, spreadId);
+  const text = readingMessages[locale];
+  const [showAnswer, setShowAnswer] = useState(false);
+  const step: Step = flow.reading ? (showAnswer ? "answer" : "reveal") : "ask";
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
-
-  const changeQuestion = () => {
-    setSelectedIds([]);
-    setStep("ask");
-  };
-
-  const toggleCard = (id: string) => {
-    if (selectedIds.includes(id)) {
-      if (selectedIds.length >= maxSelectableCards) {
-        setStep("reveal");
-        return;
-      }
-      setSelectedIds((prev) => prev.filter((cardId) => cardId !== id));
-      return;
-    }
-    setSelectedIds((prev) => (prev.length >= maxSelectableCards ? prev : [...prev, id]));
-  };
-
-  const isConfirmed = step === "choose" || step === "reveal";
+  const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
+  const speakerIcon = (icon: string | null | undefined) => GUIDE_ICON[icon as keyof typeof GUIDE_ICON] ?? "/icons/analyst.svg";
+  const changeQuestion = () => { flow.reset(); setShowAnswer(false); };
+  const isConfirmed = step === "reveal";
   const hasFan = step === "ask" || step === "answer";
 
   const stepTitle: Record<Step, string> = {
     ask: dictionary.askTitle,
-    choose: dictionary.chooseTitle
-      .replace("{count}", String(maxSelectableCards))
-      .replace("{cards}", pluralizeCardCount(locale, maxSelectableCards, dictionary)),
     reveal: dictionary.findTitle,
     answer: dictionary.truthTitle,
   };
   const stepDescription: Record<Step, string> = {
     ask: dictionary.askDescription,
-    choose: dictionary.chooseDescription,
-    reveal: dictionary.chooseDescription,
+    reveal: flow.reading?.question ?? "",
     answer: dictionary.truthDescription,
   };
 
   return (
     <section className={styles.section}>
       <div
-        className={`${styles.panel} ${isConfirmed ? styles.panelConfirmed : ""}`}
+        className={`${styles.panel} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{
           // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
           // it blurs whatever the page paints behind this panel, within its bounds.
@@ -98,19 +82,13 @@ export default function CategoryTopBlock({
             aria-hidden
           />
         )}
-        {step === "choose" && (
-          <ChooseCardsStep
-            selectedIds={selectedIds}
-            maxSelectableCards={maxSelectableCards}
-            onToggleCard={toggleCard}
-          />
-        )}
+        {/* Manual selection is bypassed; keep the decorative fan below. */}
         {hasFan && (
           <>
             <ChooseCardsStep
               selectedIds={[]}
               maxSelectableCards={maxSelectableCards}
-              onToggleCard={toggleCard}
+              onToggleCard={() => {}}
               isInteractive={false}
             />
             <div className={styles.fadeOverlay} aria-hidden />
@@ -135,7 +113,7 @@ export default function CategoryTopBlock({
 
         <div className={styles.row}>
           <div className={styles.side}>
-            {step === "choose" && (
+            {step === "reveal" && (
               <MainButton
                 variant="default"
                 size="medium"
@@ -170,9 +148,9 @@ export default function CategoryTopBlock({
 
           <div className={styles.side}>
             <div className={styles.sideEnd}>
-              {(step === "choose" || step === "ask") && (
+              {step === "ask" && (
                 <div className={styles.triggerDesktop}>
-                  <TriggerButton dictionary={dictionary.guides} />
+                  <TriggerButton dictionary={dictionary.guides} options={flow.speakers.map(s => ({ value: s.id, label: s.name, icon: speakerIcon(s.icon) }))} value={flow.speakerId} onChange={flow.setSpeakerId} disabled={flow.busy || !flow.speakers.length} />
                 </div>
               )}
             </div>
@@ -180,32 +158,33 @@ export default function CategoryTopBlock({
         </div>
 
         {step === "ask" && (
-          <AskQuestionStep dictionary={dictionary} onContinue={() => setStep("choose")} />
+          <AskQuestionStep dictionary={dictionary} question={flow.question} onChange={flow.setQuestion}
+            disabled={flow.busy || !flow.speakerId} loading={flow.busy} loadingLabel={text.loading}
+            error={flow.error} onContinue={() => { void flow.submit(); }} />
         )}
-        {step === "reveal" && (
+        {step === "reveal" && flow.reading && (
           <RevealCardsStep
             dictionary={dictionary}
             locale={locale}
-            cardCount={maxSelectableCards}
-            onAnswerQuestion={() => setStep("answer")}
+            reading={flow.reading}
+            error={flow.error} onRetry={flow.retry}
+            onAnswerQuestion={() => { if (flow.reading?.reading) setShowAnswer(true); }}
             mobileSheetTopRef={subtitleRef}
           />
         )}
         {step === "answer" && (
           <AnswerStep
             dictionary={dictionary}
-            answer={dictionary.cardDescription}
-            onStartOver={() => {
-              setSelectedIds([]);
-              setStep("ask");
-            }}
+            answer={flow.reading?.reading?.sections.map(s => [s.title, s.text].filter(Boolean).join("\n")).join("\n\n") ?? ""}
+            onStartOver={() => { changeQuestion(); flow.setQuestion(""); }}
           />
         )}
+        {flow.speakerError && <div className={styles.flowError} role="alert">{text.error} <button type="button" onClick={flow.retrySpeakers}>{text.retry}</button></div>}
       </div>
 
-      {(step === "choose" || step === "reveal" || step === "ask" || step === "answer") && (
+      {(step === "reveal" || step === "ask") && (
         <div className={styles.triggerMobile}>
-          {(step === "choose" || step === "reveal") && (
+          {step === "reveal" && (
             <MainButton
               variant="default"
               size="large"
@@ -218,25 +197,26 @@ export default function CategoryTopBlock({
           <MainButton
             variant="default"
             size="large"
-            icon={GUIDE_ICON[selectedGuide]}
-            aria-label={dictionary.guides[selectedGuide]}
+            icon={speakerIcon(selectedSpeaker?.icon)}
+            aria-label={selectedSpeaker?.name ?? text.loading}
+            disabled={step !== "ask" || flow.busy || !flow.speakers.length}
             onClick={() => setGuideSheetOpen(true)}
             muted
           />
         </div>
       )}
 
-      <BottomSheetSelect<GuideId>
+      <BottomSheetSelect<string>
         open={guideSheetOpen}
         onClose={() => setGuideSheetOpen(false)}
-        options={GUIDE_ORDER.map((guide) => ({
-          value: guide,
-          label: dictionary.guides[guide],
-          description: dictionary.guideDescriptions[guide],
-          icon: GUIDE_ICON[guide],
+        options={flow.speakers.map(s => ({
+          value: s.id,
+          label: s.name,
+          icon: speakerIcon(s.icon),
+          description: dictionary.guideDescriptions[s.icon as keyof typeof dictionary.guideDescriptions],
         }))}
-        selectedValue={selectedGuide}
-        onSelect={setSelectedGuide}
+        selectedValue={flow.speakerId}
+        onSelect={flow.setSpeakerId}
       />
     </section>
   );

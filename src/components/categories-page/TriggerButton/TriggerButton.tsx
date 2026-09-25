@@ -9,8 +9,10 @@ export type GuideId = "analyst" | "witch" | "psychologist" | "friend";
 
 export interface TriggerButtonProps {
   dictionary: Dictionary["categoryPage"]["topBlock"]["guides"];
-  value?: GuideId;
-  onChange?: (guide: GuideId) => void;
+  value?: string;
+  onChange?: (guide: string) => void;
+  options?: { value: string; label: string; icon: string }[];
+  disabled?: boolean;
 }
 
 export const GUIDE_ORDER: GuideId[] = ["analyst", "witch", "psychologist", "friend"];
@@ -24,12 +26,14 @@ export const GUIDE_ICON: Record<GuideId, string> = {
 
 const TRANSITION = { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const };
 
-export default function TriggerButton({ dictionary, value, onChange }: TriggerButtonProps) {
+export default function TriggerButton({ dictionary, value, onChange, options, disabled }: TriggerButtonProps) {
   const [open, setOpen] = useState(false);
-  const [internalValue, setInternalValue] = useState<GuideId>("analyst");
+  const [internalValue, setInternalValue] = useState<string>("analyst");
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const selected = value ?? internalValue;
+  const choices = options ?? GUIDE_ORDER.map(guide => ({ value: guide, label: dictionary[guide], icon: GUIDE_ICON[guide] }));
+  const visible = open ? choices : choices.filter(choice => choice.value === selected);
 
   useEffect(() => {
     if (!open) return;
@@ -52,7 +56,7 @@ export default function TriggerButton({ dictionary, value, onChange }: TriggerBu
     };
   }, [open]);
 
-  function handleSelect(guide: GuideId) {
+  function handleSelect(guide: string) {
     setInternalValue(guide);
     onChange?.(guide);
     setOpen(false);
@@ -68,7 +72,7 @@ export default function TriggerButton({ dictionary, value, onChange }: TriggerBu
         transition={TRANSITION}
         role={open ? "listbox" : undefined}
       >
-        {(open ? GUIDE_ORDER : [selected]).map((guide) => {
+        {visible.map(({ value: guide, label, icon }) => {
           const isActive = guide === selected;
           const isTrigger = !open;
           return (
@@ -76,6 +80,7 @@ export default function TriggerButton({ dictionary, value, onChange }: TriggerBu
               key={guide}
               layout
               type="button"
+              disabled={disabled}
               role={isTrigger ? undefined : "option"}
               aria-haspopup={isTrigger ? "listbox" : undefined}
               aria-expanded={isTrigger ? open : undefined}
@@ -87,15 +92,15 @@ export default function TriggerButton({ dictionary, value, onChange }: TriggerBu
             >
               {isTrigger && (
                 <span className={`font-instrument-sm-emphasized ${styles.itemLabel}`}>
-                  {dictionary[guide]}
+                  {label}
                 </span>
               )}
               <span className={styles.iconWrap}>
                 <span
                   className={`${styles.icon} ${!isTrigger && isActive ? styles.iconGradient : ""}`}
                   style={{
-                    maskImage: `url(${GUIDE_ICON[guide]})`,
-                    WebkitMaskImage: `url(${GUIDE_ICON[guide]})`,
+                    maskImage: `url(${icon})`,
+                    WebkitMaskImage: `url(${icon})`,
                   }}
                 />
               </span>
@@ -105,7 +110,7 @@ export default function TriggerButton({ dictionary, value, onChange }: TriggerBu
                     isActive ? styles.itemLabelActive : ""
                   }`}
                 >
-                  {dictionary[guide]}
+                  {label}
                 </span>
               )}
             </motion.button>

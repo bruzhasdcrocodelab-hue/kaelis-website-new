@@ -50,7 +50,7 @@ test("creates, persists and reuses a guest; concurrent calls share one request",
 });
 
 test("reads an existing valid token from localStorage without a request", async () => {
-  storage.set(key, JSON.stringify({ token: "existing", expiresAt: Date.now() + 60_000 }));
+  storage.set(key, JSON.stringify({ token: "existing", guestId: "1", expiresAt: Date.now() + 60_000 }));
   assert.equal(await api.getGuestToken(), "existing");
   assert.equal(calls.length, 0);
 });
@@ -66,7 +66,7 @@ test("renews expired, missing and corrupt storage", async () => {
 });
 
 test("API requests carry the stored bearer token and preserve caller headers", async () => {
-  storage.set(key, JSON.stringify({ token: "existing", expiresAt: Date.now() + 60_000 }));
+  storage.set(key, JSON.stringify({ token: "existing", guestId: "1", expiresAt: Date.now() + 60_000 }));
   await api.apiFetch("/test?value=1", { headers: { "Accept-Language": "ru" } });
   assert.equal(calls.length, 1);
   assert.equal(calls[0].url, "/api/kaelis/test?value=1");
@@ -93,7 +93,7 @@ test("invalid success responses are not stored", async () => {
 });
 
 test("401 invalidates the token without replaying a mutation; next call renews", async () => {
-  storage.set(key, JSON.stringify({ token: "revoked", expiresAt: Date.now() + 60_000 }));
+  storage.set(key, JSON.stringify({ token: "revoked", guestId: "1", expiresAt: Date.now() + 60_000 }));
   const success = globalThis.fetch;
   let rejectedCalls = 0;
   globalThis.fetch = async () => { rejectedCalls++; return new Response(null, { status: 401 }); };
@@ -104,4 +104,15 @@ test("401 invalidates the token without replaying a mutation; next call renews",
   await api.apiFetch("/test");
   assert.equal(calls.length, 2);
   assert.equal(calls[1].init.headers.get("Authorization"), "Bearer guest-1");
+});
+
+
+test("migrates a legacy token once and retains guest ID for WebSocket", async () => {
+  storage.set(key, JSON.stringify({ token: "legacy", expiresAt: Date.now() + 60000 }));
+  const sessions = await Promise.all([api.getGuestSession(), api.getGuestSession()]);
+  assert.equal(calls.length, 1);
+  assert.equal(sessions[0].guestId, "1");
+  assert.equal(sessions[1].token, sessions[0].token);
+  assert.equal(await api.getGuestToken(), sessions[0].token);
+  assert.equal(calls.length, 1);
 });

@@ -89,6 +89,8 @@ export default function CategoryPageView({
                 dictionary={dictionary.categoryPage.topBlock}
                 locale={locale}
                 categoryLabel={resolved.category.name}
+                categoryId={resolved.category.id}
+                spreadId={resolved.spread.id}
                 maxSelectableCards={count}
               />
             ) : <CatalogStatus locale={locale} status="error" retry={spreads.retry} />}

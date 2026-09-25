@@ -1,4 +1,5 @@
 .revealArea {
+  width: 100%;
   position: relative;
   z-index: 5;
   display: flex;
@@ -8,6 +9,21 @@
   /* margin-top: 10px */
   /* bottom: -15px; */
 }
+
+.spreadViewport { position: relative; width: 100%; height: 300px; overflow: hidden; touch-action: none; user-select: none; cursor: grab; }
+.spreadViewport:active { cursor: grabbing; }
+.spreadContent { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.spreadContent img { -webkit-user-drag: none; pointer-events: none; }
+.positionedCard { position: absolute; width: 98px; }
+.positionedCard .revealCard { width: 98px; height: 175.908px; }
+.positionedCard .revealCardCol { width: 98px; }
+.positionedCard .revealCardName { min-height: 40px; display: flex; align-items: flex-end; justify-content: center;}
+.zoomControls { display: flex; gap: 8px; margin: 12px 0 4px; }
+.zoomControls button { border-radius: 20px; background: var(--color-white-75); padding: 6px 12px; min-width: 36px; }
+.zoomControls button:disabled { opacity: .45; }
+.readingError { max-width: 450px; text-align: center; font-size: 13px; margin-top: 12px; }
+.readingError button { text-decoration: underline; }
+.missingArt { position: absolute; inset: 20px 6px; display: grid; place-items: center; font-size: 11px; background: var(--color-white-75); }
 
 .revealLabel {
   color: var(--color-black-75);
