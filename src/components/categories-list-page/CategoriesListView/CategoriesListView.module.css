@@ -1,3 +1,9 @@
+.pending {
+  display: grid;
+  place-content: center;
+  min-height: 60vh;
+}
+
 .page {
   position: relative;
   display: flex;

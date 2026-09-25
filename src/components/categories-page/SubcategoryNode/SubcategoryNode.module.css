@@ -1,6 +1,6 @@
 .node {
   display: block;
-  width: 88px;
+  width: 80px;
   text-decoration: none;
   transition:
     opacity 0.2s ease,

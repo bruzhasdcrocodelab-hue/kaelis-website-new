@@ -1,5 +1,5 @@
 import type { Dictionary, Locale } from "@/lang";
-import type { CategoryNode } from "@/lib/categories/data";
+import type { TarotCategory, TarotSpread } from "@/lib/categories/catalog";
 import MainButton from "@/components/global/MainButton";
 import SubcategoryRing from "@/components/categories-page/SubcategoryRing";
 import CategoryTitle from "./CategoryTitle";
@@ -8,7 +8,8 @@ import styles from "./CategoryHeroSection.module.css";
 export interface CategoryHeroSectionProps {
   dictionary: Dictionary["categoryPage"];
   locale: Locale;
-  current: CategoryNode;
+  current: TarotCategory | TarotSpread;
+  spreads: TarotSpread[];
   path: string[];
   returnHref: string;
   returnLabel: string;
@@ -18,11 +19,12 @@ export default function CategoryHeroSection({
   dictionary,
   locale,
   current,
+  spreads,
   path,
   returnHref,
   returnLabel,
 }: CategoryHeroSectionProps) {
-  const hasSubcategories = current.subcategories.length > 0;
+  const hasSubcategories = spreads.length > 0;
 
   return (
     <section className={styles.section}>
@@ -37,9 +39,9 @@ export default function CategoryHeroSection({
               {dictionary.categoryLabel}
             </p>
             <div className={styles.titleWrap}>
-              <CategoryTitle title={current.title[locale]} locale={locale} />
+              <CategoryTitle title={current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
-                {current.description[locale]}
+                {current.site_description || ("description" in current ? current.description : "")}
               </p>
             </div>
           </div>
@@ -56,7 +58,7 @@ export default function CategoryHeroSection({
           </MainButton>
         </div>
 
-        <SubcategoryRing subcategories={current.subcategories} basePath={path} locale={locale} />
+        <SubcategoryRing subcategories={spreads} basePath={path} locale={locale} />
       </div>
     </section>
   );

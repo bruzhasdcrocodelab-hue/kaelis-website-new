@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Bona_Nova_SC, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import GuestAuth from "@/components/GuestAuth";
+import CatalogProvider from "@/components/categories/CatalogProvider";
+import { getLocale } from "@/lib/locale";
 
 const bonaNovaSC = Bona_Nova_SC({
   variable: "--font-bona-nova-sc",
@@ -22,15 +24,16 @@ export const metadata: Metadata = {
   description: "Kaelis",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${bonaNovaSC.variable} ${instrumentSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <GuestAuth />
-        {children}
+        <CatalogProvider key={locale} locale={locale}>{children}</CatalogProvider>
       </body>
     </html>
   );

@@ -4,7 +4,9 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { Dictionary, Locale } from "@/lang";
-import { getCategoryList } from "@/lib/categories/list";
+import { useCategories } from "@/components/categories/CatalogProvider";
+import CatalogStatus from "@/components/categories/CatalogStatus";
+import { categoryHref } from "@/lib/categories/catalog";
 import OurAppLink from "./OurAppLink";
 import styles from "./MobileMenu.module.css";
 
@@ -30,7 +32,8 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
   const isClient = useIsClient();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const categories = getCategoryList();
+  const { state, retry } = useCategories();
+  const categories = state.status === "success" ? state.data : [];
 
   useEffect(() => {
     if (!open) return;
@@ -156,15 +159,17 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
                     >
                       {dictionary.allTarotSpreads}
                     </Link>
+                    {state.status !== "success" && <CatalogStatus locale={locale} status={state.status} retry={retry} />}
+                    {state.status === "success" && categories.length === 0 && <CatalogStatus locale={locale} status="empty" />}
                     {categories.map((category) => (
                       <Link
                         key={category.slug}
-                        href={`/categories/${category.slug}`}
+                        href={categoryHref(category.slug)}
                         role="menuitem"
                         className={`font-instrument-sm-emphasized ${styles.gridItem}`}
                         onClick={closeMenu}
                       >
-                        {category.title[locale]}
+                        {category.name}
                       </Link>
                     ))}
                   </div>

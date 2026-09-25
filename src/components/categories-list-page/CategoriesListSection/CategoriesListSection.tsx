@@ -1,12 +1,12 @@
 import type { Dictionary, Locale } from "@/lang";
-import type { CategoryListItem } from "@/lib/categories/list";
+import { categoryHref, type TarotCategory } from "@/lib/categories/catalog";
 import CategoryCard from "@/components/categories-list-page/CategoryCard";
 import styles from "./CategoriesListSection.module.css";
 
 export interface CategoriesListSectionProps {
   dictionary: Dictionary["categoriesList"];
   locale: Locale;
-  categories: CategoryListItem[];
+  categories: TarotCategory[];
 }
 
 export default function CategoriesListSection({
@@ -40,9 +40,9 @@ export default function CategoriesListSection({
               }`}
             >
               <CategoryCard
-                href={`/categories/${category.slug}`}
-                title={category.title[locale]}
-                description={category.description[locale]}
+                href={categoryHref(category.slug)}
+                title={category.name}
+                description={category.site_description}
                 locale={locale}
                 filled={(row + column) % 2 === 0}
                 mobileFilled={(mobileRow + mobileColumn) % 2 !== 0}
