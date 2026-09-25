@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
+import styles from "./MainButton.module.css";
 
 /**
  * Synced from Figma (KAELIS design file), node-id=1362-3145.
@@ -79,15 +80,17 @@ function Icon({
   variant,
   rotation,
   muted,
+  disabled,
 }: {
   src: string;
   variant: MainButtonVariant;
   rotation?: number;
   muted?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <span
-      className={muted ? ICON_BOX : `${ICON_BOX} ${ICON_FILL_CLASS[variant]}`}
+      className={`${styles.icon} ${muted ? ICON_BOX : `${ICON_BOX} ${ICON_FILL_CLASS[variant]}`}`}
       style={{
         maskImage: `url(${src})`,
         maskRepeat: "no-repeat",
@@ -98,7 +101,7 @@ function Icon({
         WebkitMaskPosition: "center",
         WebkitMaskSize: "24px 24px",
         transform: rotation ? `rotate(${rotation}deg)` : undefined,
-        backgroundColor: muted ? "var(--color-black-75, rgba(47, 47, 47, 0.75))" : undefined,
+        backgroundColor: disabled ? "#716778" : muted ? "var(--color-black-75, rgba(47, 47, 47, 0.75))" : undefined,
       }}
     />
   );
@@ -115,13 +118,14 @@ export default function MainButton({
   className,
   type = "button",
   style,
+  disabled,
   ...rest
 }: MainButtonProps) {
   const hasLabel = children != null;
   const hasIcon = Boolean(icon);
   const isStroke = variant === "stroke";
 
-  const labelColorClasses = muted
+  const labelColorClasses = disabled ? "text-[#716778]" : muted
     ? ""
     : isStroke
       ? "bg-gradient-pink bg-clip-text text-transparent"
@@ -129,7 +133,7 @@ export default function MainButton({
         ? "text-white"
         : "text-black";
 
-  const labelColorStyle = muted ? { color: "var(--color-black-75, rgba(47, 47, 47, 0.75))" } : undefined;
+  const labelColorStyle = !disabled && muted ? { color: "var(--color-black-75, rgba(47, 47, 47, 0.75))" } : undefined;
 
   const layoutClasses =
     hasLabel && hasIcon
@@ -139,7 +143,9 @@ export default function MainButton({
         : `inline-flex items-center justify-center ${ICON_ONLY_PADDING[size]}`;
 
   const buttonClasses = [
-    "rounded-full font-instrument-base-emphasized whitespace-nowrap transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50",
+    "rounded-full font-instrument-base-emphasized whitespace-nowrap",
+    styles.button,
+    styles[variant],
     layoutClasses,
     isStroke
       ? `bg-transparent border-solid border-[#d3aced] ${STROKE_BORDER_WIDTH[size]}`
@@ -151,31 +157,28 @@ export default function MainButton({
     .filter(Boolean)
     .join(" ");
 
-  const blurStyle = {
-    backdropFilter: "blur(12.5px)",
-    WebkitBackdropFilter: "blur(12.5px)",
-    ...style,
-  };
-
   const content = (
     <>
       {hasLabel && (
-        <span className={`${TEXT_SIZE[size]} ${labelColorClasses}`} style={labelColorStyle}>
+        <span className={`${styles.label} ${TEXT_SIZE[size]} ${labelColorClasses}`} style={labelColorStyle}>
           {children}
         </span>
       )}
       {hasIcon && icon && (
-        <Icon src={icon} variant={variant} rotation={iconRotation} muted={muted} />
+        <Icon src={icon} variant={variant} rotation={iconRotation} muted={muted} disabled={disabled} />
       )}
     </>
   );
 
   if (href) {
+    if (disabled) {
+      return <span role="link" aria-disabled="true" aria-label={rest["aria-label"]} className={buttonClasses} style={style}>{content}</span>;
+    }
     return (
       <Link
         href={href}
         className={buttonClasses}
-        // style={blurStyle}
+        style={style}
         aria-label={rest["aria-label"]}
       >
         {content}
@@ -184,7 +187,7 @@ export default function MainButton({
   }
 
   return (
-    <button type={type} className={buttonClasses} {...rest}>
+    <button type={type} className={buttonClasses} style={style} disabled={disabled} {...rest}>
       {content}
     </button>
   );

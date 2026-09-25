@@ -4,7 +4,9 @@ import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react"
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { Locale } from "@/lang";
-import { getCategoryList } from "@/lib/categories/list";
+import { useCategories } from "@/components/categories/CatalogProvider";
+import CatalogStatus from "@/components/categories/CatalogStatus";
+import { categoryHref } from "@/lib/categories/catalog";
 import styles from "./TarotSpreadsLink.module.css";
 
 export interface TarotSpreadsLinkProps {
@@ -41,7 +43,8 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
   const wrapperRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const menuId = useId();
-  const categories = getCategoryList();
+  const { state, retry } = useCategories();
+  const categories = state.status === "success" ? state.data : [];
   const columns = chunk(categories, DROPDOWN_COLUMN_SIZE);
 
   function cancelClose() {
@@ -118,6 +121,8 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
             onMouseLeave={scheduleClose}
           >
             <span className={styles.dropdownGlow} aria-hidden />
+            {state.status !== "success" && <CatalogStatus locale={locale} status={state.status} retry={retry} />}
+            {state.status === "success" && categories.length === 0 && <CatalogStatus locale={locale} status="empty" />}
             {columns.map((column, columnIndex) => (
               <div key={column[0]?.slug ?? columnIndex} className={styles.columnGroup}>
                 {columnIndex > 0 && <div className={styles.separator} aria-hidden />}
@@ -125,12 +130,12 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
                   {column.map((category) => (
                     <Link
                       key={category.slug}
-                      href={`/categories/${category.slug}`}
+                      href={categoryHref(category.slug)}
                       role="menuitem"
                       className={`font-instrument-base ${styles.item}`}
                       onClick={() => setOpen(false)}
                     >
-                      {category.title[locale]}
+                      {category.name}
                     </Link>
                   ))}
                 </div>

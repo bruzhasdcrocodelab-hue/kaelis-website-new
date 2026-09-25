@@ -6,14 +6,20 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, type PanInfo } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
-import { frameOverlayImage, tarotDeck, type TarotCard } from "@/lib/tarotDeck";
+import { frameOverlayImage } from "@/lib/tarotDeck";
+import { presentCards, type PresentedCard as TarotCard } from "@/lib/tarot/cardPresentation";
+import type { Reading } from "@/lib/tarot/reading";
+import { readingMessages } from "@/lib/tarot/messages";
+import SpreadViewport from "./SpreadViewport";
 import { CARD_TRUE_HEIGHT, CARD_TRUE_WIDTH } from "../cardFan";
 import styles from "./RevealCardsStep.module.css";
 
 export interface RevealCardsStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
   locale: Locale;
-  cardCount: number;
+  reading: Reading;
+  error: string;
+  onRetry: () => void;
   onAnswerQuestion: () => void;
   /** CategoryTopBlock's subtitle paragraph — the mobile detail sheet rises to meet its bottom edge. */
   mobileSheetTopRef?: RefObject<HTMLParagraphElement | null>;
@@ -29,8 +35,8 @@ const SELECT_ROTATION_RAD = (Math.abs(SELECT_ROTATION) * Math.PI) / 180;
  * above the card — has to rise by that same delta to hold the gap steady.
  */
 const NAME_RISE =
-  CARD_TRUE_WIDTH * Math.sin(SELECT_ROTATION_RAD) -
-  CARD_TRUE_HEIGHT * (1 - Math.cos(SELECT_ROTATION_RAD));
+  (CARD_TRUE_WIDTH * Math.sin(SELECT_ROTATION_RAD) -
+  CARD_TRUE_HEIGHT * (1 - Math.cos(SELECT_ROTATION_RAD))) * (120 / 98);
 
 const MOBILE_QUERY = "(max-width: 768px)";
 const SHEET_BACKDROP_TRANSITION = { duration: 0.25, ease: [0.4, 0, 0.2, 1] as const };
@@ -51,11 +57,6 @@ function useMediaQuery(query: string) {
   }, [query]);
 
   return matches;
-}
-
-function pickRandomCards(count: number): TarotCard[] {
-  const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
 }
 
 interface RevealCardProps {
@@ -117,6 +118,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
       <motion.button
         type="button"
         className={styles.revealCard}
+        aria-label={cardName}
         animate={{ rotate: isSelected ? SELECT_ROTATION : 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
         onClick={(event) => {
@@ -131,6 +133,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
         >
           {showFront ? (
             <>
+              <div className={styles.cardArtWindow} style={{ transform: card.reversed ? "rotate(180deg)" : undefined }}>
               <Image
                 src={card.image}
                 alt=""
@@ -145,6 +148,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
                   height: card.art.height,
                 }}
               />
+              </div>
               <Image
                 src={frameOverlayImage}
                 alt=""
@@ -152,6 +156,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, moreInfoLabel, onCar
                 sizes="200px"
                 className={styles.revealCardFrame}
               />
+              {card.missingArt && <span className={styles.missingArt}>{readingMessages[locale].noArt}</span>}
               {!isSelected && (
                 <div className={styles.revealCardHoverOverlay}>
                   <p className="font-instrument-xs-emphasized">{moreInfoLabel}</p>
@@ -254,11 +259,14 @@ function MobileCardDetailSheet({ card, locale, description, onClose, topRef }: M
 export default function RevealCardsStep({
   dictionary,
   locale,
-  cardCount,
+  reading, error, onRetry,
   onAnswerQuestion,
   mobileSheetTopRef,
 }: RevealCardsStepProps) {
-  const cards = useMemo(() => pickRandomCards(cardCount), [cardCount]);
+  const cards = useMemo(() => presentCards(reading, locale), [reading, locale]);
+  const text = readingMessages[locale];
+  const width = Math.max(...cards.map(c => c.x)) * 160 + 180;
+  const height = Math.max(...cards.map(c => c.y)) * 280 + 300;
   const [isRevealed, setIsRevealed] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -267,6 +275,35 @@ export default function RevealCardsStep({
   const cardDetailInfoRef = useRef<HTMLDivElement>(null);
 
   const selectedCard = cards.find((card) => card.slug === selectedSlug) ?? null;
+
+  useLayoutEffect(() => {
+    if (isMobile || !selectedCard) return;
+    const panel = revealAreaRef.current?.parentElement;
+    if (!panel) return;
+    let frame = 0;
+    const position = () => {
+      frame = 0;
+      const rect = panel.getBoundingClientRect();
+      const detailHeight = cardDetailArtRef.current?.offsetHeight ?? 404;
+      // The panel clips the original 74px overhang. Lift both blocks together
+      // to the viewport bottom, bounded by the panel's own top and bottom.
+      const bottom = Math.min(rect.height - detailHeight, Math.max(-74, rect.bottom - window.innerHeight - 74));
+      panel.style.setProperty("--detail-bottom", `${bottom}px`);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(position); };
+    position();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    const observer = new ResizeObserver(schedule);
+    observer.observe(panel);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      // Keep the last position during the exit animation.
+    };
+  }, [isMobile, selectedCard]);
 
   useEffect(() => {
     if (isMobile || !selectedCard) return;
@@ -297,16 +334,16 @@ export default function RevealCardsStep({
 
   return (
     <>
-      <div ref={revealAreaRef} className={`${styles.revealArea} ${isRevealed ? 'bottom-[-10px]' : 'bottom-[-20px]'}`} onClick={() => setSelectedSlug(null)}>
+      <div ref={revealAreaRef} className={styles.revealArea} onClick={() => setSelectedSlug(null)}>
         <p
           className={`font-instrument-xxs-emphasized ${styles.revealLabel} ${isRevealed ? styles.revealLabelHidden : ""}`}
         >
           {dictionary.tapToReveal}
         </p>
-        <div className={styles.revealRow}>
+        <SpreadViewport width={width} height={height} locale={locale}>
           {cards.map((card) => (
+            <div key={card.position} className={styles.positionedCard} style={{ left: card.x * 160 + 30, top: card.y * 280 + 20 }}>
             <RevealCard
-              key={card.slug}
               card={card}
               locale={locale}
               isRevealed={isRevealed}
@@ -314,18 +351,20 @@ export default function RevealCardsStep({
               moreInfoLabel={dictionary.moreInfo}
               onCardClick={() => handleCardClick(card.slug)}
             />
+            </div>
           ))}
-        </div>
+        </SpreadViewport>
         <div className={`${styles.answerWrap} ${isRevealed ? styles.answerWrapVisible : ""}`}>
-          <MainButton variant="gradient" size="small" onClick={onAnswerQuestion}>
-            {dictionary.answerQuestion}
+          <MainButton variant="gradient" size="small" onClick={onAnswerQuestion} disabled={!reading.reading} aria-busy={!reading.reading && !error}>
+            {reading.reading ? dictionary.answerQuestion : text.generating}
           </MainButton>
         </div>
+        {error && <div className={styles.readingError} role="alert">{error} <button type="button" onClick={onRetry}>{text.retry}</button></div>}
       </div>
       <MobileCardDetailSheet
         card={isMobile ? selectedCard : null}
         locale={locale}
-        description={dictionary.cardDescription}
+        description={selectedCard?.description || text.noDescription}
         onClose={() => setSelectedSlug(null)}
         topRef={mobileSheetTopRef}
       />
@@ -335,12 +374,13 @@ export default function RevealCardsStep({
             key="art"
             ref={cardDetailArtRef}
             className={styles.cardDetailArt}
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 404 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 60 }}
+            exit={{ opacity: 0, y: 404 }}
             transition={DETAIL_TRANSITION}
             onClick={(event) => event.stopPropagation()}
           >
+            <div className={styles.cardArtWindow} style={{ transform: selectedCard.reversed ? "rotate(180deg)" : undefined }}>
             <Image
               src={selectedCard.image}
               alt=""
@@ -355,6 +395,7 @@ export default function RevealCardsStep({
                 height: selectedCard.art.height,
               }}
             />
+            </div>
             <Image
               src={frameOverlayImage}
               alt=""
@@ -380,9 +421,9 @@ export default function RevealCardsStep({
             key="info"
             ref={cardDetailInfoRef}
             className={styles.cardDetailInfo}
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 404 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 60 }}
+            exit={{ opacity: 0, y: 404 }}
             transition={DETAIL_TRANSITION}
             onClick={(event) => event.stopPropagation()}
           >
@@ -400,7 +441,7 @@ export default function RevealCardsStep({
                 WebkitBackdropFilter: "blur(12.5px)",
               }}
             >
-              {dictionary.cardDescription}
+              {selectedCard.description || text.noDescription}
             </p>
           </motion.div>
         )}

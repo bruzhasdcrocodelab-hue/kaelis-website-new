@@ -6,6 +6,8 @@
   align-items: center;
 }
 
+.error { color: #8e2947; max-width: 450px; font-size: 12px; text-align: center; margin-top: 8px; }
+
 .inputBox {
   display: flex;
   align-items: flex-start;

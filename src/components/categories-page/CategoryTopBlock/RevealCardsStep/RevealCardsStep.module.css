@@ -1,4 +1,5 @@
 .revealArea {
+  width: 100%;
   position: relative;
   z-index: 5;
   display: flex;
@@ -8,6 +9,30 @@
   /* margin-top: 10px */
   /* bottom: -15px; */
 }
+
+.spreadViewport { position: relative; width: 100%; height: 300px; overflow: hidden; touch-action: none; user-select: none; cursor: grab; }
+.spreadViewport:active { cursor: grabbing; }
+.spreadContent { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.spreadContent img { -webkit-user-drag: none; pointer-events: none; }
+.positionedCard { position: absolute; width: 120px; }
+.positionedCard .revealCard { width: 120px; height: 215.398px; }
+.positionedCard .revealCardCol { width: 120px; }
+.positionedCard .revealCardName { width: 120px; min-height: 40px; display: flex; align-items: flex-end; justify-content: center;}
+.zoomControls { display: flex; gap: 8px; margin: 12px 0 4px; }
+.zoomControls button { border-radius: 20px; background: var(--color-white-75); padding: 6px 12px; min-width: 36px; }
+.zoomControls button:disabled { opacity: .45; }
+
+.readingError { 
+  flex-shrink: 0; 
+  max-width: 450px; 
+  width: 24.306vw;
+  text-align: center; 
+  font-size: 13px; 
+  margin-top: 12px; 
+}
+
+.readingError button { text-decoration: underline; }
+.missingArt { position: absolute; inset: 20px 6px; display: grid; place-items: center; font-size: 11px; background: var(--color-white-75); }
 
 .revealLabel {
   color: var(--color-black-75);
@@ -89,6 +114,14 @@
   max-width: none;
 }
 
+/* Clip the source's printed footer before rotating; both orientations share the same crop. */
+.cardArtWindow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
 .revealCardFrame {
   position: absolute;
   inset: 0;
@@ -120,7 +153,7 @@
 .cardDetailArt {
   position: absolute;
   left: var(--reveal-card-detail-inset-fluid);
-  top: 112px;
+  bottom: var(--detail-bottom, -74px);
   width: 226px;
   height: 404px;
   display: flex;
@@ -163,7 +196,7 @@
 .cardDetailInfo {
   position: absolute;
   right: var(--reveal-card-detail-inset-fluid);
-  top: calc(50% - 108px);
+  bottom: var(--detail-bottom, -74px);
   width: 226px;
   height: 404px;
   display: flex;
@@ -205,6 +238,7 @@
   overflow: hidden;
   pointer-events: none;
   transition: opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 .answerWrapVisible {
@@ -213,10 +247,8 @@
   pointer-events: auto;
   border: 4px solid var(--color-white);
   border-radius: 30px;
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  margin-top: 16px;
 }
 
 .mobileSheetRoot {
@@ -291,6 +323,10 @@
     gap: var(--reveal-row-gap-mobile-fluid);
   }
 
+  .readingError { 
+    width: auto;
+  }
+
   .revealCardCol {
     gap: 10px;
   }
@@ -319,7 +355,4 @@
     display: flex;
   }
 
-  .answerWrapVisible {
-    bottom: -20px;
-  }
 }

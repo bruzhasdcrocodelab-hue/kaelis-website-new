@@ -12,6 +12,8 @@
 }
 
 .truthBox {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   display: flex;
   flex: 1 0 0;
   align-items: flex-start;

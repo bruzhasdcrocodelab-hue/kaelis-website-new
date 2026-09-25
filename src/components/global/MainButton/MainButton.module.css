@@ -1,0 +1,76 @@
+.button {
+  transition: filter 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.default { --hover-brightness: .96; --pressed-brightness: .9; }
+.gradient,
+.gradient-black { --hover-brightness: .94; --pressed-brightness: .87; }
+.stroke { --hover-brightness: .92; --pressed-brightness: .84; }
+
+.stroke .label,
+.stroke .icon {
+  transition: color .3s;
+}
+
+.stroke .icon {
+  position: relative;
+  color: transparent;
+}
+
+/* Overlay the gradient fill inside the existing SVG mask. */
+.stroke .icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+}
+
+@media (hover: hover) {
+  .button:not(:disabled):not([aria-disabled="true"]):hover {
+    filter: brightness(var(--hover-brightness));
+  }
+
+  .stroke:not(:disabled):not([aria-disabled="true"]):hover {
+    background-color: var(--color-white-7);
+    transition: background-color .3s;
+    
+  }
+
+  .stroke:not(:disabled):not([aria-disabled="true"]):hover .label,
+  .stroke:not(:disabled):not([aria-disabled="true"]):hover .icon {
+    color: var(--color-white) !important;
+  }
+}
+
+.button:not(:disabled):not([aria-disabled="true"]):active {
+  filter: brightness(var(--pressed-brightness));
+}
+
+/* .stroke:not(:disabled):not([aria-disabled="true"]):active {
+  background-color: #ecdcf3;
+} */
+
+.button:focus-visible {
+  outline: 2px solid #9863b5;
+  outline-offset: 3px;
+}
+
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 1;
+  background: #e6e1e9;
+  border-color: #c4b9cb;
+  filter: none;
+  cursor: not-allowed;
+}
+
+.stroke:disabled,
+.stroke[aria-disabled="true"] {
+  background: #f3eff6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .stroke .label,
+  .stroke .icon { transition: none; }
+}

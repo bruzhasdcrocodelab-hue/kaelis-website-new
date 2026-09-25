@@ -72,7 +72,7 @@ export default async function Home() {
       />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
-        <HeroCardsSection heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards} />
+        <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards} />
         <TopBlockSection dictionary={dictionary.topBlock} />
         <Footer dictionary={dictionary.footer} />
       </div>

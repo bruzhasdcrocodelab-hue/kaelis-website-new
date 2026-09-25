@@ -1,3 +1,10 @@
+.pending {
+  display: grid;
+  place-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
 .page {
   position: relative;
   display: flex;

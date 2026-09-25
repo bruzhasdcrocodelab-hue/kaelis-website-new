@@ -8,6 +8,7 @@ import type { Dictionary } from "@/lang";
 import styles from "./CardsFan.module.css";
 import AnimatedCardFront from "./AnimatedCardFront";
 import { getCardFrontAssets } from "./cardFrontAssets";
+import { useCategoryLink } from "@/components/categories/CatalogProvider";
 
 export interface CardsFanProps {
   dictionary: Dictionary["cards"];
@@ -266,6 +267,7 @@ function FlippableCard({
   onHoverStart,
   onHoverEnd,
 }: FlippableCardProps) {
+  const href = useCategoryLink(card.slug);
   const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
   const [frontReady, setFrontReady] = useState(false);
@@ -287,7 +289,7 @@ function FlippableCard({
 
   return (
     <Link
-      href={`/categories/${card.slug}`}
+      href={href}
       aria-label={frontAssets ? card.alt : undefined}
       className={styles.cardWrap}
       style={{
@@ -545,6 +547,7 @@ function MobileFlippableCard({
   onHoverStart,
   onHoverEnd,
 }: MobileFlippableCardProps) {
+  const href = useCategoryLink(card.slug);
   const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
   const [frontReady, setFrontReady] = useState(false);
@@ -628,7 +631,7 @@ function MobileFlippableCard({
 
   return (
     <Link
-      href={`/categories/${card.slug}`}
+      href={href}
       className={styles.mobileCardWrap}
       aria-label={frontAssets ? card.alt : undefined}
       style={style}

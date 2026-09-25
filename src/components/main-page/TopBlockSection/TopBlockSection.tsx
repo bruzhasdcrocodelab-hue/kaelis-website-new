@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Dictionary } from "@/lang";
 import styles from "./TopBlockSection.module.css";
+import MainButton from "@/components/global/MainButton";
 
 export interface TopBlockSectionProps {
   dictionary: Dictionary["topBlock"];
@@ -41,7 +41,21 @@ export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
       </div>
       <div className={styles.spacer} />
       <div className={styles.actions}>
-        <Link href="/" className={styles.actionButton} aria-label="App Store">
+        
+              <MainButton
+                icon="/icons/apple.svg"
+                size="medium"
+                disabled
+                aria-label="App Store"
+              />
+              <MainButton
+                icon="/icons/google-play.svg"
+                size="medium"
+                href="https://play.google.com/store/apps/details?id=io.kaelsi.app"
+                aria-label="Google Play"
+              />
+           
+        {/* <Link href="/" className={styles.actionButton} aria-label="App Store">
           <span className={styles.actionIconWrap}>
             <Image src="/icons/apple.svg" alt="" width={24} height={24} />
           </span>
@@ -50,7 +64,7 @@ export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
           <span className={styles.actionIconWrapWide}>
             <Image src="/icons/google-play.svg" alt="" width={24} height={24} />
           </span>
-        </Link>
+        </Link> */}
       </div>
     </section>
   );

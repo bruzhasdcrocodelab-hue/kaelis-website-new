@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import type { Dictionary, Locale } from "@/lang";
-import type { CategoryListItem } from "@/lib/categories/list";
+import { useCategories } from "@/components/categories/CatalogProvider";
+import CatalogStatus from "@/components/categories/CatalogStatus";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import ConstellationPattern from "@/components/categories-list-page/ConstellationPattern";
@@ -11,14 +14,13 @@ import styles from "./CategoriesListView.module.css";
 export interface CategoriesListViewProps {
   dictionary: Dictionary;
   locale: Locale;
-  categories: CategoryListItem[];
 }
 
 export default function CategoriesListView({
   dictionary,
   locale,
-  categories,
 }: CategoriesListViewProps) {
+  const { state, retry } = useCategories();
   return (
     <div className={styles.page}>
       <div className={styles.backgroundGradient} aria-hidden />
@@ -58,11 +60,13 @@ export default function CategoriesListView({
       <StarField />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
-        <CategoriesListSection
+        {state.status === "success" && <CategoriesListSection
           dictionary={dictionary.categoriesList}
           locale={locale}
-          categories={categories}
-        />
+          categories={state.data}
+        />}
+        {state.status !== "success" && <div className={styles.pending}><CatalogStatus locale={locale} status={state.status} retry={retry} /></div>}
+        {state.status === "success" && state.data.length === 0 && <CatalogStatus locale={locale} status="empty" />}
         <Footer dictionary={dictionary.footer} variant="on-dark" />
       </div>
     </div>

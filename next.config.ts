@@ -1,7 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: "/api/kaelis/broadcasting/auth",
+        destination: "https://stagtest.kaelisai.com/broadcasting/auth",
+      },
+      {
+        source: "/api/kaelis/:path*",
+        destination: "https://stagtest.kaelisai.com/api/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -15,6 +15,8 @@ import {
   MOBILE_FAN_CONTAINER_WIDTH,
 } from "../cardFanMobile";
 import FanCard from "../FanCard/FanCard";
+import { fitSelectionFan } from "@/lib/categories/selectionFan";
+import { tarotDeck } from "@/lib/tarotDeck";
 import styles from "./ChooseCardsStep.module.css";
 
 export interface ChooseCardsStepProps {
@@ -30,10 +32,15 @@ export default function ChooseCardsStep({
   onToggleCard,
   isInteractive = true,
 }: ChooseCardsStepProps) {
+  const expand = isInteractive && maxSelectableCards > Math.min(cardFan.length, cardFanMobile.length);
+  // A spread's size is not the deck size. Keep spare cards available where
+  // the original decorative arc is clipped, especially on narrow screens.
+  const desktopCards = expand ? fitSelectionFan(cardFan, tarotDeck.length) : cardFan;
+  const mobileCards = expand ? fitSelectionFan(cardFanMobile, tarotDeck.length) : cardFanMobile;
   return (
     <>
       <div className={styles.fan}>
-        {cardFan.map((card) => {
+        {desktopCards.map((card) => {
           const isSelected = selectedIds.includes(card.id);
           const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
           return (
@@ -69,7 +76,7 @@ export default function ChooseCardsStep({
         }}
         aria-hidden={!isInteractive}
       >
-        {cardFanMobile.map((card) => {
+        {mobileCards.map((card) => {
           const isSelected = selectedIds.includes(card.id);
           const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
           return (
