@@ -20,7 +20,7 @@
   max-height: 185px;
   width: 450px;
   margin-bottom: -16px;
-  padding: 12px 16px;
+  padding: 12px 16px 20px;
   border-radius: var(--radius-card);
   background: var(--color-white);
   box-shadow: var(--shadow-default);
