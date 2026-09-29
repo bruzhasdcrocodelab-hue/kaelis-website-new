@@ -27,12 +27,12 @@ export function presentCards(reading: Reading, locale: Locale): PresentedCard[] 
   return reading.cards.map(card => {
     const key = normalize(card.name ?? "");
     const art = artFromImage(card.image) ?? artByName.get(key) ?? artByName.get(normalize(aliases[key] ?? ""));
-    const name = art?.name[locale] ?? card.name ?? card.position;
+    const name = card.name ?? art?.name[locale] ?? card.position;
     const [x, y] = reading.tarot.matrix[card.position];
     return { slug: card.position, position: card.position, name: { en: name, ru: name, uk: name },
       image: art?.image ?? "/images/cards/default-card.png",
       art: art?.art ?? { left: "0%", top: "0%", width: "100%", height: "100%" }, missingArt: !art,
-      description: reading.reading?.cards.find(c => c.position === card.position)?.text || card.description || "",
+      description: [card.description, reading.reading?.cards.find(c => c.position === card.position)?.text].filter(Boolean).join("\n\n"),
       reversed: card.orientation === 0 || card.orientation === false,
       x: x - minX, y: y - minY };
   });

@@ -218,6 +218,7 @@
 }
 
 .cardDetailInfoText {
+  white-space: pre-line;
   position: relative;
   max-height: 80%;
   padding: 12px;
@@ -310,12 +311,13 @@
 }
 
 .mobileSheetDescription {
-  flex: 1 0 0;
+  white-space: pre-line;
+  flex: 0 1 auto;
   min-height: 0;
   width: 100%;
-  padding: 0 12px;
+  padding: 0 12px 16px;
   color: var(--color-black-75);
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 @media (max-width: 768px) {

@@ -16,8 +16,6 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string)
   const [speakerAttempt, setSpeakerAttempt] = useState(0);
   const active = useRef<AbortController | null>(null);
   const current = useRef<Reading | null>(null);
-  const localizedCards = useRef<Reading["cards"] | null>(null);
-  const readingLocale = useRef(locale);
   const retryRef = useRef<() => Promise<void>>(async () => {});
   const text = readingMessages[locale];
 
@@ -33,38 +31,14 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string)
   }, [locale, speakerAttempt]);
   useEffect(() => () => active.current?.abort(), []);
 
-  const readingId = reading?.id;
-  useEffect(() => {
-    if (!readingId || readingLocale.current === locale) return;
-    const controller = new AbortController();
-    // GET refreshes only static card metadata. Keep the original question,
-    // interpretation, matrix and chosen cards, including pending generation.
-    fetchReading(readingId, locale, controller.signal).then(translated => {
-      const item = current.current;
-      if (controller.signal.aborted || !item || item.id !== readingId) return;
-      const cards = item.cards.map(card => {
-        const match = translated.cards.find(candidate => candidate.position === card.position && candidate.image === card.image);
-        return match ? { ...card, name: match.name, description: match.description } : card;
-      });
-      localizedCards.current = cards;
-      readingLocale.current = locale;
-      current.current = { ...item, cards };
-      setReading(current.current);
-    }).catch(() => { /* Keep the existing reading if metadata is unavailable. */ });
-    return () => controller.abort();
-  }, [locale, readingId]);
-
   const reset = useCallback(() => {
     active.current?.abort(); active.current = null; current.current = null;
-    localizedCards.current = null;
     setReading(null); setError(""); setBusy(false);
   }, []);
 
   async function submit() {
     if (active.current || !question.trim() || !speakers.some(s => s.id === speakerId)) return;
     const controller = new AbortController(); active.current = controller;
-    readingLocale.current = locale;
-    localizedCards.current = null;
     const { signal } = controller;
     setBusy(true); setError("");
     let closeSocket: (() => void) | undefined;
@@ -79,7 +53,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string)
     const publish = (next: Reading) => {
       if (signal.aborted || next.id !== current.current?.id) return;
       if (current.current.reading && !next.reading) return;
-      next = { ...next, question: current.current.question, cards: localizedCards.current ?? next.cards };
+      next = { ...next, question: current.current.question, cards: current.current.cards };
       current.current = next; setReading(next);
       if (next.reading) { setError(""); clean(); }
     };
