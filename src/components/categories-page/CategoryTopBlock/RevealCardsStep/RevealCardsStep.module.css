@@ -218,6 +218,7 @@
 }
 
 .cardDetailInfoText {
+  white-space: pre-line;
   position: relative;
   max-height: 80%;
   padding: 12px;
@@ -310,6 +311,7 @@
 }
 
 .mobileSheetDescription {
+  white-space: pre-line;
   flex: 0 1 auto;
   min-height: 0;
   width: 100%;

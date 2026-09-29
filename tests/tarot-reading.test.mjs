@@ -46,7 +46,7 @@ test("cards keep server positions including S regardless of array order", () => 
   assert.equal(cards[0].image, "/images/cards/deck/the-fool.png");
   assert.equal(cards[1].image, "/images/cards/deck/ace-of-cups.png");
   reading.reading = { sections: [{ title: "", text: "Answer" }], cards: [{ position: "S", text: "Personal interpretation" }] };
-  assert.equal(presentation.presentCards(reading, "en")[0].description, "Personal interpretation");
+  assert.equal(presentation.presentCards(reading, "en")[0].description, "Description\n\nPersonal interpretation");
 });
 test("unknown artwork does not substitute another card; localized names resolve", () => {
   const reading = api.normalizeReading(fixture);
@@ -66,17 +66,27 @@ test("stable backend artwork filenames map to local assets across locales", () =
   assert.equal(cards[0].image, "/images/cards/deck/king-of-pentacles.png");
   assert.equal(cards[1].image, "/images/cards/deck/the-hanged-man.png");
 });
-test("locale changes localize card names without translating the question or AI text", () => {
+test("locale changes preserve server card names, base descriptions and AI text", () => {
   const reading = api.normalizeReading(fixture);
   reading.reading = { sections: [{ title: "Answer", text: "Original AI answer" }], cards: [{ position: "S", text: "Original card interpretation" }] };
   const before = JSON.stringify(reading);
   const english = presentation.presentCards(reading, "en")[0];
   const ukrainian = presentation.presentCards(reading, "uk")[0];
-  assert.notEqual(english.name.en, ukrainian.name.uk);
-  assert.equal(ukrainian.description, "Original card interpretation");
+  assert.equal(english.name.en, ukrainian.name.uk);
+  assert.equal(ukrainian.description, "Description\n\nOriginal card interpretation");
   assert.equal(ukrainian.image, english.image);
   assert.equal(ukrainian.reversed, english.reversed);
   assert.equal(JSON.stringify(reading), before);
+});
+
+test("card descriptions handle pending and missing text without empty paragraphs", () => {
+  const reading = api.normalizeReading(fixture);
+  assert.equal(presentation.presentCards(reading, "en")[0].description, "Description");
+  reading.cards[0].description = null;
+  assert.equal(presentation.presentCards(reading, "en")[0].description, "");
+  reading.reading = { sections: [{ title: "", text: "Answer" }], cards: [{ position: "S", text: "AI text" }] };
+  assert.equal(presentation.presentCards(reading, "en")[0].description, "AI text");
+  assert.equal(presentation.presentCards(reading, "en")[1].description, "Second");
 });
 test("rejects missing, duplicated and unmapped cards instead of inventing a layout", () => {
   assert.throws(() => api.normalizeReading({ ...fixture, cards: [fixture.cards[0]] }));
