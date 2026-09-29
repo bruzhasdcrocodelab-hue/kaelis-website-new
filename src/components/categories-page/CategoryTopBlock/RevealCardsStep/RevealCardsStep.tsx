@@ -232,7 +232,7 @@ function MobileCardDetailSheet({ card, locale, description, onClose, topRef }: M
             role="dialog"
             aria-modal="true"
             aria-label={card.name[locale]}
-            style={sheetHeight != null ? { height: sheetHeight } : undefined}
+            style={sheetHeight != null ? { maxHeight: `min(${sheetHeight}px, calc(100dvh - 148px))` } : undefined}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
