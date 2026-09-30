@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Dictionary, Locale } from "@/lang";
 import { cardCount, categoryHref, resolveCatalogPath, type CatalogState } from "@/lib/categories/catalog";
-import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
+import { useAllSpreads, useCategories, useSpreads } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
@@ -41,8 +41,12 @@ export default function CategoryPageView({
   const category = categories.state.status === "success" ? categories.state.data.find((item) => item.slug === path[0]) : undefined;
   const spreadRequest = useSpreads(category?.id);
   const spreads = { ...spreadRequest, state: useLastCatalog(spreadRequest.state, `${pathKey}:${category?.id}`) };
+  const needsTriplet = path.length === 1 && spreads.state.status === "success" && spreads.state.data.length > 1;
+  const allSpreadsRequest = useAllSpreads(needsTriplet);
+  const allSpreads = { ...allSpreadsRequest, state: useLastCatalog(allSpreadsRequest.state, `${pathKey}:${category?.id}`) };
+  const triplet = allSpreads.state.status === "success" ? allSpreads.state.data.find((item) => item.slug === "triplet") : undefined;
   const resolved = categories.state.status === "success" && spreads.state.status === "success"
-    ? resolveCatalogPath(categories.state.data, spreads.state.data, path) : null;
+    ? resolveCatalogPath(categories.state.data, spreads.state.data, path, triplet) : null;
   const current = path.length === 2 ? resolved?.spread : category;
   const count = resolved?.spread ? cardCount(resolved.spread) : null;
   const returnHref = path.length === 2 ? categoryHref(path[0]) : "/";
@@ -97,7 +101,10 @@ export default function CategoryPageView({
             returnLabel={returnLabel}
           />
         )}
-        {!status && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
+        {!status && needsTriplet && (allSpreadsRequest.state.status === "error" || !resolved?.spread) && (
+          <CatalogStatus locale={locale} status={allSpreads.state.status === "loading" ? "loading" : "error"} retry={allSpreads.retry} />
+        )}
+        {!status && !needsTriplet && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
         {!status && resolved?.spread && (
           <>
             {count !== null ? (
@@ -110,7 +117,7 @@ export default function CategoryPageView({
                 spreadId={resolved.spread.id}
                 maxSelectableCards={count}
               />
-            ) : <CatalogStatus locale={locale} status="error" retry={spreads.retry} />}
+            ) : <CatalogStatus locale={locale} status="error" retry={needsTriplet ? allSpreads.retry : spreads.retry} />}
           </>
         )}
         <Footer dictionary={dictionary.footer} />

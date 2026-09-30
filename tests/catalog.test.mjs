@@ -56,6 +56,43 @@ test("requests spreads with category_id on every page", async () => {
   assert.equal((await catalog.loadCatalog("ru", "4")).length, 2);
 });
 
+test("loads the global triplet from later pages without a category filter", async () => {
+  globalThis.fetch = async (url, init) => {
+    calls.push({ url, init });
+    const query = new URL(url, window.location.origin);
+    assert.equal(query.pathname, "/api/kaelis/tarot");
+    assert.equal(query.searchParams.has("category_id"), false);
+    assert.equal(init.headers.get("Accept-Language"), "ru");
+    assert.equal(init.headers.get("X-Platform"), "site");
+    const page = Number(query.searchParams.get("page"));
+    return response([page === 1 ? spread(11, "my-family") : spread(62, "triplet")], page, 2);
+  };
+  const all = await catalog.loadCatalog("ru", null);
+  assert.equal(all.find(item => item.slug === "triplet").id, "62");
+  assert.equal(calls.length, 2);
+});
+
+test("global spreads are shared, isolated from category caches and locales, and retryable", async () => {
+  const store = catalog.createCatalogStore("en");
+  await store.load();
+  globalThis.fetch = async (url, init) => { calls.push({ url, init }); return response([spread(11)]); };
+  await store.load("4");
+  globalThis.fetch = async (url, init) => { calls.push({ url, init }); return new Response(null, { status: 503 }); };
+  await Promise.all([store.load(null), store.load(null)]);
+  assert.equal(store.getSnapshot(null).status, "error");
+  assert.equal(calls.length, 3);
+  globalThis.fetch = async (url, init) => { calls.push({ url, init }); return response([spread(62, "triplet")]); };
+  await store.load(null, true);
+  await store.load(null);
+  assert.equal(calls.length, 4);
+  assert.equal(store.getSnapshot(null).data[0].slug, "triplet");
+  assert.equal(store.getSnapshot("4").data[0].id, "11");
+  assert.equal(store.getSnapshot().data[0].id, "1");
+  assert.equal(catalog.createCatalogStore("ru").getSnapshot(null).status, "loading");
+  globalThis.fetch = async () => response([item(62, "triplet")]);
+  await assert.rejects(catalog.loadCatalog("en", null), /Invalid catalog/);
+});
+
 test("concurrent page and menu consumers share a request; category spread caches are separate", async () => {
   const store = catalog.createCatalogStore("en");
   await Promise.all([store.load(), store.load(), store.load()]);
@@ -113,13 +150,24 @@ test("malformed payloads and invalid pagination are errors, not empty lists", as
   }
 });
 
-test("routing selects the first spread for a category and validates nested slugs", () => {
+test("routing defaults to the global triplet and gives explicit nested slugs priority", () => {
   const categories = [item("4", "family")], spreads = [spread("11", "my-family"), spread("12", "children")];
-  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"]).spread.id, "11");
-  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family", "children"]).spread.id, "12");
-  assert.equal(catalog.resolveCatalogPath(categories, [], ["family"]).spread, undefined);
+  const triplet = spread("62", "triplet");
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"], triplet).spread.id, "62");
+  assert.equal(catalog.resolveCatalogPath(categories, [...spreads].reverse(), ["family"], triplet).spread.id, "62");
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"], triplet).category.id, "4");
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family", "children"], triplet).spread.id, "12");
+  assert.equal(catalog.resolveCatalogPath(categories, [], ["family"], triplet).spread, undefined);
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"]).spread, undefined);
   for (const path of [["missing"], ["family", "missing"], ["family", "children", "extra"]]) {
-    assert.equal(catalog.resolveCatalogPath(categories, spreads, path), null);
+    assert.equal(catalog.resolveCatalogPath(categories, spreads, path, triplet), null);
+  }
+});
+
+test("any category with one spread uses it before the triplet", () => {
+  for (const slug of ["dreams", "family"]) {
+    const only = spread("1", "dream");
+    assert.equal(catalog.resolveCatalogPath([item("4", slug)], [only], [slug], spread("62", "triplet")).spread, only);
   }
 });
 

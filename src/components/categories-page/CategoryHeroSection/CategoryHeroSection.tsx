@@ -27,7 +27,7 @@ export default function CategoryHeroSection({
   returnHref,
   returnLabel,
 }: CategoryHeroSectionProps) {
-  const hasSubcategories = spreads.length > 0;
+  const hasSubcategories = spreads.length > 1;
   const router = useRouter();
 
   return (
@@ -65,7 +65,7 @@ export default function CategoryHeroSection({
           </MainButton>
         </div>
 
-        <SubcategoryRing subcategories={spreads} basePath={path} locale={locale} />
+        {hasSubcategories && <SubcategoryRing subcategories={spreads} basePath={path} locale={locale} />}
       </div>
     </section>
   );
