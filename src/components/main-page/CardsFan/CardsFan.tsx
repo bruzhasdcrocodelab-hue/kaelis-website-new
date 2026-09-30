@@ -8,7 +8,7 @@ import type { Dictionary } from "@/lang";
 import styles from "./CardsFan.module.css";
 import AnimatedCardFront from "./AnimatedCardFront";
 import { getCardFrontAssets } from "./cardFrontAssets";
-import { useCategoryLink } from "@/components/categories/CatalogProvider";
+import { spreadHref } from "@/lib/categories/catalog";
 
 export interface CardsFanProps {
   dictionary: Dictionary["cards"];
@@ -91,9 +91,20 @@ function useMediaQuery(query: string) {
 
 const MOBILE_QUERY = "(max-width: 768px)";
 
+const CARD_HREFS: Record<string, string> = {
+  love: spreadHref("answer", "celtic-cross"),
+  "yes-no": spreadHref("decision", "yesno"),
+  "one-card": spreadHref("answer", "triplet"),
+  "three-cards": spreadHref("answer", "triplet"),
+  work: spreadHref("work", "my-job"),
+  family: spreadHref("answer", "celtic-cross"),
+  money: spreadHref("answer", "celtic-cross"),
+};
+
 interface CardSpec {
   key: string;
   slug: string;
+  href: string;
   srcBack: string;
   srcFront: string;
   alt: string;
@@ -109,6 +120,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "love",
       slug: "love",
+      href: CARD_HREFS.love,
       srcBack: "/images/cards-turned/LoveTurned.png",
       srcFront: "/images/cards/Love.png",
       alt: dictionary.love,
@@ -121,6 +133,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "yesNo",
       slug: "yes-no",
+      href: CARD_HREFS["yes-no"],
       srcBack: "/images/cards-turned/YesNoTurned.png",
       srcFront: "/images/cards/YesNo.png",
       alt: dictionary.yesNo,
@@ -133,6 +146,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "oneCard",
       slug: "one-card",
+      href: CARD_HREFS["one-card"],
       srcBack: "/images/cards-turned/OneCardTurned.png",
       srcFront: "/images/cards/OneCard.png",
       alt: dictionary.oneCard,
@@ -145,6 +159,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "threeCards",
       slug: "three-cards",
+      href: CARD_HREFS["three-cards"],
       srcBack: "/images/cards-turned/ThreeCardsTurned.png",
       srcFront: "/images/cards/ThreeCards.png",
       alt: dictionary.threeCards,
@@ -157,6 +172,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "work",
       slug: "work",
+      href: CARD_HREFS.work,
       srcBack: "/images/cards-turned/WorkTurned.png",
       srcFront: "/images/cards/Work.png",
       alt: dictionary.work,
@@ -169,6 +185,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "family",
       slug: "family",
+      href: CARD_HREFS.family,
       srcBack: "/images/cards-turned/FamilyTurned.png",
       srcFront: "/images/cards/Family.png",
       alt: dictionary.family,
@@ -181,6 +198,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "money",
       slug: "money",
+      href: CARD_HREFS.money,
       srcBack: "/images/cards-turned/MoneyTurned.png",
       srcFront: "/images/cards/Money.png",
       alt: dictionary.money,
@@ -267,7 +285,6 @@ function FlippableCard({
   onHoverStart,
   onHoverEnd,
 }: FlippableCardProps) {
-  const href = useCategoryLink(card.slug);
   const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
   const [frontReady, setFrontReady] = useState(false);
@@ -289,7 +306,7 @@ function FlippableCard({
 
   return (
     <Link
-      href={href}
+      href={card.href}
       aria-label={frontAssets ? card.alt : undefined}
       className={styles.cardWrap}
       style={{
@@ -454,6 +471,7 @@ function mobileFanHeight(scale: number) {
 interface MobileCardSpec {
   key: string;
   slug?: string;
+  href: string;
   srcBack: string;
   srcFront?: string;
   alt: string;
@@ -480,6 +498,7 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   ): MobileCardSpec => ({
     key,
     slug,
+    href: CARD_HREFS[slug],
     srcBack: `/images/cards-turned/${key}Turned.png`,
     srcFront: `/images/cards/${key}.png`,
     alt,
@@ -507,6 +526,7 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   ): MobileCardSpec => ({
     key,
     slug,
+    href: slug ? CARD_HREFS[slug] : "/categories",
     srcBack: slug ? `/images/cards-turned/${src}Turned.png` : "/images/cards/default-card.png",
     srcFront: slug ? `/images/cards/${src}.png` : undefined,
     alt,
@@ -547,7 +567,6 @@ function MobileFlippableCard({
   onHoverStart,
   onHoverEnd,
 }: MobileFlippableCardProps) {
-  const href = useCategoryLink(card.slug);
   const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
   const [frontReady, setFrontReady] = useState(false);
@@ -631,7 +650,7 @@ function MobileFlippableCard({
 
   return (
     <Link
-      href={href}
+      href={card.href}
       className={styles.mobileCardWrap}
       aria-label={frontAssets ? card.alt : undefined}
       style={style}
