@@ -99,12 +99,35 @@ export function spreadHref(categorySlug: string, spreadSlug: string) {
   return `${categoryHref(categorySlug)}/${encodeURIComponent(spreadSlug)}`;
 }
 
+const DEFAULT_SPREADS: Readonly<Record<string, string>> = {
+  dreams: "dream",
+  personality: "celtic-cross",
+  education: "opportunities",
+  trips: "trip",
+  health: "health",
+  decision: "decision",
+  hidden: "secret",
+  forecast: "prediction",
+  "soul-path": "whats-inside",
+  love: "celtic-cross",
+  work: "my-job",
+  family: "celtic-cross",
+  money: "celtic-cross",
+  answer: "triplet",
+};
+
+export function defaultSpreadSlug(categorySlug: string, spreads: TarotSpread[]): string | undefined {
+  if (Object.hasOwn(DEFAULT_SPREADS, categorySlug)) return DEFAULT_SPREADS[categorySlug];
+  return spreads.length === 1 ? spreads[0].slug : spreads.length > 1 ? "triplet" : undefined;
+}
+
 export function resolveCatalogPath(categories: TarotCategory[], spreads: TarotSpread[], path: string[], defaultSpread?: TarotSpread) {
   if (path.length < 1 || path.length > 2) return null;
   const category = categories.find((item) => item.slug === path[0]);
   if (!category) return null;
-  const spread = path.length === 2 ? spreads.find((item) => item.slug === path[1])
-    : spreads.length === 1 ? spreads[0] : spreads.length > 1 ? defaultSpread : undefined;
+  const slug = path.length === 2 ? path[1] : defaultSpreadSlug(category.slug, spreads);
+  const spread = spreads.find((item) => item.slug === slug)
+    ?? (path.length === 1 && slug !== undefined && defaultSpread?.slug === slug ? defaultSpread : undefined);
   if (path.length === 2 && !spread) return null;
   return { category, spread };
 }

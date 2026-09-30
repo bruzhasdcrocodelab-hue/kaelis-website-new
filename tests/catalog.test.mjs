@@ -150,25 +150,61 @@ test("malformed payloads and invalid pagination are errors, not empty lists", as
   }
 });
 
-test("routing defaults to the global triplet and gives explicit nested slugs priority", () => {
-  const categories = [item("4", "family")], spreads = [spread("11", "my-family"), spread("12", "children")];
-  const triplet = spread("62", "triplet");
-  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"], triplet).spread.id, "62");
-  assert.equal(catalog.resolveCatalogPath(categories, [...spreads].reverse(), ["family"], triplet).spread.id, "62");
-  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"], triplet).category.id, "4");
-  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family", "children"], triplet).spread.id, "12");
-  assert.equal(catalog.resolveCatalogPath(categories, [], ["family"], triplet).spread, undefined);
-  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"]).spread, undefined);
-  for (const path of [["missing"], ["family", "missing"], ["family", "children", "extra"]]) {
-    assert.equal(catalog.resolveCatalogPath(categories, spreads, path, triplet), null);
+test("every known category selects its assigned spread regardless of order, count or translated names", () => {
+  const defaults = {
+    dreams: "dream", personality: "celtic-cross", education: "opportunities",
+    trips: "trip", health: "health", decision: "decision", hidden: "secret",
+    forecast: "prediction", "soul-path": "whats-inside", love: "celtic-cross",
+    work: "my-job", family: "celtic-cross", money: "celtic-cross", answer: "triplet",
+  };
+  for (const [slug, target] of Object.entries(defaults)) {
+    const category = { ...item("4", slug), name: "Translated category" };
+    const assigned = { ...spread("61", target), name: "Translated spread" };
+    const unrelated = spread("11", "unrelated");
+    for (const local of [[assigned], [unrelated, assigned], [assigned, unrelated]]) {
+      const resolved = catalog.resolveCatalogPath([category], local, [slug], spread("99", target));
+      assert.equal(resolved.spread, assigned, slug);
+      assert.equal(resolved.category, category);
+    }
+    for (const local of [[], [unrelated], [unrelated, spread("12")]]) {
+      assert.equal(catalog.defaultSpreadSlug(slug, local), target);
+      assert.equal(catalog.resolveCatalogPath([category], local, [slug], assigned).spread, assigned);
+      assert.equal(catalog.resolveCatalogPath([category], local, [slug]).spread, undefined);
+      assert.equal(catalog.resolveCatalogPath([category], local, [slug], unrelated).spread, undefined);
+    }
   }
 });
 
-test("any category with one spread uses it before the triplet", () => {
-  for (const slug of ["dreams", "family"]) {
-    const only = spread("1", "dream");
-    assert.equal(catalog.resolveCatalogPath([item("4", slug)], [only], [slug], spread("62", "triplet")).spread, only);
+test("routing preserves category context and gives explicit nested slugs priority", () => {
+  const categories = [item("4", "family")], spreads = [spread("11", "my-family"), spread("12", "children")];
+  const celtic = spread("61", "celtic-cross");
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"], celtic).spread.id, "61");
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"], celtic).category.id, "4");
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family", "children"], celtic).spread.id, "12");
+  assert.equal(catalog.resolveCatalogPath(categories, spreads, ["family"]).spread, undefined);
+  for (const path of [[], ["missing"], ["family", "missing"], ["family", "celtic-cross"], ["family", "children", "extra"]]) {
+    assert.equal(catalog.resolveCatalogPath(categories, spreads, path, celtic), null);
   }
+});
+
+test("unmapped categories retain the single spread or triplet fallback", () => {
+  const categories = [item("99", "future")], only = spread("1", "new-spread"), triplet = spread("62", "triplet");
+  assert.equal(catalog.resolveCatalogPath(categories, [only], ["future"], triplet).spread, only);
+  assert.equal(catalog.resolveCatalogPath(categories, [only, spread("2")], ["future"], triplet).spread, triplet);
+  assert.equal(catalog.resolveCatalogPath(categories, [], ["future"], triplet).spread, undefined);
+});
+
+test("a default outside the category is resolved from a later global page", async () => {
+  globalThis.fetch = async (url) => {
+    const query = new URL(url, window.location.origin);
+    const page = Number(query.searchParams.get("page"));
+    assert.equal(query.searchParams.has("category_id"), false);
+    return response([page === 1 ? spread("11", "my-family") : spread("61", "celtic-cross")], page, 2);
+  };
+  const all = await catalog.loadCatalog("ru", null);
+  const resolved = catalog.resolveCatalogPath([item("4", "family")], [spread("11", "my-family")], ["family"], all.find(x => x.slug === "celtic-cross"));
+  assert.equal(resolved.spread.id, "61");
+  assert.equal(resolved.category.id, "4");
 });
 
 test("matrix count includes the significator and rejects invalid or empty layouts", () => {
