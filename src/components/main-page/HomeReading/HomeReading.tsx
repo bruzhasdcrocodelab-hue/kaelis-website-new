@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type RefObject } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
@@ -54,13 +54,13 @@ function ReadingSession({ slug, dictionary, locale, present }: { slug: HomeCardS
   );
 }
 
-function ReadingPanel({ selection, dictionary, locale, mobile, contentRef }: {
+function ReadingPanel({ selection, dictionary, locale, mobile }: {
   selection: Selection; dictionary: Dictionary; locale: Locale; mobile: boolean;
-  contentRef: RefObject<HTMLDivElement | null>;
 }) {
   const present = useIsPresent();
   const reduced = useReducedMotion();
   const [height, setHeight] = useState(0);
+  const contentRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const content = contentRef.current;
     if (!content) return;
@@ -92,8 +92,6 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const [session, setSession] = useState(0);
   const [pending, setPending] = useState<HomeCardSlug | null>(null);
   const [exiting, setExiting] = useState(false);
-  const [minimumHeight, setMinimumHeight] = useState({ desktop: 0, mobile: 0 });
-  const contentRef = useRef<HTMLDivElement>(null);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const open = selection !== null || exiting;
   function select(slug: HomeCardSlug) {
@@ -103,16 +101,12 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
     } else if (selection) {
       setPending(slug);
     } else {
-      setMinimumHeight({ desktop: 0, mobile: 0 });
       setSession(value => value + 1);
       setSelection({ slug, session: session + 1 });
     }
   }
   function confirm() {
     if (!pending) return;
-    // Preserve even a tall revealed spread while its replacement loads and opens.
-    const panel = contentRef.current?.querySelector<HTMLElement>("#category-top-block");
-    if (panel) setMinimumHeight(previous => ({ ...previous, [mobile ? "mobile" : "desktop"]: panel.offsetHeight }));
     setSession(value => value + 1);
     setSelection({ slug: pending, session: session + 1 });
     setPending(null);
@@ -121,12 +115,9 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
     <>
       <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
         selectedSlug={selection?.slug ?? null} onCardSelect={select} />
-      <div className={styles.panels} style={{
-        "--reading-min-desktop": `${minimumHeight.desktop}px`,
-        "--reading-min-mobile": `${minimumHeight.mobile}px`,
-      } as CSSProperties}>
+      <div className={styles.panels}>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
-          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} contentRef={contentRef} />}
+          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} />}
         </AnimatePresence>
         <div className={styles.promo} inert={mobile && open}>
           <TopBlockSection dictionary={dictionary.topBlock} className={styles.topBlock} />

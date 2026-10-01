@@ -40,8 +40,6 @@
 }
 
 .section.embedded { padding: 0; }
-.embedded .panel { min-height: var(--home-reading-min-height, 0px); }
-.embedded .panel.panelReading { min-height: max(570px, var(--home-reading-min-height, 0px)); }
 .loading { position: relative; z-index: 5; display: grid; place-items: center; flex: 1; width: 100%; }
 
 .panel.panelReading { height: auto; min-height: 570px; padding-bottom: 56px; }

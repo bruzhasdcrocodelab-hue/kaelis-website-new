@@ -3,14 +3,13 @@
   width: 100%;
   margin-top: -169px;
   z-index: 10;
-  --home-reading-min-height: var(--reading-min-desktop, 0px);
 }
 .reading { width: 100%; overflow: clip; }
 .readingContent { width: 92.5%; margin: 0 auto; padding-bottom: 30px; }
 .promo { display: flex; justify-content: center; width: 100%; }
 .promo .topBlock { margin-top: 0; }
 @media (max-width: 768px) {
-  .panels { display: grid; margin-top: -114px; --home-reading-min-height: var(--reading-min-mobile, 0px); }
+  .panels { display: grid; margin-top: -114px; }
   .reading, .promo { grid-area: 1 / 1; }
   .reading { position: relative; z-index: 6; align-self: start; }
   .readingContent {
