@@ -18,3 +18,5 @@
   .spinner { animation-duration: 2s; }
 }
 .retry { margin-top: 12px; text-decoration: underline; cursor: pointer; }
+.dark { color: var(--color-black-75); }
+.dark .spinner { border-color: var(--color-black-15); border-top-color: var(--color-black-75); }

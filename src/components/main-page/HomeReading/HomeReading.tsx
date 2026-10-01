@@ -1,17 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type RefObject } from "react";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
-import CatalogStatus from "@/components/categories/CatalogStatus";
-import CategoryTopBlock from "@/components/categories-page/CategoryTopBlock";
+import CategoryTopBlock, { type CategoryTopBlockProps } from "@/components/categories-page/CategoryTopBlock";
 import ConfirmationModal from "@/components/global/ConfirmationModal/ConfirmationModal";
 import HeroCardsSection from "@/components/main-page/HeroCardsSection";
 import TopBlockSection from "@/components/main-page/TopBlockSection";
 import { cardCount, type CatalogState } from "@/lib/categories/catalog";
 import { HOME_CARDS, type HomeCardSlug } from "@/lib/tarot/homeCards";
 import styles from "./HomeReading.module.css";
+
+const MOBILE_QUERY = "(max-width: 768px)";
+const subscribeViewport = (listener: () => void) => {
+  const query = window.matchMedia(MOBILE_QUERY);
+  query.addEventListener("change", listener);
+  return () => query.removeEventListener("change", listener);
+};
+const mobileSnapshot = () => window.matchMedia(MOBILE_QUERY).matches;
+const serverSnapshot = () => false;
+type Selection = { slug: HomeCardSlug; session: number };
 
 // Preserve the current reading while the same selection's translations load.
 function useLastSuccess<T>(state: CatalogState<T>) {
@@ -20,9 +29,7 @@ function useLastSuccess<T>(state: CatalogState<T>) {
   return state.status === "success" ? state : last;
 }
 
-function ReadingPanel({ slug, dictionary, locale }: { slug: HomeCardSlug; dictionary: Dictionary; locale: Locale }) {
-  const present = useIsPresent();
-  const reduced = useReducedMotion();
+function ReadingSession({ slug, dictionary, locale, present }: { slug: HomeCardSlug; dictionary: Dictionary; locale: Locale; present: boolean }) {
   const mapping = HOME_CARDS[slug];
   const categoryRequest = useCategories();
   const categories = useLastSuccess(categoryRequest.state);
@@ -31,35 +38,63 @@ function ReadingPanel({ slug, dictionary, locale }: { slug: HomeCardSlug; dictio
   const spreads = useLastSuccess(spreadRequest.state);
   const spread = spreads.status === "success" ? spreads.data.find(item => item.slug === mapping.spread) : undefined;
   const count = spread ? cardCount(spread) : null;
-  const status = categoryRequest.state.status !== "success" ? categoryRequest.state.status
+  const status: "loading" | "error" | "notFound" = categoryRequest.state.status !== "success" ? categoryRequest.state.status
     : !category ? "notFound" : spreadRequest.state.status !== "success" ? spreadRequest.state.status
     : !spread ? "notFound" : "error";
   const retry = categoryRequest.state.status === "error" ? categoryRequest.retry : spreadRequest.retry;
+  const ready = category && spread && count !== null;
+  const catalogStatus: CategoryTopBlockProps["catalogStatus"] = ready
+    ? categoryRequest.state.status === "error" || spreadRequest.state.status === "error" ? { status: "error" as const, retry } : undefined
+    : { status, retry };
+  return (
+    <CategoryTopBlock dictionary={dictionary.categoryPage.topBlock} locale={locale}
+      categoryLabel={dictionary.cards[mapping.label]} categoryId={category?.id ?? ""} spreadId={spread?.id ?? ""}
+      maxSelectableCards={count ?? 0} sessionActive={present && Boolean(ready)} embedded
+      catalogStatus={catalogStatus} />
+  );
+}
+
+function ReadingPanel({ selection, dictionary, locale, mobile, contentRef }: {
+  selection: Selection; dictionary: Dictionary; locale: Locale; mobile: boolean;
+  contentRef: RefObject<HTMLDivElement | null>;
+}) {
+  const present = useIsPresent();
+  const reduced = useReducedMotion();
+  const [height, setHeight] = useState(0);
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+    const measure = () => setHeight(content.getBoundingClientRect().height);
+    const observer = new ResizeObserver(measure);
+    observer.observe(content);
+    measure();
+    return () => observer.disconnect();
+  }, [contentRef]);
+  const duration = reduced ? 0 : present ? 0.65 : 0.45;
+  const transition = { duration, ease: [0.4, 0, 0.2, 1] as const };
   return (
     <motion.div className={styles.reading} inert={!present} aria-hidden={!present}
-      initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: reduced ? 0 : 0.4, ease: [0.32, 0.72, 0, 1] }}>
-      <motion.div className={styles.readingContent} initial={{ y: reduced ? 0 : 64 }} animate={{ y: 0 }} exit={{ y: reduced ? 0 : 64 }}
-        transition={{ duration: reduced ? 0 : 0.4, ease: [0.32, 0.72, 0, 1] }}>
-        {category && spread && count !== null ? (
-          <>
-            {(categoryRequest.state.status === "error" || spreadRequest.state.status === "error") &&
-              <CatalogStatus locale={locale} status="error" retry={retry} />}
-            <CategoryTopBlock dictionary={dictionary.categoryPage.topBlock} locale={locale}
-              categoryLabel={dictionary.cards[mapping.label]} categoryId={category.id} spreadId={spread.id}
-              maxSelectableCards={count} sessionActive={present} embedded />
-          </>
-        ) : <div className={styles.pending}><CatalogStatus locale={locale} status={status} retry={retry} /></div>}
+      initial={{ height: mobile ? 520 : 0 }} animate={{ height: height || (mobile ? 520 : 470) }}
+      exit={{ height: mobile ? 520 : 0 }} transition={transition}>
+      <motion.div ref={contentRef} className={styles.readingContent}
+        initial={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
+        animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
+        transition={transition}>
+        {/* Only the session resets on card changes; the animated panel stays mounted. */}
+        <ReadingSession key={selection.session} slug={selection.slug} dictionary={dictionary} locale={locale} present={present} />
       </motion.div>
     </motion.div>
   );
 }
 
 export default function HomeReading({ dictionary, locale }: { dictionary: Dictionary; locale: Locale }) {
-  const [selection, setSelection] = useState<{ slug: HomeCardSlug; session: number } | null>(null);
+  const [selection, setSelection] = useState<Selection | null>(null);
   const [session, setSession] = useState(0);
   const [pending, setPending] = useState<HomeCardSlug | null>(null);
   const [exiting, setExiting] = useState(false);
+  const [minimumHeight, setMinimumHeight] = useState({ desktop: 0, mobile: 0 });
+  const contentRef = useRef<HTMLDivElement>(null);
+  const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const open = selection !== null || exiting;
   function select(slug: HomeCardSlug) {
     if (selection?.slug === slug) {
@@ -68,12 +103,16 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
     } else if (selection) {
       setPending(slug);
     } else {
+      setMinimumHeight({ desktop: 0, mobile: 0 });
       setSession(value => value + 1);
       setSelection({ slug, session: session + 1 });
     }
   }
   function confirm() {
     if (!pending) return;
+    // Preserve even a tall revealed spread while its replacement loads and opens.
+    const panel = contentRef.current?.querySelector<HTMLElement>("#category-top-block");
+    if (panel) setMinimumHeight(previous => ({ ...previous, [mobile ? "mobile" : "desktop"]: panel.offsetHeight }));
     setSession(value => value + 1);
     setSelection({ slug: pending, session: session + 1 });
     setPending(null);
@@ -82,11 +121,14 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
     <>
       <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
         selectedSlug={selection?.slug ?? null} onCardSelect={select} />
-      <div className={`${styles.panels} ${open ? styles.open : ""}`}>
+      <div className={styles.panels} style={{
+        "--reading-min-desktop": `${minimumHeight.desktop}px`,
+        "--reading-min-mobile": `${minimumHeight.mobile}px`,
+      } as CSSProperties}>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
-          {selection && <ReadingPanel key={`${selection.slug}:${selection.session}`} slug={selection.slug} dictionary={dictionary} locale={locale} />}
+          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} contentRef={contentRef} />}
         </AnimatePresence>
-        <div className={styles.promo}>
+        <div className={styles.promo} inert={mobile && open}>
           <TopBlockSection dictionary={dictionary.topBlock} className={styles.topBlock} />
         </div>
       </div>

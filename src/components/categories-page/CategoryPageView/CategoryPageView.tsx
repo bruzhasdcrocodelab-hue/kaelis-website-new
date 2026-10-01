@@ -37,6 +37,7 @@ export default function CategoryPageView({
 }: CategoryPageViewProps) {
   const pathKey = path.join("/");
   const categoryRequest = useCategories();
+  
   const categories = { ...categoryRequest, state: useLastCatalog(categoryRequest.state, pathKey) };
   const category = categories.state.status === "success" ? categories.state.data.find((item) => item.slug === path[0]) : undefined;
   const spreadRequest = useSpreads(category?.id);
