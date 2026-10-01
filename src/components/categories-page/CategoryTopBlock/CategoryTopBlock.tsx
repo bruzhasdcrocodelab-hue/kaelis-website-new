@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton, {
@@ -50,6 +50,21 @@ export default function CategoryTopBlock({
   const text = readingMessages[locale];
   const [showAnswer, setShowAnswer] = useState(false);
   const step: Step = flow.reading ? (showAnswer ? "answer" : "reveal") : "ask";
+  const sectionRef = useRef<HTMLElement>(null);
+  const previousStep = useRef(step);
+  useEffect(() => {
+    if (previousStep.current === step) return;
+    previousStep.current = step;
+    // Scroll after the new step is laid out; initial mount and data updates stay put.
+    const frame = requestAnimationFrame(() => {
+      sectionRef.current?.scrollIntoView({
+        block: "start",
+        inline: "nearest",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [step]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   useLayoutEffect(() => {
     onProgressChange?.(hasProgress);
@@ -77,7 +92,7 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section id="category-top-block" className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
+    <section ref={step === "answer" ? sectionRef : null} id="category-top-block" className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
         className={`${styles.panel} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{
