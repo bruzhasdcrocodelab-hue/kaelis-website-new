@@ -17,9 +17,10 @@ export interface SubcategoryRingProps {
   /** Slug path of the currently viewed category/subcategory, used to build child links. */
   basePath: string[];
   locale: Locale;
+  onSpreadNavigate?: (href: string, event: { preventDefault: () => void }) => void;
 }
 
-export default function SubcategoryRing({ subcategories, basePath, locale }: SubcategoryRingProps) {
+export default function SubcategoryRing({ subcategories, basePath, locale, onSpreadNavigate }: SubcategoryRingProps) {
   const ringRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const ring = ringRef.current;
@@ -64,6 +65,7 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
           <SubcategoryNode
             key={subcategory.slug}
             href={hrefFor(subcategory)}
+            onNavigate={event => onSpreadNavigate?.(hrefFor(subcategory), event)}
             label={subcategory.name}
             filled={isFilledStarSlot(positions[index])}
             position={positions[index]}
@@ -79,6 +81,7 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
               <SubcategoryNode
                 key={subcategory.slug}
                 href={hrefFor(subcategory)}
+                onNavigate={event => onSpreadNavigate?.(hrefFor(subcategory), event)}
                 label={subcategory.name}
                 filled={isFilledStarCell(rowIndex, colIndex)}
                 locale={locale}

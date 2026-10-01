@@ -3,12 +3,14 @@
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Dictionary, Locale } from "@/lang";
-import { cardCount, categoryHref, resolveCatalogPath, type CatalogState } from "@/lib/categories/catalog";
-import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
+import { cardCount, categoryHref, defaultSpreadSlug, resolveCatalogPath, type CatalogState } from "@/lib/categories/catalog";
+import { useAllSpreads, useCategories, useSpreads } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
+import ConfirmationModal from "@/components/global/ConfirmationModal/ConfirmationModal";
 import CategoryHeroSection from "@/components/categories-page/CategoryHeroSection";
 import CategoryTopBlock from "@/components/categories-page/CategoryTopBlock";
 import ConstellationPattern from "@/components/categories-page/ConstellationPattern";
@@ -30,19 +32,45 @@ function useLastCatalog<T>(state: CatalogState<T>, scope: string) {
   return state.status !== "success" && last.scope === scope && last.state.status === "success" ? last.state : state;
 }
 
-export default function CategoryPageView({
+export default function CategoryPageView(props: CategoryPageViewProps) {
+  // A new route starts a new reading, including a category's default spread route.
+  return <CategoryPageContent key={props.path.join("/")} {...props} />;
+}
+
+function CategoryPageContent({
   dictionary,
   locale,
   path,
 }: CategoryPageViewProps) {
   const pathKey = path.join("/");
+  const router = useRouter();
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+  function onSpreadNavigate(href: string, event: { preventDefault: () => void }) {
+    if (!needsConfirmation) return;
+    event.preventDefault();
+    setPendingHref(href);
+  }
+  function confirmNavigation() {
+    if (!pendingHref) return;
+    router.push(pendingHref);
+    setPendingHref(null);
+  }
   const categoryRequest = useCategories();
+  
   const categories = { ...categoryRequest, state: useLastCatalog(categoryRequest.state, pathKey) };
   const category = categories.state.status === "success" ? categories.state.data.find((item) => item.slug === path[0]) : undefined;
   const spreadRequest = useSpreads(category?.id);
   const spreads = { ...spreadRequest, state: useLastCatalog(spreadRequest.state, `${pathKey}:${category?.id}`) };
+  const defaultSlug = path.length === 1 && category && spreads.state.status === "success"
+    ? defaultSpreadSlug(category.slug, spreads.state.data) : undefined;
+  const needsDefaultSpread = defaultSlug !== undefined && spreads.state.status === "success"
+    && !spreads.state.data.some((item) => item.slug === defaultSlug);
+  const allSpreadsRequest = useAllSpreads(needsDefaultSpread);
+  const allSpreads = { ...allSpreadsRequest, state: useLastCatalog(allSpreadsRequest.state, `${pathKey}:${category?.id}`) };
+  const defaultSpread = allSpreads.state.status === "success" ? allSpreads.state.data.find((item) => item.slug === defaultSlug) : undefined;
   const resolved = categories.state.status === "success" && spreads.state.status === "success"
-    ? resolveCatalogPath(categories.state.data, spreads.state.data, path) : null;
+    ? resolveCatalogPath(categories.state.data, spreads.state.data, path, defaultSpread) : null;
   const current = path.length === 2 ? resolved?.spread : category;
   const count = resolved?.spread ? cardCount(resolved.spread) : null;
   const returnHref = path.length === 2 ? categoryHref(path[0]) : "/";
@@ -95,9 +123,13 @@ export default function CategoryPageView({
             path={path}
             returnHref={returnHref}
             returnLabel={returnLabel}
+            onSpreadNavigate={onSpreadNavigate}
           />
         )}
-        {!status && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
+        {!status && needsDefaultSpread && (allSpreadsRequest.state.status === "error" || !resolved?.spread) && (
+          <CatalogStatus locale={locale} status={allSpreads.state.status === "loading" ? "loading" : "error"} retry={allSpreads.retry} />
+        )}
+        {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
         {!status && resolved?.spread && (
           <>
             {count !== null ? (
@@ -109,12 +141,16 @@ export default function CategoryPageView({
                 categoryId={resolved.category.id}
                 spreadId={resolved.spread.id}
                 maxSelectableCards={count}
+                onProgressChange={setNeedsConfirmation}
               />
-            ) : <CatalogStatus locale={locale} status="error" retry={spreads.retry} />}
+            ) : <CatalogStatus locale={locale} status="error" retry={needsDefaultSpread ? allSpreads.retry : spreads.retry} />}
           </>
         )}
         <Footer dictionary={dictionary.footer} />
       </div>
+      <ConfirmationModal open={pendingHref !== null} title={dictionary.readingConfirmation.title}
+        message={dictionary.readingConfirmation.message} confirmLabel={dictionary.readingConfirmation.confirm}
+        cancelLabel={dictionary.readingConfirmation.cancel} onConfirm={confirmNavigation} onCancel={() => setPendingHref(null)} />
     </div>
   );
 }

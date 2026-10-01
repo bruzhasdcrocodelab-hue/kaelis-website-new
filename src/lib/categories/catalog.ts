@@ -33,12 +33,13 @@ function isItem(value: unknown): value is Omit<TarotCategory, "id"> & { id: stri
 }
 
 /** Fetch every page locally; never follow absolute paginator URLs with a token. */
-export async function loadCatalog(locale: Locale, categoryId?: string): Promise<TarotCategory[] | TarotSpread[]> {
+// undefined loads categories; null loads all spreads without a category filter.
+export async function loadCatalog(locale: Locale, categoryId?: string | null): Promise<TarotCategory[] | TarotSpread[]> {
   const items: TarotCategory[] = [];
   let lastPage = 1;
   for (let page = 1; page <= lastPage; page++) {
     const query = new URLSearchParams({ page: String(page), per_page: "50" });
-    if (categoryId !== undefined) query.set("category_id", categoryId);
+    if (typeof categoryId === "string") query.set("category_id", categoryId);
     const response = await apiFetch(`${categoryId === undefined ? "/tarot/category" : "/tarot"}?${query}`, {
       headers: { "Accept-Language": locale, "X-Platform": "site" },
       signal: AbortSignal.timeout(30_000),
@@ -63,12 +64,12 @@ export function createCatalogStore(locale: Locale) {
   const states = new Map<string, CatalogState<TarotCategory | TarotSpread>>();
   const pending = new Map<string, Promise<void>>();
   const listeners = new Set<() => void>();
-  const keyFor = (categoryId?: string) => categoryId === undefined ? "categories" : `spreads:${categoryId}`;
+  const keyFor = (categoryId?: string | null) => categoryId === undefined ? "categories" : categoryId === null ? "all-spreads" : `spreads:${categoryId}`;
   const publish = () => listeners.forEach((listener) => listener());
   return {
     subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
-    getSnapshot(categoryId?: string) { return states.get(keyFor(categoryId)) ?? INITIAL_STATE; },
-    load(categoryId?: string, retry = false): Promise<void> {
+    getSnapshot(categoryId?: string | null) { return states.get(keyFor(categoryId)) ?? INITIAL_STATE; },
+    load(categoryId?: string | null, retry = false): Promise<void> {
       const key = keyFor(categoryId);
       const running = pending.get(key);
       if (running) return running;
@@ -98,11 +99,35 @@ export function spreadHref(categorySlug: string, spreadSlug: string) {
   return `${categoryHref(categorySlug)}/${encodeURIComponent(spreadSlug)}`;
 }
 
-export function resolveCatalogPath(categories: TarotCategory[], spreads: TarotSpread[], path: string[]) {
+const DEFAULT_SPREADS: Readonly<Record<string, string>> = {
+  dreams: "dream",
+  personality: "celtic-cross",
+  education: "opportunities",
+  trips: "trip",
+  health: "health",
+  decision: "decision",
+  hidden: "secret",
+  forecast: "prediction",
+  "soul-path": "whats-inside",
+  love: "celtic-cross",
+  work: "my-job",
+  family: "celtic-cross",
+  money: "celtic-cross",
+  answer: "triplet",
+};
+
+export function defaultSpreadSlug(categorySlug: string, spreads: TarotSpread[]): string | undefined {
+  if (Object.hasOwn(DEFAULT_SPREADS, categorySlug)) return DEFAULT_SPREADS[categorySlug];
+  return spreads.length === 1 ? spreads[0].slug : spreads.length > 1 ? "triplet" : undefined;
+}
+
+export function resolveCatalogPath(categories: TarotCategory[], spreads: TarotSpread[], path: string[], defaultSpread?: TarotSpread) {
   if (path.length < 1 || path.length > 2) return null;
   const category = categories.find((item) => item.slug === path[0]);
   if (!category) return null;
-  const spread = path.length === 2 ? spreads.find((item) => item.slug === path[1]) : spreads[0];
+  const slug = path.length === 2 ? path[1] : defaultSpreadSlug(category.slug, spreads);
+  const spread = spreads.find((item) => item.slug === slug)
+    ?? (path.length === 1 && slug !== undefined && defaultSpread?.slug === slug ? defaultSpread : undefined);
   if (path.length === 2 && !spread) return null;
   return { category, spread };
 }

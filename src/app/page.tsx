@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
-import HeroCardsSection from "@/components/main-page/HeroCardsSection";
-import TopBlockSection from "@/components/main-page/TopBlockSection";
+import HomeReading from "@/components/main-page/HomeReading/HomeReading";
 import { dictionaries } from "@/lang";
 import { getLocale } from "@/lib/locale";
 import styles from "./page.module.css";
@@ -72,8 +71,7 @@ export default async function Home() {
       />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
-        <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards} />
-        <TopBlockSection dictionary={dictionary.topBlock} />
+        <HomeReading locale={locale} dictionary={dictionary} />
         <Footer dictionary={dictionary.footer} />
       </div>
     </div>

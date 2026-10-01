@@ -11,7 +11,7 @@ export default function CatalogProvider({ locale, children }: { locale: Locale; 
   return <CatalogContext.Provider value={store}>{children}</CatalogContext.Provider>;
 }
 
-export function useCatalog(categoryId?: string, enabled = true) {
+export function useCatalog(categoryId?: string | null, enabled = true) {
   const store = useContext(CatalogContext);
   if (!store) throw new Error("CatalogProvider is required");
   const state = useSyncExternalStore(store.subscribe, () => store.getSnapshot(categoryId), () => INITIAL_STATE);
@@ -28,6 +28,11 @@ export function useCategories() {
 
 export function useSpreads(categoryId?: string) {
   const result = useCatalog(categoryId, categoryId !== undefined);
+  return { ...result, state: result.state as CatalogState<TarotSpread> };
+}
+
+export function useAllSpreads(enabled: boolean) {
+  const result = useCatalog(null, enabled);
   return { ...result, state: result.state as CatalogState<TarotSpread> };
 }
 

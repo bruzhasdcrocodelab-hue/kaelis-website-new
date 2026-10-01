@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton, {
   GUIDE_ICON,
 } from "@/components/categories-page/TriggerButton";
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
+import CatalogStatus from "@/components/categories/CatalogStatus";
 import { type Dictionary, type Locale } from "@/lang";
 import AnimatedWaves from "./AnimatedWaves/AnimatedWaves";
 import WavesLineFrame from "./WavesLineFrame/WavesLineFrame";
@@ -28,6 +29,13 @@ export interface CategoryTopBlockProps {
   maxSelectableCards: number;
   categoryId: string;
   spreadId: string;
+  sessionActive?: boolean;
+  embedded?: boolean;
+  onProgressChange?: (hasProgress: boolean) => void;
+  catalogStatus?: {
+    status: "loading" | "error" | "notFound";
+    retry: () => void;
+  };
 }
 
 type Step = "ask" | "reveal" | "answer";
@@ -36,19 +44,41 @@ export default function CategoryTopBlock({
   dictionary,
   locale,
   categoryLabel,
-  maxSelectableCards, categoryId, spreadId,
+  maxSelectableCards, categoryId, spreadId, sessionActive = true, embedded = false, catalogStatus, onProgressChange,
 }: CategoryTopBlockProps) {
-  const flow = useReading(locale, categoryId, spreadId);
+  const flow = useReading(locale, categoryId, spreadId, sessionActive);
   const text = readingMessages[locale];
   const [showAnswer, setShowAnswer] = useState(false);
   const step: Step = flow.reading ? (showAnswer ? "answer" : "reveal") : "ask";
+  const sectionRef = useRef<HTMLElement>(null);
+  const previousStep = useRef(step);
+  useEffect(() => {
+    if (previousStep.current === step) return;
+    previousStep.current = step;
+    // Scroll after the new step is laid out; initial mount and data updates stay put.
+    const frame = requestAnimationFrame(() => {
+      sectionRef.current?.scrollIntoView({
+        block: "start",
+        inline: "nearest",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [step]);
+  const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
+  useLayoutEffect(() => {
+    onProgressChange?.(hasProgress);
+  }, [hasProgress, onProgressChange]);
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
   const speakerIcon = (icon: string | null | undefined) => GUIDE_ICON[icon as keyof typeof GUIDE_ICON] ?? "/icons/analyst.svg";
   const changeQuestion = () => { flow.reset(); setShowAnswer(false); };
   const isConfirmed = step === "reveal";
-  const hasFan = step === "ask" || step === "answer";
+  const loadingStatus = catalogStatus ?? (embedded && !flow.speakers.length
+    ? { status: flow.speakerError ? "error" as const : "loading" as const, retry: flow.retrySpeakers }
+    : undefined);
+  const hasFan = !loadingStatus && (step === "ask" || step === "answer");
 
   const stepTitle: Record<Step, string> = {
     ask: dictionary.askTitle,
@@ -62,7 +92,7 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section id="category-top-block" className={styles.section}>
+    <section ref={step === "answer" ? sectionRef : null} id="category-top-block" className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
         className={`${styles.panel} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{
@@ -111,6 +141,11 @@ export default function CategoryTopBlock({
           <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />
         )}
 
+        {loadingStatus ? (
+          <div className={styles.loading}>
+            <CatalogStatus locale={locale} status={loadingStatus.status} retry={loadingStatus.retry} tone="dark" />
+          </div>
+        ) : <>
         <div className={styles.row}>
           <div className={styles.side}>
             {step === "reveal" && (
@@ -180,9 +215,10 @@ export default function CategoryTopBlock({
           />
         )}
         {flow.speakerError && <div className={styles.flowError} role="alert">{text.error} <button type="button" onClick={flow.retrySpeakers}>{text.retry}</button></div>}
+        </>}
       </div>
 
-      {(step === "reveal" || step === "ask") && (
+      {!loadingStatus && (step === "reveal" || step === "ask") && (
         <div className={styles.triggerMobile}>
           {step === "reveal" && (
             <MainButton

@@ -29,6 +29,12 @@ const en = {
     cta: "Pick a Card to Start Your Reading",
     ctaHover: "Get Your Readings",
   },
+  readingConfirmation: {
+    title: "Are you sure?",
+    message: "Switching cards will clear your question and reading result.",
+    confirm: "Switch card",
+    cancel: "Keep reading",
+  },
   cards: {
     love: "Love",
     yesNo: "Yes/No",

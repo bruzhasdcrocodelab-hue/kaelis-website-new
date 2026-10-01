@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link, { type LinkProps } from "next/link";
 import type { SubcategoryPosition } from "@/lib/categories/subcategoryLayout";
 import styles from "./SubcategoryNode.module.css";
 import { htmlLang, Locale } from "@/lang";
@@ -14,6 +14,7 @@ export interface SubcategoryNodeProps {
   /** Absolute position on the desktop arc. Omitted for the in-flow mobile rows. */
   position?: SubcategoryPosition;
   locale: Locale;
+  onNavigate?: LinkProps["onNavigate"];
 }
 
 const ICON_SRC = {
@@ -32,7 +33,7 @@ function seededUnit(seed: string): number {
 const NODE_FLOAT_DURATION_S = 6;
 const NODE_ICON_PULSE_DURATION_S = 2.2;
 
-export default function SubcategoryNode({ href, label, filled, position, locale }: SubcategoryNodeProps) {
+export default function SubcategoryNode({ href, label, filled, position, locale, onNavigate }: SubcategoryNodeProps) {
   const floatDelay = -(seededUnit(`${href}:float`) * NODE_FLOAT_DURATION_S).toFixed(2);
   const pulseDelay = -(seededUnit(`${href}:pulse`) * NODE_ICON_PULSE_DURATION_S).toFixed(2);
   const displayLabel = isSingleWord(label) ? withSoftHyphens(label) : label;
@@ -40,6 +41,7 @@ export default function SubcategoryNode({ href, label, filled, position, locale 
   return (
     <Link
       href={href}
+      onNavigate={onNavigate}
       className={`${styles.node} ${position ? styles.nodeArc : styles.nodeFlow}`}
       style={
         position

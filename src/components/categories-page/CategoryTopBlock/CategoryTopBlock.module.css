@@ -39,6 +39,9 @@
   background: var(--color-greyish-blue);
 }
 
+.section.embedded { padding: 0; }
+.loading { position: relative; z-index: 5; display: grid; place-items: center; flex: 1; width: 100%; }
+
 .panel.panelReading { height: auto; min-height: 570px; padding-bottom: 56px; }
 .flowError { position: relative; z-index: 5; max-width: 450px; text-align: center; }
 .flowError button { text-decoration: underline; }
@@ -176,6 +179,7 @@
 }
 
 @media (max-width: 768px) {
+  .embedded .panel { margin-top: 0; }
   .panel.panelReading { padding-bottom: 72px; }
   .section {
     padding: 0;
