@@ -16,6 +16,7 @@ export interface CategoryHeroSectionProps {
   path: string[];
   returnHref: string;
   returnLabel: string;
+  onSpreadNavigate?: (href: string, event: { preventDefault: () => void }) => void;
 }
 
 export default function CategoryHeroSection({
@@ -26,6 +27,7 @@ export default function CategoryHeroSection({
   path,
   returnHref,
   returnLabel,
+  onSpreadNavigate,
 }: CategoryHeroSectionProps) {
   const hasSubcategories = spreads.length > 1;
   const router = useRouter();
@@ -65,7 +67,7 @@ export default function CategoryHeroSection({
           </MainButton>
         </div>
 
-        {hasSubcategories && <SubcategoryRing subcategories={spreads} basePath={path} locale={locale} />}
+        {hasSubcategories && <SubcategoryRing subcategories={spreads} basePath={path} locale={locale} onSpreadNavigate={onSpreadNavigate} />}
       </div>
     </section>
   );
