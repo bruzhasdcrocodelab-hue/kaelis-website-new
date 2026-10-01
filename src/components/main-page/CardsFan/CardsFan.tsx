@@ -2,18 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
 import styles from "./CardsFan.module.css";
 import AnimatedCardFront from "./AnimatedCardFront";
 import { getCardFrontAssets } from "./cardFrontAssets";
-import { spreadHref } from "@/lib/categories/catalog";
+import type { HomeCardSlug } from "@/lib/tarot/homeCards";
 
 export interface CardsFanProps {
   dictionary: Dictionary["cards"];
   hoveredIndex: number | null;
   onCardHoverChange: (index: number | null) => void;
+  selectedSlug: HomeCardSlug | null;
+  onCardSelect: (slug: HomeCardSlug) => void;
 }
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
@@ -91,20 +92,9 @@ function useMediaQuery(query: string) {
 
 const MOBILE_QUERY = "(max-width: 768px)";
 
-const CARD_HREFS: Record<string, string> = {
-  love: spreadHref("answer", "celtic-cross"),
-  "yes-no": spreadHref("decision", "yesno"),
-  "one-card": spreadHref("answer", "triplet"),
-  "three-cards": spreadHref("answer", "triplet"),
-  work: spreadHref("work", "my-job"),
-  family: spreadHref("answer", "celtic-cross"),
-  money: spreadHref("answer", "celtic-cross"),
-};
-
 interface CardSpec {
   key: string;
-  slug: string;
-  href: string;
+  slug: HomeCardSlug;
   srcBack: string;
   srcFront: string;
   alt: string;
@@ -120,7 +110,6 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "love",
       slug: "love",
-      href: CARD_HREFS.love,
       srcBack: "/images/cards-turned/LoveTurned.png",
       srcFront: "/images/cards/Love.png",
       alt: dictionary.love,
@@ -133,7 +122,6 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "yesNo",
       slug: "yes-no",
-      href: CARD_HREFS["yes-no"],
       srcBack: "/images/cards-turned/YesNoTurned.png",
       srcFront: "/images/cards/YesNo.png",
       alt: dictionary.yesNo,
@@ -146,7 +134,6 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "oneCard",
       slug: "one-card",
-      href: CARD_HREFS["one-card"],
       srcBack: "/images/cards-turned/OneCardTurned.png",
       srcFront: "/images/cards/OneCard.png",
       alt: dictionary.oneCard,
@@ -159,7 +146,6 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "threeCards",
       slug: "three-cards",
-      href: CARD_HREFS["three-cards"],
       srcBack: "/images/cards-turned/ThreeCardsTurned.png",
       srcFront: "/images/cards/ThreeCards.png",
       alt: dictionary.threeCards,
@@ -172,7 +158,6 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "work",
       slug: "work",
-      href: CARD_HREFS.work,
       srcBack: "/images/cards-turned/WorkTurned.png",
       srcFront: "/images/cards/Work.png",
       alt: dictionary.work,
@@ -185,7 +170,6 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "family",
       slug: "family",
-      href: CARD_HREFS.family,
       srcBack: "/images/cards-turned/FamilyTurned.png",
       srcFront: "/images/cards/Family.png",
       alt: dictionary.family,
@@ -198,7 +182,6 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "money",
       slug: "money",
-      href: CARD_HREFS.money,
       srcBack: "/images/cards-turned/MoneyTurned.png",
       srcFront: "/images/cards/Money.png",
       alt: dictionary.money,
@@ -275,6 +258,8 @@ interface FlippableCardProps {
   zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
 function FlippableCard({
@@ -284,6 +269,8 @@ function FlippableCard({
   zIndex,
   onHoverStart,
   onHoverEnd,
+  isSelected,
+  onSelect,
 }: FlippableCardProps) {
   const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
@@ -305,8 +292,10 @@ function FlippableCard({
   const dealOffsetY = FAN_CENTER_TOP - cardCenterY;
 
   return (
-    <Link
-      href={card.href}
+    <button
+      type="button"
+      aria-pressed={isSelected}
+      onClick={onSelect}
       aria-label={frontAssets ? card.alt : undefined}
       className={styles.cardWrap}
       style={{
@@ -318,6 +307,8 @@ function FlippableCard({
       }}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
+      onFocus={onHoverStart}
+      onBlur={onHoverEnd}
     >
       <motion.div
         className={styles.card}
@@ -359,11 +350,11 @@ function FlippableCard({
           </div>
         </motion.div>
       </motion.div>
-    </Link>
+    </button>
   );
 }
 
-export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
+export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
   const cards = buildCards(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -392,7 +383,9 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
           <FlippableCard
             key={card.key}
             card={card}
-            isHovered={hoveredIndex === index}
+            isHovered={selectedSlug === card.slug || hoveredIndex === index}
+            isSelected={selectedSlug === card.slug}
+            onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
             isDealt={isDealt}
             /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
             zIndex={index}
@@ -405,6 +398,8 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange }
         dictionary={dictionary}
         hoveredIndex={hoveredIndex}
         onCardHoverChange={onCardHoverChange}
+        selectedSlug={selectedSlug}
+        onCardSelect={onCardSelect}
       />
     </div>
   );
@@ -470,8 +465,7 @@ function mobileFanHeight(scale: number) {
 
 interface MobileCardSpec {
   key: string;
-  slug?: string;
-  href: string;
+  slug?: HomeCardSlug;
   srcBack: string;
   srcFront?: string;
   alt: string;
@@ -490,7 +484,7 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   const backPitch = 92;
   const cardBack = (
     key: string,
-    slug: string,
+    slug: HomeCardSlug,
     alt: string,
     slot: number,
     rotate: number,
@@ -498,7 +492,6 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   ): MobileCardSpec => ({
     key,
     slug,
-    href: CARD_HREFS[slug],
     srcBack: `/images/cards-turned/${key}Turned.png`,
     srcFront: `/images/cards/${key}.png`,
     alt,
@@ -517,7 +510,7 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
 
   const frontCard = (
     key: string,
-    slug: string | undefined,
+    slug: HomeCardSlug | undefined,
     src: string,
     alt: string,
     cxOffset: number,
@@ -526,7 +519,6 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   ): MobileCardSpec => ({
     key,
     slug,
-    href: slug ? CARD_HREFS[slug] : "/categories",
     srcBack: slug ? `/images/cards-turned/${src}Turned.png` : "/images/cards/default-card.png",
     srcFront: slug ? `/images/cards/${src}.png` : undefined,
     alt,
@@ -556,6 +548,8 @@ interface MobileFlippableCardProps {
   zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
 function MobileFlippableCard({
@@ -566,6 +560,8 @@ function MobileFlippableCard({
   zIndex,
   onHoverStart,
   onHoverEnd,
+  isSelected,
+  onSelect,
 }: MobileFlippableCardProps) {
   const frontAssets = getCardFrontAssets(card.slug);
   const [showFront, setShowFront] = useState(false);
@@ -649,8 +645,10 @@ function MobileFlippableCard({
   }
 
   return (
-    <Link
-      href={card.href}
+    <button
+      type="button"
+      aria-pressed={isSelected}
+      onClick={onSelect}
       className={styles.mobileCardWrap}
       aria-label={frontAssets ? card.alt : undefined}
       style={style}
@@ -660,11 +658,11 @@ function MobileFlippableCard({
       onBlur={onHoverEnd}
     >
       {inner}
-    </Link>
+    </button>
   );
 }
 
-function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFanProps) {
+function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
   const { back, front } = buildMobileRows(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -691,7 +689,9 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange }: CardsFa
           key={card.key}
           card={card}
           rowCenterCx={rowCenterCx}
-          isHovered={hoveredIndex === globalIndex}
+          isHovered={selectedSlug === card.slug || hoveredIndex === globalIndex}
+          isSelected={selectedSlug === card.slug}
+          onSelect={() => { if (card.slug) { onCardHoverChange(null); onCardSelect(card.slug); } }}
           isDealt={isDealt}
           zIndex={rowBaseZ + i}
           onHoverStart={() => onCardHoverChange(globalIndex)}

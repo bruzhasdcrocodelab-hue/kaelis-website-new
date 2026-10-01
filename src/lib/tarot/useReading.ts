@@ -4,10 +4,13 @@ import type { Locale } from "@/lang";
 import { createReading, fetchReading, loadSpeakers, messagePath, normalizeInterpretation, readingPayload, record, tarotRequest, TarotError, type Reading, type Speaker } from "./reading";
 import { connectReadingSocket, type AnswerEvent } from "./socket";
 import { readingMessages } from "./messages";
+import { useTarotStyle } from "@/components/TarotStyleProvider";
+import { resolveSpeakerId } from "./styleStore";
 
-export function useReading(locale: Locale, categoryId: string, spreadId: string) {
+export function useReading(locale: Locale, categoryId: string, spreadId: string, enabled = true) {
   const [speakers, setSpeakers] = useState<Speaker[]>([]);
-  const [speakerId, setSpeakerId] = useState("");
+  const { speakerId: preferredSpeakerId, setSpeakerId, getSpeakerId } = useTarotStyle();
+  const speakerId = resolveSpeakerId(speakers, preferredSpeakerId);
   const [question, setQuestion] = useState("");
   const [reading, setReading] = useState<Reading | null>(null);
   const [busy, setBusy] = useState(false);
@@ -24,12 +27,14 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string)
     loadSpeakers(locale, controller.signal).then(data => {
       if (controller.signal.aborted) return;
       setSpeakers(data);
-      setSpeakerId(previous => data.some(s => s.id === previous) ? previous : data.find(s => s.icon === "analyst")?.id ?? data[0].id);
+      setSpeakerId(resolveSpeakerId(data, getSpeakerId()));
       setSpeakerError(false);
     }).catch(() => { if (!controller.signal.aborted) setSpeakerError(true); });
     return () => controller.abort();
-  }, [locale, speakerAttempt]);
+  }, [locale, speakerAttempt, setSpeakerId, getSpeakerId]);
   useEffect(() => () => active.current?.abort(), []);
+  // Exit animations may keep the old panel mounted; stop its flow immediately.
+  useEffect(() => { if (!enabled) active.current?.abort(); }, [enabled]);
 
   const reset = useCallback(() => {
     active.current?.abort(); active.current = null; current.current = null;
@@ -37,7 +42,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string)
   }, []);
 
   async function submit() {
-    if (active.current || !question.trim() || !speakers.some(s => s.id === speakerId)) return;
+    if (!enabled || active.current || !question.trim() || !speakers.some(s => s.id === speakerId)) return;
     const controller = new AbortController(); active.current = controller;
     const { signal } = controller;
     setBusy(true); setError("");

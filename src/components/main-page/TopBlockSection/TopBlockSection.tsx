@@ -5,13 +5,14 @@ import MainButton from "@/components/global/MainButton";
 
 export interface TopBlockSectionProps {
   dictionary: Dictionary["topBlock"];
+  className?: string;
 }
 
-export default function TopBlockSection({ dictionary }: TopBlockSectionProps) {
+export default function TopBlockSection({ dictionary, className = "" }: TopBlockSectionProps) {
   return (
     <section
       id="top-block"
-      className={styles.topBlock}
+      className={`${styles.topBlock} ${className}`}
       style={{
         // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
         // it blurs whatever the page paints behind this panel, within its bounds.

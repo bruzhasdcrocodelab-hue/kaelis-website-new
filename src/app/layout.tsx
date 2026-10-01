@@ -3,6 +3,7 @@ import { Bona_Nova_SC, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import GuestAuth from "@/components/GuestAuth";
 import CatalogProvider from "@/components/categories/CatalogProvider";
+import TarotStyleProvider from "@/components/TarotStyleProvider";
 import { getLocale } from "@/lib/locale";
 
 const bonaNovaSC = Bona_Nova_SC({
@@ -33,7 +34,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <GuestAuth />
-        <CatalogProvider locale={locale}>{children}</CatalogProvider>
+        <TarotStyleProvider><CatalogProvider locale={locale}>{children}</CatalogProvider></TarotStyleProvider>
       </body>
     </html>
   );

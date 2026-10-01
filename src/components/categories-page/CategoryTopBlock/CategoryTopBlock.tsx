@@ -28,6 +28,8 @@ export interface CategoryTopBlockProps {
   maxSelectableCards: number;
   categoryId: string;
   spreadId: string;
+  sessionActive?: boolean;
+  embedded?: boolean;
 }
 
 type Step = "ask" | "reveal" | "answer";
@@ -36,9 +38,9 @@ export default function CategoryTopBlock({
   dictionary,
   locale,
   categoryLabel,
-  maxSelectableCards, categoryId, spreadId,
+  maxSelectableCards, categoryId, spreadId, sessionActive = true, embedded = false,
 }: CategoryTopBlockProps) {
-  const flow = useReading(locale, categoryId, spreadId);
+  const flow = useReading(locale, categoryId, spreadId, sessionActive);
   const text = readingMessages[locale];
   const [showAnswer, setShowAnswer] = useState(false);
   const step: Step = flow.reading ? (showAnswer ? "answer" : "reveal") : "ask";
@@ -62,7 +64,7 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section id="category-top-block" className={styles.section}>
+    <section id="category-top-block" className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
         className={`${styles.panel} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{
