@@ -29,7 +29,10 @@ function useLastSuccess<T>(state: CatalogState<T>) {
   return state.status === "success" ? state : last;
 }
 
-function ReadingSession({ slug, dictionary, locale, present }: { slug: HomeCardSlug; dictionary: Dictionary; locale: Locale; present: boolean }) {
+function ReadingSession({ slug, dictionary, locale, present, onProgressChange }: {
+  slug: HomeCardSlug; dictionary: Dictionary; locale: Locale; present: boolean;
+  onProgressChange: (hasProgress: boolean) => void;
+}) {
   const mapping = HOME_CARDS[slug];
   const categoryRequest = useCategories();
   const categories = useLastSuccess(categoryRequest.state);
@@ -50,12 +53,13 @@ function ReadingSession({ slug, dictionary, locale, present }: { slug: HomeCardS
     <CategoryTopBlock dictionary={dictionary.categoryPage.topBlock} locale={locale}
       categoryLabel={dictionary.cards[mapping.label]} categoryId={category?.id ?? ""} spreadId={spread?.id ?? ""}
       maxSelectableCards={count ?? 0} sessionActive={present && Boolean(ready)} embedded
-      catalogStatus={catalogStatus} />
+      catalogStatus={catalogStatus} onProgressChange={onProgressChange} />
   );
 }
 
-function ReadingPanel({ selection, dictionary, locale, mobile }: {
+function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange }: {
   selection: Selection; dictionary: Dictionary; locale: Locale; mobile: boolean;
+  onProgressChange: (hasProgress: boolean) => void;
 }) {
   const present = useIsPresent();
   const reduced = useReducedMotion();
@@ -81,7 +85,7 @@ function ReadingPanel({ selection, dictionary, locale, mobile }: {
         animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
         transition={transition}>
         {/* Only the session resets on card changes; the animated panel stays mounted. */}
-        <ReadingSession key={selection.session} slug={selection.slug} dictionary={dictionary} locale={locale} present={present} />
+        <ReadingSession key={selection.session} slug={selection.slug} dictionary={dictionary} locale={locale} present={present} onProgressChange={onProgressChange} />
       </motion.div>
     </motion.div>
   );
@@ -92,24 +96,28 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const [session, setSession] = useState(0);
   const [pending, setPending] = useState<HomeCardSlug | null>(null);
   const [exiting, setExiting] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const open = selection !== null || exiting;
+  function startSession(slug: HomeCardSlug) {
+    setNeedsConfirmation(false);
+    setSession(value => value + 1);
+    setSelection({ slug, session: session + 1 });
+    setPending(null);
+  }
   function select(slug: HomeCardSlug) {
     if (selection?.slug === slug) {
       setExiting(true);
       setSelection(null);
-    } else if (selection) {
+    } else if (selection && needsConfirmation) {
       setPending(slug);
     } else {
-      setSession(value => value + 1);
-      setSelection({ slug, session: session + 1 });
+      startSession(slug);
     }
   }
   function confirm() {
     if (!pending) return;
-    setSession(value => value + 1);
-    setSelection({ slug: pending, session: session + 1 });
-    setPending(null);
+    startSession(pending);
   }
   return (
     <>
@@ -117,7 +125,7 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
         selectedSlug={selection?.slug ?? null} onCardSelect={select} />
       <div className={styles.panels}>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
-          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} />}
+          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onProgressChange={setNeedsConfirmation} />}
         </AnimatePresence>
         <div className={styles.promo} inert={mobile && open}>
           <TopBlockSection dictionary={dictionary.topBlock} className={styles.topBlock} />

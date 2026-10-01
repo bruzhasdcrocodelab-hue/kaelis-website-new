@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton, {
@@ -31,6 +31,7 @@ export interface CategoryTopBlockProps {
   spreadId: string;
   sessionActive?: boolean;
   embedded?: boolean;
+  onProgressChange?: (hasProgress: boolean) => void;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
     retry: () => void;
@@ -43,12 +44,16 @@ export default function CategoryTopBlock({
   dictionary,
   locale,
   categoryLabel,
-  maxSelectableCards, categoryId, spreadId, sessionActive = true, embedded = false, catalogStatus,
+  maxSelectableCards, categoryId, spreadId, sessionActive = true, embedded = false, catalogStatus, onProgressChange,
 }: CategoryTopBlockProps) {
   const flow = useReading(locale, categoryId, spreadId, sessionActive);
   const text = readingMessages[locale];
   const [showAnswer, setShowAnswer] = useState(false);
   const step: Step = flow.reading ? (showAnswer ? "answer" : "reveal") : "ask";
+  const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
+  useLayoutEffect(() => {
+    onProgressChange?.(hasProgress);
+  }, [hasProgress, onProgressChange]);
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
