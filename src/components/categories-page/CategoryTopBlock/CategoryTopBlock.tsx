@@ -123,7 +123,7 @@ export default function CategoryTopBlock({
           />
         )}
         {/* Preserve the existing decoration on the ask and answer steps. */}
-        {hasFan && (
+        {/* {hasFan && (
           <>
             <DecorativeCardFan
               selectedIds={[]}
@@ -133,7 +133,7 @@ export default function CategoryTopBlock({
             />
             <div className={styles.fadeOverlay} aria-hidden />
           </>
-        )}
+        )} */}
         <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
         {hasFan || step === "choose" ? (
           <>

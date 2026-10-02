@@ -185,7 +185,6 @@
 @media (max-width: 768px) {
   .panelLoading { background: transparent; }
   .panelLoading::before { background: var(--gradient-topblock-mobile); }
-  .panelLoading .pattern { top: -38px; }
   .embedded .panel { margin-top: 0; }
   .panel.panelReading { padding-bottom: 72px; }
   .section {
@@ -212,10 +211,11 @@
     background: linear-gradient(0deg, transparent 0%, var(--color-white) 82%);
   }
 
-  .pattern {
+  .pattern,
+  .panelLoading .pattern {
     position: absolute;
     left: calc(50% - 0.23px);
-    top: -28px;
+    top: -38px;
     /* width: 240.5%;
     height: auto; */
     width: 990px;
