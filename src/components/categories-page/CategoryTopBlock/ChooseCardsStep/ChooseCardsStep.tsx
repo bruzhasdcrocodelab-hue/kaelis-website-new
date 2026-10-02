@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { easingDefinitionToFunction, interpolate, motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransform, type MotionValue } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { readingMessages } from "@/lib/tarot/messages";
 import { CYCLE_MS, fanTracks, loadingCards, progressTracks, textTracks, type Tracks } from "./loadingMotion";
-import { mobileLoadingCards } from "./mobileLoadingMotion";
-import { MOBILE_FAN_CONTAINER_WIDTH, MOBILE_FAN_CONTAINER_HEIGHT, MOBILE_CARD_TRUE_WIDTH, MOBILE_CARD_TRUE_HEIGHT } from "../cardFanMobile";
+import { mobileLoadingCards, mobileFanTracks, mobileTextTracks, mobileProgressTracks, MOBILE_CYCLE_MS, MOBILE_REST_PROGRESS, MOBILE_FAN_WIDTH, MOBILE_FAN_HEIGHT, MOBILE_CARD_WIDTH, MOBILE_CARD_HEIGHT } from "./mobileLoadingMotion";
 import styles from "./ChooseCardsStep.module.css";
 
-const ASSETS = ["/images/cards/default-card.png", "/images/backgrounds/pattern-categories-top-block-2.svg"];
+const ASSETS = ["/images/cards/default-card.png", "/images/backgrounds/pattern-categories-top-block-2.svg", "/images/reading-loading/mobile-mask.svg"];
 
 export interface ChooseCardsStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
@@ -43,24 +42,38 @@ function AnimatedLayer({ progress, tracks, className, children, left, top }: {
   return <motion.div className={className} style={{ transform, opacity, left, top }}>{children}</motion.div>;
 }
 
-function Progress({ progress }: { progress: MotionValue<number> }) {
-  const { width, opacity } = useTracks(progress, progressTracks);
+function Progress({ progress, tracks }: { progress: MotionValue<number>; tracks: Tracks }) {
+  const { width, opacity } = useTracks(progress, tracks);
   return <div className={styles.progress} aria-hidden><div className={styles.track} /><motion.div className={styles.fill} style={{ width, opacity }} /></div>;
 }
 
 export default function ChooseCardsStep({ dictionary, locale, categoryLabel, error, onRetry, onFirstCycleComplete }: ChooseCardsStepProps) {
   const progress = useMotionValue(0);
+  const [isMobile, setIsMobile] = useState(false);
   const reducedMotion = useReducedMotion();
-  const visibleProgress = useTransform(progress, time => reducedMotion ? 0.2656 : time);
-  const startedAt = useRef<number | null>(null);
+  const visibleProgress = useTransform(progress, time => reducedMotion ? (isMobile ? MOBILE_REST_PROGRESS : 0.2656) : time);
+  const lastFrame = useRef<number | null>(null);
+  const completedCycles = useRef(0);
+  const cycleDuration = useRef(CYCLE_MS);
   const assetsReady = useRef(false);
   const firstCycleComplete = useRef(false);
   const text = readingMessages[locale];
 
   useEffect(() => {
+    const query = window.matchMedia("(max-width: 768px)");
+    const update = () => {
+      setIsMobile(query.matches);
+      cycleDuration.current = query.matches ? MOBILE_CYCLE_MS : CYCLE_MS;
+    };
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
     // Count a visible cycle, not time spent downloading its artwork.
-    const images = ASSETS.map(src => new Promise<void>(resolve => {
+    const images = ASSETS.filter((_, index) => index < 2 || window.matchMedia("(max-width: 768px)").matches).map(src => new Promise<void>(resolve => {
       const image = new window.Image();
       image.onload = image.onerror = () => resolve();
       image.src = src;
@@ -72,10 +85,13 @@ export default function ChooseCardsStep({ dictionary, locale, categoryLabel, err
 
   useAnimationFrame(time => {
     if (!assetsReady.current) return;
-    startedAt.current ??= time;
-    const elapsed = time - startedAt.current;
-    progress.set((elapsed % CYCLE_MS) / CYCLE_MS);
-    if (elapsed >= CYCLE_MS && !firstCycleComplete.current) {
+    lastFrame.current ??= time;
+    // Keep the completed fraction when crossing the breakpoint; never restart
+    // the first-cycle guard or wait for a second cycle after reading is ready.
+    completedCycles.current += (time - lastFrame.current) / cycleDuration.current;
+    lastFrame.current = time;
+    progress.set(completedCycles.current % 1);
+    if (completedCycles.current >= 1 - 1e-9 && !firstCycleComplete.current) {
       firstCycleComplete.current = true;
       onFirstCycleComplete();
     }
@@ -94,16 +110,17 @@ export default function ChooseCardsStep({ dictionary, locale, categoryLabel, err
           </AnimatedLayer>
         </div>
       </div>
-      <div className={styles.mobileScene} data-loading-scene="mobile" aria-hidden
-        style={{ width: MOBILE_FAN_CONTAINER_WIDTH, height: MOBILE_FAN_CONTAINER_HEIGHT }}>
-        <AnimatedLayer progress={visibleProgress} tracks={fanTracks} className={styles.fan}>
+      <div className={styles.mobileScene} data-loading-scene="mobile" aria-hidden>
+        <div className={styles.mobileFanPosition} style={{ width: MOBILE_FAN_WIDTH, height: MOBILE_FAN_HEIGHT }}>
+        <AnimatedLayer progress={visibleProgress} tracks={mobileFanTracks} className={styles.fan}>
           {mobileLoadingCards.map(card => (
             <AnimatedLayer key={card.id} progress={visibleProgress} tracks={card.tracks} className={styles.mobileCard} left={card.left} top={card.top}>
-              <Image src={ASSETS[0]} alt="" width={MOBILE_CARD_TRUE_WIDTH} height={MOBILE_CARD_TRUE_HEIGHT}
-                unoptimized className={styles.mobileCardImage} style={{ transform: card.flipY ? "scaleY(-1)" : undefined }} />
+              <Image src={ASSETS[0]} alt="" width={MOBILE_CARD_WIDTH} height={MOBILE_CARD_HEIGHT}
+                unoptimized className={styles.mobileCardImage} />
             </AnimatedLayer>
           ))}
         </AnimatedLayer>
+        </div>
       </div>
       <div className={styles.content}>
         <div className={styles.category}>
@@ -112,14 +129,14 @@ export default function ChooseCardsStep({ dictionary, locale, categoryLabel, err
         </div>
         <div className={styles.messages} aria-hidden>
           {dictionary.loadingMessages.map((message, index) => (
-            <AnimatedLayer key={index} progress={visibleProgress} tracks={textTracks[index]} className={styles.message}>
+            <AnimatedLayer key={index} progress={visibleProgress} tracks={(isMobile ? mobileTextTracks : textTracks)[index]} className={styles.message}>
               <p className={`font-bona-topblock-title ${styles.title}`}>{message.title}</p>
               <p className={`font-instrument-xs ${styles.description}`}>{message.description}</p>
             </AnimatedLayer>
           ))}
         </div>
         <span className={styles.srOnly} role="status">{text.generating}</span>
-        <Progress progress={visibleProgress} />
+        <Progress progress={visibleProgress} tracks={isMobile ? mobileProgressTracks : progressTracks} />
         {error && <div className={styles.error} role="alert">{error} <button type="button" onClick={onRetry}>{text.retry}</button></div>}
       </div>
     </div>

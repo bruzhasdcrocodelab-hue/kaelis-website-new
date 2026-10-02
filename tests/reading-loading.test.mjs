@@ -113,66 +113,103 @@ test("a new question requires its own full cycle, and an inactive session ignore
   assert.ok(find(app.render(), "RevealCardsStep"));
 });
 
-for (const reduced of [false, true]) test("shared clock completes once at 3600 ms after artwork is ready, reduced motion=" + reduced, async () => {
+for (const mobile of [false, true]) for (const reduced of [false, true]) {
+  test(`clock completes its first ${mobile ? 3700 : 3600} ms cycle once, reduced motion=${reduced}`, async () => {
+    const app = await mountLoading(mobile, reduced);
+    try {
+      app.frame(5000);
+      assert.equal(app.completed(), 0, "downloads must not consume the first cycle");
+      await app.finishDownloads();
+      const duration = mobile ? 3700 : 3600;
+      app.frame(6000); app.frame(6000 + duration - 1);
+      assert.equal(app.completed(), 0);
+      app.frame(6000 + duration);
+      assert.equal(app.completed(), 1);
+      app.frame(6000 + duration * 2 + 100);
+      assert.equal(app.completed(), 1);
+      assert.ok(Math.abs(app.progress() - (reduced ? mobile ? 0.2584 : 0.2656 : 100 / duration)) < 1e-8);
+    } finally { app.cleanup(); }
+  });
+}
+
+async function mountLoading(mobile, reduced = false) {
   const state = hooks();
-  let frame, completed = 0, downloads = [];
+  let frame, completed = 0, listener, downloads = [];
   const priorWindow = globalThis.window;
-  globalThis.window = { Image: class { set src(_) { downloads.push(() => this.onload()); } } };
+  const query = { matches: mobile, addEventListener(_, fn) { listener = fn; }, removeEventListener() {} };
+  globalThis.window = {
+    matchMedia: () => query,
+    Image: class { set src(_) { downloads.push(() => this.onload()); } },
+  };
+  const desktop = await load(base + "ChooseCardsStep/loadingMotion.ts", require);
+  const mobileData = await load(base + "ChooseCardsStep/mobileLoadingMotion.ts", require);
+  const { default: Loading } = await load(base + "ChooseCardsStep/ChooseCardsStep.tsx", name => {
+    if (name === "react") return state.react;
+    if (name === "react/jsx-runtime") return require(name);
+    if (name === "motion/react") return {
+      useMotionValue: value => state.react.useRef({ value, set(next) { this.value = next; } }).current,
+      useReducedMotion: () => reduced,
+      useTransform: (value, fn) => ({ get: () => fn(value.value) }),
+      useAnimationFrame: callback => { frame = callback; },
+    };
+    if (name === "./loadingMotion") return desktop;
+    if (name === "./mobileLoadingMotion") return mobileData;
+    if (name === "@/lib/tarot/messages") return { readingMessages: { en: {} } };
+    if (name.endsWith(".css")) return {};
+    return "Image";
+  });
+  const render = () => { state.begin(); return Loading({ dictionary: { loadingMessages: [] }, locale: "en", onFirstCycleComplete: () => completed++ }); };
+  let tree = render(); state.flush(); tree = render();
+  return {
+    frame: time => frame(time),
+    completed: () => completed,
+    progress: () => tree.props.children[0].props.children.props.children.props.progress.get(),
+    resize(value) { query.matches = value; listener(); tree = render(); },
+    async finishDownloads() { downloads.forEach(finish => finish()); await new Promise(resolve => setImmediate(resolve)); },
+    cleanup() { globalThis.window = priorWindow; },
+  };
+}
+
+test("breakpoint changes preserve the completed fraction and do not restart the first cycle", async () => {
+  const app = await mountLoading(true);
   try {
-    const motionData = await load(base + "ChooseCardsStep/loadingMotion.ts", require);
-    const { default: Loading } = await load(base + "ChooseCardsStep/ChooseCardsStep.tsx", name => {
-      if (name === "react") return state.react;
-      if (name === "react/jsx-runtime") return require(name);
-      if (name === "motion/react") return {
-        useMotionValue: value => ({ value, set(next) { this.value = next; } }),
-        useReducedMotion: () => reduced,
-        useTransform: (value, fn) => ({ get: () => fn(value.value) }),
-        useAnimationFrame: callback => { frame = callback; },
-      };
-      if (name === "./loadingMotion") return motionData;
-      if (name === "./mobileLoadingMotion") return { mobileLoadingCards: [] };
-      if (name === "../cardFanMobile") return {};
-      if (name === "@/lib/tarot/messages") return { readingMessages: { en: {} } };
-      if (name.endsWith(".css")) return {};
-      return "Image";
-    });
-    const tree = Loading({ dictionary: { loadingMessages: [] }, locale: "en", onFirstCycleComplete: () => completed++ });
-    state.flush();
-    frame(5000);
-    assert.equal(completed, 0, "network delay must not consume the first cycle");
-    downloads.forEach(finish => finish());
-    await new Promise(resolve => setImmediate(resolve));
-    frame(6000); frame(9599);
-    assert.equal(completed, 0);
-    frame(9600);
-    assert.equal(completed, 1);
-    frame(11000); frame(13200);
-    assert.equal(completed, 1);
-    const layer = tree.props.children[0].props.children.props.children;
-    assert.equal(layer.props.progress.get(), reduced ? 0.2656 : 0);
-  } finally { globalThis.window = priorWindow; }
+    await app.finishDownloads();
+    app.frame(0); app.frame(1850);
+    assert.ok(Math.abs(app.progress() - 0.5) < 1e-8);
+    app.resize(false);
+    app.frame(3649);
+    assert.equal(app.completed(), 0);
+    app.frame(3650);
+    assert.equal(app.completed(), 1);
+    app.resize(true); app.frame(3700);
+    assert.equal(app.completed(), 1);
+  } finally { app.cleanup(); }
 });
 
-test("mobile motion preserves the old spread geometry and gathers every card into the same pile", async () => {
-  const fan = await load(base + "cardFanMobile.ts", require);
-  const desktop = await load(base + "ChooseCardsStep/loadingMotion.ts", require);
-  const mobile = await load(base + "ChooseCardsStep/mobileLoadingMotion.ts", name =>
-    name === "../cardFanMobile" ? fan : desktop);
-  const centre = fan.cardFanMobile.find(card => card.id === "13");
-  const pile = { x: centre.left + 30, y: centre.top + 55 };
+test("mobile Figma scene has 21 smaller cards with its own fan, text and progress timeline", async () => {
+  const mobile = await load(base + "ChooseCardsStep/mobileLoadingMotion.ts", require);
+  assert.equal(mobile.MOBILE_CYCLE_MS, 3700);
+  assert.equal(mobile.mobileLoadingCards.length, 21);
+  assert.equal(mobile.MOBILE_CARD_WIDTH, 49.612);
+  assert.equal(mobile.MOBILE_CARD_HEIGHT, 88.594);
+  const centre = mobile.mobileLoadingCards.find(card => card.cardId === "13");
+  assert.ok(Math.abs(centre.top + mobile.MOBILE_CARD_HEIGHT - 377.975) < 0.1);
   for (const card of mobile.mobileLoadingCards) {
-    const original = fan.cardFanMobile.find(item => item.id === card.id);
-    assert.equal(card.left, original.left);
-    assert.equal(card.top, original.top);
-    assert.equal(card.flipY, original.flipY);
-    assert.ok(Math.abs(card.tracks.rotate.values[1] - original.rotate) < 0.001);
     for (const axis of ["x", "y"]) {
       const track = card.tracks[axis];
-      const position = axis === "x" ? card.left + 30 : card.top + 55;
-      assert.ok(Math.abs(track.values[1]) < 0.001, "spread pose must stay at the old card position");
-      const final = track.values[track.timing.times.findIndex(time => time >= 0.8561)];
-      assert.ok(Math.abs(position + final - pile[axis]) < 0.001, "all cards must meet at the pile");
+      assert.equal(track.values[1], 0);
+      const index = track.values.length - 3; // Gathered pose before the hidden reset.
+      const position = axis === "x" ? card.left : card.top;
+      const target = axis === "x" ? centre.left : centre.top;
+      assert.ok(Math.abs(position + track.values[index] - target) < 0.02, "cards gather at the centre card");
+    }
+    for (const track of Object.values(card.tracks)) {
+      assert.equal(track.values.length, track.timing.times.length);
+      assert.equal(track.timing.ease.length, track.values.length - 1);
       assert.ok(track.values.every(Number.isFinite));
     }
   }
+  assert.deepEqual(mobile.mobileTextTracks.map(track => track.opacity.timing.times[1]), [0.0426, 0.2703, 0.5676]);
+  assert.equal(Math.max(...mobile.mobileProgressTracks.width.values), 193.67);
+  assert.equal(Math.max(...mobile.mobileFanTracks.scaleX.values), 2.98);
 });

@@ -185,7 +185,7 @@
 @media (max-width: 768px) {
   .panelLoading { background: transparent; }
   .panelLoading::before { background: var(--gradient-topblock-mobile); }
-  .panelLoading .pattern { top: -28px; }
+  .panelLoading .pattern { top: -38px; }
   .embedded .panel { margin-top: 0; }
   .panel.panelReading { padding-bottom: 72px; }
   .section {

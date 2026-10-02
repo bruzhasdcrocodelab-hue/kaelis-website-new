@@ -212,7 +212,9 @@
   --radius-sheet: 28px;
   --radius-header-pill: 60px;
   --radius-loading-card: 8px;
-  --radius-loading-card-mobile: 4px;
+  --radius-loading-card-mobile: 4.05px;
+  --radius-loading-progress-surface-mobile: 25px;
+  --radius-loading-progress-mobile: 10px;
   --radius-loading-progress: 12px;
   --color-loading-progress-surface: #fff;
   --opacity-loading-progress-outline: 0.5;

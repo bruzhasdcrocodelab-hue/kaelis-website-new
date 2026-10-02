@@ -161,7 +161,7 @@ export default function CategoryTopBlock({
             error={flow.error} onRetry={flow.retry} onFirstCycleComplete={completeFirstCycle} />
         ) : <div className={styles.row}>
           <div className={styles.side}>
-            {step === "reveal" && (
+            {/* {step === "reveal" && (
               <MainButton
                 variant="default"
                 size="medium"
@@ -171,7 +171,7 @@ export default function CategoryTopBlock({
               >
                 {dictionary.changeQuestion}
               </MainButton>
-            )}
+            )} */}
           </div>
 
           <div className={styles.center}>
@@ -233,7 +233,7 @@ export default function CategoryTopBlock({
 
       {!loadingStatus && (step === "reveal" || step === "ask") && (
         <div className={styles.triggerMobile}>
-          {step === "reveal" && (
+          {/* {step === "reveal" && (
             <MainButton
               variant="default"
               size="large"
@@ -242,7 +242,7 @@ export default function CategoryTopBlock({
               onClick={changeQuestion}
               muted
             />
-          )}
+          )} */}
           <MainButton
             variant="default"
             size="large"
