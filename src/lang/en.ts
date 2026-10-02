@@ -32,7 +32,7 @@ const en = {
   readingConfirmation: {
     title: "Are you sure?",
     message: "Switching cards will clear your question and reading result.",
-    confirm: "Switch card",
+    confirm: "Switch reading",
     cancel: "Keep reading",
   },
   cards: {

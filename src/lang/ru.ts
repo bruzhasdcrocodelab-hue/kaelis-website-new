@@ -34,7 +34,7 @@ const ru: Dictionary = {
   readingConfirmation: {
     title: "Точно уверены?",
     message: "При смене карты вопрос и результат расклада будут очищены.",
-    confirm: "Сменить карту",
+    confirm: "Сменить расклад",
     cancel: "Продолжить расклад",
   },
   cards: {

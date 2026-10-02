@@ -34,7 +34,7 @@ const uk: Dictionary = {
   readingConfirmation: {
     title: "Ви впевнені?",
     message: "Після зміни карти запитання та результат розкладу буде очищено.",
-    confirm: "Змінити карту",
+    confirm: "Змінити розклад",
     cancel: "Продовжити розклад",
   },
   cards: {
