@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { CardFrontAssets } from "./cardFrontAssets";
 import styles from "./AnimatedCardFront.module.css";
 
-export default function AnimatedCardFront({ active, assets }: { active: boolean; assets: CardFrontAssets }) {
+export default function AnimatedCardFront({ active, visible, assets }: { active: boolean; visible: boolean; assets: CardFrontAssets }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -21,7 +21,7 @@ export default function AnimatedCardFront({ active, assets }: { active: boolean;
     let generation = 0;
 
     const update = () => {
-      if (inView && !reducedMotion.matches && !video.getAttribute("src")) {
+      if (active && inView && !reducedMotion.matches && !video.getAttribute("src")) {
         video.src = assets.video;
       }
       const shouldPlay = active && inView && !document.hidden && !reducedMotion.matches;
@@ -31,8 +31,8 @@ export default function AnimatedCardFront({ active, assets }: { active: boolean;
       const attempt = ++generation;
       if (!shouldPlay) {
         video.pause();
-        // Freeze the last frame during the reverse flip. The front unmounts
-        // at its midpoint; don't flash the initial poster on mouse leave.
+        // Freeze the last frame during the reverse flip; the front is hidden
+        // at its midpoint. Keep its images mounted for the next reveal.
         return;
       }
       // Keep the poster visible until playback actually starts. Each reveal
@@ -64,13 +64,14 @@ export default function AnimatedCardFront({ active, assets }: { active: boolean;
   }, [active, assets.video]);
 
   return (
-    <div ref={rootRef} className={styles.front} aria-hidden="true">
+    <div ref={rootRef} className={styles.front} style={{ opacity: visible ? 1 : 0 }} aria-hidden="true">
       <Image
         className={styles.layer}
         src={assets.poster}
         alt=""
         fill
         sizes="165px"
+        loading="eager"
         unoptimized
       />
       <video
@@ -91,6 +92,7 @@ export default function AnimatedCardFront({ active, assets }: { active: boolean;
         src={assets.title}
         alt=""
         fill
+        loading="eager"
         unoptimized
       />
     </div>

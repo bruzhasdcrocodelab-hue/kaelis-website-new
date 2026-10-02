@@ -28,9 +28,11 @@ export default function Header({ dictionary, locale }: HeaderProps) {
         <span className={styles.glowClip} aria-hidden>
           <span className={styles.glow} />
         </span>
-        <Link href="/" className={`font-instrument-xl ${styles.logo}`}>
+        {/* A native link reloads the home page, including when already on it. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/" className={`font-instrument-xl ${styles.logo}`}>
           {dictionary.logo}
-        </Link>
+        </a>
         <nav className={`font-instrument-base ${styles.nav}`}>
           <TarotSpreadsLink className={styles.navLink} locale={locale}>
             {dictionary.nav.tarotSpreads}

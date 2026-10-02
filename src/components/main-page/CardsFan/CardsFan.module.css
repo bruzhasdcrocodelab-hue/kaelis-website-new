@@ -1,4 +1,5 @@
 .cardsFan {
+  scroll-margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;

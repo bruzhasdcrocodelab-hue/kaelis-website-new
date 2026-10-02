@@ -34,7 +34,7 @@ const ru: Dictionary = {
   readingConfirmation: {
     title: "Точно уверены?",
     message: "При смене карты вопрос и результат расклада будут очищены.",
-    confirm: "Сменить карту",
+    confirm: "Сменить расклад",
     cancel: "Продолжить расклад",
   },
   cards: {
@@ -71,6 +71,11 @@ const ru: Dictionary = {
       placeholder: "Опишите свой вопрос…",
       continue: "Продолжить",
       chooseTitle: "Выберите {count} {cards}",
+      loadingMessages: [
+        { title: "Читаем знаки", description: "Карты встают на свои места" },
+        { title: "Шёпот судьбы", description: "Ваше послание раскрывается" },
+        { title: "Заглянем за горизонт", description: "Невидимое обретает очертания" },
+      ],
       cardWordOne: "карту",
       cardWordFew: "карты",
       cardWordMany: "карт",
