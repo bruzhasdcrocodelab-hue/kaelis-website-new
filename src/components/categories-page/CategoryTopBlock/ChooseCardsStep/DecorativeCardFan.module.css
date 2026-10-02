@@ -1,0 +1,41 @@
+.fan {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1320px;
+  height: 440px;
+  transform: translateX(-50%);
+  overflow: visible;
+  z-index: 0;
+}
+
+.fanMobile {
+  display: none;
+}
+
+.fanCardBox {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .fan {
+    display: none;
+  }
+
+  .fanMobile {
+    display: block;
+    position: absolute;
+    left: calc(50% - 355px);
+    top: -97px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .fanMobileForeground {
+    z-index: 4;
+  }
+}

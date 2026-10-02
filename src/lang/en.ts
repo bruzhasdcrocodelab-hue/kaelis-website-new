@@ -69,6 +69,11 @@ const en = {
       placeholder: "Describe your question…",
       continue: "Continue",
       chooseTitle: "Choose {count} {cards}",
+      loadingMessages: [
+        { title: "Reading the signs", description: "The cards are aligning" },
+        { title: "Whispers of fate", description: "Your message is unfolding" },
+        { title: "Looking beyond", description: "The unseen is taking shape" },
+      ],
       cardWordOne: "Card",
       cardWordFew: "Cards",
       cardWordMany: "Cards",

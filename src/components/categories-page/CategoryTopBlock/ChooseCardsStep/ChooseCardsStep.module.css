@@ -1,41 +1,44 @@
-.fan {
+.loading {
   position: absolute;
-  left: 50%;
-  top: 0;
-  width: 1320px;
-  height: 440px;
-  transform: translateX(-50%);
-  overflow: visible;
-  z-index: 0;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-greyish-blue);
+  container-type: inline-size;
 }
 
-.fanMobile {
-  display: none;
-}
+.pattern { position: absolute; left: calc(50% + 0.5px); bottom: -85px; width: 1627px; height: 731px; transform: translateX(-50%); pointer-events: none; }
+.pattern img, .waves img { max-width: none; }
+.scene { position: absolute; inset: 0; pointer-events: none; }
+.fanPosition { position: absolute; left: calc(50% - 0.38px); bottom: 33.38px; width: 1440px; height: 746.618px; transform: translateX(-50%); }
+.fan { width: 100%; height: 100%; }
+.card { position: absolute; width: 98px; height: 175px; border-radius: 8px; overflow: hidden; }
+.cardImage { position: absolute; left: -0.86%; top: -0.29%; width: 101.11%; height: 100.6%; max-width: none; transform: scaleY(-1); }
+.waves { position: absolute; left: calc(50% - 0.23px); top: -340px; width: 1779.53px; height: 800.367px; transform: translateX(-50%); pointer-events: none; }
+.border { position: absolute; inset: 20px 17.5px; border: 1px solid #d3aced; border-radius: 30px; pointer-events: none; }
 
-.fanCardBox {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
+.content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 32px 20px 0; text-align: center; }
+.category { display: flex; flex-direction: column; align-items: center; color: var(--color-black-40); }
+.category img { margin: 4px 4px -4px; }
+.category p { line-height: normal; overflow-wrap: anywhere; }
+.messages { display: grid; width: 100%; max-width: 480px; }
+.message { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; }
+.title { color: var(--color-black); font-size: 40px; letter-spacing: -3px; line-height: normal; margin-bottom: -4px; }
+.description { color: var(--color-black-50); font-size: 12px; line-height: normal; width: 240px; max-width: 100%; }
+.progress { position: relative; width: 240px; max-width: 100%; padding: 4px; border-radius: 30px; background: white; }
+.track { position: absolute; inset: 4px; border: 1px solid #d3aced; border-radius: 12px; opacity: 0.5; }
+.fill { position: relative; height: 10px; border-radius: 12px; background-image: url('/images/reading-loading/progress-overlay.png'), url('/images/reading-loading/progress-base.png'); background-size: cover; }
+.error { max-width: 360px; padding: 8px 12px; background: var(--color-greyish-blue); border-radius: 12px; font-size: 13px; color: var(--color-black); }
+.error button { text-decoration: underline; cursor: pointer; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 @media (max-width: 768px) {
-  .fan {
-    display: none;
-  }
-
-  .fanMobile {
-    display: block;
-    position: absolute;
-    left: calc(50% - 355px);
-    top: -97px;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .fanMobileForeground {
-    z-index: 4;
-  }
+  .content { padding: 24px 16px 0; }
+  .title { font-size: clamp(27px, 7.8cqw, 40px); letter-spacing: -1.5px; }
+  /* Scale the scene, not the translated copy, so all locales share one timeline. */
+  .scene { top: auto; bottom: 38px; height: 440px; left: calc(50% - 660px); width: 1320px; transform: scale(0.62); transform-origin: center bottom; }
+  .pattern { bottom: -70px; transform: translateX(-50%) scale(0.62); transform-origin: center bottom; }
+  .waves { top: auto; bottom: 18px; transform: translateX(-50%) scale(0.62); transform-origin: center bottom; }
+  .border { inset: 12px 10px 24px; border-radius: 24px; }
 }

@@ -1,0 +1,110 @@
+"use client";
+
+import {
+  cardFan,
+  CARD_TRUE_HEIGHT,
+  CARD_TRUE_WIDTH,
+  FAN_CONTAINER_HEIGHT,
+  FAN_CONTAINER_WIDTH,
+} from "../cardFan";
+import {
+  cardFanMobile,
+  MOBILE_CARD_TRUE_HEIGHT,
+  MOBILE_CARD_TRUE_WIDTH,
+  MOBILE_FAN_CONTAINER_HEIGHT,
+  MOBILE_FAN_CONTAINER_WIDTH,
+} from "../cardFanMobile";
+import FanCard from "../FanCard/FanCard";
+import { fitSelectionFan } from "@/lib/categories/selectionFan";
+import { tarotDeck } from "@/lib/tarotDeck";
+import styles from "./DecorativeCardFan.module.css";
+
+export interface DecorativeCardFanProps {
+  selectedIds: string[];
+  maxSelectableCards: number;
+  onToggleCard: (id: string) => void;
+  isInteractive?: boolean;
+}
+
+export default function DecorativeCardFan({
+  selectedIds,
+  maxSelectableCards,
+  onToggleCard,
+  isInteractive = true,
+}: DecorativeCardFanProps) {
+  const expand = isInteractive && maxSelectableCards > Math.min(cardFan.length, cardFanMobile.length);
+  // A spread's size is not the deck size. Keep spare cards available where
+  // the original decorative arc is clipped, especially on narrow screens.
+  const desktopCards = expand ? fitSelectionFan(cardFan, tarotDeck.length) : cardFan;
+  const mobileCards = expand ? fitSelectionFan(cardFanMobile, tarotDeck.length) : cardFanMobile;
+  return (
+    <>
+      <div className={styles.fan}>
+        {desktopCards.map((card) => {
+          const isSelected = selectedIds.includes(card.id);
+          const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
+          return (
+            <div
+              key={card.id}
+              className={styles.fanCardBox}
+              style={{
+                left: `${(card.left / FAN_CONTAINER_WIDTH) * 100}%`,
+                top: `${(card.top / FAN_CONTAINER_HEIGHT) * 100}%`,
+                width: `${(card.width / FAN_CONTAINER_WIDTH) * 100}%`,
+                height: `${(card.height / FAN_CONTAINER_HEIGHT) * 100}%`,
+              }}
+            >
+              <FanCard
+                card={card}
+                width={CARD_TRUE_WIDTH}
+                height={CARD_TRUE_HEIGHT}
+                isSelected={isSelected}
+                isDisabled={selectionDisabled}
+                isInteractive={isInteractive}
+                onToggle={() => onToggleCard(card.id)}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      <div
+        className={`${styles.fanMobile} ${isInteractive ? styles.fanMobileForeground : ""}`}
+        style={{
+          width: MOBILE_FAN_CONTAINER_WIDTH,
+          height: MOBILE_FAN_CONTAINER_HEIGHT,
+        }}
+        aria-hidden={!isInteractive}
+      >
+        {mobileCards.map((card) => {
+          const isSelected = selectedIds.includes(card.id);
+          const selectionDisabled = !isSelected && selectedIds.length >= maxSelectableCards;
+          return (
+            <div
+              key={card.id}
+              className={styles.fanCardBox}
+              style={{
+                left: card.left,
+                top: card.top,
+                width: card.width,
+                height: card.height,
+              }}
+            >
+              <FanCard
+                card={card}
+                width={MOBILE_CARD_TRUE_WIDTH}
+                height={MOBILE_CARD_TRUE_HEIGHT}
+                isSelected={isSelected}
+                isDisabled={selectionDisabled}
+                isInteractive={isInteractive}
+                onToggle={() => onToggleCard(card.id)}
+                flipY={card.flipY}
+                mobile
+              />
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}

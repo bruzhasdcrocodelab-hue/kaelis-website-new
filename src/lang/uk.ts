@@ -71,6 +71,11 @@ const uk: Dictionary = {
       placeholder: "Опишіть своє питання…",
       continue: "Продовжити",
       chooseTitle: "Оберіть {count} {cards}",
+      loadingMessages: [
+        { title: "Читаємо знаки", description: "Карти стають на свої місця" },
+        { title: "Шепіт долі", description: "Ваше послання розкривається" },
+        { title: "Зазирнемо за обрій", description: "Невидиме набуває обрисів" },
+      ],
       cardWordOne: "карту",
       cardWordFew: "карти",
       cardWordMany: "карт",

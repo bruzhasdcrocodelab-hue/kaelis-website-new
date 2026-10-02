@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton, {
@@ -15,6 +15,7 @@ import GradientWavesLineFrame from "./GradientWavesLineFrame/GradientWavesLineFr
 import AnswerStep from "./AnswerStep/AnswerStep";
 import AskQuestionStep from "./AskQuestionStep/AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep/ChooseCardsStep";
+import DecorativeCardFan from "./ChooseCardsStep/DecorativeCardFan";
 import RevealCardsStep from "./RevealCardsStep/RevealCardsStep";
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
@@ -38,7 +39,7 @@ export interface CategoryTopBlockProps {
   };
 }
 
-type Step = "ask" | "reveal" | "answer";
+type Step = "ask" | "choose" | "reveal" | "answer";
 
 export default function CategoryTopBlock({
   dictionary,
@@ -49,7 +50,14 @@ export default function CategoryTopBlock({
   const flow = useReading(locale, categoryId, spreadId, sessionActive);
   const text = readingMessages[locale];
   const [showAnswer, setShowAnswer] = useState(false);
-  const step: Step = flow.reading ? (showAnswer ? "answer" : "reveal") : "ask";
+  const [firstCycleComplete, setFirstCycleComplete] = useState(false);
+  const completeFirstCycle = useCallback(() => {
+    if (sessionActive) setFirstCycleComplete(true);
+  }, [sessionActive]);
+  // Receiving cards alone does not mean the AI interpretation is ready.
+  const step: Step = flow.reading?.reading && firstCycleComplete
+    ? (showAnswer ? "answer" : "reveal")
+    : flow.busy || flow.reading ? "choose" : "ask";
   const sectionRef = useRef<HTMLElement>(null);
   const previousStep = useRef(step);
   useEffect(() => {
@@ -73,7 +81,7 @@ export default function CategoryTopBlock({
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
   const speakerIcon = (icon: string | null | undefined) => GUIDE_ICON[icon as keyof typeof GUIDE_ICON] ?? "/icons/analyst.svg";
-  const changeQuestion = () => { flow.reset(); setShowAnswer(false); };
+  const changeQuestion = () => { flow.reset(); setShowAnswer(false); setFirstCycleComplete(false); };
   const isConfirmed = step === "reveal";
   const loadingStatus = catalogStatus ?? (embedded && !flow.speakers.length
     ? { status: flow.speakerError ? "error" as const : "loading" as const, retry: flow.retrySpeakers }
@@ -82,11 +90,13 @@ export default function CategoryTopBlock({
 
   const stepTitle: Record<Step, string> = {
     ask: dictionary.askTitle,
+    choose: "",
     reveal: dictionary.findTitle,
     answer: dictionary.truthTitle,
   };
   const stepDescription: Record<Step, string> = {
     ask: dictionary.askDescription,
+    choose: "",
     reveal: flow.reading?.question ? `“${flow.reading.question}”` : "",
     answer: flow.reading?.question ? `“${flow.reading.question}”` : "",
   };
@@ -112,10 +122,10 @@ export default function CategoryTopBlock({
             aria-hidden
           />
         )}
-        {/* Manual selection is bypassed; keep the decorative fan below. */}
+        {/* Preserve the existing decoration on the ask and answer steps. */}
         {hasFan && (
           <>
-            <ChooseCardsStep
+            <DecorativeCardFan
               selectedIds={[]}
               maxSelectableCards={maxSelectableCards}
               onToggleCard={() => {}}
@@ -124,8 +134,9 @@ export default function CategoryTopBlock({
             <div className={styles.fadeOverlay} aria-hidden />
           </>
         )}
-        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
-        {hasFan ? (
+        {step !== "choose" && 
+        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />}
+        {step !== "choose" && (hasFan ? (
           <>
             <WavesLineFrame className={styles.wavesLine} style={{ zIndex: 2 }} />
             <Image
@@ -139,14 +150,17 @@ export default function CategoryTopBlock({
           </>
         ):(
           <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />
-        )}
+        ))}
 
         {loadingStatus ? (
           <div className={styles.loading}>
             <CatalogStatus locale={locale} status={loadingStatus.status} retry={loadingStatus.retry} tone="dark" />
           </div>
         ) : <>
-        <div className={styles.row}>
+        {step === "choose" ? (
+          <ChooseCardsStep dictionary={dictionary} locale={locale} categoryLabel={categoryLabel}
+            error={flow.error} onRetry={flow.retry} onFirstCycleComplete={completeFirstCycle} />
+        ) : <div className={styles.row}>
           <div className={styles.side}>
             {step === "reveal" && (
               <MainButton
@@ -190,12 +204,12 @@ export default function CategoryTopBlock({
               )}
             </div>
           </div>
-        </div>
+        </div>}
 
         {step === "ask" && (
           <AskQuestionStep dictionary={dictionary} question={flow.question} onChange={flow.setQuestion}
             disabled={flow.busy || !flow.speakerId} loading={flow.busy} loadingLabel={text.loading}
-            error={flow.error} onContinue={() => { void flow.submit(); }} />
+            error={flow.error} onContinue={() => { setFirstCycleComplete(false); void flow.submit(); }} />
         )}
         {step === "reveal" && flow.reading && (
           <RevealCardsStep
