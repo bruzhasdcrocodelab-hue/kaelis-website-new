@@ -59,7 +59,13 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
           <p className={`font-instrument-sm ${styles.description}`}>{dictionary.description}</p>
         </div>
         <motion.div layout className={styles.ctaButtonWrap} transition={CTA_LAYOUT_TRANSITION}>
-          <MainButton variant="stroke" size="large" type="button">
+          <MainButton variant="stroke" size="large" type="button" aria-controls="cards"
+            onClick={() => {
+              const cards = document.getElementById("cards");
+              if (!cards) return;
+              if (window.location.hash !== "#cards") window.history.pushState(null, "", "#cards");
+              cards.scrollIntoView({ behavior: prefersReducedMotion ? "instant" : "smooth", block: "start" });
+            }}>
             <span className={styles.ctaLabelWrap}>
               {/* <AnimatePresence initial={false} mode="wait">
                 <motion.span

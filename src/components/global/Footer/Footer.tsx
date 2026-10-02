@@ -45,9 +45,11 @@ export default function Footer({ dictionary, variant = "default" }: FooterProps)
           {dictionary.links.privacyPolicy}
         </Link>
       </div>
-      <Link href="/" className={`font-instrument-xl ${styles.logo}`}>
+      {/* A native link reloads the home page, including when already on it. */}
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <a href="/" className={`font-instrument-xl ${styles.logo}`}>
         {dictionary.logo}
-      </Link>
+      </a>
     </footer>
   );
 }

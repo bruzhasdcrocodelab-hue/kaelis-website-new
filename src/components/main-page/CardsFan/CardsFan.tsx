@@ -342,10 +342,10 @@ function FlippableCard({
           }}
         >
           <div className={styles.cardSideInner}>
-            {showFront && frontAssets ? (
-              <AnimatedCardFront active={frontReady && isHovered} assets={frontAssets} />
-            ) : (
-              <Image src={showFront ? card.srcFront : card.srcBack} alt={card.alt} fill sizes="165px" />
+            <Image src={showFront && !frontAssets ? card.srcFront : card.srcBack} alt={card.alt} fill sizes="165px"
+              style={{ visibility: showFront && frontAssets ? "hidden" : "visible" }} />
+            {frontAssets && (
+              <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
             )}
           </div>
         </motion.div>
@@ -368,6 +368,7 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
   return (
     <div
       ref={fanRef}
+      id="cards"
       className={styles.cardsFan}
       style={isMobile ? undefined : { height: desktopCardsFanHeight(scale) }}
     >
@@ -613,15 +614,15 @@ function MobileFlippableCard({
         }}
       >
         <div className={styles.cardSideInner}>
-          {showFront && frontAssets ? (
-            <AnimatedCardFront active={frontReady && isHovered} assets={frontAssets} />
-          ) : (
-            <Image
-              src={showFront && card.srcFront ? card.srcFront : card.srcBack}
-              alt={card.alt}
-              fill
-              sizes="116px"
-            />
+          <Image
+            src={showFront && !frontAssets && card.srcFront ? card.srcFront : card.srcBack}
+            alt={card.alt}
+            fill
+            sizes="116px"
+            style={{ visibility: showFront && frontAssets ? "hidden" : "visible" }}
+          />
+          {frontAssets && (
+            <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
           )}
         </div>
       </motion.div>
