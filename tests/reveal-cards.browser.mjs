@@ -1,0 +1,185 @@
+// Run against a local dev server: node tests/reveal-cards.browser.mjs <path-to-playwright>
+// All API requests are intercepted; this test never creates a backend reading.
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+import { mkdirSync } from "node:fs";
+const loadPackage = createRequire(import.meta.url);
+const { chromium } = loadPackage(process.argv[2] || "playwright");
+const artifacts = ".next/reveal-checks";
+mkdirSync(artifacts, { recursive: true });
+
+(async () => {
+  const browser = await chromium.launch({ channel: "chrome", headless: true });
+  try {
+    for (const scenario of [
+      { name: "desktop", width: 1440, height: 1000, count: 4, locale: "en" },
+      { name: "mobile", width: 390, height: 844, count: 7, locale: "uk" },
+      { name: "narrow-reduced", width: 320, height: 640, count: 1, locale: "ru", reduced: true },
+      { name: "desktop-twelve", width: 1440, height: 1000, count: 12, locale: "en" },
+    ]) {
+      const context = await browser.newContext({
+        viewport: { width: scenario.width, height: scenario.height },
+        reducedMotion: scenario.reduced ? "reduce" : "no-preference",
+        hasTouch: scenario.width < 768,
+      });
+      await context.addCookies([{ name: "locale", value: scenario.locale, url: "http://localhost:3000" }]);
+      const page = await context.newPage();
+      const errors = [];
+      page.on("pageerror", error => errors.push(error.message));
+      let submissions = 0;
+      const keys = Array.from({ length: scenario.count }, (_, i) => i === 0 ? "S" : String(i));
+      const matrix = Object.fromEntries(keys.map((key, i) => [key, [i % 4 - 2, Math.floor(i / 4) - 1]]));
+      // Array order deliberately disagrees with object/numeric/spatial ordering.
+      const order = [...keys].reverse();
+      const cardNames = ["The Sun", "The Moon", "The Star", "Knight of Wands"];
+      await page.route("**/api/kaelis/**", async route => {
+        const url = new URL(route.request().url());
+        const base = { id: 4, slug: "family", name: "Family", site_description: "Family reading", image: null, need_new_plan: false };
+        let body;
+        if (url.pathname.endsWith("/user/anonymous")) body = { data: { token_type: "Bearer", access_token: "test-only", guest: { id: 1 } } };
+        else if (url.pathname.endsWith("/tarot/category")) body = { data: [base], meta: { current_page: 1, last_page: 1 } };
+        else if (url.pathname.endsWith("/tarot/speaker")) body = { data: [{ id: 1, name: "Analyst", icon: "analyst" }] };
+        else if (url.pathname.endsWith("/configuration")) body = { data: { web_socket: {} } };
+        else if (url.pathname.endsWith("/tarot") && route.request().method() === "POST") {
+          submissions++;
+          body = { data: {
+            id: 100 + submissions, chat_id: 1, question: JSON.parse(route.request().postData()).question, tarot: { id: 62, matrix },
+            cards: order.map((position, i) => ({
+              position, name: cardNames[i % 4], description: ("Card " + position + " — опис карти, описание карты. ").repeat(10),
+              image: ["Sun.png", "Moon.png", "Star.png", "Wands12.png"][i % 4], orientation: i % 2 === 0,
+            })),
+            reading: { interpretation: [{ title: "Reading answer", text: ("AI reading " + submissions + " — відповідь, ответ. ").repeat(40) }], cards: [] },
+          } };
+        } else if (url.pathname.endsWith("/tarot")) body = {
+          data: [{ ...base, id: 62, slug: "celtic-cross", name: "Celtic Cross", description: "Spread", matrix }],
+          meta: { current_page: 1, last_page: 1 },
+        };
+        else body = { data: {} };
+        await route.fulfill({ json: body });
+      });
+      await page.goto("http://localhost:3000/categories/family");
+      await page.locator("textarea").waitFor();
+      await page.evaluate(() => {
+        window.revealPhases = []; window.anchorCalls = 0; window.phaseSamples = [];
+        const original = Element.prototype.scrollIntoView;
+        Element.prototype.scrollIntoView = function (...args) {
+          if (this.id === "category-top-block") window.anchorCalls++;
+          return original.apply(this, args);
+        };
+        new MutationObserver(() => {
+          const phase = document.querySelector("[data-reveal-phase]")?.dataset.revealPhase;
+          if (!phase || window.revealPhases.at(-1) === phase) return;
+          window.revealPhases.push(phase);
+          window.phaseSamples.push({
+            phase,
+            selected: document.querySelectorAll("[data-card-position] [aria-pressed=true]").length,
+            landed: [...document.querySelectorAll("[data-card-position]")].every(el => {
+              const matrix = new DOMMatrix(getComputedStyle(el).transform);
+              return Math.abs(matrix.e) < .1 && Math.abs(matrix.f) < .1;
+            }),
+          });
+        }).observe(document.body, { subtree: true, attributes: true, childList: true });
+      });
+      const continueLabel = { en: "Continue", uk: "Продовжити", ru: "Продолжить" }[scenario.locale];
+      const startLabel = { en: "Start Over", uk: "Почати спочатку", ru: "Начать заново" }[scenario.locale];
+      await page.locator("textarea").fill("How will my plans develop? Довге запитання про майбутнє та можливості. Длинный вопрос о планах и новых возможностях.");
+      await page.getByRole("button", { name: continueLabel, exact: true }).click();
+      await page.locator("[data-reveal-phase=ready]").waitFor({ timeout: 30000 });
+      await page.waitForTimeout(scenario.reduced ? 50 : 500);
+
+      assert.deepEqual(await page.evaluate(() => window.revealPhases), ["preparing", "dealing", "flipping", "focusing", "ready"]);
+      assert.equal(await page.evaluate(() => window.anchorCalls), 1);
+      assert.equal(await page.locator("[data-card-position] button[aria-pressed=true]").locator("..").locator("..").getAttribute("data-card-position"), order[0]);
+      assert.equal(await page.locator("[data-card-position]").count(), scenario.count);
+      assert.ok(await page.evaluate(() => window.phaseSamples.filter(sample => ["flipping", "focusing"].includes(sample.phase)).every(sample => sample.landed && !sample.selected)));
+      assert.deepEqual(await page.locator("[data-card-position]").evaluateAll(nodes => nodes.map(node => node.dataset.cardPosition)), order);
+      const coordinates = await page.locator("[data-card-position]").evaluateAll(nodes => nodes.map(node => ({ x: parseFloat(node.style.left), y: parseFloat(node.style.top) })));
+      const minX = Math.min(...Object.values(matrix).map(point => point[0])), minY = Math.min(...Object.values(matrix).map(point => point[1]));
+      const tokens = await page.evaluate(() => {
+        const style = getComputedStyle(document.documentElement);
+        return Object.fromEntries(["padding", "column", "row"].map(key => [key, parseFloat(style.getPropertyValue("--reveal-" + key))]));
+      });
+      coordinates.forEach((point, index) => assert.deepEqual(point, { x: tokens.padding + (matrix[order[index]][0] - minX) * tokens.column, y: tokens.padding + (matrix[order[index]][1] - minY) * tokens.row }));
+      assert.equal(await page.locator("[data-ai-detail]").count(), 1);
+      assert.ok((await page.locator("[data-ai-detail]").innerText()).includes("AI reading 1"));
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+      await page.locator("[data-reading-panel]").screenshot({ path: artifacts + "/reveal-" + scenario.name + ".png" });
+
+      // Following page scroll must keep the two information cards aligned and panel-bounded.
+      await page.evaluate(() => window.scrollBy(0, 80));
+      await page.waitForTimeout(100);
+      const bounds = await page.evaluate(() => {
+        const panel = document.querySelector('[data-reading-panel]').getBoundingClientRect();
+        return [...document.querySelectorAll('[data-selected-detail], [data-ai-detail]')].map(node => {
+          const rect = node.getBoundingClientRect();
+          return { top: rect.top, within: rect.top >= panel.top && rect.bottom <= panel.bottom };
+        });
+      });
+      assert.ok(bounds.every(bound => bound.within));
+      assert.ok(Math.abs(bounds[0].top - bounds[1].top) < 1);
+
+      await page.locator("[data-ai-detail]").evaluate(node => { window.answerNode = node; node.querySelector('[tabindex="0"]').scrollTop = 50; });
+      await page.locator("[data-card-position] button[aria-pressed=true]").click();
+      await page.locator("[data-selected-detail]").waitFor({ state: "detached" });
+      assert.ok(await page.evaluate(() => window.answerNode === document.querySelector("[data-ai-detail]")));
+      assert.equal(await page.locator("[data-ai-detail] [tabindex]").evaluate(node => node.scrollTop), 50);
+
+      const target = page.locator("[data-card-position] button").nth(scenario.count > 1 ? 1 : 0);
+      await target.evaluate(node => node.focus({ preventScroll: true }));
+      await page.keyboard.press("Enter");
+      await page.locator("[data-selected-detail]").waitFor();
+      assert.ok(await page.evaluate(() => window.answerNode === document.querySelector("[data-ai-detail]")));
+      await page.locator("[data-selected-detail]").click({ position: { x: 20, y: 20 } });
+      await page.locator("[data-selected-detail]").waitFor({ state: "detached" });
+
+      const viewport = page.locator("[data-spread-viewport]");
+      await viewport.scrollIntoViewIfNeeded();
+      const rect = await viewport.boundingBox();
+      const cx = rect.x + rect.width / 2, cy = rect.y + rect.height / 2;
+      const beforeZoom = await viewport.locator(":scope > div").getAttribute("style");
+      await page.mouse.move(cx, cy); await page.mouse.wheel(0, -200);
+      await page.waitForTimeout(100);
+      assert.notEqual(await viewport.locator(":scope > div").getAttribute("style"), beforeZoom);
+      const beforePan = await viewport.locator(":scope > div").getAttribute("style");
+      await page.mouse.move(cx, cy); await page.mouse.down(); await page.mouse.move(cx + 35, cy + 25, { steps: 5 }); await page.mouse.up();
+      assert.notEqual(await viewport.locator(":scope > div").getAttribute("style"), beforePan);
+      assert.equal(await page.locator("[data-selected-detail]").count(), 0, "drag must not select a card");
+
+      if (scenario.width < 768) {
+        const client = await context.newCDPSession(page);
+        const beforePinch = await viewport.locator(":scope > div").getAttribute("style");
+        await client.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: cx - 20, y: cy, id: 0 }, { x: cx + 20, y: cy, id: 1 }] });
+        await client.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: cx - 40, y: cy, id: 0 }, { x: cx + 40, y: cy, id: 1 }] });
+        await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+        assert.notEqual(await viewport.locator(":scope > div").getAttribute("style"), beforePinch);
+      }
+      await page.setViewportSize({ width: scenario.width + 20, height: scenario.height });
+      await page.waitForTimeout(100);
+      assert.equal(await page.locator("[data-reveal-phase]").getAttribute("data-reveal-phase"), "ready");
+      assert.equal(await page.evaluate(() => window.anchorCalls), 1);
+      await page.getByRole("button", { name: startLabel, exact: true }).click();
+      assert.equal(await page.locator("textarea").inputValue(), "");
+      assert.equal(await page.locator("[data-ai-detail]").count(), 0);
+      if (scenario.name === "desktop") {
+        await page.locator("textarea").fill("A new reading");
+        await page.getByRole("button", { name: continueLabel, exact: true }).click();
+        await page.locator("[data-reveal-phase=ready]").waitFor({ timeout: 30000 });
+        assert.equal(submissions, 2);
+        assert.ok((await page.locator("[data-ai-detail]").innerText()).includes("AI reading 2"));
+        assert.equal(await page.evaluate(() => window.anchorCalls), 2);
+        await page.getByRole("button", { name: startLabel, exact: true }).click();
+        await page.locator("textarea").fill("Cancel during animation");
+        await page.getByRole("button", { name: continueLabel, exact: true }).click();
+        await page.locator("[data-reveal-phase=dealing]").waitFor({ timeout: 30000 });
+        await page.getByRole("button", { name: startLabel, exact: true }).click();
+        await page.waitForTimeout(1200);
+        assert.equal(await page.locator("textarea").inputValue(), "");
+        assert.equal(await page.locator("[data-reveal-phase]").count(), 0);
+      }
+      assert.deepEqual(errors, []);
+      console.log("PASS", scenario.name, scenario.locale, scenario.count, "cards: phases, positions, selection, persistent answer, wheel/drag/pinch, resize, scroll, reset");
+      await context.close();
+    }
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });
+

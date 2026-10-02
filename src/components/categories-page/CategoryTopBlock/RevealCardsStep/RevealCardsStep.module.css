@@ -1,360 +1,155 @@
 .revealArea {
-  width: 100%;
   position: relative;
   z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* gap: 10px; */
-  /* margin-top: 10px */
-  /* bottom: -15px; */
+  width: 100%;
+  min-width: 0;
+  margin-top: var(--reveal-space);
 }
-
-.spreadViewport { position: relative; width: 100%; height: 300px; overflow: hidden; touch-action: none; user-select: none; cursor: grab; }
-.spreadViewport:active { cursor: grabbing; }
-.spreadContent { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-.spreadContent img { -webkit-user-drag: none; pointer-events: none; }
-.positionedCard { position: absolute; width: 120px; }
-.positionedCard .revealCard { width: 120px; height: 215.398px; }
-.positionedCard .revealCardCol { width: 120px; }
-.positionedCard .revealCardName { width: 120px; min-height: 40px; display: flex; align-items: flex-end; justify-content: center;}
-.zoomControls { display: flex; gap: 8px; margin: 12px 0 4px; }
-.zoomControls button { border-radius: 20px; background: var(--color-white-75); padding: 6px 12px; min-width: 36px; }
-.zoomControls button:disabled { opacity: .45; }
-
-.readingError { 
-  flex-shrink: 0; 
-  max-width: 450px; 
-  width: 24.306vw;
-  text-align: center; 
-  font-size: 13px; 
-  margin-top: 12px; 
-}
-
-.readingError button { text-decoration: underline; }
-.missingArt { position: absolute; inset: 20px 6px; display: grid; place-items: center; font-size: 11px; background: var(--color-white-75); }
-
-.revealLabel {
-  color: var(--color-black-75);
-  opacity: 1;
-  height: auto;
+.spreadViewport {
+  position: relative;
+  width: 100%;
+  height: var(--reveal-viewport-height);
   overflow: hidden;
-  transition: opacity 0.2s ease;
-  line-height: normal;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  mask-image: var(--reveal-edge-mask), var(--reveal-side-mask);
+  mask-composite: intersect;
 }
-
-.revealLabelHidden {
-  opacity: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.revealRow {
+.spreadViewport:active { cursor: grabbing; }
+.spreadContent { position: absolute; inset: 0 auto auto 0; transform-origin: 0 0; }
+.spreadContent img { -webkit-user-drag: none; pointer-events: none; }
+.positionedCard { position: absolute; width: var(--reveal-card-width); }
+.revealCardCol { display: flex; flex-direction: column; align-items: center; gap: var(--reveal-gap); }
+.revealCardName {
+  width: var(--reveal-card-width);
+  height: var(--reveal-label-height);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 40px;
-}
-
-.revealCardCol {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.revealCardColWrapped {
-  gap: 6px;
-}
-
-.revealCardName {
-  color: var(--color-black-75);
   text-align: center;
-  opacity: 0;
-  height: 0;
-  overflow: hidden;
-  transition: opacity 0.2s ease;
-  width: 98px;
-  text-wrap: balance;
+  color: var(--color-black-75);
   line-height: normal;
-  font-weight: 400;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
-
-.revealCardNameVisible {
-  opacity: 1;
-  height: auto;
-}
-
 .revealCard {
   position: relative;
+  width: var(--reveal-card-width);
+  height: var(--reveal-card-height);
   flex-shrink: 0;
-  width: 96.749px;
-  height: 175.908px;
-  border-radius: 8;
-  overflow: hidden;
   border: none;
   padding: 0;
   background: none;
+  border-radius: var(--reveal-radius);
   cursor: pointer;
+  perspective: var(--reveal-perspective);
   box-shadow: var(--shadow-default);
 }
-
-.revealCard :global(img) {
-  object-fit: cover;
-}
-
-.revealCardFace {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.revealCardArt {
-  position: absolute;
-  max-width: none;
-}
-
-/* Clip the source's printed footer before rotating; both orientations share the same crop. */
-.cardArtWindow {
-  position: absolute;
-  inset: 0;
+.revealCard:disabled { cursor: default; }
+.revealCardFace { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+.cardFront, .cardBack {
+  position: absolute; inset: 0;
   overflow: hidden;
-  border-radius: inherit;
+  border-radius: var(--reveal-radius);
+  backface-visibility: hidden;
 }
-
-.revealCardFrame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: lighten;
-  pointer-events: none;
+.cardFront { transform: rotateY(180deg); }
+.cardBack img, .detailBack { object-fit: cover; }
+.cardArtWindow { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+.cardArtImage { position: absolute; max-width: none; }
+.cardFrame { object-fit: cover; mix-blend-mode: lighten; pointer-events: none; }
+.missingArt {
+  position: absolute; inset: var(--reveal-space);
+  display: grid; place-items: center; text-align: center;
+  background: var(--color-white-75); color: var(--color-black);
+  font-size: var(--text-xs);
 }
-
 .revealCardHoverOverlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 8px;
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  padding: var(--reveal-gap);
   text-align: center;
-  background: var(--color-black-50);
-  color: var(--color-white);
+  background: var(--color-black-50); color: var(--color-white);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--reveal-hover-duration) ease;
 }
-
-.revealCard:hover .revealCardHoverOverlay {
-  opacity: 1;
+@media (hover: hover) {
+  .revealCard:not(:disabled):hover .revealCardHoverOverlay { opacity: 1; }
 }
-
-.cardDetailArt {
+.revealCard:focus-visible, .cardDetail:focus-visible, .detailText:focus-visible {
+  outline: var(--reveal-focus-outline) solid var(--color-black);
+  outline-offset: var(--reveal-focus-outline);
+}
+.detailLayer {
   position: absolute;
-  left: var(--reveal-card-detail-inset-fluid);
-  bottom: var(--detail-bottom, -74px);
-  width: 226px;
-  height: 404px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 96px;
-  overflow: hidden;
-  border-radius: 8;
-  z-index: 6;
+  top: var(--detail-top, calc(50% - var(--reveal-detail-height) / 2 + var(--reveal-detail-center-offset)));
+  left: var(--reveal-detail-left); right: var(--reveal-detail-right);
+  height: var(--reveal-detail-height);
+  display: flex; justify-content: space-between;
+  z-index: 6; pointer-events: none;
 }
-
-.cardDetailArtImage {
-  position: absolute;
-  max-width: none;
-}
-
-.cardDetailArtFrame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: lighten;
-  pointer-events: none;
-}
-
-.cardDetailArtLabel {
+.detailSlot { width: var(--reveal-detail-width); height: 100%; min-width: 0; }
+.cardDetail {
   position: relative;
-  padding: 6px 16px;
-  border-radius: 30px;
-  background: var(--color-white-75);
-  color: var(--color-black-75);
-  white-space: nowrap;
-  box-shadow: var(--shadow-medium);
-  backdrop-filter: blur(var(--blur-shadow));
-  -webkit-backdrop-filter: blur(var(--blur-shadow));
-}
-
-.cardDetailInfo {
-  position: absolute;
-  right: var(--reveal-card-detail-inset-fluid);
-  bottom: var(--detail-bottom, -74px);
-  width: 226px;
-  height: 404px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  gap: var(--reveal-gap);
+  width: 100%; height: 100%;
+  padding: var(--reveal-gap);
+  border-radius: var(--reveal-radius);
   overflow: hidden;
-  border-radius: 8;
-  z-index: 6;
-}
-
-.cardDetailInfoBg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-}
-
-.cardDetailInfoText {
-  white-space: pre-line;
-  position: relative;
-  max-height: 80%;
-  padding: 12px;
-  border-radius: 12px;
-  background: var(--color-white-75);
-  color: var(--color-black-75);
-  box-shadow: var(--shadow-medium);
-  backdrop-filter: blur(var(--blur-shadow));
-  -webkit-backdrop-filter: blur(var(--blur-shadow));
-  overflow-y: auto;
-}
-
-.answerWrap {
-  display: flex;
-  justify-content: center;
-  opacity: 0;
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  flex-shrink: 0;
-}
-
-.answerWrapVisible {
-  opacity: 1;
-  height: auto;
   pointer-events: auto;
-  border: 4px solid var(--color-white);
-  border-radius: 30px;
+}
+.cardDetail[role="button"] { cursor: pointer; }
+.detailLabel, .detailText {
   position: relative;
-  margin-top: 16px;
-}
-
-.mobileSheetRoot {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: none;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.mobileSheetBackdrop {
-  position: absolute;
-  inset: 0;
-  background: var(--color-black-40);
-}
-
-.mobileSheet {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  max-height: calc(100dvh - 148px);
-  padding: 16px 16px 24px;
-  background: var(--color-greyish-blue);
-  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--color-white-75);
+  color: var(--color-black-75);
   box-shadow: var(--shadow-medium);
-  touch-action: none;
-  overflow: hidden;
+  backdrop-filter: blur(var(--blur-shadow));
+  overflow-wrap: anywhere;
 }
-
-.mobileSheetGrabberRow {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-}
-
-.mobileSheetGrabber {
-  width: 80px;
-  height: 3px;
-  border-radius: 1000px;
-  background: var(--color-black-15);
-}
-
-.mobileSheetTitle {
-  flex-shrink: 0;
-  color: var(--color-black);
+.detailLabel {
+  max-width: 100%; flex-shrink: 0;
+  max-height: var(--reveal-detail-label-max); overflow-y: auto;
+  padding: var(--reveal-label-padding);
+  border-radius: var(--reveal-label-radius);
   text-align: center;
 }
-
-.mobileSheetDivider {
-  flex-shrink: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--color-grey);
-}
-
-.mobileSheetDescription {
+.detailText {
+  width: 100%; min-height: 0; max-height: var(--reveal-detail-text-max);
+  padding: var(--reveal-space);
+  border-radius: var(--reveal-radius);
+  overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
   white-space: pre-line;
-  flex: 0 1 auto;
-  min-height: 0;
-  width: 100%;
-  padding: 0 12px 16px;
-  color: var(--color-black-75);
-  /* overflow-y: auto; */
 }
+.answerSection + .answerSection { margin-top: var(--reveal-space); }
+.answerTitle { font-weight: var(--reveal-answer-weight); margin-bottom: var(--reveal-gap); }
+.startOver {
+  position: relative; 
+  z-index: 7; flex-shrink: 0;
+  margin-top: var(--reveal-gap);
+  /* margin-bottom: 2px; */
+  border: var(--reveal-button-border) solid var(--color-white);
+  border-radius: var(--reveal-label-radius);
+}
+.readingError { text-align: center; color: var(--color-black); font-size: var(--text-xs); }
+.readingError button { text-decoration: underline; }
 
 @media (max-width: 768px) {
-  .revealRow {
-    gap: var(--reveal-row-gap-mobile-fluid);
+  .spreadViewport { height: var(--reveal-viewport-mobile); }
+  .detailLayer {
+    position: sticky; top: auto; left: auto; right: auto;
+    bottom: max(var(--reveal-gap), env(safe-area-inset-bottom));
+    width: 100%; height: var(--reveal-detail-mobile-height);
+    flex-shrink: 0; gap: var(--reveal-gap);
+    margin-top: var(--reveal-space);
   }
-
-  .readingError { 
-    width: auto;
-  }
-
-  .revealCardCol {
-    gap: 10px;
-  }
-
-  .revealCardName {
-    width: var(--reveal-card-width-mobile-fluid);
-    font-size: var(--reveal-card-name-mobile-fluid);
-  }
-
-  .revealLabel{
-    margin-top: 10px;
-  }
-
-  .revealCard {
-    width: var(--reveal-card-width-mobile-fluid);
-    height: var(--reveal-card-height-mobile-fluid);
-    border-radius: 8px;
-  }
-
-  .cardDetailArt,
-  .cardDetailInfo {
-    display: none;
-  }
-
-  .mobileSheetRoot {
-    display: flex;
-  }
-
+  .detailSlot { width: calc((100% - var(--reveal-gap)) / 2); }
+  .detailLabel { font-size: var(--text-xs); padding: var(--reveal-gap); }
+  .detailText { font-size: var(--text-xs); padding: var(--reveal-gap); }
+  .startOver { margin-bottom: env(safe-area-inset-bottom); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .revealCardHoverOverlay { transition: none; }
 }

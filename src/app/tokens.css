@@ -11,6 +11,55 @@
  */
 
 :root {
+  /* Reveal reading: Figma 2311:6573 / 6714 / 6857. Motion durations are seconds. */
+  --reveal-card-width: 120px;
+  --reveal-card-height: 215.398px;
+  --reveal-label-height: 44px;
+  --reveal-column: 160px;
+  --reveal-row: 280px;
+  --reveal-padding: 64px;
+  --reveal-gap: 8px;
+  --reveal-space: 12px;
+  --reveal-panel-height: 650px;
+  --reveal-viewport-height: 494px;
+  --reveal-viewport-mobile: clamp(260px, 43dvh, 400px);
+  --reveal-detail-width: 226px;
+  --reveal-detail-height: 404px;
+  --reveal-detail-mobile-height: clamp(160px, 30dvh, 260px);
+  --reveal-detail-left: clamp(12px, 9.85%, 130px);
+  --reveal-detail-right: clamp(12px, 8.33%, 110px);
+  --reveal-detail-center-offset: 51px;
+  --reveal-detail-scroll-inset: 20px;
+  --reveal-detail-text-max: 72%;
+  --reveal-detail-label-max: 35%;
+  --reveal-radius: 8px;
+  --reveal-label-radius: 30px;
+  --reveal-label-padding: 6px 16px;
+  --reveal-copy-width: 240px;
+  --reveal-header-max-width: 560px;
+  --reveal-pattern-top: -30px;
+  --reveal-pattern-mobile-top: -38px;
+  --reveal-pattern-mobile-width: 990px;
+  --reveal-pattern-mobile-height: 445px;
+  --reveal-pattern-width: 1627px;
+  --reveal-pattern-height: 731px;
+  --reveal-fade-size: 8%;
+  --reveal-edge-mask: linear-gradient(to bottom, transparent, var(--color-black) var(--reveal-fade-size), var(--color-black) calc(100% - var(--reveal-fade-size)), transparent);
+  --reveal-side-mask: linear-gradient(to right, transparent, var(--color-black) var(--reveal-fade-size), var(--color-black) calc(100% - var(--reveal-fade-size)), transparent);
+  --reveal-deal-duration: 0.48;
+  --reveal-stagger-duration: 0.16;
+  --reveal-flip-duration: 0.5;
+  --reveal-focus-duration: 0.7;
+  --reveal-detail-duration: 0.4;
+  --reveal-ease: 0.4, 0, 0.2, 1;
+  --reveal-selection-rotation: -8;
+  --reveal-selection-stiffness: 260;
+  --reveal-selection-damping: 22;
+  --reveal-perspective: 1000px;
+  --reveal-focus-outline: 2px;
+  --reveal-button-border: 4px;
+  --reveal-hover-duration: 0.2s;
+  --reveal-answer-weight: 500;
   /* ---- Colors: Neutral ---- */
   --color-neutral-900: #171717;
 
