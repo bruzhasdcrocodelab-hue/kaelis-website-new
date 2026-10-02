@@ -130,6 +130,8 @@ for (const reduced of [false, true]) test("shared clock completes once at 3600 m
         useAnimationFrame: callback => { frame = callback; },
       };
       if (name === "./loadingMotion") return motionData;
+      if (name === "./mobileLoadingMotion") return { mobileLoadingCards: [] };
+      if (name === "../cardFanMobile") return {};
       if (name === "@/lib/tarot/messages") return { readingMessages: { en: {} } };
       if (name.endsWith(".css")) return {};
       return "Image";
@@ -146,7 +148,31 @@ for (const reduced of [false, true]) test("shared clock completes once at 3600 m
     assert.equal(completed, 1);
     frame(11000); frame(13200);
     assert.equal(completed, 1);
-    const layer = tree.props.children[1].props.children.props.children;
+    const layer = tree.props.children[0].props.children.props.children;
     assert.equal(layer.props.progress.get(), reduced ? 0.2656 : 0);
   } finally { globalThis.window = priorWindow; }
+});
+
+test("mobile motion preserves the old spread geometry and gathers every card into the same pile", async () => {
+  const fan = await load(base + "cardFanMobile.ts", require);
+  const desktop = await load(base + "ChooseCardsStep/loadingMotion.ts", require);
+  const mobile = await load(base + "ChooseCardsStep/mobileLoadingMotion.ts", name =>
+    name === "../cardFanMobile" ? fan : desktop);
+  const centre = fan.cardFanMobile.find(card => card.id === "13");
+  const pile = { x: centre.left + 30, y: centre.top + 55 };
+  for (const card of mobile.mobileLoadingCards) {
+    const original = fan.cardFanMobile.find(item => item.id === card.id);
+    assert.equal(card.left, original.left);
+    assert.equal(card.top, original.top);
+    assert.equal(card.flipY, original.flipY);
+    assert.ok(Math.abs(card.tracks.rotate.values[1] - original.rotate) < 0.001);
+    for (const axis of ["x", "y"]) {
+      const track = card.tracks[axis];
+      const position = axis === "x" ? card.left + 30 : card.top + 55;
+      assert.ok(Math.abs(track.values[1]) < 0.001, "spread pose must stay at the old card position");
+      const final = track.values[track.timing.times.findIndex(time => time >= 0.8561)];
+      assert.ok(Math.abs(position + final - pile[axis]) < 0.001, "all cards must meet at the pile");
+      assert.ok(track.values.every(Number.isFinite));
+    }
+  }
 });

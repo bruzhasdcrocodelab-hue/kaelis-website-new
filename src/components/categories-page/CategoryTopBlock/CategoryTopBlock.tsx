@@ -104,7 +104,7 @@ export default function CategoryTopBlock({
   return (
     <section ref={step === "answer" ? sectionRef : null} id="category-top-block" className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
-        className={`${styles.panel} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
+        className={`${styles.panel} ${step === "choose" ? styles.panelLoading : ""} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{
           // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
           // it blurs whatever the page paints behind this panel, within its bounds.
@@ -134,9 +134,8 @@ export default function CategoryTopBlock({
             <div className={styles.fadeOverlay} aria-hidden />
           </>
         )}
-        {step !== "choose" && 
-        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />}
-        {step !== "choose" && (hasFan ? (
+        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
+        {hasFan || step === "choose" ? (
           <>
             <WavesLineFrame className={styles.wavesLine} style={{ zIndex: 2 }} />
             <Image
@@ -150,7 +149,7 @@ export default function CategoryTopBlock({
           </>
         ):(
           <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />
-        ))}
+        )}
 
         {loadingStatus ? (
           <div className={styles.loading}>

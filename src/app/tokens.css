@@ -211,6 +211,12 @@
   --radius-card-mobile: 12px;
   --radius-sheet: 28px;
   --radius-header-pill: 60px;
+  --radius-loading-card: 8px;
+  --radius-loading-card-mobile: 4px;
+  --radius-loading-progress: 12px;
+  --color-loading-progress-surface: #fff;
+  --opacity-loading-progress-outline: 0.5;
+  --mask-solid: linear-gradient(#fff 0 0);
 
   /*
    * Viewport Y of the top edge of the header dropdown panels (Tarot Spreads and

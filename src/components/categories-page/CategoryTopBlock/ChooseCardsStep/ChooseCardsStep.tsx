@@ -6,9 +6,11 @@ import { easingDefinitionToFunction, interpolate, motion, useAnimationFrame, use
 import type { Dictionary, Locale } from "@/lang";
 import { readingMessages } from "@/lib/tarot/messages";
 import { CYCLE_MS, fanTracks, loadingCards, progressTracks, textTracks, type Tracks } from "./loadingMotion";
+import { mobileLoadingCards } from "./mobileLoadingMotion";
+import { MOBILE_FAN_CONTAINER_WIDTH, MOBILE_FAN_CONTAINER_HEIGHT, MOBILE_CARD_TRUE_WIDTH, MOBILE_CARD_TRUE_HEIGHT } from "../cardFanMobile";
 import styles from "./ChooseCardsStep.module.css";
 
-const ASSETS = ["/images/cards/default-card.png", "/images/reading-loading/pattern.svg", "/images/reading-loading/waves.svg", "/images/reading-loading/progress-base.png", "/images/reading-loading/progress-overlay.png"];
+const ASSETS = ["/images/cards/default-card.png", "/images/backgrounds/pattern-categories-top-block-2.svg"];
 
 export interface ChooseCardsStepProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
@@ -81,8 +83,7 @@ export default function ChooseCardsStep({ dictionary, locale, categoryLabel, err
 
   return (
     <div className={styles.loading} data-reading-loading lang={locale} aria-busy={!error}>
-      <div className={styles.pattern} aria-hidden><Image src={ASSETS[1]} alt="" width={1627} height={731} unoptimized /></div>
-      <div className={styles.scene} aria-hidden>
+      <div className={styles.scene} data-loading-scene="desktop" aria-hidden>
         <div className={styles.fanPosition}>
           <AnimatedLayer progress={visibleProgress} tracks={fanTracks} className={styles.fan}>
             {loadingCards.map(card => (
@@ -93,8 +94,17 @@ export default function ChooseCardsStep({ dictionary, locale, categoryLabel, err
           </AnimatedLayer>
         </div>
       </div>
-      <div className={styles.waves} aria-hidden><Image src={ASSETS[2]} alt="" width={1785.39} height={800.367} unoptimized /></div>
-      <div className={styles.border} aria-hidden />
+      <div className={styles.mobileScene} data-loading-scene="mobile" aria-hidden
+        style={{ width: MOBILE_FAN_CONTAINER_WIDTH, height: MOBILE_FAN_CONTAINER_HEIGHT }}>
+        <AnimatedLayer progress={visibleProgress} tracks={fanTracks} className={styles.fan}>
+          {mobileLoadingCards.map(card => (
+            <AnimatedLayer key={card.id} progress={visibleProgress} tracks={card.tracks} className={styles.mobileCard} left={card.left} top={card.top}>
+              <Image src={ASSETS[0]} alt="" width={MOBILE_CARD_TRUE_WIDTH} height={MOBILE_CARD_TRUE_HEIGHT}
+                unoptimized className={styles.mobileCardImage} style={{ transform: card.flipY ? "scaleY(-1)" : undefined }} />
+            </AnimatedLayer>
+          ))}
+        </AnimatedLayer>
+      </div>
       <div className={styles.content}>
         <div className={styles.category}>
           <Image src="/icons/eye-gradient.svg" alt="" width={24} height={24} />

@@ -39,6 +39,10 @@
   background: var(--color-greyish-blue);
 }
 
+.panelLoading { background: var(--color-greyish-blue); }
+.panelLoading::before { background: transparent; }
+.panelLoading .pattern { top: -210px; }
+
 .section.embedded { padding: 0; }
 .loading { position: relative; z-index: 5; display: grid; place-items: center; flex: 1; width: 100%; }
 
@@ -179,6 +183,9 @@
 }
 
 @media (max-width: 768px) {
+  .panelLoading { background: transparent; }
+  .panelLoading::before { background: var(--gradient-topblock-mobile); }
+  .panelLoading .pattern { top: -28px; }
   .embedded .panel { margin-top: 0; }
   .panel.panelReading { padding-bottom: 72px; }
   .section {
