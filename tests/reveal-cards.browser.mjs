@@ -10,6 +10,26 @@ const { chromium } = loadPackage(process.argv[2] || "playwright");
 const artifacts = ".next/reveal-checks";
 mkdirSync(artifacts, { recursive: true });
 
+async function checkAccordion(page, container, reduced) {
+  const section = page.locator(`${container} [data-section="why"]`);
+  const toggle = section.locator('button');
+  const body = section.locator('[data-open]');
+  const icon = toggle.locator('[aria-hidden]');
+  assert.equal(await icon.evaluate(node => node.getBoundingClientRect().width), 16);
+  assert.equal(await body.evaluate(node => node.getBoundingClientRect().height), 0);
+  await toggle.click();
+  if (!reduced) {
+    assert.ok(await body.evaluate(node => node.getAnimations().length > 0));
+    assert.ok(await icon.evaluate(node => node.getAnimations().length > 0));
+  }
+  await page.waitForTimeout(400);
+  assert.ok(await body.evaluate(node => node.getBoundingClientRect().height > 0));
+  await toggle.click();
+  await page.waitForTimeout(400);
+  assert.equal(await body.evaluate(node => node.getBoundingClientRect().height), 0);
+  assert.equal(await body.getAttribute('aria-hidden'), 'true');
+}
+
 (async () => {
   const browser = await chromium.launch({ channel: "chrome", headless: true });
   try {
@@ -97,6 +117,7 @@ mkdirSync(artifacts, { recursive: true });
       await page.getByRole("button", { name: continueLabel, exact: true }).click();
       await page.locator("[data-reveal-phase=ready]").waitFor({ timeout: 30000 });
       await page.waitForTimeout(scenario.reduced ? 50 : 500);
+      assert.equal(await page.locator('#category-top-block').evaluate(node => getComputedStyle(node).scrollMarginTop), '16px');
       const focusedWidth = await page.locator('[data-card-position] button').first().evaluate(node => {
         const transform = new DOMMatrixReadOnly(node.closest('[data-spread-viewport]').firstElementChild.style.transform);
         return node.offsetWidth * transform.a;
@@ -140,6 +161,7 @@ mkdirSync(artifacts, { recursive: true });
         assert.equal(await page.locator('[data-ai-detail] [data-section="why"], [data-ai-detail] [data-section="risks"]').count(), 0);
         assert.equal(await page.locator('[data-ai-detail] ol li').count(), 2);
       } else {
+      await checkAccordion(page, '[data-ai-detail]', scenario.reduced);
       await page.locator('[data-ai-detail] [data-section="why"] button').click();
       await page.locator('[data-ai-detail] [data-section="risks"] button').click();
       assert.equal(await page.locator('[data-ai-detail] [aria-expanded="true"]').count(), 2);
@@ -150,6 +172,7 @@ mkdirSync(artifacts, { recursive: true });
       }
       await page.locator("[data-reading-panel]").screenshot({ path: artifacts + "/expanded-" + scenario.name + ".png" });
       // Following page scroll must keep the two information cards aligned and panel-bounded.
+      const detailOffset = await page.locator('[data-reading-details]').evaluate(node => node.getBoundingClientRect().top - node.closest('[data-reading-panel]').getBoundingClientRect().top);
       await page.evaluate(() => window.scrollBy(0, 80));
       await page.waitForTimeout(100);
       const bounds = await page.evaluate(() => {
@@ -161,6 +184,7 @@ mkdirSync(artifacts, { recursive: true });
       });
       assert.ok(bounds.every(bound => bound.within));
       assert.ok(Math.abs(bounds[0].top - bounds[1].top) < 1);
+      assert.equal(await page.locator('[data-reading-details]').evaluate(node => node.getBoundingClientRect().top - node.closest('[data-reading-panel]').getBoundingClientRect().top), detailOffset);
 
       await page.locator('[data-ai-detail] [data-reading-scroll]').evaluate(node => { node.scrollTop = node.scrollHeight; });
       await page.waitForTimeout(100);
@@ -205,6 +229,7 @@ mkdirSync(artifacts, { recursive: true });
           assert.equal(await page.locator('[role="dialog"] [data-section="why"], [role="dialog"] [data-section="risks"]').count(), 0);
           assert.equal(await page.locator('[role="dialog"] ol li').count(), 2);
         } else {
+        await checkAccordion(page, '[role="dialog"]', scenario.reduced);
         await page.locator('[role="dialog"] [data-section="why"] button').click();
         await page.locator('[role="dialog"] [data-section="risks"] button').click();
         assert.equal(await page.locator('[role="dialog"] [aria-expanded="true"]').count(), 2);
@@ -214,6 +239,7 @@ mkdirSync(artifacts, { recursive: true });
           assert.deepEqual(await page.locator('[role="dialog"] ol li').allTextContents(), interpretations[scenario.rawAnswer].advice);
         }
         }
+        await page.waitForTimeout(400);
         await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => { node.scrollTop = 80; });
         assert.ok(await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => node.scrollTop > 0));
         await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => { node.scrollTop = 0; });

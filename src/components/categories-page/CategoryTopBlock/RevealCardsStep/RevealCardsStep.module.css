@@ -1,4 +1,4 @@
-﻿.revealArea {
+.revealArea {
   position: relative;
   z-index: 5;
   width: calc(100% - 2 * var(--reveal-content-padding));
@@ -157,13 +157,19 @@
   background: none; border: none; padding: 0; text-align: left; color: var(--color-black-75); cursor: pointer;
   font: inherit; font-weight: var(--reveal-answer-weight);
 }
-.chevronIcon { display: block; width: var(--reveal-toggle-glyph-size); height: var(--reveal-toggle-glyph-size); background: var(--color-black-60); mask: url("/icons/chevron-down.svg") center / contain no-repeat; }
-.interpretationSections { display: flex; flex-direction: column; gap: var(--reveal-gap); flex-shrink: 0; }
+.chevronIcon { display: block; width: var(--reveal-toggle-glyph-size); height: var(--reveal-toggle-glyph-size); background: var(--color-black-60); mask: url("/icons/chevron-down.svg") center / contain no-repeat; transition: transform var(--reveal-toggle-duration) var(--reveal-section-ease); }
+.interpretationSections { display: flex; flex-direction: column; gap: var(--reveal-gap); flex-shrink: 0; transition: gap var(--reveal-section-duration) var(--reveal-section-ease); }
 .interpretationSections:has([aria-expanded="true"]) { gap: var(--reveal-space); }
-.insetSection:has(.sectionToggle) { padding: var(--reveal-toggle-padding); gap: 0; }
+.insetSection:has(.sectionToggle) { padding: var(--reveal-toggle-padding); gap: 0; transition: padding var(--reveal-section-duration) var(--reveal-section-ease); }
 .insetSection:has([aria-expanded="true"]) { padding: var(--reveal-space); }
-.sectionToggleIcon { width: var(--reveal-toggle-icon-size); height: var(--reveal-toggle-icon-size); padding: var(--reveal-toggle-icon-padding); flex-shrink: 0; }
+.sectionToggleIcon { display: grid; place-items: center; width: var(--reveal-toggle-icon-size); height: var(--reveal-toggle-icon-size); padding: var(--reveal-toggle-icon-padding); flex-shrink: 0; }
 .sectionToggle[aria-expanded="true"] .chevronIcon { transform: rotate(var(--reveal-toggle-rotation)); }
+.sectionCollapse {
+  display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden;
+  transition: grid-template-rows var(--reveal-section-duration) var(--reveal-section-ease), opacity var(--reveal-section-duration) var(--reveal-section-ease), visibility 0s var(--reveal-section-duration);
+}
+.sectionCollapse[data-open="true"] { grid-template-rows: 1fr; opacity: 1; visibility: visible; transition-delay: 0s; }
+.sectionClip { min-height: 0; overflow: hidden; }
 .expandedSection { padding-top: var(--reveal-gap); color: var(--color-black); }
 .answerSection[data-section="advice"] { gap: var(--reveal-gap); }
 .adviceList { list-style: none; counter-reset: advice; display: flex; flex-direction: column; gap: var(--reveal-space); }
@@ -241,5 +247,5 @@
 .cardSheet .answerTitle, .cardSheet .detailLabel { font-size: var(--text-xs); }
 .cardSheet .detailLabel { bottom: var(--reveal-space); left: var(--reveal-space); font-weight: var(--reveal-answer-weight); }
 @media (prefers-reduced-motion: reduce) {
-  .revealCardHoverOverlay { transition: none; }
+  .revealCardHoverOverlay, .chevronIcon, .sectionCollapse, .interpretationSections, .insetSection:has(.sectionToggle) { transition: none; }
 }

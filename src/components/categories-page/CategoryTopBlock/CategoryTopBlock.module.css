@@ -1,3 +1,4 @@
+.section:has([data-reading-panel]) { scroll-margin-top: var(--reveal-anchor-inset); }
 .section {
   display: flex;
   flex-direction: column;

@@ -71,9 +71,13 @@
   --reveal-content-padding: 16px;
   --reveal-section-gap: 6px;
   --reveal-toggle-padding: 2px 2px 2px 12px;
-  --reveal-sheet-toggle-padding: 10px 12px;
+  --reveal-sheet-toggle-padding: 10px 2px 10px 12px;
   --reveal-toggle-icon-size: 32px;
-  --reveal-toggle-glyph-size: 24px;
+  --reveal-toggle-glyph-size: 16px;
+  --reveal-toggle-duration: 0.3s;
+  --reveal-section-duration: 0.35s;
+  --reveal-section-ease: ease;
+  --reveal-anchor-inset: 16px;
   --reveal-toggle-icon-padding: 4px;
   --reveal-toggle-rotation: 180deg;
   --reveal-border-width: 1px;

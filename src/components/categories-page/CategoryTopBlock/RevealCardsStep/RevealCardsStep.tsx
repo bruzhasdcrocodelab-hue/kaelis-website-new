@@ -133,6 +133,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   }, [phase, metrics, firstPosition, firstX, firstY, reduced]);
 
   // Both desktop cards share one scroll anchor, including while only the answer is visible.
+  /*
   useLayoutEffect(() => {
     const layer = detailRef.current, panel = areaRef.current?.closest<HTMLElement>('[data-reading-panel]');
     if (!layer || !panel || !answerVisible) return;
@@ -158,6 +159,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
       window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule);
     };
   }, [answerVisible, isMobile]);
+  */
 
   useEffect(() => {
     const keydown = (event: KeyboardEvent) => { if (event.key === "Escape" && !window.matchMedia("(max-width: 768px)").matches) setSelectedPosition(null); };

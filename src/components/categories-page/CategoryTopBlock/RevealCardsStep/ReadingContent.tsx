@@ -25,7 +25,9 @@ function Section({ section, locale }: { section: ReadingSection; locale: Locale 
       <button type="button" className={styles.sectionToggle} aria-expanded={open} aria-controls={id} onClick={() => setOpen(value => !value)}>
         <span>{title}</span><span className={styles.sectionToggleIcon}><span className={styles.chevronIcon} aria-hidden="true" /></span>
       </button>
-      <div id={id} hidden={!open} className={styles.expandedSection}><SectionBody section={section} /></div>
+      <div id={id} aria-hidden={!open} inert={!open} data-open={open} className={styles.sectionCollapse}>
+        <div className={styles.sectionClip}><div className={styles.expandedSection}><SectionBody section={section} /></div></div>
+      </div>
     </> : <>{title && <h3 className={styles.answerTitle}>{title}</h3>}<SectionBody section={section} /></>}
   </section>;
 }
