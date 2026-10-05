@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
@@ -9,6 +10,10 @@ import { frameOverlayImage } from "@/lib/tarotDeck";
 import { presentCards, type PresentedCard as TarotCard } from "@/lib/tarot/cardPresentation";
 import type { Reading } from "@/lib/tarot/reading";
 import { readingMessages } from "@/lib/tarot/messages";
+import { readingSections } from "@/lib/tarot/readingSections";
+import ReadingContent from "./ReadingContent";
+import RevealSheet from "./RevealSheet";
+import { revealMessages } from "./revealMessages";
 import SpreadViewport, { type SpreadViewportHandle } from "./SpreadViewport";
 import { readRevealMetrics, spreadGeometry, type Point, type RevealMetrics } from "./revealGeometry";
 import styles from "./RevealCardsStep.module.css";
@@ -73,6 +78,7 @@ export default function RevealCardsStep(props: RevealCardsStepProps) {
 function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOver }: RevealCardsStepProps) {
   const cards = useMemo(() => presentCards(reading, locale), [reading, locale]);
   const text = readingMessages[locale];
+  const labels = revealMessages[locale];
   const reduced = !!useReducedMotion();
   const areaRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
@@ -82,10 +88,18 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   const [phase, setPhase] = useState<Phase>("preparing");
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   const [answerVisible, setAnswerVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [sheet, setSheet] = useState<"card" | "answer" | null>(null);
   const landed = useRef(new Set<string>());
   const flipped = useRef(new Set<string>());
   const pointerStart = useRef<Point | null>(null);
   const selectedCard = cards.find(card => card.position === selectedPosition) ?? null;
+  const cardSections = useMemo(() => [
+    ...readingSections(reading.cards.find(card => card.position === selectedPosition)?.description),
+    ...readingSections(reading.reading?.cards.find(card => card.position === selectedPosition)?.text),
+  ], [reading, selectedPosition]);
+  const answerSections = useMemo(() => readingSections(reading.reading?.sections), [reading.reading]);
+  const closeSheet = useCallback(() => { setSheet(null); setSelectedPosition(null); }, []);
   const geometry = useMemo(() => metrics ? spreadGeometry(cards, metrics) : null, [cards, metrics]);
   const isRevealed = phase === "flipping" || phase === "focusing" || phase === "ready";
   const onReady = useCallback((point: Point) => {
@@ -94,8 +108,11 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   }, []);
 
   useLayoutEffect(() => {
-    const frame = requestAnimationFrame(() => setMetrics(readRevealMetrics(areaRef.current!)));
-    return () => cancelAnimationFrame(frame);
+    const media = window.matchMedia("(max-width: 768px)");
+    const resize = () => { setIsMobile(media.matches); setSheet(null); setSelectedPosition(null); };
+    const frame = requestAnimationFrame(() => { setMetrics(readRevealMetrics(areaRef.current!)); setIsMobile(media.matches); });
+    media.addEventListener("change", resize);
+    return () => { cancelAnimationFrame(frame); media.removeEventListener("change", resize); };
   }, []);
 
   // Focus only on the first real card; later selections leave the user's viewport intact.
@@ -108,7 +125,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
       x: firstX + metrics.cardWidth / 2,
       y: firstY + metrics.labelHeight + metrics.gap + metrics.cardHeight / 2,
     }, reduced ? 0 : metrics.focus, () => {
-      setSelectedPosition(firstPosition);
+      if (!window.matchMedia("(max-width: 768px)").matches) setSelectedPosition(firstPosition);
       setAnswerVisible(true);
       setPhase("ready");
     });
@@ -139,16 +156,18 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
       cancelAnimationFrame(frame); observer.disconnect();
       window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule);
     };
-  }, [answerVisible]);
+  }, [answerVisible, isMobile]);
 
   useEffect(() => {
-    const keydown = (event: KeyboardEvent) => { if (event.key === "Escape") setSelectedPosition(null); };
+    const keydown = (event: KeyboardEvent) => { if (event.key === "Escape" && !window.matchMedia("(max-width: 768px)").matches) setSelectedPosition(null); };
     document.addEventListener("keydown", keydown);
     return () => document.removeEventListener("keydown", keydown);
   }, []);
 
   const select = (position: string) => {
-    if (phase === "ready") setSelectedPosition(previous => previous === position ? null : position);
+    if (phase !== "ready") return;
+    setSelectedPosition(previous => isMobile ? position : previous === position ? null : position);
+    if (isMobile) setSheet("card");
   };
   const transition = { duration: reduced ? 0 : metrics?.detail ?? 0, ease: metrics?.ease };
 
@@ -179,12 +198,13 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
       </SpreadViewport> : <div className={styles.spreadViewport} />}
       {error && <div className={styles.readingError} role="alert">{error} <button type="button" onClick={onRetry}>{text.retry}</button></div>}
     </div>
-    <div ref={detailRef} className={styles.detailLayer} data-reading-details>
+    {isMobile && <p className={styles.mobileHint}>{labels.chooseCard}</p>}
+    {!isMobile && <div ref={detailRef} className={styles.detailLayer} data-reading-details>
       <div className={styles.detailSlot}>
         <AnimatePresence>
-          {selectedCard && <motion.div key="selected-detail" className={styles.cardDetail} data-selected-detail
+          {selectedCard && <motion.section key="selected-detail" className={styles.cardDetail} data-selected-detail
             initial={{ opacity: 0, y: "110%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "110%" }} transition={transition}
-            role="button" tabIndex={0} aria-label={`${dictionary.closeCard}: ${selectedCard.name[locale]}`}
+            tabIndex={0} aria-label={`${dictionary.closeCard}: ${selectedCard.name[locale]}`}
             onKeyDown={event => {
               if (event.target !== event.currentTarget) return;
               if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedPosition(null); }
@@ -193,33 +213,40 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
             onClick={event => {
               // Scrolling long information must not accidentally dismiss the selected card.
               const start = pointerStart.current;
-              if (!start || Math.hypot(event.clientX - start.x, event.clientY - start.y) < 5) setSelectedPosition(null);
+              if (!(event.target as HTMLElement).closest("button") && !window.getSelection()?.toString() &&
+                (!start || Math.hypot(event.clientX - start.x, event.clientY - start.y) < 5)) setSelectedPosition(null);
               pointerStart.current = null;
             }}>
-            <CardArt card={selectedCard} locale={locale} />
-            <p className={`font-instrument-base ${styles.detailLabel}`}>{selectedCard.name[locale]}</p>
-            <div className={`font-instrument-sm ${styles.detailText}`} tabIndex={0}>
-              {selectedCard.description || text.noDescription}
+            <h2 className={styles.detailHeader}>{labels.cardDescription}</h2>
+            <div className={styles.detailText} tabIndex={0} key={selectedPosition}>
+              <ReadingContent sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} />} />
             </div>
-          </motion.div>}
+          </motion.section>}
         </AnimatePresence>
       </div>
       <div className={styles.detailSlot}>
         {answerVisible && <motion.section className={styles.cardDetail} data-ai-detail aria-label={dictionary.readingAnswer}
           initial={{ opacity: 0, y: "110%" }} animate={{ opacity: 1, y: 0 }} transition={transition}>
-          <Image src="/images/cards/default-card.png" alt="" fill sizes="(max-width: 768px) 45vw, 226px" className={styles.detailBack} />
-          <p className={`font-instrument-base ${styles.detailLabel}`}>{dictionary.readingAnswer}</p>
-          <div className={`font-instrument-sm ${styles.detailText}`} tabIndex={0}>
-            {reading.reading?.sections.map((section, index) => <div className={styles.answerSection} key={index}>
-              {section.title && <p className={styles.answerTitle}>{section.title}</p>}
-              <p>{section.text}</p>
-            </div>)}
+          <h2 className={styles.detailHeader}>{labels.interpretation}</h2>
+          <div className={styles.detailText} tabIndex={0}>
+            <ReadingContent sections={answerSections} locale={locale} />
           </div>
         </motion.section>}
       </div>
-    </div>
-    <div className={styles.startOver}>
+    </div>}
+    {!isMobile && <div className={styles.startOver}>
       <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={onStartOver}>{dictionary.startOver}</MainButton>
-    </div>
+    </div>}
+    {isMobile && createPortal(<div className={styles.mobileControls} data-reveal-controls>
+      <MainButton variant="gradient" size="large" icon="/icons/sparkles.svg" className={styles.answerButton} disabled={phase !== "ready"}
+        onClick={() => { setSelectedPosition(null); setSheet("answer"); }}>{labels.seeAnswer}</MainButton>
+      <MainButton variant="default" size="large" icon="/icons/right-arrow.svg" muted onClick={onStartOver}>{labels.restart}</MainButton>
+    </div>, document.body)}
+    <RevealSheet open={isMobile && sheet !== null} onClose={closeSheet} locale={locale} transition={transition} card={sheet === "card"}
+      title={sheet === "card" ? labels.cardDescription : labels.interpretation}>
+      {sheet === "card" && selectedCard
+        ? <ReadingContent key={selectedPosition} sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} />} />
+        : <ReadingContent sections={answerSections} locale={locale} />}
+    </RevealSheet>
   </>;
 }

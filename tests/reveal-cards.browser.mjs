@@ -32,6 +32,7 @@ mkdirSync(artifacts, { recursive: true });
       // Array order deliberately disagrees with object/numeric/spatial ordering.
       const order = [...keys].reverse();
       const cardNames = ["The Sun", "The Moon", "The Star", "Knight of Wands"];
+      const headings = { en: ["Result", "Why these cards", "Risks", "Advice"], uk: ["Результат", "Чому ці карти", "Ризики", "Поради"], ru: ["Итог", "Почему эти карты", "Риски", "Советы"] }[scenario.locale];
       await page.route("**/api/kaelis/**", async route => {
         const url = new URL(route.request().url());
         const base = { id: 4, slug: "family", name: "Family", site_description: "Family reading", image: null, need_new_plan: false };
@@ -48,7 +49,12 @@ mkdirSync(artifacts, { recursive: true });
               position, name: cardNames[i % 4], description: ("Card " + position + " — опис карти, описание карты. ").repeat(10),
               image: ["Sun.png", "Moon.png", "Star.png", "Wands12.png"][i % 4], orientation: i % 2 === 0,
             })),
-            reading: { interpretation: [{ title: "Reading answer", text: ("AI reading " + submissions + " — відповідь, ответ. ").repeat(40) }], cards: [] },
+            reading: { interpretation: [
+              { title: headings[0], text: "AI reading " + submissions + " — відповідь, ответ." },
+              { title: headings[1], text: "Card reasoning. ".repeat(50) },
+              { title: headings[2], text: "Risks and possibilities. ".repeat(10) },
+              { title: headings[3], text: "1. First action\n2. Second action\n3. Third action" },
+            ], cards: order.map(position => ({ position, text: "Impact: Personal impact\nRecognition: Recognition text\nFocus: Focus text" })) },
           } };
         } else if (url.pathname.endsWith("/tarot")) body = {
           data: [{ ...base, id: 62, slug: "celtic-cross", name: "Celtic Cross", description: "Spread", matrix }],
@@ -81,7 +87,7 @@ mkdirSync(artifacts, { recursive: true });
         }).observe(document.body, { subtree: true, attributes: true, childList: true });
       });
       const continueLabel = { en: "Continue", uk: "Продовжити", ru: "Продолжить" }[scenario.locale];
-      const startLabel = { en: "Start Over", uk: "Почати спочатку", ru: "Начать заново" }[scenario.locale];
+      const startLabel = { en: scenario.width < 768 ? "Restart" : "Start Over", uk: "Почати спочатку", ru: "Начать заново" }[scenario.locale];
       await page.locator("textarea").fill("How will my plans develop? Довге запитання про майбутнє та можливості. Длинный вопрос о планах и новых возможностях.");
       await page.getByRole("button", { name: continueLabel, exact: true }).click();
       await page.locator("[data-reveal-phase=ready]").waitFor({ timeout: 30000 });
@@ -89,7 +95,11 @@ mkdirSync(artifacts, { recursive: true });
 
       assert.deepEqual(await page.evaluate(() => window.revealPhases), ["preparing", "dealing", "flipping", "focusing", "ready"]);
       assert.equal(await page.evaluate(() => window.anchorCalls), 1);
-      assert.equal(await page.locator("[data-card-position] button[aria-pressed=true]").locator("..").locator("..").getAttribute("data-card-position"), order[0]);
+      if (scenario.width > 768) assert.equal(await page.locator("[data-card-position] button[aria-pressed=true]").locator("..").locator("..").getAttribute("data-card-position"), order[0]);
+      else {
+        assert.equal(await page.locator("[data-card-position] button[aria-pressed=true]").count(), 0);
+        assert.equal(await page.getByRole("dialog").count(), 0);
+      }
       assert.equal(await page.locator("[data-card-position]").count(), scenario.count);
       assert.ok(await page.evaluate(() => window.phaseSamples.filter(sample => ["flipping", "focusing"].includes(sample.phase)).every(sample => sample.landed && !sample.selected)));
       assert.deepEqual(await page.locator("[data-card-position]").evaluateAll(nodes => nodes.map(node => node.dataset.cardPosition)), order);
@@ -100,11 +110,16 @@ mkdirSync(artifacts, { recursive: true });
         return Object.fromEntries(["padding", "column", "row"].map(key => [key, parseFloat(style.getPropertyValue("--reveal-" + key))]));
       });
       coordinates.forEach((point, index) => assert.deepEqual(point, { x: tokens.padding + (matrix[order[index]][0] - minX) * tokens.column, y: tokens.padding + (matrix[order[index]][1] - minY) * tokens.row }));
-      assert.equal(await page.locator("[data-ai-detail]").count(), 1);
-      assert.ok((await page.locator("[data-ai-detail]").innerText()).includes("AI reading 1"));
+      assert.equal(await page.locator("[data-ai-detail]").count(), scenario.width > 768 ? 1 : 0);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await page.locator("[data-reading-panel]").screenshot({ path: artifacts + "/reveal-" + scenario.name + ".png" });
 
+      if (scenario.width > 768) {
+      assert.ok((await page.locator("[data-ai-detail]").innerText()).includes("AI reading 1"));
+      await page.locator('[data-ai-detail] [data-section="why"] button').click();
+      await page.locator('[data-ai-detail] [data-section="risks"] button').click();
+      assert.equal(await page.locator('[data-ai-detail] [aria-expanded="true"]').count(), 2);
+      await page.locator("[data-reading-panel]").screenshot({ path: artifacts + "/expanded-" + scenario.name + ".png" });
       // Following page scroll must keep the two information cards aligned and panel-bounded.
       await page.evaluate(() => window.scrollBy(0, 80));
       await page.waitForTimeout(100);
@@ -131,6 +146,41 @@ mkdirSync(artifacts, { recursive: true });
       assert.ok(await page.evaluate(() => window.answerNode === document.querySelector("[data-ai-detail]")));
       await page.locator("[data-selected-detail]").click({ position: { x: 20, y: 20 } });
       await page.locator("[data-selected-detail]").waitFor({ state: "detached" });
+
+      } else {
+        assert.equal(await page.locator('[data-reveal-controls]').evaluate(node => getComputedStyle(node).position), 'fixed');
+        await page.locator('[data-card-position] button').first().click();
+        await page.getByRole('dialog').waitFor();
+        assert.ok(await page.getByRole('dialog').evaluate(node => node.contains(document.activeElement)));
+        assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+        assert.equal(await page.locator('[data-card-position] button[aria-pressed=true]').count(), 1);
+        assert.ok((await page.getByRole('dialog').innerText()).includes('Personal impact'));
+        await page.getByRole('dialog').screenshot({ path: artifacts + '/card-modal-' + scenario.name + '.png' });
+        await page.locator('[data-sheet-backdrop]').click({ position: { x: 5, y: 5 } });
+        await page.getByRole('dialog').waitFor({ state: 'detached' });
+        await page.locator('[data-reveal-controls] button').first().click();
+        await page.getByRole('dialog').waitFor();
+        assert.ok((await page.getByRole('dialog').innerText()).includes('AI reading 1'));
+        await page.locator('[role="dialog"] [data-section="why"] button').click();
+        await page.locator('[role="dialog"] [data-section="risks"] button').click();
+        assert.equal(await page.locator('[role="dialog"] [aria-expanded="true"]').count(), 2);
+        assert.equal(await page.locator('[role="dialog"] ol li').count(), 3);
+        await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => { node.scrollTop = 80; });
+        assert.ok(await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => node.scrollTop > 0));
+        await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => { node.scrollTop = 0; });
+        await page.getByRole('dialog').screenshot({ path: artifacts + '/answer-modal-' + scenario.name + '.png' });
+        const handle = await page.locator('[data-sheet-handle]').boundingBox();
+        await page.mouse.move(handle.x + handle.width / 2, handle.y + 12);
+        await page.mouse.down();
+        await page.mouse.move(handle.x + handle.width / 2, handle.y + 150, { steps: 12 });
+        await page.mouse.up();
+        await page.getByRole('dialog').waitFor({ state: 'detached' });
+        assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+        assert.equal(await page.locator('[data-card-position] button[aria-pressed=true]').count(), 0);
+        await page.locator('[data-reveal-controls] button').first().click();
+        await page.keyboard.press('Escape');
+        await page.getByRole('dialog').waitFor({ state: 'detached' });
+      }
 
       const viewport = page.locator("[data-spread-viewport]");
       await viewport.scrollIntoViewIfNeeded();

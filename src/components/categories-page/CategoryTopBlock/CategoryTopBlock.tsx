@@ -173,8 +173,12 @@ export default function CategoryTopBlock({
               </p>
             </div>
             <div className={styles.askBlock}>
-              <p className={`font-bona-topblock-title ${styles.askTitle}`}>{stepTitle[step]}</p>
-              <p className={`font-instrument-xs ${styles.askDescription}`}>{stepDescription[step]}</p>
+              <p className={`font-bona-topblock-title ${styles.askTitle}`}>
+                {isConfirmed ? <><span className={styles.revealDesktopCopy}>{stepTitle[step]}</span><span className={styles.revealMobileCopy}>{dictionary.findTitle}</span></> : stepTitle[step]}
+              </p>
+              <p className={`font-instrument-xs ${styles.askDescription}`}>
+                {isConfirmed ? <><span className={styles.revealDesktopCopy}>{dictionary.askDescription}</span><span className={styles.revealMobileCopy}>{stepDescription[step]}</span></> : stepDescription[step]}
+              </p>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 .revealArea {
   position: relative;
   z-index: 5;
-  width: 100%;
+  width: clamp(var(--reveal-viewport-min-width), calc(100% - 2 * (var(--reveal-detail-width) + var(--reveal-detail-left))), var(--reveal-viewport-width));
   min-width: 0;
   margin-top: var(--reveal-space);
 }
@@ -92,41 +92,76 @@
 .detailSlot { width: var(--reveal-detail-width); height: 100%; min-width: 0; }
 .cardDetail {
   position: relative;
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  gap: var(--reveal-gap);
+  display: flex; flex-direction: column;
   width: 100%; height: 100%;
-  padding: var(--reveal-gap);
-  border-radius: var(--reveal-radius);
+  border: var(--reveal-border-width) solid var(--color-black-15);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
   overflow: hidden;
   pointer-events: auto;
 }
-.cardDetail[role="button"] { cursor: pointer; }
-.detailLabel, .detailText {
-  position: relative;
-  background: var(--color-white-75);
-  color: var(--color-black-75);
-  box-shadow: var(--shadow-medium);
-  backdrop-filter: blur(var(--blur-shadow));
-  overflow-wrap: anywhere;
+.cardDetail[data-selected-detail] { cursor: pointer; }
+.cardDetail::after {
+  content: ""; position: absolute; bottom: 0; left: 0; right: 0;
+  height: var(--reveal-detail-fade-height); background: var(--reveal-detail-fade); pointer-events: none;
+}
+.detailHeader {
+  flex-shrink: 0; padding: var(--reveal-space);
+  border-bottom: var(--reveal-border-width) solid var(--color-black-15);
+  background: var(--color-greyish-blue); color: var(--color-black);
+  font-size: var(--text-xxs); font-weight: var(--reveal-answer-weight);
+}
+.detailPreview {
+  position: relative; flex-shrink: 0; height: var(--reveal-preview-height);
+  overflow: hidden; border-radius: var(--radius-card);
+}
+.previewArtwork {
+  position: absolute; width: 100%; aspect-ratio: var(--reveal-preview-aspect);
+  top: 50%; transform: translateY(-50%);
 }
 .detailLabel {
-  max-width: 100%; flex-shrink: 0;
-  max-height: var(--reveal-detail-label-max); overflow-y: auto;
-  padding: var(--reveal-label-padding);
-  border-radius: var(--reveal-label-radius);
-  text-align: center;
+  position: absolute; bottom: var(--reveal-gap); left: var(--reveal-gap);
+  max-width: calc(100% - 2 * var(--reveal-gap));
+  padding: var(--reveal-preview-label-padding); border-radius: var(--reveal-label-radius);
+  font-size: var(--text-xxs); font-weight: var(--reveal-answer-weight);
+  background: var(--color-white-75); color: var(--color-black-75);
+  backdrop-filter: blur(var(--blur-shadow)); overflow-wrap: anywhere;
 }
-.detailText {
-  width: 100%; min-height: 0; max-height: var(--reveal-detail-text-max);
-  padding: var(--reveal-space);
-  border-radius: var(--reveal-radius);
+.detailText, .sheetContent {
+  position: relative;
+  display: flex; flex-direction: column; gap: var(--reveal-space);
+  width: 100%; min-height: 0; flex: 1;
+  padding: var(--reveal-content-padding);
+  color: var(--color-black); font-size: var(--text-xxs); line-height: normal;
   overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
-  white-space: pre-line;
+  white-space: pre-line; overflow-wrap: anywhere;
 }
-.answerSection + .answerSection { margin-top: var(--reveal-space); }
-.answerTitle { font-weight: var(--reveal-answer-weight); margin-bottom: var(--reveal-gap); }
+.answerSection, .fullDescription { display: flex; flex-direction: column; gap: var(--reveal-section-gap); flex-shrink: 0; }
+.answerTitle { color: var(--color-black-60); font-size: inherit; font-weight: var(--reveal-answer-weight); }
+.insetSection { padding: var(--reveal-space); border-radius: var(--radius-card); background: var(--color-greyish-blue); color: var(--color-black-75); }
+.sectionToggle {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--reveal-gap); width: 100%;
+  background: none; border: none; padding: 0; text-align: left; color: var(--color-black-75); cursor: pointer;
+  font: inherit; font-weight: var(--reveal-answer-weight);
+}
+.chevronIcon { display: block; width: var(--reveal-toggle-glyph-size); height: var(--reveal-toggle-glyph-size); background: var(--color-black-60); mask: url("/icons/chevron-down.svg") center / contain no-repeat; }
+.insetSection:has(.sectionToggle) { padding: var(--reveal-toggle-padding); }
+.insetSection:has([aria-expanded="true"]) { padding: var(--reveal-space); }
+.sectionToggleIcon { width: var(--reveal-toggle-icon-size); height: var(--reveal-toggle-icon-size); padding: var(--reveal-toggle-icon-padding); flex-shrink: 0; }
+.sectionToggle[aria-expanded="true"] .chevronIcon { transform: rotate(var(--reveal-toggle-rotation)); }
+.expandedSection { padding-top: var(--reveal-gap); }
+.adviceList { list-style: none; counter-reset: advice; display: flex; flex-direction: column; gap: var(--reveal-space); }
+.adviceList li { display: flex; gap: var(--reveal-gap); color: var(--color-black-75); }
+.adviceList li::before {
+  counter-increment: advice; content: counter(advice); display: grid; place-items: center; flex-shrink: 0;
+  width: var(--reveal-advice-number-size); height: var(--reveal-advice-number-size); border-radius: var(--reveal-label-radius);
+  background: var(--color-greyish-blue); color: var(--color-black); font-size: var(--reveal-advice-number-font);
+}
 .startOver {
-  position: relative; 
+  position: absolute;
+  bottom: var(--reveal-detail-scroll-inset); left: 50%; transform: translateX(-50%);
   z-index: 7; flex-shrink: 0;
   margin-top: var(--reveal-gap);
   /* margin-bottom: 2px; */
@@ -137,19 +172,45 @@
 .readingError button { text-decoration: underline; }
 
 @media (max-width: 768px) {
+  .revealArea { width: 100%; margin-top: var(--reveal-mobile-section-space); }
   .spreadViewport { height: var(--reveal-viewport-mobile); }
-  .detailLayer {
-    position: sticky; top: auto; left: auto; right: auto;
-    bottom: max(var(--reveal-gap), env(safe-area-inset-bottom));
-    width: 100%; height: var(--reveal-detail-mobile-height);
-    flex-shrink: 0; gap: var(--reveal-gap);
-    margin-top: var(--reveal-space);
-  }
-  .detailSlot { width: calc((100% - var(--reveal-gap)) / 2); }
-  .detailLabel { font-size: var(--text-xs); padding: var(--reveal-gap); }
-  .detailText { font-size: var(--text-xs); padding: var(--reveal-gap); }
-  .startOver { margin-bottom: env(safe-area-inset-bottom); }
 }
+.mobileHint { position: relative; z-index: 5; margin-top: var(--reveal-mobile-section-space); font-size: var(--text-xs); color: var(--color-black-40); text-align: center; }
+.mobileControls {
+  position: fixed; left: var(--reveal-controls-inset); right: var(--reveal-controls-inset);
+  bottom: max(var(--reveal-controls-inset), env(safe-area-inset-bottom)); z-index: var(--reveal-controls-layer);
+  display: flex; gap: var(--reveal-space); align-items: stretch;
+}
+.mobileControls > button {
+  min-width: 0; height: auto; min-height: var(--reveal-controls-height); padding: var(--reveal-controls-padding);
+  box-shadow: var(--shadow-medium); border: var(--reveal-border-width) solid var(--color-black-7);
+}
+.mobileControls > button:last-child { background: var(--color-white-60); backdrop-filter: blur(var(--blur-shadow)); }
+.mobileControls > .answerButton { flex: 1; flex-direction: row-reverse; }
+.mobileControls > button > span:first-child { white-space: normal; overflow-wrap: anywhere; font-size: var(--text-sm); }
+.sheetRoot { position: fixed; inset: 0; z-index: var(--reveal-sheet-layer); display: flex; flex-direction: column; justify-content: flex-end; }
+.sheetBackdrop { position: absolute; inset: 0; background: var(--color-black-40); }
+.sheet {
+  position: relative; display: flex; flex-direction: column; max-height: var(--reveal-sheet-max-height);
+  background: var(--color-white); border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  border-top: var(--reveal-border-width) solid var(--color-black-15); box-shadow: var(--shadow-medium);
+  padding-bottom: env(safe-area-inset-bottom); overflow: hidden;
+}
+.sheetHeader { position: relative; flex-shrink: 0; padding: var(--reveal-content-padding) var(--reveal-sheet-header-inset) var(--reveal-space); touch-action: none; text-align: center; }
+.sheetGrabber { display: block; width: var(--reveal-sheet-grabber-width); height: var(--reveal-sheet-grabber-height); margin: 0 auto var(--reveal-space); border-radius: var(--reveal-label-radius); background: var(--color-black-15); }
+.sheetEyebrow { font-size: var(--text-xxs); color: var(--color-black-40); }
+.sheetTitle { font-family: var(--font-bona-nova-sc); font-size: var(--text-4xl); letter-spacing: var(--tracking-bona-4xl); font-weight: normal; line-height: normal; }
+.sheetClose { position: absolute; right: var(--reveal-gap); top: var(--reveal-sheet-header-inset); padding: var(--reveal-controls-padding); border: none; background: none; cursor: pointer; }
+.sheetContent { flex: 0 1 auto; font-size: var(--text-sm); gap: var(--reveal-mobile-section-space); padding-bottom: var(--reveal-sheet-bottom-padding); }
+.sheetContent .detailPreview { height: var(--reveal-preview-mobile-height); }
+.sheetContent .sectionToggle { font-size: var(--text-base); }
+.sheetContent .adviceList li::before { width: var(--reveal-advice-number-mobile-size); height: var(--reveal-advice-number-mobile-size); font-size: var(--text-sm); }
+.sheetContent .fullDescription { gap: var(--reveal-space); }
+.cardSheet .sheetHeader::after { content: ""; position: absolute; bottom: 0; left: var(--reveal-content-padding); right: var(--reveal-content-padding); height: var(--reveal-border-width); background: var(--color-grey); }
+.cardSheet .sheetContent { padding-inline: var(--reveal-sheet-card-padding); gap: var(--reveal-content-padding); }
+.cardSheet .fullDescription { border-top: var(--reveal-border-width) solid var(--color-grey); padding-top: var(--reveal-content-padding); }
+.cardSheet .answerTitle, .cardSheet .detailLabel { font-size: var(--text-xs); }
+.cardSheet .detailLabel { bottom: var(--reveal-space); left: var(--reveal-space); }
 @media (prefers-reduced-motion: reduce) {
   .revealCardHoverOverlay { transition: none; }
 }
