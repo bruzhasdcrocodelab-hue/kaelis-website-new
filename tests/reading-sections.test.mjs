@@ -110,7 +110,10 @@ test("all interpretation text survives missing and additional paragraphs in its 
       const rendered = sections.flatMap(section => section.key === "advice"
         ? adviceItems(section.text).items : [section.text]).join(" ");
       assert.equal(normalizeWhitespace(rendered), normalizeWhitespace([...body.slice(0, count), ...fixture.advice].join(" ")));
-      assert.deepEqual(sections.map(section => section.key), [...["result", "why", "risks"].slice(0, count), "advice"]);
+      assert.deepEqual(sections.map(section => section.key), [...(count === 0 ? [] : count === 1 ? ["result"] : count === 2 ? ["result", "risks"] : ["result", "why", "risks"]), "advice"]);
+      if (count > 0) assert.equal(sections.find(section => section.key === "result").text, body[0]);
+      if (count > 1) assert.equal(sections.find(section => section.key === "risks").text, body[count - 1]);
+      if (count > 2) assert.equal(sections.find(section => section.key === "why").text, body.slice(1, count - 1).join("\n\n"));
     }
   }
 });
@@ -120,8 +123,11 @@ test("interpretation respects localized headings, explicit sections and incomple
     for (const count of [0, 1, 2, 3, 4]) {
       const parts = ["First.", "Second.", "Third.", "Fourth."].slice(0, count);
       const result = interpretationSections([{ title: heading, text: parts.join("\n") }]);
-      assert.deepEqual(result.map(item => item.key), ["result", "why", "risks"].slice(0, count));
-      if (count > 3) assert.equal(result.at(-1).text, "Third.\n\nFourth.");
+      assert.deepEqual(result.map(item => item.key), count === 0 ? [] : count === 1 ? ["result"] : count === 2 ? ["result", "risks"] : ["result", "why", "risks"]);
+      if (count > 3) {
+        assert.equal(result.find(item => item.key === "why").text, "Second.\n\nThird.");
+        assert.equal(result.at(-1).text, "Fourth.");
+      }
     }
   }
   assert.deepEqual(interpretationSections(null), []);

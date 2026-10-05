@@ -107,8 +107,9 @@ export function interpretationSections(value: unknown): ReadingSection[] {
     if (section.key !== "result" && (section.key || section.title)) return [section];
     const parts = paragraphs(section.text);
     const keys: SectionKey[] = ["result", "why", "risks"];
+    const bodies = [parts[0], parts.slice(1, -1).join("\n\n"), parts.length > 1 ? parts.at(-1) : undefined];
     return keys.flatMap((key, index) => {
-      const text = index === keys.length - 1 ? parts.slice(index).join("\n\n") : parts[index];
+      const text = bodies[index];
       return text ? [{ key, title: "", text }] : [];
     });
   });
