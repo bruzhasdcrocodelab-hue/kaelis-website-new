@@ -10,7 +10,7 @@ import { frameOverlayImage } from "@/lib/tarotDeck";
 import { presentCards, type PresentedCard as TarotCard } from "@/lib/tarot/cardPresentation";
 import type { Reading } from "@/lib/tarot/reading";
 import { readingMessages } from "@/lib/tarot/messages";
-import { cardReadingSections, readingSections } from "@/lib/tarot/readingSections";
+import { cardReadingSections, interpretationSections } from "@/lib/tarot/readingSections";
 import ReadingScroll from "./ReadingScroll";
 import ReadingContent from "./ReadingContent";
 import RevealSheet from "./RevealSheet";
@@ -99,7 +99,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     reading.cards.find(card => card.position === selectedPosition)?.description,
     reading.reading?.cards.find(card => card.position === selectedPosition)?.text,
   ), [reading, selectedPosition]);
-  const answerSections = useMemo(() => readingSections(reading.reading?.sections), [reading.reading]);
+  const answerSections = useMemo(() => interpretationSections(reading.reading?.sections), [reading.reading]);
   const closeSheet = useCallback(() => { setSheet(null); setSelectedPosition(null); }, []);
   const geometry = useMemo(() => metrics ? spreadGeometry(cards, metrics) : null, [cards, metrics]);
   const isRevealed = phase === "flipping" || phase === "focusing" || phase === "ready";
@@ -229,9 +229,9 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
         {answerVisible && <motion.section className={styles.cardDetail} data-ai-detail aria-label={dictionary.readingAnswer}
           initial={{ opacity: 0, y: "110%" }} animate={{ opacity: 1, y: 0 }} transition={transition}>
           <h2 className={styles.detailHeader}>{labels.interpretation}</h2>
-          <div className={styles.detailText} tabIndex={0}>
+          <ReadingScroll>
             <ReadingContent sections={answerSections} locale={locale} />
-          </div>
+          </ReadingScroll>
         </motion.section>}
       </div>
     </div>}

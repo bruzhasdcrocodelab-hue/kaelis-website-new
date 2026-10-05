@@ -5,6 +5,7 @@
   align-items: flex-start;
   justify-content: center;
   width: 92.5%;
+  max-width: 1320px;
   height: 360px;
   padding: 40px;
   margin-top: -169px;

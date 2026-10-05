@@ -63,9 +63,6 @@ export default function RevealSheet({ open, onClose, title, locale, transition, 
           <span className={styles.sheetGrabber} />
           <p className={styles.sheetEyebrow}>{card ? revealMessages[locale].discoverMeaning : revealMessages[locale].learnMore}</p>
           <h2 id={titleId} className={styles.sheetTitle}>{title}</h2>
-          {/* {!card && <button type="button" className={styles.sheetClose} onClick={onClose} aria-label={revealMessages[locale].close}>
-            <span className={styles.chevronIcon} aria-hidden="true" />
-          </button>} */}
         </div>
         <div className={styles.sheetContent} tabIndex={0}>{children}</div>
       </motion.div>

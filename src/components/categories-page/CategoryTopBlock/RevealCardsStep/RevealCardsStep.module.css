@@ -1,4 +1,4 @@
-.revealArea {
+﻿.revealArea {
   position: relative;
   z-index: 5;
   width: calc(100% - 2 * var(--reveal-content-padding));
@@ -158,11 +158,14 @@
   font: inherit; font-weight: var(--reveal-answer-weight);
 }
 .chevronIcon { display: block; width: var(--reveal-toggle-glyph-size); height: var(--reveal-toggle-glyph-size); background: var(--color-black-60); mask: url("/icons/chevron-down.svg") center / contain no-repeat; }
-.insetSection:has(.sectionToggle) { padding: var(--reveal-toggle-padding); }
+.interpretationSections { display: flex; flex-direction: column; gap: var(--reveal-gap); flex-shrink: 0; }
+.interpretationSections:has([aria-expanded="true"]) { gap: var(--reveal-space); }
+.insetSection:has(.sectionToggle) { padding: var(--reveal-toggle-padding); gap: 0; }
 .insetSection:has([aria-expanded="true"]) { padding: var(--reveal-space); }
 .sectionToggleIcon { width: var(--reveal-toggle-icon-size); height: var(--reveal-toggle-icon-size); padding: var(--reveal-toggle-icon-padding); flex-shrink: 0; }
 .sectionToggle[aria-expanded="true"] .chevronIcon { transform: rotate(var(--reveal-toggle-rotation)); }
-.expandedSection { padding-top: var(--reveal-gap); }
+.expandedSection { padding-top: var(--reveal-gap); color: var(--color-black); }
+.answerSection[data-section="advice"] { gap: var(--reveal-gap); }
 .adviceList { list-style: none; counter-reset: advice; display: flex; flex-direction: column; gap: var(--reveal-space); }
 .adviceList li { display: flex; gap: var(--reveal-gap); color: var(--color-black-75); }
 .adviceList li::before {
@@ -225,6 +228,8 @@
 .sheetContent { flex: 0 1 auto; font-size: var(--text-sm); gap: var(--reveal-mobile-section-space); padding-bottom: var(--reveal-sheet-bottom-padding); }
 .sheetContent .detailPreview { height: var(--reveal-preview-mobile-height); }
 .sheetContent .sectionToggle { font-size: var(--text-base); }
+.sheetContent .insetSection:has(.sectionToggle) { padding: var(--reveal-sheet-toggle-padding); }
+.sheetContent .insetSection:has([aria-expanded="true"]) { padding: var(--reveal-space); }
 .sheetContent .adviceList li::before { width: var(--reveal-advice-number-mobile-size); height: var(--reveal-advice-number-mobile-size); font-size: var(--text-sm); }
 .cardSheet { max-height: calc(100dvh - var(--reveal-card-sheet-top-inset)); }
 .cardSheet .sheetHeader { padding-inline: var(--reveal-content-padding); }

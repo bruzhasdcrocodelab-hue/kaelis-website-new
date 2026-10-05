@@ -21,8 +21,16 @@ export const victory = {
 
 export const balance = {
   quickRead: "Balance, moderation, alchemy; reversed — excess, imbalance.",
-  impact: "The likely result is a measured, integrated development rather than a dramatic immediate breakthrough. A sustainable model comes from balancing quality with cost, ambition with capacity, and personal involvement with repeatable systems.",
+  impact: "The likely result is a measured, integrated development rather than a dramatic immediate breakthrough.",
+  recognition: "A sustainable model comes from balancing quality with cost, ambition with capacity, and personal involvement with repeatable systems.",
   focus: "A phased launch, limited menu, or trial format fits this position better than overextending from day one.",
+};
+
+export const uncertainty = {
+  quickRead: "Uncertainty, instincts, fears; reversed — clarity emerging, self-deception exposed.",
+  impact: "The relevant past influence is uncertainty rather than a settled foundation.",
+  recognition: "Some of the motivation for this plan may have developed without clear information about customer demand, costs, or your own non-negotiables.",
+  focus: "Replace impressions with observations: local footfall, competitors’ pricing, customer interviews, and realistic monthly cash-flow estimates.",
 };
 
 export const cardText = ({ quickRead, ...details }) => `${quickRead}\n\n${Object.values(details).join(" ")}`;

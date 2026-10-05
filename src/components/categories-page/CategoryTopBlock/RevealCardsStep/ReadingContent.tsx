@@ -30,6 +30,19 @@ function Section({ section, locale }: { section: ReadingSection; locale: Locale 
   </section>;
 }
 
+function AnswerSections({ sections, locale }: { sections: ReadingSection[]; locale: Locale }) {
+  const expandable = (section: ReadingSection) => section.key === "why" || section.key === "risks";
+  const groups: ReadingSection[][] = [];
+  for (const section of sections) {
+    const previous = groups.at(-1);
+    if (expandable(section) && previous && expandable(previous[0])) previous.push(section);
+    else groups.push([section]);
+  }
+  return groups.map((group, index) => expandable(group[0])
+    ? <div key={index} className={styles.interpretationSections}>{group.map((section, item) => <Section key={item} section={section} locale={locale} />)}</div>
+    : <Section key={index} section={group[0]} locale={locale} />);
+}
+
 export default function ReadingContent({ sections, locale, card, artwork }: {
   sections: ReadingSection[]; locale: Locale; card?: string; artwork?: ReactNode;
 }) {
@@ -44,9 +57,7 @@ export default function ReadingContent({ sections, locale, card, artwork }: {
     {card ? <div className={styles.cardSummary}>
       {preview}
       {rest.map((section, index) => <Section key={`${section.key}-${index}`} section={section} locale={locale} />)}
-    </div> : <>
-    {rest.map((section, index) => <Section key={`${section.key}-${index}`} section={section} locale={locale} />)}
-    </>}
+    </div> : <AnswerSections sections={rest} locale={locale} />}
     {details.length > 0 && <div className={styles.fullDescription}>
       <h3 className={styles.answerTitle}>{revealMessages[locale].fullDescription}</h3>
       <div className={styles.descriptionSections}>

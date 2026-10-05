@@ -64,47 +64,55 @@ export function readingSections(value: unknown): ReadingSection[] {
   });
 }
 
-const cardSentencePatterns = {
-  focus: /\b(?:keep (?:the |your )?focus|focus on|prioriti[sz]e|concentrate on|consider|aim for|(?:fits?|works?) .{0,80}better|(?:you )?should (?:focus|prioriti[sz]e|start|keep)|start (?:by|with))\b|(?:^|\s)(?:зосеред\p{L}*|сосредоточ\p{L}*|зверніть увагу|обратите внимание|тримайте фокус|держите фокус|варто почати|стоит начать|краще почати|лучше начать|почніть|начните|надайте перевагу)/iu,
-  recognition: /\b(?:recognition|acknowledg(?:e)?ment|reputation|appreciation)\b|(?:^|\s)(?:визнан\p{L}*|признан\p{L}*|репутац\p{L}*|схвален\p{L}*|одобрен\p{L}*)/iu,
-  impact: /\b(?:affect|impact|influence|likely (?:result|outcome)|(?:result|outcome) (?:is|will)|lead to|increase|reduce)\b|(?:^|\s)(?:вплив\p{L}*|вплин\p{L}*|повлия\p{L}*|влия\p{L}*|познач\p{L}*|скажется|результат\p{L}*|наслід\p{L}*|последств\p{L}*)/iu,
-};
+const sentences = (text: string) => [...new Intl.Segmenter(undefined, { granularity: "sentence" }).segment(text.replace(/\s*\n\s*/g, " "))]
+  .map(({ segment }) => segment.trim()).filter(Boolean);
+const paragraphs = (text: string) => text.replace(/\r\n?/g, "\n").split(/\n+/).map(part => part.trim()).filter(Boolean);
 
 export function cardReadingSections(description: unknown, interpretation?: unknown): ReadingSection[] {
   const source = [...readingSections(description), ...readingSections(interpretation)];
   const result: ReadingSection[] = [];
-  const add = (section: ReadingSection, separator = "\n\n") => {
-    if (!section.text.trim() || result.some(item => item.text === section.text)) return;
-    const last = result.at(-1);
-    if (last && last.key === section.key && last.title === section.title) last.text += `${separator}${section.text}`;
-    else result.push({ ...section });
-  };
-  const segmenter = new Intl.Segmenter(undefined, { granularity: "sentence" });
+  const detailKeys: SectionKey[] = ["impact", "recognition", "focus"];
+  const explicitDetails = source.some(section => detailKeys.includes(section.key as SectionKey));
+  let sentenceIndex = 0;
   for (const section of source) {
-    if (section.key || section.title) { add(section); continue; }
-    const paragraphs = section.text.split(/\n\s*\n/).map(text => text.trim()).filter(Boolean);
-    if (!result.some(item => item.key === "quickRead") && paragraphs.length) {
-      const first = paragraphs[0];
-      const summary = first.length <= 240 && (/(?:\breversed\b|перевернут\p{L}*|перевёрнут\p{L}*|обернен\p{L}*)/iu.test(first) ||
-        (first.split(/\s+/).length <= 22 && (first.match(/[,;]/g)?.length ?? 0) >= 2 && !Object.values(cardSentencePatterns).some(pattern => pattern.test(first))));
-      if (summary) add({ key: "quickRead", title: "", text: paragraphs.shift()! });
+    if ((section.key && section.key !== "fullDescription") || (!section.key && section.title)) {
+      result.push(section);
+      continue;
     }
-    for (const paragraph of paragraphs) {
-      let previousKey: SectionKey = "fullDescription";
-      let firstSentence = true;
-      for (const { segment } of segmenter.segment(paragraph)) {
-        const text = segment.trim();
-        const match = Object.entries(cardSentencePatterns).find(([, pattern]) => pattern.test(text));
-        const key: SectionKey = match ? match[0] as SectionKey : previousKey;
-        add({ key, title: "", text }, firstSentence ? "\n\n" : " ");
-        firstSentence = false;
-        previousKey = key;
-      }
+    const parts = section.text.split(/\n\s*\n/).map(text => text.trim()).filter(Boolean);
+    if (!section.key && !result.some(item => item.key === "quickRead") && parts.length) {
+      const first = parts[0];
+      const summary = first.length <= 240 && (/(?:\breversed\b|перевернут\p{L}*|перевёрнут\p{L}*|обернен\p{L}*)/iu.test(first) ||
+        (first.split(/\s+/).length <= 22 && (first.match(/[,;]/g)?.length ?? 0) >= 2));
+      if (summary) result.push({ key: "quickRead", title: "", text: parts.shift()! });
+    }
+    if (explicitDetails) {
+      if (parts.length) result.push({ ...section, key: "fullDescription", text: parts.join("\n\n") });
+      continue;
+    }
+    for (const text of sentences(parts.join("\n\n"))) {
+      const key = detailKeys[Math.min(sentenceIndex++, detailKeys.length - 1)];
+      const existing = result.find(item => item.key === key);
+      if (existing) existing.text += ` ${text}`;
+      else result.push({ key, title: "", text });
     }
   }
   return result;
 }
 
+export function interpretationSections(value: unknown): ReadingSection[] {
+  const sections = readingSections(value);
+  if (sections.some(section => section.key === "why" || section.key === "risks")) return sections;
+  return sections.flatMap(section => {
+    if (section.key !== "result" && (section.key || section.title)) return [section];
+    const parts = paragraphs(section.text);
+    const keys: SectionKey[] = ["result", "why", "risks"];
+    return keys.flatMap((key, index) => {
+      const text = index === keys.length - 1 ? parts.slice(index).join("\n\n") : parts[index];
+      return text ? [{ key, title: "", text }] : [];
+    });
+  });
+}
 export function adviceItems(text: string): { intro: string; items: string[] } {
   const lines = text.replace(/\r\n?/g, "\n").split("\n").flatMap(line =>
     /^\s*\d+[.)]\s+/.test(line) ? line.replace(/\s+(?=\d+[.)]\s+)/g, "\n").split("\n") : [line]);
@@ -121,6 +129,7 @@ export function adviceItems(text: string): { intro: string; items: string[] } {
     if (paragraphs.length > 1) return { intro: "", items: paragraphs };
     const separateLines = intro.trim().split("\n").map(item => item.trim()).filter(Boolean);
     if (separateLines.length > 1 && separateLines.every(line => /[.!?。！？]["'»”’)]?$/.test(line))) return { intro: "", items: separateLines };
+    return { intro: "", items: sentences(intro) };
   }
   return { intro: intro.trim(), items: items.map(item => item.trim()).filter(Boolean) };
 }

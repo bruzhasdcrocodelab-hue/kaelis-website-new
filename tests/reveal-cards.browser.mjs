@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
 import { victory, balance, cardText } from "./card-description-fixtures.mjs";
+import { interpretations, interpretationText } from "./interpretation-fixtures.mjs";
 const loadPackage = createRequire(import.meta.url);
 const { chromium } = loadPackage(process.argv[2] || "playwright");
 const artifacts = ".next/reveal-checks";
@@ -15,9 +16,10 @@ mkdirSync(artifacts, { recursive: true });
     for (const scenario of [
       { name: "desktop", width: 1440, height: 1000, count: 4, locale: "en" },
       { name: "mobile", width: 390, height: 844, count: 7, locale: "uk" },
-      { name: "narrow-reduced", width: 320, height: 640, count: 1, locale: "ru", reduced: true },
-      { name: "desktop-twelve", width: 1440, height: 1000, count: 12, locale: "en", partial: true },
-      { name: "mobile-twelve", width: 390, height: 844, count: 12, locale: "en", partial: true },
+      { name: "narrow-reduced", width: 320, height: 640, count: 1, locale: "ru", reduced: true, rawAnswer: 0 },
+      { name: "desktop-ru", width: 1440, height: 1000, count: 7, locale: "ru", reduced: true, rawAnswer: 0 },
+      { name: "desktop-twelve", width: 1440, height: 1000, count: 12, locale: "en", rawAnswer: 1 },
+      { name: "mobile-twelve", width: 390, height: 844, count: 12, locale: "en", rawAnswer: 2 },
       { name: "mobile-large", width: 390, height: 844, count: 30, locale: "uk", reduced: true },
     ].filter(scenario => !process.argv[3] || scenario.name === process.argv[3])) {
       const context = await browser.newContext({
@@ -52,7 +54,7 @@ mkdirSync(artifacts, { recursive: true });
               position, name: cardNames[i % 4], description: cardText(i % 2 ? balance : victory[scenario.locale]),
               image: ["Wands12.png", "Moon.png", "Star.png", "Sun.png"][i % 4], orientation: i % 2 === 0,
             })),
-            reading: { interpretation: scenario.partial ? [{ title: "", text: `${headings[0]}\n\nAI reading ${submissions}. ${"Existing result from the reading. ".repeat(60)}\n\n${headings[3]}\n\nWrite a one-page concept and obtain actual quotes for rent, equipment, suppliers, and staffing.\nRun a small-scale demand and margin test before signing a lease.` }] : [
+            reading: { interpretation: scenario.rawAnswer != null ? [{ title: "", text: interpretationText(interpretations[scenario.rawAnswer]) }] : scenario.partial ? [{ title: "", text: `${headings[0]}\n\nAI reading ${submissions}. ${"Existing result from the reading. ".repeat(60)}\n\n${headings[3]}\n\nWrite a one-page concept and obtain actual quotes for rent, equipment, suppliers, and staffing.\nRun a small-scale demand and margin test before signing a lease.` }] : [
               { title: headings[0], text: "AI reading " + submissions + " — відповідь, ответ." },
               { title: headings[1], text: "Card reasoning. ".repeat(50) },
               { title: headings[2], text: "Risks and possibilities. ".repeat(10) },
@@ -127,13 +129,13 @@ mkdirSync(artifacts, { recursive: true });
 
       if (scenario.width > 768) {
       assert.deepEqual(await page.locator('[data-selected-detail] [data-section]').evaluateAll(nodes => nodes.map(node => node.dataset.section)), ['quickRead', 'impact', 'recognition', 'focus']);
-      await page.locator('[data-reading-scroll]').evaluate(node => { node.scrollTop = node.scrollHeight; });
+      await page.locator('[data-selected-detail] [data-reading-scroll]').evaluate(node => { node.scrollTop = node.scrollHeight; });
       await page.waitForTimeout(100);
-      assert.equal(await page.locator('[data-reading-scroll]').getAttribute('data-at-end'), 'true');
+      assert.equal(await page.locator('[data-selected-detail] [data-reading-scroll]').getAttribute('data-at-end'), 'true');
       assert.equal(await page.locator('[data-selected-detail]').evaluate(node => getComputedStyle(node, '::after').display), 'none');
       await page.locator('[data-selected-detail]').screenshot({ path: artifacts + '/card-bottom-' + scenario.name + '.png' });
-      await page.locator('[data-reading-scroll]').evaluate(node => { node.scrollTop = 0; });
-      assert.ok((await page.locator("[data-ai-detail]").innerText()).includes("AI reading 1"));
+      await page.locator('[data-selected-detail] [data-reading-scroll]').evaluate(node => { node.scrollTop = 0; });
+      assert.ok((await page.locator("[data-ai-detail]").innerText()).includes(scenario.rawAnswer != null ? interpretations[scenario.rawAnswer].result : "AI reading 1"));
       if (scenario.partial) {
         assert.equal(await page.locator('[data-ai-detail] [data-section="why"], [data-ai-detail] [data-section="risks"]').count(), 0);
         assert.equal(await page.locator('[data-ai-detail] ol li').count(), 2);
@@ -141,6 +143,10 @@ mkdirSync(artifacts, { recursive: true });
       await page.locator('[data-ai-detail] [data-section="why"] button').click();
       await page.locator('[data-ai-detail] [data-section="risks"] button').click();
       assert.equal(await page.locator('[data-ai-detail] [aria-expanded="true"]').count(), 2);
+      if (scenario.rawAnswer != null) {
+        for (const key of ['result', 'why', 'risks']) assert.equal(await page.locator(`[data-ai-detail] [data-section="${key}"] p`).innerText(), interpretations[scenario.rawAnswer][key]);
+        assert.deepEqual(await page.locator('[data-ai-detail] ol li').allTextContents(), interpretations[scenario.rawAnswer].advice);
+      }
       }
       await page.locator("[data-reading-panel]").screenshot({ path: artifacts + "/expanded-" + scenario.name + ".png" });
       // Following page scroll must keep the two information cards aligned and panel-bounded.
@@ -156,6 +162,13 @@ mkdirSync(artifacts, { recursive: true });
       assert.ok(bounds.every(bound => bound.within));
       assert.ok(Math.abs(bounds[0].top - bounds[1].top) < 1);
 
+      await page.locator('[data-ai-detail] [data-reading-scroll]').evaluate(node => { node.scrollTop = node.scrollHeight; });
+      await page.waitForTimeout(100);
+      assert.equal(await page.locator('[data-ai-detail]').evaluate(node => getComputedStyle(node, '::after').display), 'none');
+      assert.ok(await page.locator('[data-ai-detail] ol li').last().evaluate(node => {
+        const scroll = node.closest('[data-reading-scroll]').getBoundingClientRect();
+        return node.getBoundingClientRect().bottom <= scroll.bottom;
+      }));
       await page.locator("[data-ai-detail]").evaluate(node => { window.answerNode = node; node.querySelector('[tabindex="0"]').scrollTop = 50; });
       await page.locator("[data-card-position] button[aria-pressed=true]").click();
       await page.locator("[data-selected-detail]").waitFor({ state: "detached" });
@@ -186,7 +199,8 @@ mkdirSync(artifacts, { recursive: true });
         await page.getByRole('dialog').waitFor({ state: 'detached' });
         await page.locator('[data-reveal-controls] button').first().click();
         await page.getByRole('dialog').waitFor();
-        assert.ok((await page.getByRole('dialog').innerText()).includes('AI reading 1'));
+        assert.ok((await page.getByRole('dialog').innerText()).includes(scenario.rawAnswer != null ? interpretations[scenario.rawAnswer].result : 'AI reading 1'));
+        await page.getByRole('dialog').screenshot({ path: artifacts + '/answer-collapsed-' + scenario.name + '.png' });
         if (scenario.partial) {
           assert.equal(await page.locator('[role="dialog"] [data-section="why"], [role="dialog"] [data-section="risks"]').count(), 0);
           assert.equal(await page.locator('[role="dialog"] ol li').count(), 2);
@@ -194,7 +208,11 @@ mkdirSync(artifacts, { recursive: true });
         await page.locator('[role="dialog"] [data-section="why"] button').click();
         await page.locator('[role="dialog"] [data-section="risks"] button').click();
         assert.equal(await page.locator('[role="dialog"] [aria-expanded="true"]').count(), 2);
-        assert.equal(await page.locator('[role="dialog"] ol li').count(), 3);
+        assert.equal(await page.locator('[role="dialog"] ol li').count(), scenario.rawAnswer != null ? 2 : 3);
+        if (scenario.rawAnswer != null) {
+          for (const key of ['result', 'why', 'risks']) assert.equal(await page.locator(`[role="dialog"] [data-section="${key}"] p`).innerText(), interpretations[scenario.rawAnswer][key]);
+          assert.deepEqual(await page.locator('[role="dialog"] ol li').allTextContents(), interpretations[scenario.rawAnswer].advice);
+        }
         }
         await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => { node.scrollTop = 80; });
         assert.ok(await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => node.scrollTop > 0));

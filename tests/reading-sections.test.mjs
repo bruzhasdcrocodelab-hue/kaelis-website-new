@@ -2,14 +2,15 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import ts from "typescript";
-import { victory, balance, cardText } from "./card-description-fixtures.mjs";
+import { victory, balance, uncertainty, cardText } from "./card-description-fixtures.mjs";
+import { interpretations, interpretationText } from "./interpretation-fixtures.mjs";
 
 const source = await readFile(new URL("../src/lib/tarot/readingSections.ts", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
-const { readingSections, adviceItems, cardReadingSections } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+const { readingSections, interpretationSections, adviceItems, cardReadingSections } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
 
 test("unheaded card examples become populated design sections without changing their text", () => {
-  for (const fixture of [...Object.values(victory), balance]) {
+  for (const fixture of [...Object.values(victory), balance, uncertainty]) {
     assert.deepEqual(cardReadingSections(cardText(fixture)).map(({ key, text }) => [key, text]), Object.entries(fixture));
     const { quickRead, ...details } = fixture;
     assert.deepEqual(cardReadingSections(quickRead, Object.values(details).join(" ")).map(({ key, text }) => [key, text]), Object.entries(fixture));
@@ -19,7 +20,7 @@ test("unheaded card examples become populated design sections without changing t
 test("card sections preserve explicit structure, unknown prose and missing values", () => {
   assert.deepEqual(cardReadingSections(null, undefined), []);
   assert.deepEqual(cardReadingSections({ quickRead: "", fullDescription: { Impact: "Actual impact", Recognition: null } }).map(({ key, text }) => [key, text]), [["impact", "Actual impact"]]);
-  assert.deepEqual(cardReadingSections("An unclassified observation.").map(({ key, text }) => [key, text]), [["fullDescription", "An unclassified observation."]]);
+  assert.deepEqual(cardReadingSections("An unclassified observation.").map(({ key, text }) => [key, text]), [["impact", "An unclassified observation."]]);
   assert.deepEqual(cardReadingSections([{ title: "Impact", text: "Focus on this exact backend wording." }]).map(({ key, text }) => [key, text]), [["impact", "Focus on this exact backend wording."]]);
   assert.deepEqual(cardReadingSections("Patience, balance, care.").map(({ key, text }) => [key, text]), [["quickRead", "Patience, balance, care."]]);
 });
@@ -59,8 +60,8 @@ test("advice preserves introductory text, multiline items and ordinary paragraph
   assert.deepEqual(adviceItems("Start here.\n1. First\ncontinued\n2) Second"), { intro: "Start here.", items: ["First\ncontinued", "Second"] });
   assert.deepEqual(adviceItems("• Один\n• Два"), { intro: "", items: ["Один", "Два"] });
   assert.deepEqual(adviceItems("1. First 2. Second"), { intro: "", items: ["First", "Second"] });
-  assert.deepEqual(adviceItems("An ordinary recommendation."), { intro: "An ordinary recommendation.", items: [] });
-  assert.deepEqual(adviceItems("Plan for 2026. Review the budget."), { intro: "Plan for 2026. Review the budget.", items: [] });
+  assert.deepEqual(adviceItems("An ordinary recommendation."), { intro: "", items: ["An ordinary recommendation."] });
+  assert.deepEqual(adviceItems("Plan for 2026. Review the budget."), { intro: "", items: ["Plan for 2026.", "Review the budget."] });
 });
 
 test("partial answers keep only populated sections and render unmarked advice as items in EN, UK and RU", () => {
@@ -75,5 +76,55 @@ test("partial answers keep only populated sections and render unmarked advice as
     assert.deepEqual(adviceItems(`${first}\n\n${second}`), { intro: "", items: [first, second] });
   }
   assert.deepEqual(readingSections({ Result: null, Risks: [], Advice: [null, "", "   "] }), []);
-  assert.deepEqual(adviceItems("A recommendation wrapped\nacross two lines."), { intro: "A recommendation wrapped\nacross two lines.", items: [] });
+  assert.deepEqual(adviceItems("A recommendation wrapped\nacross two lines."), { intro: "", items: ["A recommendation wrapped across two lines."] });
+});
+
+test("card descriptions use sentence position, omit missing blocks and append overflow to Focus", () => {
+  for (const fixture of Object.values(victory)) {
+    const all = [fixture.impact, fixture.recognition, fixture.focus, fixture.impact];
+    for (const count of [0, 1, 2, 3, 4]) {
+      const result = cardReadingSections({ QuickRead: fixture.quickRead, FullDescription: all.slice(0, count).join(" ") });
+      assert.deepEqual(result.map(item => item.key), ["quickRead", ...["impact", "recognition", "focus"].slice(0, count)]);
+      if (count > 3) assert.equal(result.at(-1).text, all.slice(2).join(" "));
+    }
+  }
+});
+
+test("complete AI examples split into exactly three interpretation paragraphs and two advice items", () => {
+  for (const fixture of interpretations) {
+    for (const separator of ["\n", "\n\n", "\r\n"]) {
+      const result = interpretationSections(interpretationText(fixture, separator));
+      assert.deepEqual(result.map(item => item.key), ["result", "why", "risks", "advice"]);
+      for (const key of ["result", "why", "risks"]) assert.equal(result.find(item => item.key === key).text, fixture[key]);
+      assert.deepEqual(adviceItems(result.at(-1).text), { intro: "", items: fixture.advice });
+    }
+  }
+});
+
+test("all interpretation text survives missing and additional paragraphs in its original order", () => {
+  const normalizeWhitespace = text => text.replace(/\s+/g, " ").trim();
+  for (const fixture of interpretations) {
+    const body = [fixture.result, fixture.why, fixture.risks, "Дополнительный абзац.", "Ще один абзац."];
+    for (const count of [0, 1, 2, 3, 4, 5]) {
+      const sections = interpretationSections({ Result: body.slice(0, count).join("\n"), Advice: fixture.advice });
+      const rendered = sections.flatMap(section => section.key === "advice"
+        ? adviceItems(section.text).items : [section.text]).join(" ");
+      assert.equal(normalizeWhitespace(rendered), normalizeWhitespace([...body.slice(0, count), ...fixture.advice].join(" ")));
+      assert.deepEqual(sections.map(section => section.key), [...["result", "why", "risks"].slice(0, count), "advice"]);
+    }
+  }
+});
+
+test("interpretation respects localized headings, explicit sections and incomplete paragraph counts", () => {
+  for (const heading of ["Result", "Результат", "Итог"]) {
+    for (const count of [0, 1, 2, 3, 4]) {
+      const parts = ["First.", "Second.", "Third.", "Fourth."].slice(0, count);
+      const result = interpretationSections([{ title: heading, text: parts.join("\n") }]);
+      assert.deepEqual(result.map(item => item.key), ["result", "why", "risks"].slice(0, count));
+      if (count > 3) assert.equal(result.at(-1).text, "Third.\n\nFourth.");
+    }
+  }
+  assert.deepEqual(interpretationSections(null), []);
+  const explicit = [{ title: "Result", text: "First.\nSecond." }, { title: "Risks", text: "Explicit risk." }];
+  assert.deepEqual(interpretationSections(explicit), readingSections(explicit));
 });
