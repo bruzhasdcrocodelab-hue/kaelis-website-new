@@ -1,3 +1,4 @@
+.section:has([data-reading-panel]) { scroll-margin-top: var(--reveal-anchor-inset); }
 .section {
   display: flex;
   flex-direction: column;
@@ -46,7 +47,33 @@
 .section.embedded { padding: 0; }
 .loading { position: relative; z-index: 5; display: grid; place-items: center; flex: 1; width: 100%; }
 
-.panel.panelReading { height: auto; min-height: 570px; padding-bottom: 56px; }
+.panel.panelReading {
+  height: auto;
+  min-height: var(--reveal-panel-height);
+  padding-bottom: var(--reveal-detail-scroll-inset);
+  overflow: clip;
+}
+.panelReading .pattern {
+  top: var(--reveal-pattern-top);
+  width: var(--reveal-pattern-width);
+  height: var(--reveal-pattern-height);
+}
+.panelReading .center { padding-top: 0; min-width: 0; max-width: var(--reveal-header-max-width); }
+.panelReading .categoryTagLabel { margin-top: 0; white-space: normal; text-align: center; overflow-wrap: anywhere; }
+.panelReading .askTitle {
+  font-size: var(--text-3xl);
+  letter-spacing: var(--tracking-bona-3xl);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  margin-top: 0;
+}
+.panelReading .askDescription { width: min(100%, var(--reveal-copy-width)); font-size: var(--text-xxs); }
+.revealMobileCopy { display: none; }
+.panelReading .wavesLine {
+  height: var(--reveal-frame-height); max-height: calc(100% - 2 * var(--reveal-detail-scroll-inset));
+  width: calc(100% - 2 * var(--reveal-detail-scroll-inset)); padding: 0;
+  top: 50%; bottom: auto; transform: translate(-50%, -50%);
+}
 .flowError { position: relative; z-index: 5; max-width: 450px; text-align: center; }
 .flowError button { text-decoration: underline; }
 
@@ -186,7 +213,16 @@
   .panelLoading { background: transparent; }
   .panelLoading::before { background: var(--gradient-topblock-mobile); }
   .embedded .panel { margin-top: 0; }
-  .panel.panelReading { padding-bottom: 72px; }
+  .panel.panelReading { min-height: 0; padding-top: var(--reveal-mobile-section-space); padding-bottom: var(--reveal-controls-reserve); }
+  .panelReading .askTitle { font-size: var(--text-4xl); letter-spacing: var(--tracking-bona-4xl); }
+  .panelReading .askDescription { width: min(100%, var(--reveal-mobile-header-width)); }
+  .revealDesktopCopy { display: none; }
+  .revealMobileCopy { display: inline; }
+  .panelReading .pattern {
+    top: var(--reveal-pattern-mobile-top);
+    width: var(--reveal-pattern-mobile-width);
+    height: var(--reveal-pattern-mobile-height);
+  }
   .section {
     padding: 0;
   }

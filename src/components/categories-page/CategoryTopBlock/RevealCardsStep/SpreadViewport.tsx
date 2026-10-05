@@ -1,46 +1,95 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { Locale } from "@/lang";
-import { readingMessages } from "@/lib/tarot/messages";
+import { useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
+import { animate } from "motion/react";
+import { clampPan, focusTransform, readRevealMetrics, zoomBounds, type Point } from "./revealGeometry";
 import styles from "./RevealCardsStep.module.css";
 
-export function clampPan(value: number, content: number, viewport: number) {
-  return content <= viewport ? (viewport - content) / 2 : Math.max(viewport - content, Math.min(0, value));
+export { clampPan } from "./revealGeometry";
+export interface SpreadViewportHandle {
+  focus: (point: Point, duration: number, complete: () => void) => () => void;
 }
-export default function SpreadViewport({ width, height, locale, children }: { width: number; height: number; locale: Locale; children: ReactNode }) {
+
+export default function SpreadViewport({ width, height, locked, apiRef, onReady, children }: {
+  width: number; height: number; locked: boolean;
+  apiRef: RefObject<SpreadViewportHandle | null>;
+  onReady: (origin: Point) => void;
+  children: ReactNode;
+}) {
   const viewport = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
-  const controls = useRef<(factor: number | null) => void>(() => {});
-  const [zoom, setZoom] = useState(1);
-  const text = readingMessages[locale];
-  useEffect(() => {
+  const lockedRef = useRef(locked);
+  useLayoutEffect(() => { lockedRef.current = locked; }, [locked]);
+
+  useLayoutEffect(() => {
     const el = viewport.current!, inner = content.current!;
-    let vw = el.clientWidth, vh = 300, fit = 1, scale = 1, x = 0, y = 0, moved = false;
-    const pointers = new Map<number, { x: number; y: number }>();
+    const metrics = readRevealMetrics(el);
+    let vw = 0, vh = 0, fit = 1, max = 1, scale = 1, x = 0, y = 0, moved = false;
+    let stopAnimation: (() => void) | undefined;
+    const pointers = new Map<number, Point>();
     const paint = () => {
-      x = clampPan(x, width * scale, vw); y = clampPan(y, height * scale, vh);
+      // Zoomed spreads need a bounded gutter to center even their outermost cards.
+      const zoomed = scale > fit;
+      el.dataset.zoomed = String(zoomed);
+      x = clampPan(x, width * scale, vw, zoomed ? vw / 2 : 0);
+      y = clampPan(y, height * scale, vh, zoomed ? vh / 2 : 0);
       inner.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-      setZoom(scale / fit);
     };
     const change = (factor: number | null, cx = vw / 2, cy = vh / 2) => {
-      const next = factor === null ? fit : Math.max(fit, Math.min(fit * 3, scale * factor));
+      const next = factor === null ? fit : Math.max(fit, Math.min(max, scale * factor));
       x = cx - (cx - x) * next / scale; y = cy - (cy - y) * next / scale;
       scale = next; paint();
     };
-    controls.current = change;
     const resize = () => {
-      vw = el.clientWidth;
-      vh = Math.max(280, Math.min(840, height * Math.min(1, vw / width)));
-      el.style.height = `${vh}px`;
-      fit = Math.min(1, vw / width, vh / height); scale = fit; x = 0; y = 0; paint();
+      const nextWidth = el.clientWidth, nextHeight = el.clientHeight;
+      if (!nextWidth || !nextHeight || (nextWidth === vw && nextHeight === vh)) return;
+      const ratio = scale / fit;
+      const atMax = scale >= max;
+      const center = { x: (vw / 2 - x) / scale, y: (vh / 2 - y) / scale };
+      const initial = !vw;
+      vw = nextWidth; vh = nextHeight;
+      const style = getComputedStyle(el);
+      const overviewWidth = parseFloat(style.getPropertyValue('--reveal-overview-card-width'));
+      const maxWidth = parseFloat(style.getPropertyValue('--reveal-max-card-width'));
+      ({ fit, max } = zoomBounds(width, height, vw, vh, metrics, overviewWidth, maxWidth));
+      scale = lockedRef.current ? fit : atMax ? max : Math.min(max, fit * ratio);
+      const next = focusTransform(initial ? { x: width / 2, y: height / 2 } : center, scale, width, height, vw, vh, scale > fit);
+      x = next.x; y = next.y; paint();
+      if (initial) {
+        const rect = el.getBoundingClientRect();
+        const panel = el.closest('[data-reading-panel]')!.getBoundingClientRect();
+        // Shared origin below the whole panel, expressed in spread coordinates.
+        onReady({ x: (panel.left + panel.width / 2 - rect.left - x) / scale, y: (panel.bottom - rect.top - y) / scale + height });
+      }
+    };
+    apiRef.current = {
+      focus(point, duration, complete) {
+        stopAnimation?.();
+        const from = { x, y, scale };
+        const animation = animate(0, 1, {
+          duration, ease: metrics.ease,
+          onUpdate(progress) {
+            // Resizing during focus must not leave stale bounds.
+            const focusScale = max;
+            const target = focusTransform(point, focusScale, width, height, vw, vh, true);
+            x = from.x + (target.x - from.x) * progress;
+            y = from.y + (target.y - from.y) * progress;
+            scale = from.scale + (target.scale - from.scale) * progress;
+            paint();
+          },
+          onComplete: complete,
+        });
+        stopAnimation = () => animation.stop();
+        return stopAnimation;
+      },
     };
     const observer = new ResizeObserver(resize); observer.observe(el); resize();
     const wheel = (e: WheelEvent) => {
-      e.preventDefault(); const box = el.getBoundingClientRect();
+      e.preventDefault(); if (lockedRef.current) return;
+      const box = el.getBoundingClientRect();
       change(Math.exp(-e.deltaY * .002), e.clientX - box.left, e.clientY - box.top);
     };
     const down = (e: PointerEvent) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (lockedRef.current || (e.pointerType === 'mouse' && e.button !== 0)) return;
       if (!pointers.size) moved = false;
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     };
@@ -60,25 +109,19 @@ export default function SpreadViewport({ width, height, locale, children }: { wi
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); paint();
     };
     const up = (e: PointerEvent) => { pointers.delete(e.pointerId); if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId); };
-    const click = (e: MouseEvent) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } };
-    const reset = () => change(null);
-    el.addEventListener("wheel", wheel, { passive: false }); el.addEventListener("pointerdown", down);
-    el.addEventListener("pointermove", move); window.addEventListener("pointerup", up); window.addEventListener("pointercancel", up);
-    el.addEventListener("click", click, true); el.addEventListener("dblclick", reset);
+    const click = (e: MouseEvent) => { if (moved || lockedRef.current) { e.preventDefault(); e.stopPropagation(); moved = false; } };
+    const reset = () => { if (!lockedRef.current) change(null); };
+    el.addEventListener('wheel', wheel, { passive: false }); el.addEventListener('pointerdown', down);
+    el.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+    el.addEventListener('click', click, true); el.addEventListener('dblclick', reset);
     return () => {
-      observer.disconnect(); el.removeEventListener("wheel", wheel); el.removeEventListener("pointerdown", down);
-      el.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); window.removeEventListener("pointercancel", up);
-      el.removeEventListener("click", click, true); el.removeEventListener("dblclick", reset);
+      stopAnimation?.(); apiRef.current = null;
+      observer.disconnect(); el.removeEventListener('wheel', wheel); el.removeEventListener('pointerdown', down);
+      el.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
+      el.removeEventListener('click', click, true); el.removeEventListener('dblclick', reset);
     };
-  }, [width, height]);
-  return <>
-    {/* <div className={styles.zoomControls} onClick={e => e.stopPropagation()}>
-      <button type="button" aria-label={text.zoomOut} disabled={zoom <= 1.001} onClick={() => controls.current(1 / 1.25)}>−</button>
-      <button type="button" aria-label={text.reset} onClick={() => controls.current(null)}>{Math.round(zoom * 100)}%</button>
-      <button type="button" aria-label={text.zoomIn} disabled={zoom >= 2.999} onClick={() => controls.current(1.25)}>+</button>
-    </div> */}
-    <div ref={viewport} className={styles.spreadViewport}>
-      <div ref={content} className={styles.spreadContent} style={{ width, height }}>{children}</div>
-    </div>
-  </>;
+  }, [width, height, apiRef, onReady]);
+  return <div ref={viewport} className={styles.spreadViewport} data-spread-viewport>
+    <div ref={content} className={styles.spreadContent} style={{ width, height }}>{children}</div>
+  </div>;
 }

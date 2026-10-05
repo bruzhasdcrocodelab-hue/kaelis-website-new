@@ -46,7 +46,7 @@ async function mountParent() {
     reading: null, busy: false, error: "", speakers: [{ id: "1" }], speakerId: "1", question: "Question",
     submit() { this.busy = true; this.error = ""; },
     reset() { this.reading = null; this.busy = false; this.error = ""; },
-    retry() {}, setQuestion() {},
+    retry() {}, setQuestion(value) { this.question = value; },
   };
   const marker = name => name.split("/").at(-1);
   const { default: Parent } = await load(base + "CategoryTopBlock.tsx", name => {
@@ -67,7 +67,7 @@ const ready = { id: "10", question: "Question", cards: [{ position: "0" }], read
 
 test("an immediate interpretation waits for the first complete cycle and passes the original reading to Reveal", async () => {
   const app = await mountParent();
-  assert.ok(find(app.render(), "DecorativeCardFan"));
+  assert.ok(find(app.render(), "AskQuestionStep"));
   const loading = find(app.start(), "ChooseCardsStep");
   assert.ok(loading);
   app.flow.reading = ready; app.flow.busy = false;
@@ -101,7 +101,11 @@ test("a new question requires its own full cycle, and an inactive session ignore
   const app = await mountParent();
   find(app.start(), "ChooseCardsStep").props.onFirstCycleComplete();
   app.flow.reading = ready; app.flow.busy = false;
-  find(app.render(), "MainButton").props.onClick();
+  assert.equal(find(app.render(), "AnswerStep"), null);
+  find(app.render(), "RevealCardsStep").props.onStartOver();
+  assert.equal(app.flow.question, "");
+  assert.equal(app.flow.reading, null);
+  assert.ok(find(app.render(), "AskQuestionStep"));
   const loading = find(app.start(), "ChooseCardsStep");
   app.flow.reading = ready; app.flow.busy = false;
   assert.equal(find(app.render(), "RevealCardsStep"), null);
