@@ -21,7 +21,7 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
     let generation = 0;
 
     const update = () => {
-      if (active && inView && !reducedMotion.matches && !video.getAttribute("src")) {
+      if (inView && !reducedMotion.matches && !video.getAttribute("src")) {
         video.src = assets.video;
       }
       const shouldPlay = active && inView && !document.hidden && !reducedMotion.matches;
