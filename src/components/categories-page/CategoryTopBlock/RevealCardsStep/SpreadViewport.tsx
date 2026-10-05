@@ -1,7 +1,7 @@
 "use client";
 import { useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
 import { animate } from "motion/react";
-import { clampPan, focusTransform, readRevealMetrics, type Point } from "./revealGeometry";
+import { clampPan, focusTransform, readRevealMetrics, zoomBounds, type Point } from "./revealGeometry";
 import styles from "./RevealCardsStep.module.css";
 
 export { clampPan } from "./revealGeometry";
@@ -23,18 +23,19 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
   useLayoutEffect(() => {
     const el = viewport.current!, inner = content.current!;
     const metrics = readRevealMetrics(el);
-    let vw = 0, vh = 0, fit = 1, scale = 1, x = 0, y = 0, moved = false;
+    let vw = 0, vh = 0, fit = 1, max = 1, scale = 1, x = 0, y = 0, moved = false;
     let stopAnimation: (() => void) | undefined;
     const pointers = new Map<number, Point>();
     const paint = () => {
       // Zoomed spreads need a bounded gutter to center even their outermost cards.
       const zoomed = scale > fit;
+      el.dataset.zoomed = String(zoomed);
       x = clampPan(x, width * scale, vw, zoomed ? vw / 2 : 0);
       y = clampPan(y, height * scale, vh, zoomed ? vh / 2 : 0);
       inner.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
     };
     const change = (factor: number | null, cx = vw / 2, cy = vh / 2) => {
-      const next = factor === null ? fit : Math.max(fit, Math.min(fit * 3, scale * factor));
+      const next = factor === null ? fit : Math.max(fit, Math.min(max, scale * factor));
       x = cx - (cx - x) * next / scale; y = cy - (cy - y) * next / scale;
       scale = next; paint();
     };
@@ -42,11 +43,15 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
       const nextWidth = el.clientWidth, nextHeight = el.clientHeight;
       if (!nextWidth || !nextHeight || (nextWidth === vw && nextHeight === vh)) return;
       const ratio = scale / fit;
+      const atMax = scale >= max;
       const center = { x: (vw / 2 - x) / scale, y: (vh / 2 - y) / scale };
       const initial = !vw;
       vw = nextWidth; vh = nextHeight;
-      fit = Math.min(1, vw / width, vh / height);
-      scale = lockedRef.current ? fit : fit * ratio;
+      const style = getComputedStyle(el);
+      const overviewWidth = parseFloat(style.getPropertyValue('--reveal-overview-card-width'));
+      const maxWidth = parseFloat(style.getPropertyValue('--reveal-max-card-width'));
+      ({ fit, max } = zoomBounds(width, height, vw, vh, metrics, overviewWidth, maxWidth));
+      scale = lockedRef.current ? fit : atMax ? max : Math.min(max, fit * ratio);
       const next = focusTransform(initial ? { x: width / 2, y: height / 2 } : center, scale, width, height, vw, vh, scale > fit);
       x = next.x; y = next.y; paint();
       if (initial) {
@@ -64,9 +69,7 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
           duration, ease: metrics.ease,
           onUpdate(progress) {
             // Resizing during focus must not leave stale bounds.
-            const focusScale = Math.max(fit, Math.min(fit * 2,
-              vh / (metrics.cardHeight + metrics.labelHeight + metrics.gap + metrics.padding),
-              vw / (metrics.cardWidth + metrics.padding)));
+            const focusScale = max;
             const target = focusTransform(point, focusScale, width, height, vw, vh, true);
             x = from.x + (target.x - from.x) * progress;
             y = from.y + (target.y - from.y) * progress;

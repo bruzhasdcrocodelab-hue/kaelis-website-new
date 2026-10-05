@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
+import { victory, balance, cardText } from "./card-description-fixtures.mjs";
 const loadPackage = createRequire(import.meta.url);
 const { chromium } = loadPackage(process.argv[2] || "playwright");
 const artifacts = ".next/reveal-checks";
@@ -15,8 +16,10 @@ mkdirSync(artifacts, { recursive: true });
       { name: "desktop", width: 1440, height: 1000, count: 4, locale: "en" },
       { name: "mobile", width: 390, height: 844, count: 7, locale: "uk" },
       { name: "narrow-reduced", width: 320, height: 640, count: 1, locale: "ru", reduced: true },
-      { name: "desktop-twelve", width: 1440, height: 1000, count: 12, locale: "en" },
-    ]) {
+      { name: "desktop-twelve", width: 1440, height: 1000, count: 12, locale: "en", partial: true },
+      { name: "mobile-twelve", width: 390, height: 844, count: 12, locale: "en", partial: true },
+      { name: "mobile-large", width: 390, height: 844, count: 30, locale: "uk", reduced: true },
+    ].filter(scenario => !process.argv[3] || scenario.name === process.argv[3])) {
       const context = await browser.newContext({
         viewport: { width: scenario.width, height: scenario.height },
         reducedMotion: scenario.reduced ? "reduce" : "no-preference",
@@ -31,7 +34,7 @@ mkdirSync(artifacts, { recursive: true });
       const matrix = Object.fromEntries(keys.map((key, i) => [key, [i % 4 - 2, Math.floor(i / 4) - 1]]));
       // Array order deliberately disagrees with object/numeric/spatial ordering.
       const order = [...keys].reverse();
-      const cardNames = ["The Sun", "The Moon", "The Star", "Knight of Wands"];
+      const cardNames = ["Knight of Wands", "The Moon", "The Star", "The Sun"];
       const headings = { en: ["Result", "Why these cards", "Risks", "Advice"], uk: ["Результат", "Чому ці карти", "Ризики", "Поради"], ru: ["Итог", "Почему эти карты", "Риски", "Советы"] }[scenario.locale];
       await page.route("**/api/kaelis/**", async route => {
         const url = new URL(route.request().url());
@@ -46,15 +49,15 @@ mkdirSync(artifacts, { recursive: true });
           body = { data: {
             id: 100 + submissions, chat_id: 1, question: JSON.parse(route.request().postData()).question, tarot: { id: 62, matrix },
             cards: order.map((position, i) => ({
-              position, name: cardNames[i % 4], description: ("Card " + position + " — опис карти, описание карты. ").repeat(10),
-              image: ["Sun.png", "Moon.png", "Star.png", "Wands12.png"][i % 4], orientation: i % 2 === 0,
+              position, name: cardNames[i % 4], description: cardText(i % 2 ? balance : victory[scenario.locale]),
+              image: ["Wands12.png", "Moon.png", "Star.png", "Sun.png"][i % 4], orientation: i % 2 === 0,
             })),
-            reading: { interpretation: [
+            reading: { interpretation: scenario.partial ? [{ title: "", text: `${headings[0]}\n\nAI reading ${submissions}. ${"Existing result from the reading. ".repeat(60)}\n\n${headings[3]}\n\nWrite a one-page concept and obtain actual quotes for rent, equipment, suppliers, and staffing.\nRun a small-scale demand and margin test before signing a lease.` }] : [
               { title: headings[0], text: "AI reading " + submissions + " — відповідь, ответ." },
               { title: headings[1], text: "Card reasoning. ".repeat(50) },
               { title: headings[2], text: "Risks and possibilities. ".repeat(10) },
               { title: headings[3], text: "1. First action\n2. Second action\n3. Third action" },
-            ], cards: order.map(position => ({ position, text: "Impact: Personal impact\nRecognition: Recognition text\nFocus: Focus text" })) },
+            ], cards: order.map(position => ({ position, text: "" })) },
           } };
         } else if (url.pathname.endsWith("/tarot")) body = {
           data: [{ ...base, id: 62, slug: "celtic-cross", name: "Celtic Cross", description: "Spread", matrix }],
@@ -92,6 +95,11 @@ mkdirSync(artifacts, { recursive: true });
       await page.getByRole("button", { name: continueLabel, exact: true }).click();
       await page.locator("[data-reveal-phase=ready]").waitFor({ timeout: 30000 });
       await page.waitForTimeout(scenario.reduced ? 50 : 500);
+      const focusedWidth = await page.locator('[data-card-position] button').first().evaluate(node => {
+        const transform = new DOMMatrixReadOnly(node.closest('[data-spread-viewport]').firstElementChild.style.transform);
+        return node.offsetWidth * transform.a;
+      });
+      assert.ok(Math.abs(focusedWidth - (scenario.width < 768 ? 111.189 : 169.589)) < 1, 'auto focus reaches the design maximum');
 
       assert.deepEqual(await page.evaluate(() => window.revealPhases), ["preparing", "dealing", "flipping", "focusing", "ready"]);
       assert.equal(await page.evaluate(() => window.anchorCalls), 1);
@@ -109,16 +117,31 @@ mkdirSync(artifacts, { recursive: true });
         const style = getComputedStyle(document.documentElement);
         return Object.fromEntries(["padding", "column", "row"].map(key => [key, parseFloat(style.getPropertyValue("--reveal-" + key))]));
       });
-      coordinates.forEach((point, index) => assert.deepEqual(point, { x: tokens.padding + (matrix[order[index]][0] - minX) * tokens.column, y: tokens.padding + (matrix[order[index]][1] - minY) * tokens.row }));
+      coordinates.forEach((point, index) => {
+        assert.ok(Math.abs(point.x - (tokens.padding + (matrix[order[index]][0] - minX) * tokens.column)) < 0.001);
+        assert.ok(Math.abs(point.y - (tokens.padding + (matrix[order[index]][1] - minY) * tokens.row)) < 0.001);
+      });
       assert.equal(await page.locator("[data-ai-detail]").count(), scenario.width > 768 ? 1 : 0);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await page.locator("[data-reading-panel]").screenshot({ path: artifacts + "/reveal-" + scenario.name + ".png" });
 
       if (scenario.width > 768) {
+      assert.deepEqual(await page.locator('[data-selected-detail] [data-section]').evaluateAll(nodes => nodes.map(node => node.dataset.section)), ['quickRead', 'impact', 'recognition', 'focus']);
+      await page.locator('[data-reading-scroll]').evaluate(node => { node.scrollTop = node.scrollHeight; });
+      await page.waitForTimeout(100);
+      assert.equal(await page.locator('[data-reading-scroll]').getAttribute('data-at-end'), 'true');
+      assert.equal(await page.locator('[data-selected-detail]').evaluate(node => getComputedStyle(node, '::after').display), 'none');
+      await page.locator('[data-selected-detail]').screenshot({ path: artifacts + '/card-bottom-' + scenario.name + '.png' });
+      await page.locator('[data-reading-scroll]').evaluate(node => { node.scrollTop = 0; });
       assert.ok((await page.locator("[data-ai-detail]").innerText()).includes("AI reading 1"));
+      if (scenario.partial) {
+        assert.equal(await page.locator('[data-ai-detail] [data-section="why"], [data-ai-detail] [data-section="risks"]').count(), 0);
+        assert.equal(await page.locator('[data-ai-detail] ol li').count(), 2);
+      } else {
       await page.locator('[data-ai-detail] [data-section="why"] button').click();
       await page.locator('[data-ai-detail] [data-section="risks"] button').click();
       assert.equal(await page.locator('[data-ai-detail] [aria-expanded="true"]').count(), 2);
+      }
       await page.locator("[data-reading-panel]").screenshot({ path: artifacts + "/expanded-" + scenario.name + ".png" });
       // Following page scroll must keep the two information cards aligned and panel-bounded.
       await page.evaluate(() => window.scrollBy(0, 80));
@@ -149,22 +172,30 @@ mkdirSync(artifacts, { recursive: true });
 
       } else {
         assert.equal(await page.locator('[data-reveal-controls]').evaluate(node => getComputedStyle(node).position), 'fixed');
+        await page.locator('[data-reveal-controls]').screenshot({ path: artifacts + '/controls-' + scenario.name + '.png' });
+        const controls = await page.locator('[data-reveal-controls] button').evaluateAll(nodes => nodes.map(node => ({ scroll: node.scrollWidth, width: node.clientWidth, height: node.getBoundingClientRect().height, text: node.innerText })));
+        assert.ok(controls.every(node => node.scroll <= node.width && node.height <= 60), JSON.stringify(controls));
         await page.locator('[data-card-position] button').first().click();
         await page.getByRole('dialog').waitFor();
         assert.ok(await page.getByRole('dialog').evaluate(node => node.contains(document.activeElement)));
         assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
         assert.equal(await page.locator('[data-card-position] button[aria-pressed=true]').count(), 1);
-        assert.ok((await page.getByRole('dialog').innerText()).includes('Personal impact'));
+        assert.deepEqual(await page.locator('[role="dialog"] [data-section]').evaluateAll(nodes => nodes.map(node => node.dataset.section)), ['quickRead', 'impact', 'recognition', 'focus']);
         await page.getByRole('dialog').screenshot({ path: artifacts + '/card-modal-' + scenario.name + '.png' });
         await page.locator('[data-sheet-backdrop]').click({ position: { x: 5, y: 5 } });
         await page.getByRole('dialog').waitFor({ state: 'detached' });
         await page.locator('[data-reveal-controls] button').first().click();
         await page.getByRole('dialog').waitFor();
         assert.ok((await page.getByRole('dialog').innerText()).includes('AI reading 1'));
+        if (scenario.partial) {
+          assert.equal(await page.locator('[role="dialog"] [data-section="why"], [role="dialog"] [data-section="risks"]').count(), 0);
+          assert.equal(await page.locator('[role="dialog"] ol li').count(), 2);
+        } else {
         await page.locator('[role="dialog"] [data-section="why"] button').click();
         await page.locator('[role="dialog"] [data-section="risks"] button').click();
         assert.equal(await page.locator('[role="dialog"] [aria-expanded="true"]').count(), 2);
         assert.equal(await page.locator('[role="dialog"] ol li').count(), 3);
+        }
         await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => { node.scrollTop = 80; });
         assert.ok(await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => node.scrollTop > 0));
         await page.locator('[role="dialog"] [tabindex="0"]').evaluate(node => { node.scrollTop = 0; });
@@ -188,6 +219,9 @@ mkdirSync(artifacts, { recursive: true });
       const cx = rect.x + rect.width / 2, cy = rect.y + rect.height / 2;
       const beforeZoom = await viewport.locator(":scope > div").getAttribute("style");
       await page.mouse.move(cx, cy); await page.mouse.wheel(0, -200);
+      await page.waitForTimeout(100);
+      assert.equal(await viewport.locator(":scope > div").getAttribute("style"), beforeZoom, 'auto focus already uses maximum zoom');
+      await page.mouse.wheel(0, 100);
       await page.waitForTimeout(100);
       assert.notEqual(await viewport.locator(":scope > div").getAttribute("style"), beforeZoom);
       const beforePan = await viewport.locator(":scope > div").getAttribute("style");

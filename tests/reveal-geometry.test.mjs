@@ -5,8 +5,22 @@ import ts from "typescript";
 
 const source = await readFile(new URL("../src/components/categories-page/CategoryTopBlock/RevealCardsStep/revealGeometry.ts", import.meta.url), "utf8");
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ES2022 } }).outputText).toString("base64")}`;
-const { spreadGeometry, clampPan, focusTransform } = await import(moduleUrl);
+const { spreadGeometry, clampPan, focusTransform, zoomBounds } = await import(moduleUrl);
 const metrics = { cardWidth: 120, cardHeight: 215, labelHeight: 44, gap: 8, padding: 64, column: 160, row: 280 };
+
+test("maximum zoom keeps the design card size independently of spread size", () => {
+  const layoutMetrics = { ...metrics, labelHeight: 0, gap: 0, padding: 8, column: 136.8, row: 232.2 };
+  for (const [vw, vh, overview, maximum] of [[500, 494, 85.662, 169.589], [358, 456, 79.9, 111.189]]) {
+    for (const count of [1, 4, 7, 12, 30, 78]) {
+      const layout = spreadGeometry(Array.from({ length: count }, (_, i) => ({ x: i % 4, y: Math.floor(i / 4) })), layoutMetrics);
+      const bounds = zoomBounds(layout.width, layout.height, vw, vh, layoutMetrics, overview, maximum);
+      assert.ok(layout.width * bounds.fit <= vw + 0.001);
+      assert.ok(layout.height * bounds.fit <= vh + 0.001);
+      assert.ok(Math.abs(bounds.max * metrics.cardWidth - maximum) < 0.001);
+      if (count === 12) assert.ok(bounds.fit * metrics.cardWidth > overview * 0.97);
+    }
+  }
+});
 
 test("arbitrary reading order and asymmetric coordinates survive layout without a fixed card count", () => {
   for (const count of [1, 3, 7, 12, 21]) {

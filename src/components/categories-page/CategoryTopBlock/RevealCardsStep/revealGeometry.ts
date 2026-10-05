@@ -13,7 +13,7 @@ export function readRevealMetrics(element: Element): RevealMetrics {
   const token = (name: string) => parseFloat(style.getPropertyValue(`--reveal-${name}`));
   return {
     cardWidth: token('card-width'), cardHeight: token('card-height'),
-    labelHeight: token('label-height'), gap: token('gap'),
+    labelHeight: token('label-height'), gap: token('card-gap'),
     column: token('column'), row: token('row'), padding: token('padding'),
     deal: token('deal-duration'), stagger: token('stagger-duration'),
     flip: token('flip-duration'), focus: token('focus-duration'), detail: token('detail-duration'),
@@ -34,6 +34,14 @@ export function spreadGeometry(cards: Point[], metrics: RevealMetrics) {
 
 export function clampPan(value: number, content: number, viewport: number, gutter = 0) {
   return content + gutter * 2 <= viewport ? (viewport - content) / 2 : Math.max(viewport - content - gutter, Math.min(gutter, value));
+}
+
+export function zoomBounds(width: number, height: number, vw: number, vh: number, metrics: RevealMetrics, overviewWidth: number, maxWidth: number) {
+  const fit = Math.min(overviewWidth / metrics.cardWidth, vw / width, vh / height);
+  const max = Math.max(fit, Math.min(maxWidth / metrics.cardWidth,
+    vw / (metrics.cardWidth + metrics.padding * 2),
+    vh / (metrics.cardHeight + metrics.labelHeight + metrics.gap + metrics.padding * 2)));
+  return { fit, max };
 }
 
 export function focusTransform(point: Point, scale: number, width: number, height: number, vw: number, vh: number, allowEdgeFocus = false) {

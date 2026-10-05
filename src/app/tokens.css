@@ -14,10 +14,15 @@
   /* Reveal reading: Figma 2311:6573 / 6714 / 6857. Motion durations are seconds. */
   --reveal-card-width: 120px;
   --reveal-card-height: 215.398px;
-  --reveal-label-height: 44px;
-  --reveal-column: 160px;
-  --reveal-row: 280px;
-  --reveal-padding: 64px;
+  --reveal-label-height: 0px;
+  --reveal-card-gap: 0px;
+  --reveal-column: 136.8px;
+  --reveal-row: 232.2px;
+  --reveal-padding: 8px;
+  --reveal-overview-card-width: 85.662px;
+  --reveal-overview-card-width-mobile: 79.9px;
+  --reveal-max-card-width: 169.589px;
+  --reveal-max-card-width-mobile: 111.189px;
   --reveal-gap: 8px;
   --reveal-space: 12px;
   --reveal-panel-height: 650px;
@@ -72,6 +77,11 @@
   --reveal-toggle-rotation: 180deg;
   --reveal-border-width: 1px;
   --reveal-preview-height: 129px;
+  --reveal-preview-art-anchor: 28%;
+  --reveal-card-label-weight: 600;
+  --reveal-detail-header-height: 40px;
+  --reveal-card-sheet-top-inset: 48px;
+  --reveal-sheet-eyebrow-overlap: -4px;
   --reveal-preview-mobile-height: 179px;
   --reveal-sheet-card-padding: 28px;
   --reveal-preview-aspect: 120 / 215.398;
@@ -86,6 +96,10 @@
   --reveal-controls-reserve: 92px;
   --reveal-controls-height: 52px;
   --reveal-controls-padding: 6px;
+  --reveal-controls-label-inset: 16px;
+  --reveal-controls-gap: 10px;
+  --reveal-controls-weight: 400;
+  --reveal-controls-answer-grow: 1.864;
   --reveal-sheet-layer: 100;
   --reveal-sheet-max-height: 90dvh;
   --reveal-sheet-bottom-padding: 24px;

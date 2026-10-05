@@ -10,7 +10,8 @@ import { frameOverlayImage } from "@/lib/tarotDeck";
 import { presentCards, type PresentedCard as TarotCard } from "@/lib/tarot/cardPresentation";
 import type { Reading } from "@/lib/tarot/reading";
 import { readingMessages } from "@/lib/tarot/messages";
-import { readingSections } from "@/lib/tarot/readingSections";
+import { cardReadingSections, readingSections } from "@/lib/tarot/readingSections";
+import ReadingScroll from "./ReadingScroll";
 import ReadingContent from "./ReadingContent";
 import RevealSheet from "./RevealSheet";
 import { revealMessages } from "./revealMessages";
@@ -94,10 +95,10 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   const flipped = useRef(new Set<string>());
   const pointerStart = useRef<Point | null>(null);
   const selectedCard = cards.find(card => card.position === selectedPosition) ?? null;
-  const cardSections = useMemo(() => [
-    ...readingSections(reading.cards.find(card => card.position === selectedPosition)?.description),
-    ...readingSections(reading.reading?.cards.find(card => card.position === selectedPosition)?.text),
-  ], [reading, selectedPosition]);
+  const cardSections = useMemo(() => cardReadingSections(
+    reading.cards.find(card => card.position === selectedPosition)?.description,
+    reading.reading?.cards.find(card => card.position === selectedPosition)?.text,
+  ), [reading, selectedPosition]);
   const answerSections = useMemo(() => readingSections(reading.reading?.sections), [reading.reading]);
   const closeSheet = useCallback(() => { setSheet(null); setSelectedPosition(null); }, []);
   const geometry = useMemo(() => metrics ? spreadGeometry(cards, metrics) : null, [cards, metrics]);
@@ -218,9 +219,9 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
               pointerStart.current = null;
             }}>
             <h2 className={styles.detailHeader}>{labels.cardDescription}</h2>
-            <div className={styles.detailText} tabIndex={0} key={selectedPosition}>
+            <ReadingScroll key={selectedPosition}>
               <ReadingContent sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} />} />
-            </div>
+            </ReadingScroll>
           </motion.section>}
         </AnimatePresence>
       </div>

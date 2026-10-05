@@ -36,15 +36,22 @@ export default function ReadingContent({ sections, locale, card, artwork }: {
   const detailKeys = ["fullDescription", "impact", "recognition", "focus"];
   const details = card ? sections.filter(section => detailKeys.includes(section.key ?? "")) : [];
   const rest = card ? sections.filter(section => !detailKeys.includes(section.key ?? "")) : sections;
-  return <>
-    {card && <div className={styles.detailPreview}>
+  const preview = card && <div className={styles.detailPreview}>
       <div className={styles.previewArtwork}>{artwork}</div>
       <p className={styles.detailLabel}>{card}</p>
-    </div>}
+    </div>;
+  return <>
+    {card ? <div className={styles.cardSummary}>
+      {preview}
+      {rest.map((section, index) => <Section key={`${section.key}-${index}`} section={section} locale={locale} />)}
+    </div> : <>
     {rest.map((section, index) => <Section key={`${section.key}-${index}`} section={section} locale={locale} />)}
+    </>}
     {details.length > 0 && <div className={styles.fullDescription}>
       <h3 className={styles.answerTitle}>{revealMessages[locale].fullDescription}</h3>
-      {details.map((section, index) => <Section key={`${section.key}-${index}`} section={section.key === "fullDescription" ? { ...section, key: null, title: "" } : section} locale={locale} />)}
+      <div className={styles.descriptionSections}>
+        {details.map((section, index) => <Section key={`${section.key}-${index}`} section={section.key === "fullDescription" ? { ...section, key: null, title: "" } : section} locale={locale} />)}
+      </div>
     </div>}
   </>;
 }
