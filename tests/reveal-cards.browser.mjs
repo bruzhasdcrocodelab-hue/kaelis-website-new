@@ -22,10 +22,10 @@ async function checkAccordion(page, container, reduced) {
     assert.ok(await body.evaluate(node => node.getAnimations().length > 0));
     assert.ok(await icon.evaluate(node => node.getAnimations().length > 0));
   }
-  await page.waitForTimeout(400);
+  await body.evaluate(async node => { await Promise.all(node.getAnimations().map(animation => animation.finished)); });
   assert.ok(await body.evaluate(node => node.getBoundingClientRect().height > 0));
   await toggle.click();
-  await page.waitForTimeout(400);
+  await body.evaluate(async node => { await Promise.all(node.getAnimations().map(animation => animation.finished)); });
   assert.equal(await body.evaluate(node => node.getBoundingClientRect().height), 0);
   assert.equal(await body.getAttribute('aria-hidden'), 'true');
 }
@@ -115,6 +115,21 @@ async function checkAccordion(page, container, reduced) {
       const startLabel = { en: scenario.width < 768 ? "Restart" : "Start Over", uk: "Почати спочатку", ru: "Начать заново" }[scenario.locale];
       await page.locator("textarea").fill("How will my plans develop? Довге запитання про майбутнє та можливості. Длинный вопрос о планах и новых возможностях.");
       await page.getByRole("button", { name: continueLabel, exact: true }).click();
+      await page.locator("[data-reveal-phase]").waitFor({ state: 'attached', timeout: 30000 });
+      await page.locator("[data-spread-viewport]").waitFor({ state: 'attached' });
+      const spreadLayer = await page.locator("[data-reveal-phase]").evaluate(node => {
+        const style = getComputedStyle(node);
+        const panel = node.closest('[data-reading-panel]');
+        const viewport = node.querySelector('[data-spread-viewport]');
+        return {
+          position: style.position,
+          aboveBackground: Number(style.zIndex) > Number(getComputedStyle(panel, '::before').zIndex),
+          width: viewport?.getBoundingClientRect().width ?? 0,
+        };
+      });
+      assert.equal(spreadLayer.position, 'relative', 'spread positioning rule must match the rendered element');
+      assert.ok(spreadLayer.aboveBackground, 'spread must render above the translucent panel background');
+      assert.ok(spreadLayer.width > 0, 'spread viewport must not collapse');
       await page.locator("[data-reveal-phase=ready]").waitFor({ timeout: 30000 });
       await page.waitForTimeout(scenario.reduced ? 50 : 500);
       assert.equal(await page.locator('#category-top-block').evaluate(node => getComputedStyle(node).scrollMarginTop), '16px');

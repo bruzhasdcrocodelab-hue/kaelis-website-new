@@ -123,12 +123,19 @@
 }
 .detailPreview {
   width: 100%;
-  position: relative; flex-shrink: 0; height: var(--reveal-preview-height);
-  overflow: hidden; border-radius: var(--radius-card);
+  position: relative; 
+  flex-shrink: 0; 
+  height: var(--reveal-preview-height);
+  overflow: hidden; 
+  border-radius: var(--radius-card);
 }
 .previewArtwork {
-  position: absolute; width: 100%; aspect-ratio: var(--reveal-preview-aspect);
-  top: var(--reveal-preview-art-anchor); transform: translateY(calc(-1 * var(--reveal-preview-art-anchor)));
+  position: absolute; 
+  width: 100%; 
+  aspect-ratio: var(--reveal-preview-aspect);
+  /* top: var(--reveal-preview-art-anchor);  */
+  top: 18%; 
+  transform: translateY(calc(-1 * var(--reveal-preview-art-anchor)));
 }
 .detailLabel {
   position: absolute; bottom: var(--reveal-gap); left: var(--reveal-gap);
@@ -204,6 +211,7 @@
   position: fixed; left: var(--reveal-controls-inset); right: var(--reveal-controls-inset);
   bottom: max(var(--reveal-controls-inset), env(safe-area-inset-bottom)); z-index: var(--reveal-controls-layer);
   display: flex; gap: var(--reveal-space); align-items: stretch;
+  justify-content: center;
 }
 .mobileControls > button {
   min-width: 0; height: auto; min-height: var(--reveal-controls-height);
@@ -211,8 +219,8 @@
   gap: var(--reveal-controls-gap); justify-content: center; font-weight: var(--reveal-controls-weight);
   box-shadow: var(--shadow-default); border: var(--reveal-border-width) solid var(--color-black-7);
 }
-.mobileControls > button:last-child { flex: 1; min-width: min-content; background: var(--color-white-60); backdrop-filter: blur(var(--blur-shadow)); }
-.mobileControls > .answerButton { flex: var(--reveal-controls-answer-grow); flex-direction: row-reverse; padding-inline: var(--reveal-controls-padding) var(--reveal-controls-label-inset); }
+.mobileControls > button:last-child { max-width: 96px; flex: 1; min-width: min-content; background: var(--color-white-60); backdrop-filter: blur(var(--blur-shadow)); }
+.mobileControls > .answerButton { max-width: 198px; flex: var(--reveal-controls-answer-grow); flex-direction: row-reverse; padding-inline: var(--reveal-controls-padding) var(--reveal-controls-label-inset); }
 .mobileControls > button > span:first-child { min-width: 0; white-space: normal; overflow-wrap: normal; font-size: var(--text-base); line-height: normal; font-weight: var(--reveal-controls-weight); }
 @media (max-width: 360px) {
   .mobileControls { --reveal-controls-label-inset: var(--reveal-space); --reveal-controls-gap: var(--reveal-section-gap); }
@@ -232,7 +240,7 @@
 .sheetTitle { font-family: var(--font-bona-nova-sc); font-size: var(--text-4xl); letter-spacing: var(--tracking-bona-4xl); font-weight: normal; line-height: normal; }
 .sheetClose { position: absolute; right: var(--reveal-gap); top: var(--reveal-sheet-header-inset); padding: var(--reveal-controls-padding); border: none; background: none; cursor: pointer; }
 .sheetContent { flex: 0 1 auto; font-size: var(--text-sm); gap: var(--reveal-mobile-section-space); padding-bottom: var(--reveal-sheet-bottom-padding); }
-.sheetContent .detailPreview { height: var(--reveal-preview-mobile-height); }
+.sheetContent .detailPreview { height: 45.897vw; }
 .sheetContent .sectionToggle { font-size: var(--text-base); }
 .sheetContent .insetSection:has(.sectionToggle) { padding: var(--reveal-sheet-toggle-padding); }
 .sheetContent .insetSection:has([aria-expanded="true"]) { padding: var(--reveal-space); }
