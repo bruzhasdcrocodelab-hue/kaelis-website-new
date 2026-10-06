@@ -22,7 +22,7 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
 
   useLayoutEffect(() => {
     const el = viewport.current!, inner = content.current!;
-    const metrics = readRevealMetrics(el);
+    const metrics = readRevealMetrics();
     let vw = 0, vh = 0, fit = 1, max = 1, scale = 1, x = 0, y = 0, moved = false;
     let stopAnimation: (() => void) | undefined;
     const pointers = new Map<number, Point>();
@@ -47,9 +47,9 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
       const center = { x: (vw / 2 - x) / scale, y: (vh / 2 - y) / scale };
       const initial = !vw;
       vw = nextWidth; vh = nextHeight;
-      const style = getComputedStyle(el);
-      const overviewWidth = parseFloat(style.getPropertyValue('--reveal-overview-card-width'));
-      const maxWidth = parseFloat(style.getPropertyValue('--reveal-max-card-width'));
+      const mobile = window.matchMedia('(max-width: 768px)').matches;
+      const overviewWidth = mobile ? 79.9 : 85.662;
+      const maxWidth = mobile ? 111.189 : 169.589;
       ({ fit, max } = zoomBounds(width, height, vw, vh, metrics, overviewWidth, maxWidth));
       scale = lockedRef.current ? fit : atMax ? max : Math.min(max, fit * ratio);
       const next = focusTransform(initial ? { x: width / 2, y: height / 2 } : center, scale, width, height, vw, vh, scale > fit);

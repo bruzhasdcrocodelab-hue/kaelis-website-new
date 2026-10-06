@@ -1,13 +1,4 @@
 .loading {
-  --radius-loading-card: 8px;
-  --radius-loading-card-mobile: 4.05px;
-  --radius-loading-progress-surface-mobile: 25px;
-  --radius-loading-progress-mobile: 10px;
-  --radius-loading-progress: 12px;
-  --opacity-loading-progress-outline: 0.5;
-}
-
-.loading {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -39,7 +30,7 @@
   position: absolute;
   width: 98px;
   height: 175px;
-  border-radius: var(--radius-loading-card);
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -61,7 +52,7 @@
   position: absolute;
   width: 49.612px;
   height: 88.594px;
-  border-radius: var(--radius-loading-card-mobile);
+  border-radius: 4.05px;
   overflow: hidden;
 }
 
@@ -143,10 +134,10 @@
 .track {
   position: absolute;
   inset: 4px;
-  border-radius: var(--radius-loading-progress);
+  border-radius: 12px;
   padding: 1px;
   background: var(--gradient-pink);
-  opacity: var(--opacity-loading-progress-outline);
+  opacity: 0.5;
   mask: var(--mask-solid) content-box, var(--mask-solid);
   mask-composite: exclude;
 }
@@ -154,7 +145,7 @@
 .fill {
   position: relative;
   height: 10px;
-  border-radius: var(--radius-loading-progress);
+  border-radius: 12px;
   background: var(--gradient-pink);
 }
 
@@ -227,18 +218,18 @@
     width: 200px;
     margin-top: 18px;
     padding: 3.333px;
-    border-radius: var(--radius-loading-progress-surface-mobile);
+    border-radius: 25px;
   }
 
   .track {
     inset: 3.333px;
     padding: 0.833px;
-    border-radius: var(--radius-loading-progress-mobile);
+    border-radius: 10px;
   }
 
   .fill {
     height: 9px;
-    border-radius: var(--radius-loading-progress-mobile);
+    border-radius: 10px;
   }
 
   /* Long translations can wrap above the fan without moving the scene. */

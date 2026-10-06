@@ -1,5 +1,4 @@
 .section {
-  --text-category-title: 86px;
   /*
    * ---- Typography: categories-list heading fluid sizes ----
    * Line through the 390px value (min) and the 1440px value (max):
@@ -8,11 +7,6 @@
    * One continuous clamp() covers both the 390-768 and 769-1440 ranges so the
    * heading keeps growing with the viewport instead of stepping at 768px.
    */
-  --text-categories-list-eyebrow-fluid: clamp(var(--text-xs), 0.286vw + 11.89px, var(--text-base));
-  --text-categories-list-title-fluid: clamp(var(--text-4xl), 4.381vw + 22.91px, var(--text-category-title));
-  --tracking-categories-list-title-fluid: clamp(-3px, 0.286vw - 4.11px, 0px);
-  --text-categories-list-description-fluid: clamp(var(--text-xxs), 0.19vw + 11.26px, var(--text-sm));
-  --width-categories-list-description-fluid: clamp(230px, 6.667vw + 204px, 300px);
 }
 
 .section {
@@ -37,7 +31,7 @@
   line-height: normal;
   white-space: nowrap;
   margin-bottom: -25px;
-  font-size: var(--text-categories-list-eyebrow-fluid);
+  font-size: clamp(var(--text-xs), 0.286vw + 11.89px, var(--text-base));
 }
 
 .title {
@@ -49,16 +43,16 @@
   line-height: normal;
   padding-right: 20px;
   margin-left: 20px;
-  font-size: var(--text-categories-list-title-fluid);
-  letter-spacing: var(--tracking-categories-list-title-fluid);
+  font-size: clamp(var(--text-4xl), 4.381vw + 22.91px, 86px);
+  letter-spacing: clamp(-3px, 0.286vw - 4.11px, 0px);
 }
 
 .description {
-  width: var(--width-categories-list-description-fluid);
+  width: clamp(230px, 6.667vw + 204px, 300px);
   margin-top: -6px;
   color: var(--color-white-60);
   line-height: normal;
-  font-size: var(--text-categories-list-description-fluid);
+  font-size: clamp(var(--text-xxs), 0.19vw + 11.26px, var(--text-sm));
 }
 
 .grid {

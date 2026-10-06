@@ -1,146 +1,38 @@
 .revealArea {
   position: relative;
   z-index: 5;
-  width: calc(100% - 2 * var(--reveal-content-padding));
+  width: calc(100% - 2 * 16px);
   min-width: 0;
-  margin-top: var(--reveal-space);
+  margin-top: 12px;
 }
 
-.tokens {
-  /* Reveal reading: Figma 2311:6573 / 6714 / 6857. Motion durations are seconds. */
-  --reveal-card-width: 120px;
-  --reveal-card-height: 215.398px;
-  --reveal-label-height: 0px;
-  --reveal-card-gap: 0px;
-  --reveal-column: 136.8px;
-  --reveal-row: 232.2px;
-  --reveal-padding: 8px;
-  --reveal-overview-card-width: 85.662px;
-  --reveal-overview-card-width-mobile: 79.9px;
-  --reveal-max-card-width: 169.589px;
-  --reveal-max-card-width-mobile: 111.189px;
-  --reveal-gap: 8px;
-  --reveal-space: 12px;
-  --reveal-panel-height: 650px;
-  --reveal-viewport-height: 494px;
-  --reveal-viewport-mobile: clamp(300px, 54dvh, 456px);
-  --reveal-detail-width: clamp(160px, 18.2vw, 240px);
-  --reveal-detail-height: 400px;
-  --reveal-detail-mobile-height: clamp(160px, 30dvh, 260px);
-  --reveal-detail-left: max(12px, var(--reveal-card-detail-inset-fluid));
-  --reveal-detail-right: clamp(12px, 14.28vw - 109.7px, 96px);
-  --reveal-detail-center-offset: 0px;
-  --reveal-detail-scroll-inset: 20px;
-  --reveal-detail-text-max: 72%;
-  --reveal-detail-label-max: 35%;
-  --reveal-radius: 8px;
-  --reveal-label-radius: 30px;
-  --reveal-label-padding: 6px 16px;
-  --reveal-copy-width: 240px;
-  --reveal-header-max-width: 560px;
-  --reveal-pattern-top: -30px;
-  --reveal-pattern-mobile-top: -38px;
-  --reveal-pattern-mobile-width: 990px;
-  --reveal-pattern-mobile-height: 445px;
-  --reveal-pattern-width: 1627px;
-  --reveal-pattern-height: 731px;
-  --reveal-fade-size: 8%;
-  --reveal-edge-mask: linear-gradient(to bottom, transparent, var(--color-black) var(--reveal-fade-size), var(--color-black) calc(100% - var(--reveal-fade-size)), transparent);
-  --reveal-side-mask: linear-gradient(to right, transparent, var(--color-black) var(--reveal-fade-size), var(--color-black) calc(100% - var(--reveal-fade-size)), transparent);
-  --reveal-deal-duration: 0.48;
-  --reveal-stagger-duration: 0.16;
-  --reveal-flip-duration: 0.5;
-  --reveal-focus-duration: 0.7;
-  --reveal-detail-duration: 0.4;
-  --reveal-ease: 0.4, 0, 0.2, 1;
-  --reveal-selection-rotation: -8;
-  --reveal-selection-stiffness: 260;
-  --reveal-selection-damping: 22;
-  --reveal-perspective: 1000px;
-  --reveal-focus-outline: 2px;
-  --reveal-button-border: 4px;
-  --reveal-hover-duration: 0.2s;
-  --reveal-answer-weight: 500;
-  --reveal-viewport-width: 500px;
-  --reveal-viewport-min-width: 180px;
-  --reveal-frame-height: 612px;
-  --reveal-content-padding: 16px;
-  --reveal-section-gap: 6px;
-  --reveal-toggle-padding: 2px 2px 2px 12px;
-  --reveal-sheet-toggle-padding: 10px 2px 10px 12px;
-  --reveal-toggle-icon-size: 32px;
-  --reveal-toggle-glyph-size: 16px;
-  --reveal-toggle-duration: 0.3s;
-  --reveal-section-duration: 0.35s;
-  --reveal-section-ease: ease;
-  --reveal-anchor-inset: 16px;
-  --reveal-toggle-icon-padding: 4px;
-  --reveal-toggle-rotation: 180deg;
-  --reveal-border-width: 1px;
-  --reveal-preview-height: 129px;
-  --reveal-preview-art-anchor: 28%;
-  --reveal-card-label-weight: 600;
-  --reveal-detail-header-height: 40px;
-  --reveal-card-sheet-top-inset: 48px;
-  --reveal-sheet-eyebrow-overlap: -4px;
-  --reveal-preview-mobile-height: 179px;
-  --reveal-sheet-card-padding: 28px;
-  --reveal-preview-aspect: 120 / 215.398;
-  --reveal-preview-label-padding: 6px 10px;
-  --reveal-detail-fade-height: 29px;
-  --reveal-detail-fade: linear-gradient(to bottom, transparent, var(--color-white));
-  --reveal-advice-number-size: 20px;
-  --reveal-advice-number-mobile-size: 30px;
-  --reveal-advice-number-font: 10px;
-  --reveal-controls-inset: 20px;
-  --reveal-controls-layer: 30;
-  --reveal-controls-reserve: 92px;
-  --reveal-controls-height: 52px;
-  --reveal-controls-padding: 6px;
-  --reveal-controls-label-inset: 16px;
-  --reveal-controls-gap: 10px;
-  --reveal-controls-weight: 400;
-  --reveal-controls-answer-grow: 1.864;
-  --reveal-sheet-layer: 100;
-  --reveal-sheet-max-height: 90dvh;
-  --reveal-sheet-bottom-padding: 24px;
-  --reveal-sheet-grabber-width: 80px;
-  --reveal-sheet-grabber-height: 3px;
-  --reveal-sheet-drag-offset: 90;
-  --reveal-sheet-drag-velocity: 500;
-  --reveal-sheet-header-inset: 32px;
-  --reveal-mobile-header-width: 260px;
-  --reveal-mobile-section-space: 24px;
-  /*
+/* Reveal reading: Figma 2311:6573 / 6714 / 6857. Motion durations are seconds. */
+
+/*
    * ---- RevealCardsStep ----
    * cardDetailArt / cardDetailInfo inset: linear from 0px at the 769px
    * breakpoint to 130px at 1440px and above.
    *   vw-coeff = 100 * (130 - 0) / (1440 - 769)
    *   offset   = 0 - (vw-coeff / 100) * 769
    */
-  --reveal-card-detail-inset-fluid: clamp(0px, 19.374vw - 148.98px, 130px);
-  /*
+
+/*
    * Below 390px the three reveal cards + labels no longer fit the mobile
    * panel, so card box, row gap and label shrink linearly from their 390px
    * values down to a size that clears the 320px viewport:
    *   vw-coeff = 100 * (valueMax - valueMin) / (390 - 320)
    *   offset   = valueMin - (vw-coeff / 100) * 320
    */
-  --reveal-card-width-mobile-fluid: clamp(84px, 22.857vw + 10.86px, 100px);
-  --reveal-card-height-mobile-fluid: clamp(151.2px, 41.143vw + 19.54px, 180px);
-  --reveal-row-gap-mobile-fluid: clamp(8px, 11.429vw - 28.57px, 16px);
-  --reveal-card-name-mobile-fluid: clamp(11px, 2.857vw + 1.86px, 13px);
-}
 
 .spreadViewport {
   position: relative;
   width: 100%;
-  height: var(--reveal-viewport-height);
+  height: 494px;
   overflow: hidden;
   touch-action: none;
   user-select: none;
   cursor: grab;
-  mask-image: var(--reveal-edge-mask), var(--reveal-side-mask);
+  mask-image: linear-gradient(to bottom, transparent, var(--color-black) 8%, var(--color-black) calc(100% - 8%), transparent), linear-gradient(to right, transparent, var(--color-black) 8%, var(--color-black) calc(100% - 8%), transparent);
   mask-composite: intersect;
 }
 
@@ -165,20 +57,20 @@
 
 .positionedCard {
   position: absolute;
-  width: var(--reveal-card-width);
+  width: 120px;
 }
 
 .revealCardCol {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--reveal-card-gap);
+  gap: 0px;
 }
 
 .revealCardName {
   display: none;
-  width: var(--reveal-card-width);
-  height: var(--reveal-label-height);
+  width: 120px;
+  height: 0px;
   align-items: flex-end;
   justify-content: center;
   text-align: center;
@@ -190,15 +82,15 @@
 
 .revealCard {
   position: relative;
-  width: var(--reveal-card-width);
-  height: var(--reveal-card-height);
+  width: 120px;
+  height: 215.398px;
   flex-shrink: 0;
   border: none;
   padding: 0;
   background: none;
-  border-radius: var(--reveal-radius);
+  border-radius: 8px;
   cursor: pointer;
-  perspective: var(--reveal-perspective);
+  perspective: 1000px;
   box-shadow: var(--shadow-default);
 }
 
@@ -218,7 +110,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: var(--reveal-radius);
+  border-radius: 8px;
   backface-visibility: hidden;
 }
 
@@ -251,7 +143,7 @@
 
 .missingArt {
   position: absolute;
-  inset: var(--reveal-space);
+  inset: 12px;
   display: grid;
   place-items: center;
   text-align: center;
@@ -265,12 +157,12 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: var(--reveal-gap);
+  padding: 8px;
   text-align: center;
   background: var(--color-black-50);
   color: var(--color-white);
   opacity: 0;
-  transition: opacity var(--reveal-hover-duration) ease;
+  transition: opacity 0.2s ease;
 }
 
 @media (hover: hover) {
@@ -283,16 +175,16 @@
 .revealCard:focus-visible,
 .cardDetail:focus-visible,
 .detailText:focus-visible {
-  outline: var(--reveal-focus-outline) solid var(--color-black);
-  outline-offset: var(--reveal-focus-outline);
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
 }
 
 .detailLayer {
   position: absolute;
-  top: var(--detail-top, calc(50% - var(--reveal-detail-height) / 2 + var(--reveal-detail-center-offset)));
-  left: var(--reveal-detail-left);
-  right: var(--reveal-detail-right);
-  height: var(--reveal-detail-height);
+  top: var(--detail-top, calc(50% - 400px / 2 + 0px));
+  left: max(12px, clamp(0px, 19.374vw - 148.98px, 130px));
+  right: clamp(12px, 14.28vw - 109.7px, 96px);
+  height: 400px;
   display: flex;
   justify-content: space-between;
   z-index: 6;
@@ -300,7 +192,7 @@
 }
 
 .detailSlot {
-  width: var(--reveal-detail-width);
+  width: clamp(160px, 18.2vw, 240px);
   height: 100%;
   min-width: 0;
 }
@@ -311,7 +203,7 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  border: var(--reveal-border-width) solid var(--color-black-15);
+  border: 1px solid var(--color-black-15);
   border-radius: var(--radius-card);
   background: var(--color-white);
   box-shadow: var(--shadow-medium);
@@ -330,8 +222,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: var(--reveal-detail-fade-height);
-  background: var(--reveal-detail-fade);
+  height: 29px;
+  background: linear-gradient(to bottom, transparent, var(--color-white));
   pointer-events: none;
 }
 
@@ -342,33 +234,33 @@
 .cardDetail:has([data-reading-scroll][data-at-start="false"])::before {
   content: "";
   position: absolute;
-  top: var(--reveal-detail-header-height);
+  top: 40px;
   left: 0;
   right: 0;
   z-index: 1;
-  height: var(--reveal-detail-fade-height);
-  background: var(--reveal-detail-fade);
-  transform: rotate(var(--reveal-toggle-rotation));
+  height: 29px;
+  background: linear-gradient(to bottom, transparent, var(--color-white));
+  transform: rotate(180deg);
   pointer-events: none;
 }
 
 .detailHeader {
-  min-height: var(--reveal-detail-header-height);
+  min-height: 40px;
   line-height: normal;
   flex-shrink: 0;
-  padding: var(--reveal-space);
-  border-bottom: var(--reveal-border-width) solid var(--color-black-15);
+  padding: 12px;
+  border-bottom: 1px solid var(--color-black-15);
   background: var(--color-greyish-blue);
   color: var(--color-black);
   font-size: var(--text-xxs);
-  font-weight: var(--reveal-answer-weight);
+  font-weight: 500;
 }
 
 .detailPreview {
   width: 100%;
   position: relative;
   flex-shrink: 0;
-  height: var(--reveal-preview-height);
+  height: 129px;
   overflow: hidden;
   border-radius: var(--radius-card);
 }
@@ -376,21 +268,21 @@
 .previewArtwork {
   position: absolute;
   width: 100%;
-  aspect-ratio: var(--reveal-preview-aspect);
+  aspect-ratio: 120 / 215.398;
   /* top: var(--reveal-preview-art-anchor);  */
   top: 18%;
-  transform: translateY(calc(-1 * var(--reveal-preview-art-anchor)));
+  transform: translateY(calc(-1 * 28%));
 }
 
 .detailLabel {
   position: absolute;
-  bottom: var(--reveal-gap);
-  left: var(--reveal-gap);
-  max-width: calc(100% - 2 * var(--reveal-gap));
-  padding: var(--reveal-preview-label-padding);
-  border-radius: var(--reveal-label-radius);
+  bottom: 8px;
+  left: 8px;
+  max-width: calc(100% - 2 * 8px);
+  padding: 6px 10px;
+  border-radius: 30px;
   font-size: var(--text-xxs);
-  font-weight: var(--reveal-card-label-weight);
+  font-weight: 600;
   background: var(--color-white-75);
   color: var(--color-black-75);
   backdrop-filter: blur(var(--blur-shadow));
@@ -402,11 +294,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--reveal-space);
+  gap: 12px;
   width: 100%;
   min-height: 0;
   flex: 1;
-  padding: var(--reveal-content-padding);
+  padding: 16px;
   color: var(--color-black);
   font-size: var(--text-xxs);
   line-height: normal;
@@ -421,7 +313,7 @@
 .fullDescription {
   display: flex;
   flex-direction: column;
-  gap: var(--reveal-section-gap);
+  gap: 6px;
   flex-shrink: 0;
 }
 
@@ -429,24 +321,24 @@
 .cardSummary {
   display: flex;
   flex-direction: column;
-  gap: var(--reveal-space);
+  gap: 12px;
   flex-shrink: 0;
 }
 
 .descriptionSections {
   display: flex;
   flex-direction: column;
-  gap: var(--reveal-section-gap);
+  gap: 6px;
 }
 
 .answerTitle {
   color: var(--color-black-60);
   font-size: inherit;
-  font-weight: var(--reveal-answer-weight);
+  font-weight: 500;
 }
 
 .insetSection {
-  padding: var(--reveal-space);
+  padding: 12px;
   border-radius: var(--radius-card);
   background: var(--color-greyish-blue);
   color: var(--color-black-75);
@@ -456,7 +348,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--reveal-gap);
+  gap: 8px;
   width: 100%;
   background: none;
   border: none;
@@ -465,51 +357,51 @@
   color: var(--color-black-75);
   cursor: pointer;
   font: inherit;
-  font-weight: var(--reveal-answer-weight);
+  font-weight: 500;
 }
 
 .chevronIcon {
   display: block;
-  width: var(--reveal-toggle-glyph-size);
-  height: var(--reveal-toggle-glyph-size);
+  width: 16px;
+  height: 16px;
   background: var(--color-black-60);
   mask: url("/icons/chevron-down.svg") center / contain no-repeat;
-  transition: transform var(--reveal-toggle-duration) var(--reveal-section-ease);
+  transition: transform 0.3s ease;
 }
 
 .interpretationSections {
   display: flex;
   flex-direction: column;
-  gap: var(--reveal-gap);
+  gap: 8px;
   flex-shrink: 0;
-  transition: gap var(--reveal-section-duration) var(--reveal-section-ease);
+  transition: gap 0.35s ease;
 }
 
 .interpretationSections:has([aria-expanded="true"]) {
-  gap: var(--reveal-space);
+  gap: 12px;
 }
 
 .insetSection:has(.sectionToggle) {
-  padding: var(--reveal-toggle-padding);
+  padding: 2px 2px 2px 12px;
   gap: 0;
-  transition: padding var(--reveal-section-duration) var(--reveal-section-ease);
+  transition: padding 0.35s ease;
 }
 
 .insetSection:has([aria-expanded="true"]) {
-  padding: var(--reveal-space);
+  padding: 12px;
 }
 
 .sectionToggleIcon {
   display: grid;
   place-items: center;
-  width: var(--reveal-toggle-icon-size);
-  height: var(--reveal-toggle-icon-size);
-  padding: var(--reveal-toggle-icon-padding);
+  width: 32px;
+  height: 32px;
+  padding: 4px;
   flex-shrink: 0;
 }
 
 .sectionToggle[aria-expanded="true"] .chevronIcon {
-  transform: rotate(var(--reveal-toggle-rotation));
+  transform: rotate(180deg);
 }
 
 .sectionCollapse {
@@ -517,7 +409,7 @@
   grid-template-rows: 0fr;
   opacity: 0;
   visibility: hidden;
-  transition: grid-template-rows var(--reveal-section-duration) var(--reveal-section-ease), opacity var(--reveal-section-duration) var(--reveal-section-ease), visibility 0s var(--reveal-section-duration);
+  transition: grid-template-rows 0.35s ease, opacity 0.35s ease, visibility 0s 0.35s;
 }
 
 .sectionCollapse[data-open="true"] {
@@ -533,12 +425,12 @@
 }
 
 .expandedSection {
-  padding-top: var(--reveal-gap);
+  padding-top: 8px;
   color: var(--color-black);
 }
 
 .answerSection[data-section="advice"] {
-  gap: var(--reveal-gap);
+  gap: 8px;
 }
 
 .adviceList {
@@ -546,12 +438,12 @@
   counter-reset: advice;
   display: flex;
   flex-direction: column;
-  gap: var(--reveal-space);
+  gap: 12px;
 }
 
 .adviceList li {
   display: flex;
-  gap: var(--reveal-gap);
+  gap: 8px;
   color: var(--color-black-75);
 }
 
@@ -561,25 +453,25 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: var(--reveal-advice-number-size);
-  height: var(--reveal-advice-number-size);
-  border-radius: var(--reveal-label-radius);
+  width: 20px;
+  height: 20px;
+  border-radius: 30px;
   background: var(--color-greyish-blue);
   color: var(--color-black);
-  font-size: var(--reveal-advice-number-font);
+  font-size: 10px;
 }
 
 .startOver {
   position: absolute;
-  bottom: var(--reveal-detail-scroll-inset);
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 7;
   flex-shrink: 0;
-  margin-top: var(--reveal-gap);
+  margin-top: 8px;
   margin-bottom: 3px;
-  border: var(--reveal-button-border) solid var(--color-white);
-  border-radius: var(--reveal-label-radius);
+  border: 4px solid var(--color-white);
+  border-radius: 30px;
 }
 
 .readingError {
@@ -595,13 +487,11 @@
 @media (max-width: 768px) {
   .revealArea {
     width: 100%;
-    margin-top: var(--reveal-mobile-section-space);
+    margin-top: 24px;
   }
 
   .spreadViewport {
-    height: var(--reveal-viewport-mobile);
-    --reveal-overview-card-width: var(--reveal-overview-card-width-mobile);
-    --reveal-max-card-width: var(--reveal-max-card-width-mobile);
+    height: clamp(300px, 54dvh, 456px);
   }
 
 }
@@ -609,7 +499,7 @@
 .mobileHint {
   position: relative;
   z-index: 5;
-  margin-top: var(--reveal-mobile-section-space);
+  margin-top: 24px;
   font-size: var(--text-xs);
   color: var(--color-black-40);
   text-align: center;
@@ -617,12 +507,12 @@
 
 .mobileControls {
   position: fixed;
-  left: var(--reveal-controls-inset);
-  right: var(--reveal-controls-inset);
-  bottom: max(var(--reveal-controls-inset), env(safe-area-inset-bottom));
-  z-index: var(--reveal-controls-layer);
+  left: 20px;
+  right: 20px;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 30;
   display: flex;
-  gap: var(--reveal-space);
+  gap: 12px;
   align-items: stretch;
   justify-content: center;
 }
@@ -630,13 +520,13 @@
 .mobileControls > button {
   min-width: 0;
   height: auto;
-  min-height: var(--reveal-controls-height);
-  padding: var(--reveal-controls-padding) var(--reveal-controls-padding) var(--reveal-controls-padding) var(--reveal-controls-label-inset);
-  gap: var(--reveal-controls-gap);
+  min-height: 52px;
+  padding: 6px 6px 6px 16px;
+  gap: 10px;
   justify-content: center;
-  font-weight: var(--reveal-controls-weight);
+  font-weight: 400;
   box-shadow: var(--shadow-default);
-  border: var(--reveal-border-width) solid var(--color-black-7);
+  border: 1px solid var(--color-black-7);
 }
 
 .mobileControls > button:last-child {
@@ -649,9 +539,9 @@
 
 .mobileControls > .answerButton {
   max-width: 198px;
-  flex: var(--reveal-controls-answer-grow);
+  flex: 1.864;
   flex-direction: row-reverse;
-  padding-inline: var(--reveal-controls-padding) var(--reveal-controls-label-inset);
+  padding-inline: 6px 16px;
 }
 
 .mobileControls > button > span:first-child {
@@ -660,13 +550,17 @@
   overflow-wrap: normal;
   font-size: var(--text-base);
   line-height: normal;
-  font-weight: var(--reveal-controls-weight);
+  font-weight: 400;
 }
 
 @media (max-width: 360px) {
-  .mobileControls {
-    --reveal-controls-label-inset: var(--reveal-space);
-    --reveal-controls-gap: var(--reveal-section-gap);
+  .mobileControls > button {
+    padding: 6px 6px 6px 12px;
+    gap: 6px;
+  }
+
+  .mobileControls > .answerButton {
+    padding-inline: 6px 12px;
   }
 
   .mobileControls > button > span:first-child {
@@ -678,7 +572,7 @@
 .sheetRoot {
   position: fixed;
   inset: 0;
-  z-index: var(--reveal-sheet-layer);
+  z-index: 100;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -694,10 +588,10 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  max-height: var(--reveal-sheet-max-height);
+  max-height: 90dvh;
   background: var(--color-white);
   border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-  border-top: var(--reveal-border-width) solid var(--color-black-15);
+  border-top: 1px solid var(--color-black-15);
   box-shadow: var(--shadow-medium);
   padding-bottom: env(safe-area-inset-bottom);
   overflow: hidden;
@@ -706,17 +600,17 @@
 .sheetHeader {
   position: relative;
   flex-shrink: 0;
-  padding: var(--reveal-content-padding) var(--reveal-sheet-header-inset) var(--reveal-space);
+  padding: 16px 32px 12px;
   touch-action: none;
   text-align: center;
 }
 
 .sheetGrabber {
   display: block;
-  width: var(--reveal-sheet-grabber-width);
-  height: var(--reveal-sheet-grabber-height);
-  margin: 0 auto var(--reveal-space);
-  border-radius: var(--reveal-label-radius);
+  width: 80px;
+  height: 3px;
+  margin: 0 auto 12px;
+  border-radius: 30px;
   background: var(--color-black-15);
 }
 
@@ -735,9 +629,9 @@
 
 .sheetClose {
   position: absolute;
-  right: var(--reveal-gap);
-  top: var(--reveal-sheet-header-inset);
-  padding: var(--reveal-controls-padding);
+  right: 8px;
+  top: 32px;
+  padding: 6px;
   border: none;
   background: none;
   cursor: pointer;
@@ -746,8 +640,8 @@
 .sheetContent {
   flex: 0 1 auto;
   font-size: var(--text-sm);
-  gap: var(--reveal-mobile-section-space);
-  padding-bottom: var(--reveal-sheet-bottom-padding);
+  gap: 24px;
+  padding-bottom: 24px;
 }
 
 .sheetContent .detailPreview {
@@ -759,54 +653,54 @@
 }
 
 .sheetContent .insetSection:has(.sectionToggle) {
-  padding: var(--reveal-sheet-toggle-padding);
+  padding: 10px 2px 10px 12px;
 }
 
 .sheetContent .insetSection:has([aria-expanded="true"]) {
-  padding: var(--reveal-space);
+  padding: 12px;
 }
 
 .sheetContent .adviceList li::before {
-  width: var(--reveal-advice-number-mobile-size);
-  height: var(--reveal-advice-number-mobile-size);
+  width: 30px;
+  height: 30px;
   font-size: var(--text-sm);
 }
 
 .cardSheet {
-  max-height: calc(100dvh - var(--reveal-card-sheet-top-inset));
+  max-height: calc(100dvh - 48px);
 }
 
 .cardSheet .sheetHeader {
-  padding-inline: var(--reveal-content-padding);
+  padding-inline: 16px;
 }
 
 .cardSheet .sheetEyebrow {
-  margin-bottom: var(--reveal-sheet-eyebrow-overlap);
+  margin-bottom: -4px;
 }
 
 .cardSheet .sheetHeader::after {
   content: "";
   position: absolute;
   bottom: 0;
-  left: var(--reveal-content-padding);
-  right: var(--reveal-content-padding);
-  height: var(--reveal-border-width);
+  left: 16px;
+  right: 16px;
+  height: 1px;
   background: var(--color-grey);
 }
 
 .cardSheet .sheetContent {
-  padding-inline: var(--reveal-sheet-card-padding);
-  padding-top: var(--reveal-mobile-section-space);
-  gap: var(--reveal-content-padding);
+  padding-inline: 28px;
+  padding-top: 24px;
+  gap: 16px;
 }
 
 .cardSheet .descriptionSections {
-  gap: var(--reveal-space);
+  gap: 12px;
 }
 
 .cardSheet .fullDescription {
-  border-top: var(--reveal-border-width) solid var(--color-grey);
-  padding-top: var(--reveal-content-padding);
+  border-top: 1px solid var(--color-grey);
+  padding-top: 16px;
 }
 
 .cardSheet .answerTitle,
@@ -815,9 +709,9 @@
 }
 
 .cardSheet .detailLabel {
-  bottom: var(--reveal-space);
-  left: var(--reveal-space);
-  font-weight: var(--reveal-answer-weight);
+  bottom: 12px;
+  left: 12px;
+  font-weight: 500;
 }
 
 @media (prefers-reduced-motion: reduce) {

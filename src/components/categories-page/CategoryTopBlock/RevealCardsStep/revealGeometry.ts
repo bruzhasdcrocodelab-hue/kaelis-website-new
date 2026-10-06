@@ -8,17 +8,15 @@ export type RevealMetrics = {
   ease: [number, number, number, number];
 };
 
-export function readRevealMetrics(element: Element): RevealMetrics {
-  const style = getComputedStyle(element);
-  const token = (name: string) => parseFloat(style.getPropertyValue(`--reveal-${name}`));
+export function readRevealMetrics(): RevealMetrics {
   return {
-    cardWidth: token('card-width'), cardHeight: token('card-height'),
-    labelHeight: token('label-height'), gap: token('card-gap'),
-    column: token('column'), row: token('row'), padding: token('padding'),
-    deal: token('deal-duration'), stagger: token('stagger-duration'),
-    flip: token('flip-duration'), focus: token('focus-duration'), detail: token('detail-duration'),
-    rotation: token('selection-rotation'), stiffness: token('selection-stiffness'), damping: token('selection-damping'),
-    ease: style.getPropertyValue('--reveal-ease').split(',').map(Number) as RevealMetrics['ease'],
+    cardWidth: 120, cardHeight: 215.398,
+    labelHeight: 0, gap: 0,
+    column: 136.8, row: 232.2, padding: 8,
+    deal: 0.48, stagger: 0.16,
+    flip: 0.5, focus: 0.7, detail: 0.4,
+    rotation: -8, stiffness: 260, damping: 22,
+    ease: [0.4, 0, 0.2, 1],
   };
 }
 

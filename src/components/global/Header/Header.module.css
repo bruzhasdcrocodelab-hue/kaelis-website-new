@@ -9,7 +9,6 @@
 }
 
 .pill {
-  --radius-header-pill: 60px;
   position: relative;
   display: flex;
   gap: 20px;
@@ -19,7 +18,7 @@
   max-width: 1360px;
   height: 82px;
   padding: 20px;
-  border-radius: var(--radius-header-pill);
+  border-radius: 60px;
   background: var(--color-white-5);
   --pill-blur: blur(var(--blur-shadow));
 }

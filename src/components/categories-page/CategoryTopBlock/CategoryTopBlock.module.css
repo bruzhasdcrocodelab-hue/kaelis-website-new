@@ -1,9 +1,5 @@
 .section {
-  --radius-topblock-panel-mobile: 24px;
   /* --tracking-category-title: -4.5px; */
-  --text-topblock-title: 56px;
-  --tracking-topblock-title: -3px;
-  --text-topblock-title-fluid: clamp(var(--text-4xl), 2.385vw + 21.66px, var(--text-topblock-title));
 }
 
 /* .section:has([data-reading-panel]) {
@@ -78,21 +74,21 @@
 
 .panel.panelReading {
   height: auto;
-  min-height: var(--reveal-panel-height);
-  padding-bottom: var(--reveal-detail-scroll-inset);
+  min-height: 650px;
+  padding-bottom: 20px;
   overflow: clip;
 }
 
 .panelReading .pattern {
-  top: var(--reveal-pattern-top);
-  width: var(--reveal-pattern-width);
-  height: var(--reveal-pattern-height);
+  top: -30px;
+  width: 1627px;
+  height: 731px;
 }
 
 .panelReading .center {
   padding-top: 0;
   min-width: 0;
-  max-width: var(--reveal-header-max-width);
+  max-width: 560px;
 }
 
 .panelReading .categoryTagLabel {
@@ -111,7 +107,7 @@
 }
 
 .panelReading .askDescription {
-  width: min(100%, var(--reveal-copy-width));
+  width: min(100%, 240px);
   font-size: var(--text-xxs);
 }
 
@@ -120,9 +116,9 @@
 }
 
 .panelReading .wavesLine {
-  height: var(--reveal-frame-height);
-  max-height: calc(100% - 2 * var(--reveal-detail-scroll-inset));
-  width: calc(100% - 2 * var(--reveal-detail-scroll-inset));
+  height: 612px;
+  max-height: calc(100% - 2 * 20px);
+  width: calc(100% - 2 * 20px);
   padding: 0;
   top: 50%;
   bottom: auto;
@@ -253,7 +249,7 @@
   white-space: nowrap;
   line-height: normal;
   margin-top: -6px;
-  font-size: var(--text-topblock-title-fluid);
+  font-size: clamp(var(--text-4xl), 2.385vw + 21.66px, 56px);
 }
 
 .askDescription {
@@ -287,8 +283,8 @@
 
   .panel.panelReading {
     min-height: 0;
-    padding-top: var(--reveal-mobile-section-space);
-    padding-bottom: var(--reveal-controls-reserve);
+    padding-top: 24px;
+    padding-bottom: 92px;
   }
 
   .panelReading .askTitle {
@@ -297,7 +293,7 @@
   }
 
   .panelReading .askDescription {
-    width: min(100%, var(--reveal-mobile-header-width));
+    width: min(100%, 260px);
   }
 
   .revealDesktopCopy {
@@ -309,9 +305,9 @@
   }
 
   .panelReading .pattern {
-    top: var(--reveal-pattern-mobile-top);
-    width: var(--reveal-pattern-mobile-width);
-    height: var(--reveal-pattern-mobile-height);
+    top: -38px;
+    width: 990px;
+    height: 445px;
   }
 
   .section {
@@ -322,7 +318,7 @@
     max-width: none;
     height: 520px;
     padding: 8px 16px 96px;
-    border-radius: var(--radius-topblock-panel-mobile) var(--radius-topblock-panel-mobile) 0 0;
+    border-radius: 24px 24px 0 0;
     box-shadow: none;
     margin-top: 40px;
   }

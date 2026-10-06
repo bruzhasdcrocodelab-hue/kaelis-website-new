@@ -1,8 +1,5 @@
 .section {
   /* ---- Typography: Terms of Use hero title (one-off, node-id=1507-1475) ---- */
-  --text-terms-title: 80px;
-  --text-terms-title-mobile: 56px;
-  --tracking-terms-title-mobile: -3px;
 }
 
 .section {
@@ -39,9 +36,9 @@
   -webkit-background-clip: text;
   color: transparent;
   font-size: clamp(
-    var(--text-terms-title-mobile),
+    56px,
     5.5vw + 1rem,
-    var(--text-terms-title)
+    80px
   );
   text-align: center;
   line-height: .95;
@@ -94,7 +91,7 @@
   }
 
   .title {
-    letter-spacing: var(--tracking-terms-title-mobile);
+    letter-spacing: -3px;
   }
 
   .lastUpdated {

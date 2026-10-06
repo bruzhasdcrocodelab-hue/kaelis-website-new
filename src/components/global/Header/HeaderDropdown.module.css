@@ -5,12 +5,12 @@
    * = header padding-top (40px) + pill height (82px) + 20px gap; drops by 8px
    *   below 1300px where the header padding-top becomes 32px.
    */
-  --header-dropdown-top: 142px;
+  top: 142px;
 }
 
 @media (max-width: 1300px) {
   .dropdown {
-    --header-dropdown-top: 134px;
+    top: 134px;
   }
 
 }

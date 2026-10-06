@@ -46,16 +46,15 @@ export default function RevealSheet({ open, onClose, title, locale, transition, 
 
   if (typeof document === "undefined") return null;
   return createPortal(<AnimatePresence>
-    {open && <div ref={rootRef} className={`${styles.tokens} ${styles.sheetRoot}`} data-reading-sheet>
+    {open && <div ref={rootRef} className={styles.sheetRoot} data-reading-sheet>
       <motion.div className={styles.sheetBackdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={transition} onClick={onClose} data-sheet-backdrop />
       <motion.div ref={sheetRef} className={`${styles.sheet} ${card ? styles.cardSheet : ""}`} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}
         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={transition}
         drag="y" dragListener={false} dragControls={drag} dragConstraints={{ top: 0, bottom: 0 }} dragElastic={{ top: 0, bottom: .9 }}
         onDragEnd={(_, info) => {
-          const style = getComputedStyle(sheetRef.current!);
-          if (info.offset.y > parseFloat(style.getPropertyValue("--reveal-sheet-drag-offset")) ||
-            info.velocity.y > parseFloat(style.getPropertyValue("--reveal-sheet-drag-velocity"))) onClose();
+          if (info.offset.y > 90 ||
+            info.velocity.y > 500) onClose();
         }}>
         <div className={styles.sheetHeader} onPointerDown={event => {
           if (!(event.target as HTMLElement).closest("button")) drag.start(event);

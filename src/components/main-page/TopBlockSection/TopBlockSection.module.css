@@ -38,21 +38,17 @@
    * the mobile framing; the rest is spent on the LEFT. So both sides crop on
    * the way down, but the left always more than the right.
    */
-  --bg-image-band: 360px;
-  --bg-image-width: calc(var(--bg-image-band) * 3.667);
-  --bg-image-hide-right: 0.125;
-  --bg-image-overflow: max(var(--bg-image-width) - 100%, 0px);
   position: absolute;
   top: 0;
   left: auto;
   right: calc(
     -1 * min(
-      var(--bg-image-overflow) / 2,
-      var(--bg-image-width) * var(--bg-image-hide-right)
+      max(calc(360px * 3.667) - 100%, 0px) / 2,
+      calc(360px * 3.667) * 0.125
     )
   );
-  width: var(--bg-image-width);
-  height: var(--bg-image-band);
+  width: calc(360px * 3.667);
+  height: 360px;
   min-width: 100%;
 }
 
@@ -184,14 +180,11 @@
      * the panel widens toward 768px, the extra room is revealed on the LEFT --
      * the right framing is pinned, the crop only ever eats the left side.
      */
-    --bg-image-band: 243px;
-    --bg-image-width: calc(var(--bg-image-band) * 3.667);
-    --bg-image-hide-right: 0.125;
     top: 0;
     left: auto;
-    right: calc(var(--bg-image-width) * var(--bg-image-hide-right) * -1);
-    width: var(--bg-image-width);
-    height: var(--bg-image-band);
+    right: calc(calc(243px * 3.667) * 0.125 * -1);
+    width: calc(243px * 3.667);
+    height: 243px;
   }
 
   .backgroundTint {

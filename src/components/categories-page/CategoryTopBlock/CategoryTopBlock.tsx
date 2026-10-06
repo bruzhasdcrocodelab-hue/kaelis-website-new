@@ -18,7 +18,6 @@ import RevealCardsStep from "./RevealCardsStep/RevealCardsStep";
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
 import styles from "./CategoryTopBlock.module.css";
-import revealStyles from "./RevealCardsStep/RevealCardsStep.module.css";
 
 export interface CategoryTopBlockProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
@@ -98,7 +97,7 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section className={`${revealStyles.tokens} ${styles.section} ${embedded ? styles.embedded : ""}`}>
+    <section className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
         ref={panelRef}
         id="category-top-block"

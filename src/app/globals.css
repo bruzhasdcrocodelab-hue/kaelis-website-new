@@ -73,25 +73,25 @@ body {
   font-family: var(--font-bona-nova-sc);
   font-weight: 400;
   font-style: normal;
-  font-size: var(--text-hero);
+  font-size: 48px;
   line-height: 1;
-  letter-spacing: var(--tracking-hero);
+  letter-spacing: -2.88px;
 }
 
 .font-bona-hero-emphasized {
   font-family: var(--font-bona-nova-sc);
   font-weight: 400;
   font-style: normal;
-  font-size: var(--text-hero-emphasized);
+  font-size: 116px;
   line-height: 1;
-  letter-spacing: var(--tracking-hero-emphasized);
+  letter-spacing: -11.6px;
 }
 
 .font-bona-category-title {
   font-family: var(--font-bona-nova-sc);
   font-weight: 400;
   font-style: normal;
-  font-size: var(--text-category-title);
+  font-size: 86px;
   line-height: 1;
   letter-spacing: var(--tracking-category-title);
 }
@@ -100,16 +100,16 @@ body {
   font-family: var(--font-bona-nova-sc);
   font-weight: 400;
   font-style: normal;
-  font-size: var(--text-topblock-title);
+  font-size: 56px;
   line-height: 1;
-  letter-spacing: var(--tracking-topblock-title);
+  letter-spacing: -3px;
 }
 
 .font-bona-terms-title {
   font-family: var(--font-bona-nova-sc);
   font-weight: 400;
   font-style: normal;
-  font-size: var(--text-terms-title);
+  font-size: 80px;
   line-height: 1;
 }
 
@@ -117,9 +117,9 @@ body {
   font-family: var(--font-bona-nova-sc);
   font-weight: 400;
   font-style: normal;
-  font-size: var(--text-terms-title-mobile);
+  font-size: 56px;
   line-height: 1;
-  letter-spacing: var(--tracking-terms-title-mobile);
+  letter-spacing: -3px;
 }
 
 .font-bona-4xl {

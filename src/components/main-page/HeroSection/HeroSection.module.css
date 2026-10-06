@@ -1,13 +1,6 @@
 .hero {
   /* ---- Typography: hero display sizes (one-off, larger than shared scale) ---- */
-  --text-hero: 48px;
-  --text-hero-emphasized: 116px;
-  --tracking-hero: -2.88px;
-  --tracking-hero-emphasized: -11.6px;
   /* ---- Typography: main-page hero mobile (one-off, node-id=1888-7553) ---- */
-  --text-hero-mobile: 48px;
-  --text-hero-guide-mobile: 32px;
-  --tracking-hero-mobile: -3px;
   /*
    * ---- Typography: main-page hero fluid sizes ----
    * Font size scales linearly with viewport width between the mobile value
@@ -18,20 +11,6 @@
    * Letter-spacing interpolates the same way between the mobile and desktop
    * tracking tokens.
    */
-  --text-hero-guide-fluid: clamp(
-    var(--text-hero-guide-mobile),
-    1.502vw + 26.37px,
-    var(--text-hero)
-  );
-  --tracking-hero-guide-fluid: clamp(-3px, 0.01127vw - 3.042px, -2.88px);
-  --text-hero-word-fluid: clamp(var(--text-lg), 1.315vw + 13.07px, var(--text-3xl));
-  --text-hero-highlight-fluid: clamp(
-    var(--text-hero-mobile),
-    6.385vw + 24.06px,
-    var(--text-hero-emphasized)
-  );
-  --tracking-hero-highlight-fluid: clamp(-11.6px, -0.8075vw + 0.028px, -3px);
-  --text-hero-description-fluid: clamp(var(--text-xxs), 0.188vw + 11.3px, var(--text-sm));
 }
 
 .hero {
@@ -80,8 +59,12 @@
 .titleLine1 {
   color: var(--color-white);
   margin-bottom: -30px;
-  font-size: var(--text-hero-guide-fluid);
-  letter-spacing: var(--tracking-hero-guide-fluid);
+  font-size: clamp(
+    32px,
+    1.502vw + 26.37px,
+    48px
+  );
+  letter-spacing: clamp(-3px, 0.01127vw - 3.042px, -2.88px);
 }
 
 .titleRow {
@@ -93,7 +76,7 @@
 
 .titleWord {
   color: var(--color-white);
-  font-size: var(--text-hero-word-fluid);
+  font-size: clamp(var(--text-lg), 1.315vw + 13.07px, var(--text-3xl));
 }
 
 .titleHighlight {
@@ -105,8 +88,12 @@
   padding-bottom: 11.5px;
   padding-right: 10px;
   margin-left: 10px;
-  font-size: var(--text-hero-highlight-fluid);
-  letter-spacing: var(--tracking-hero-highlight-fluid);
+  font-size: clamp(
+    48px,
+    6.385vw + 24.06px,
+    116px
+  );
+  letter-spacing: clamp(-11.6px, -0.8075vw + 0.028px, -3px);
 }
 
 .description {
@@ -114,7 +101,7 @@
   text-align: center;
   white-space: pre-line;
   width: 285;
-  font-size: var(--text-hero-description-fluid);
+  font-size: clamp(var(--text-xxs), 0.188vw + 11.3px, var(--text-sm));
 }
 
 /* Positioning context for the star, which is anchored to the button so it

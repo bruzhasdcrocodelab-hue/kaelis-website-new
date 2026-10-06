@@ -70,7 +70,6 @@
 
 .dropdown {
   position: absolute;
-  top: var(--header-dropdown-top);
   left: 0;
   z-index: 20;
   display: flex;
