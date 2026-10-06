@@ -11,6 +11,7 @@ import TopBlockSection from "@/components/main-page/TopBlockSection";
 import { cardCount, type CatalogState } from "@/lib/categories/catalog";
 import { HOME_CARDS, type HomeCardSlug } from "@/lib/tarot/homeCards";
 import styles from "./HomeReading.module.css";
+import { scrollToCards } from "./scrollToCards";
 
 const MOBILE_QUERY = "(max-width: 768px)";
 const subscribeViewport = (listener: () => void) => {
@@ -69,19 +70,7 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange 
   const scrolledSession = useRef<number | null>(null);
   const scrollToReading = useCallback(() => {
     if (!present || !revealed.current || scrolledSession.current === selection.session) return;
-    const content = contentRef.current;
-    const fan = document.getElementById("cards");
-    const heading = content?.querySelector("[data-reading-heading]");
-    if (!content || !fan) return;
-    const cardBounds = Array.from(fan.querySelectorAll("button img"), card => card.getBoundingClientRect())
-      .filter(bounds => bounds.width > 0 && bounds.height > 0);
-    const fanTop = Math.min(fan.getBoundingClientRect().top, ...cardBounds.map(bounds => bounds.top));
-    const headingBottom = heading?.getBoundingClientRect().bottom ?? content.getBoundingClientRect().top;
-    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-    window.scrollTo({
-      top: window.scrollY + Math.max(fanTop, headingBottom - viewportHeight),
-      behavior: reduced ? "instant" : "smooth",
-    });
+    scrollToCards(Boolean(reduced));
     scrolledSession.current = selection.session;
   }, [present, reduced, selection.session]);
   useEffect(() => {
@@ -150,11 +139,11 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
     <>
       <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
         selectedSlug={selection?.slug ?? null} onCardSelect={select} />
-      <div className={styles.panels}>
+      <div className={styles.panels} data-home-panels>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
           {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onProgressChange={setNeedsConfirmation} />}
         </AnimatePresence>
-        <div className={styles.promo} inert={mobile && open}>
+        <div className={styles.promo} data-home-promo inert={mobile && open}>
           <TopBlockSection dictionary={dictionary.topBlock} className={styles.topBlock} />
         </div>
       </div>

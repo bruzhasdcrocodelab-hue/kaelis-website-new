@@ -6,9 +6,9 @@
   --text-topblock-title-fluid: clamp(var(--text-4xl), 2.385vw + 21.66px, var(--text-topblock-title));
 }
 
-.section:has([data-reading-panel]) {
+/* .section:has([data-reading-panel]) {
   scroll-margin-top: var(--reveal-anchor-inset);
-}
+} */
 
 .section {
   display: flex;

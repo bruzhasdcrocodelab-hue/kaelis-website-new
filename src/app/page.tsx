@@ -11,7 +11,7 @@ export default async function Home() {
   const dictionary = dictionaries[locale];
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-home-page>
       <div className={styles.backgroundGradientMobile} aria-hidden />
       <Image
         src="/images/backgrounds/main.png"

@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary } from "@/lang";
 import styles from "./HeroSection.module.css";
+import { scrollToCards } from "@/components/main-page/HomeReading/scrollToCards";
 
 export interface HeroSectionProps {
   dictionary: Dictionary["hero"];
@@ -64,7 +65,7 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
               const cards = document.getElementById("cards");
               if (!cards) return;
               if (window.location.hash !== "#cards") window.history.pushState(null, "", "#cards");
-              cards.scrollIntoView({ behavior: prefersReducedMotion ? "instant" : "smooth", block: "start" });
+              scrollToCards(Boolean(prefersReducedMotion));
             }}>
             <span className={styles.ctaLabelWrap}>
               {/* <AnimatePresence initial={false} mode="wait">

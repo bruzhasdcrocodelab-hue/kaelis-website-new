@@ -56,7 +56,7 @@ export default function CategoryTopBlock({
   const step: Step = flow.reading?.reading && firstCycleComplete
     ? "reveal"
     : flow.busy || flow.reading ? "choose" : "ask";
-  const sectionRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const previousStep = useRef(step);
   useEffect(() => {
     if (previousStep.current === step) return;
@@ -64,7 +64,7 @@ export default function CategoryTopBlock({
     if (step !== "reveal") return;
     // Scroll after the new step is laid out; initial mount and data updates stay put.
     const frame = requestAnimationFrame(() => {
-      sectionRef.current?.scrollIntoView({
+      panelRef.current?.scrollIntoView({
         block: "start",
         inline: "nearest",
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
@@ -98,8 +98,10 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section ref={sectionRef} id="category-top-block" className={`${revealStyles.tokens} ${styles.section} ${embedded ? styles.embedded : ""}`}>
+    <section className={`${revealStyles.tokens} ${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
+        ref={panelRef}
+        id="category-top-block"
         data-reading-panel={isConfirmed || undefined}
         className={`${styles.panel} ${step === "choose" ? styles.panelLoading : ""} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{
