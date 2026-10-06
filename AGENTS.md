@@ -6,4 +6,16 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
+***
+
+## Общие ограничения
+* Не читать весь проект
+* Не менять backend.
+* EN / UK / RU должны продолжать работать.
+* Не делать unrelated refactoring.
+* Не добавлять зависимости без необходимости.
+* Не хардкодить глобальные цвета, шрифты, градиенты и другие design tokens: использовать `src/app/tokens.css`; уникальные значения конкретного компонента писать в его `.css`.
+* CSS оформлять в столбик: каждый селектор и каждое свойство на отдельной строке.
+* Новые комментарии не добавлять; существующие без необходимости не менять/не удалять.
+* Удаляй временные / тестовые файлы после завершения их использования
 <!-- END:nextjs-agent-rules -->

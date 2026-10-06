@@ -1,15 +1,47 @@
-export function scrollToCards(reducedMotion: boolean) {
+let cancelPreviousScroll: (() => void) | undefined;
+
+export function scrollToCards(reducedMotion: boolean, followExpansion = false) {
+  cancelPreviousScroll?.();
   const fan = document.getElementById("cards");
   const panels = document.querySelector<HTMLElement>("[data-home-panels]");
-  const promo = document.querySelector<HTMLElement>("[data-home-promo]");
-  const page = document.querySelector<HTMLElement>("[data-home-page]");
-  if (!fan || !panels || !promo || !page) return;
-  const readingHeight = panels.getBoundingClientRect().height - promo.getBoundingClientRect().height;
-  const pageHeight = page.getBoundingClientRect().bottom + window.scrollY;
-  const maxScroll = Math.max(0, pageHeight - readingHeight - window.innerHeight);
-  const margin = parseFloat(getComputedStyle(fan).scrollMarginTop) || 0;
-  window.scrollTo({
-    top: Math.floor(Math.min(window.scrollY + fan.getBoundingClientRect().top - margin, maxScroll)),
-    behavior: reducedMotion ? "instant" : "smooth",
-  });
+  if (!fan) return;
+  let observer: ResizeObserver | undefined;
+  const cancel = () => {
+    observer?.disconnect();
+    for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+      window.removeEventListener(event, cancel);
+    }
+    if (cancelPreviousScroll === cancel) cancelPreviousScroll = undefined;
+  };
+  cancelPreviousScroll = cancel;
+  let previousTop = -1;
+  const scroll = () => {
+    const margin = parseFloat(getComputedStyle(fan).scrollMarginTop) || 0;
+    const target = Math.max(0, window.scrollY + fan.getBoundingClientRect().top - margin);
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const top = Math.min(target, maxScroll);
+    if (top !== previousTop) {
+      window.scrollTo({ top, behavior: reducedMotion ? "instant" : "smooth" });
+      previousTop = top;
+    }
+    if (maxScroll >= target) cancel();
+  };
+  if (followExpansion && panels) {
+    observer = new ResizeObserver(scroll);
+    observer.observe(panels);
+    for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+      window.addEventListener(event, cancel, { passive: true });
+    }
+  }
+  scroll();
+  return {
+    cancel,
+    finish: () => {
+      requestAnimationFrame(() => {
+        if (cancelPreviousScroll !== cancel) return;
+        scroll();
+        cancel();
+      });
+    },
+  };
 }
