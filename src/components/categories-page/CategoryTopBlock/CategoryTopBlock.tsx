@@ -59,10 +59,12 @@ export default function CategoryTopBlock({
   const previousStep = useRef(step);
   useEffect(() => {
     if (previousStep.current === step) return;
+    const restarting = previousStep.current === "reveal" && step === "ask";
     previousStep.current = step;
-    if (step !== "reveal") return;
+    if (step !== "reveal" && !restarting) return;
     const panel = panelRef.current;
     if (!panel) return;
+    const anchor = restarting && embedded ? document.getElementById("cards") ?? panel : panel;
     let frame = 0;
     let previousTop: number | undefined;
     let active = true;
@@ -78,14 +80,13 @@ export default function CategoryTopBlock({
     const scroll = () => {
       frame = 0;
       if (!active) return;
-      const margin = parseFloat(getComputedStyle(panel).scrollMarginTop) || 0;
-      const target = Math.max(0, window.scrollY + panel.getBoundingClientRect().top - margin);
+      const margin = parseFloat(getComputedStyle(anchor).scrollMarginTop) || 0;
+      const target = Math.max(0, window.scrollY + anchor.getBoundingClientRect().top - margin);
       const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
       const top = Math.min(target, maxScroll);
       if (top !== previousTop) {
-        panel.scrollIntoView({
-          block: "start",
-          inline: "nearest",
+        window.scrollTo({
+          top,
           behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
         });
         previousTop = top;
@@ -102,7 +103,7 @@ export default function CategoryTopBlock({
     }
     schedule();
     return cancel;
-  }, [step]);
+  }, [step, embedded]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   useLayoutEffect(() => {
     onProgressChange?.(hasProgress);
