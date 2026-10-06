@@ -61,15 +61,47 @@ export default function CategoryTopBlock({
     if (previousStep.current === step) return;
     previousStep.current = step;
     if (step !== "reveal") return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    let frame = 0;
+    let previousTop: number | undefined;
+    let active = true;
+    const cancel = () => {
+      active = false;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+        window.removeEventListener(event, cancel);
+      }
+    };
     // Scroll after the new step is laid out; initial mount and data updates stay put.
-    const frame = requestAnimationFrame(() => {
-      panelRef.current?.scrollIntoView({
-        block: "start",
-        inline: "nearest",
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-      });
-    });
-    return () => cancelAnimationFrame(frame);
+    const scroll = () => {
+      frame = 0;
+      if (!active) return;
+      const margin = parseFloat(getComputedStyle(panel).scrollMarginTop) || 0;
+      const target = Math.max(0, window.scrollY + panel.getBoundingClientRect().top - margin);
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      const top = Math.min(target, maxScroll);
+      if (top !== previousTop) {
+        panel.scrollIntoView({
+          block: "start",
+          inline: "nearest",
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+        });
+        previousTop = top;
+      }
+      if (maxScroll >= target) cancel();
+    };
+    const schedule = () => {
+      if (active && !frame) frame = requestAnimationFrame(scroll);
+    };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(panel.closest("[data-home-panels]") ?? panel);
+    for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+      window.addEventListener(event, cancel, { passive: true });
+    }
+    schedule();
+    return cancel;
   }, [step]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   useLayoutEffect(() => {
