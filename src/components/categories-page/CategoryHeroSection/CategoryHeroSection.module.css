@@ -1,4 +1,18 @@
 .section {
+  /* ---- Typography: category page title (one-off, node-id=1464-1491) ---- */
+  /*
+   * ---- Typography: category page fluid sizes ----
+   * Same construction as the main-page hero fluid tokens, but the line runs
+   * through the mobile ceiling value (at the 769px breakpoint) and the desktop
+   * value (at 1440px):
+   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 769)
+   *   offset   = sizeMin - (vw-coeff / 100) * 769
+   * Below 768px each component's own media query takes over with the fixed
+   * mobile token, keeping the 390px layout pixel-identical.
+   */
+}
+
+.section {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -36,7 +50,7 @@
   color: var(--color-white);
   white-space: nowrap;
   line-height: normal;
-  font-size: var(--text-category-eyebrow-fluid);
+  font-size: clamp(var(--text-xs), 0.447vw + 9.56px, var(--text-base));
 }
 
 .titleWrap {
@@ -63,18 +77,20 @@
   hyphens: none;
   overflow-wrap: normal;
   word-break: normal;
-  font-size: var(--text-category-title-fluid);
-  letter-spacing: var(--tracking-category-title-fluid);
+  font-size: clamp(56px, 4.471vw + 21.62px, 86px);
+  letter-spacing: clamp(-3px, 0.447vw - 6.44px, 0px);
 }
 
-.titleWord { white-space: nowrap; }
+.titleWord {
+  white-space: nowrap;
+}
 
 .description {
   width: min(300px, 100%);
   color: var(--color-white-60);
   text-align: center;
   line-height: normal;
-  font-size: var(--text-category-description-fluid);
+  font-size: clamp(var(--text-xs), 0.149vw + 11.85px, var(--text-sm));
 }
 
 @media (max-width: 768px) {
@@ -110,8 +126,8 @@
   }
 
   .title {
-    font-size: var(--text-topblock-title);
-    letter-spacing: var(--tracking-topblock-title);
+    font-size: 56px;
+    letter-spacing: -3px;
   }
 
   .readingsButton {
@@ -124,4 +140,5 @@
     font-size: var(--text-sm);
     color: var(--color-black) !important;
   }
+
 }

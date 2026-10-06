@@ -14,14 +14,12 @@
   background: transparent;
   cursor: pointer;
   appearance: none;
-  --menu-toggle-blur: none;
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .toggleActive {
   background: var(--color-white-7);
   box-shadow: var(--shadow-mobile-menu-button);
-  --menu-toggle-blur: blur(var(--blur-panel));
 }
 
 .toggleIcon {

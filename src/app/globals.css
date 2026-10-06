@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "./tokens.css";
-
 :root {
   --background: var(--color-white);
   --foreground: var(--color-neutral-900);
@@ -16,4 +15,377 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-instrument-sans);
+}
+
+/* ---- Shadow utilities ----
+ * Composite of the Figma effect styles' DROP_SHADOW layers plus their
+ * BACKGROUND_BLUR layer (applied on the same element in the design), so
+ * `shadow-default`/`shadow-medium`/`shadow-light` are drop-in classes.
+ * Not exposed via @theme since Tailwind's shadow-* utility only sets
+ * box-shadow, not backdrop-filter.
+ */
+.shadow-default {
+  box-shadow: var(--shadow-default);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.shadow-medium {
+  box-shadow: var(--shadow-medium);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+.shadow-light {
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(var(--blur-shadow));
+  -webkit-backdrop-filter: blur(var(--blur-shadow));
+}
+
+/* ---- Standalone blur effect (no box-shadow) ---- */
+.effect-blur {
+  backdrop-filter: blur(var(--blur-default));
+  -webkit-backdrop-filter: blur(var(--blur-default));
+}
+
+/* ---- Gradient utilities (Tailwind v4 has no gradient-value theme namespace) ---- */
+.bg-gradient-pink {
+  background-image: var(--gradient-pink);
+}
+
+.bg-gradient-pink-purple {
+  background-image: var(--gradient-pink-purple);
+}
+
+.bg-gradient-pink-to-transparent {
+  background-image: var(--gradient-pink-to-transparent);
+}
+
+.bg-gradient-gold {
+  background-image: var(--gradient-gold);
+}
+
+/* ---- Typography utilities ----
+ * Named after the Figma type scale: font-{family}-{size}[-emphasized]
+ * e.g. `font-bona-4xl`, `font-bona-4xl-emphasized`, `font-instrument-base-emphasized`
+ */
+.font-bona-hero {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -2.88px;
+}
+
+.font-bona-hero-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 116px;
+  line-height: 1;
+  letter-spacing: -11.6px;
+}
+
+.font-bona-category-title {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 86px;
+  line-height: 1;
+  letter-spacing: var(--tracking-category-title);
+}
+
+.font-bona-topblock-title {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -3px;
+}
+
+.font-bona-terms-title {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 80px;
+  line-height: 1;
+}
+
+.font-bona-terms-title-mobile {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -3px;
+}
+
+.font-bona-4xl {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-4xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-4xl);
+}
+
+.font-bona-4xl-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-4xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-4xl);
+}
+
+.font-bona-3xl {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-3xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-3xl);
+}
+
+.font-bona-3xl-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-3xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-3xl-emphasized);
+}
+
+.font-bona-2xl {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-2xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-2xl);
+}
+
+.font-bona-2xl-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-2xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-2xl-emphasized);
+}
+
+.font-bona-xl {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-xl);
+}
+
+.font-bona-xl-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-xl-emphasized);
+}
+
+.font-bona-lg {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-lg);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-lg);
+}
+
+.font-bona-lg-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-lg);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-lg-emphasized);
+}
+
+.font-bona-base {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--text-base);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-base);
+}
+
+.font-bona-base-emphasized {
+  font-family: var(--font-bona-nova-sc);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-base);
+  line-height: 1;
+  letter-spacing: var(--tracking-bona-base-emphasized);
+}
+
+.font-instrument-4xl {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-4xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-4xl-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 600;
+  font-size: var(--text-4xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-3xl {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-3xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-3xl-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-3xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-2xl {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-2xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-2xl-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-2xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xl {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xl-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-xl);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-lg {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-lg-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-lg);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-base {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-base-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-sm {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-sm);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-sm-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xs {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-xs);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xs-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-xs);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xxs {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-xxs);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xxs-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-xxs);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xxxs {
+  font-family: var(--font-instrument-sans);
+  font-weight: 400;
+  font-size: var(--text-xxxs);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
+}
+
+.font-instrument-xxxs-emphasized {
+  font-family: var(--font-instrument-sans);
+  font-weight: 500;
+  font-size: var(--text-xxxs);
+  line-height: 1;
+  letter-spacing: var(--tracking-instrument);
 }

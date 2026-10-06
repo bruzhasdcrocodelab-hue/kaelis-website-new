@@ -45,7 +45,6 @@
 
 .dropdown {
   position: absolute;
-  top: var(--header-dropdown-top);
   left: 50%;
   z-index: 20;
   display: flex;

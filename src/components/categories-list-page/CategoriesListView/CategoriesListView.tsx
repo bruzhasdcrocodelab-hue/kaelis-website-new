@@ -6,6 +6,7 @@ import { useCategories } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
+import geometryStyles from "@/components/categories/ConstellationGeometry.module.css";
 import ConstellationPattern from "@/components/categories-list-page/ConstellationPattern";
 import StarField from "@/components/categories-list-page/StarField";
 import CategoriesListSection from "@/components/categories-list-page/CategoriesListSection";
@@ -22,7 +23,7 @@ export default function CategoriesListView({
 }: CategoriesListViewProps) {
   const { state, retry } = useCategories();
   return (
-    <div className={styles.page}>
+    <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <div className={styles.backgroundGradient} aria-hidden />
       <ConstellationPattern />
       <Image
@@ -67,7 +68,7 @@ export default function CategoriesListView({
         />}
         {state.status !== "success" && <div className={styles.pending}><CatalogStatus locale={locale} status={state.status} retry={retry} /></div>}
         {state.status === "success" && state.data.length === 0 && <CatalogStatus locale={locale} status="empty" />}
-        <Footer dictionary={dictionary.footer} variant="on-dark" />
+        <Footer dictionary={dictionary.footer} locale={locale} variant="on-dark" />
       </div>
     </div>
   );

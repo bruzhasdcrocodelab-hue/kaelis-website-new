@@ -53,9 +53,8 @@ export default function RevealSheet({ open, onClose, title, locale, transition, 
         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={transition}
         drag="y" dragListener={false} dragControls={drag} dragConstraints={{ top: 0, bottom: 0 }} dragElastic={{ top: 0, bottom: .9 }}
         onDragEnd={(_, info) => {
-          const style = getComputedStyle(sheetRef.current!);
-          if (info.offset.y > parseFloat(style.getPropertyValue("--reveal-sheet-drag-offset")) ||
-            info.velocity.y > parseFloat(style.getPropertyValue("--reveal-sheet-drag-velocity"))) onClose();
+          if (info.offset.y > 90 ||
+            info.velocity.y > 500) onClose();
         }}>
         <div className={styles.sheetHeader} onPointerDown={event => {
           if (!(event.target as HTMLElement).closest("button")) drag.start(event);

@@ -1,4 +1,11 @@
-.section:has([data-reading-panel]) { scroll-margin-top: var(--reveal-anchor-inset); }
+.section {
+  /* --tracking-category-title: -4.5px; */
+}
+
+/* .section:has([data-reading-panel]) {
+  scroll-margin-top: var(--reveal-anchor-inset);
+} */
+
 .section {
   display: flex;
   flex-direction: column;
@@ -40,26 +47,57 @@
   background: var(--color-greyish-blue);
 }
 
-.panelLoading { background: var(--color-greyish-blue); }
-.panelLoading::before { background: transparent; }
-.panelLoading .pattern { top: -210px; }
+.panelLoading {
+  background: var(--color-greyish-blue);
+}
 
-.section.embedded { padding: 0; }
-.loading { position: relative; z-index: 5; display: grid; place-items: center; flex: 1; width: 100%; }
+.panelLoading::before {
+  background: transparent;
+}
+
+.panelLoading .pattern {
+  top: -210px;
+}
+
+.section.embedded {
+  padding: 0;
+}
+
+.loading {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  flex: 1;
+  width: 100%;
+}
 
 .panel.panelReading {
   height: auto;
-  min-height: var(--reveal-panel-height);
-  padding-bottom: var(--reveal-detail-scroll-inset);
+  min-height: 650px;
+  padding-bottom: 20px;
   overflow: clip;
 }
+
 .panelReading .pattern {
-  top: var(--reveal-pattern-top);
-  width: var(--reveal-pattern-width);
-  height: var(--reveal-pattern-height);
+  top: -30px;
+  width: 1627px;
+  height: 731px;
 }
-.panelReading .center { padding-top: 0; min-width: 0; max-width: var(--reveal-header-max-width); }
-.panelReading .categoryTagLabel { margin-top: 0; white-space: normal; text-align: center; overflow-wrap: anywhere; }
+
+.panelReading .center {
+  padding-top: 0;
+  min-width: 0;
+  max-width: 560px;
+}
+
+.panelReading .categoryTagLabel {
+  margin-top: 0;
+  white-space: normal;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
 .panelReading .askTitle {
   font-size: var(--text-3xl);
   letter-spacing: var(--tracking-bona-3xl);
@@ -67,15 +105,36 @@
   overflow-wrap: anywhere;
   margin-top: 0;
 }
-.panelReading .askDescription { width: min(100%, var(--reveal-copy-width)); font-size: var(--text-xxs); }
-.revealMobileCopy { display: none; }
-.panelReading .wavesLine {
-  height: var(--reveal-frame-height); max-height: calc(100% - 2 * var(--reveal-detail-scroll-inset));
-  width: calc(100% - 2 * var(--reveal-detail-scroll-inset)); padding: 0;
-  top: 50%; bottom: auto; transform: translate(-50%, -50%);
+
+.panelReading .askDescription {
+  width: min(100%, 240px);
+  font-size: var(--text-xxs);
 }
-.flowError { position: relative; z-index: 5; max-width: 450px; text-align: center; }
-.flowError button { text-decoration: underline; }
+
+.revealMobileCopy {
+  display: none;
+}
+
+.panelReading .wavesLine {
+  height: 612px;
+  max-height: calc(100% - 2 * 20px);
+  width: calc(100% - 2 * 20px);
+  padding: 0;
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+}
+
+.flowError {
+  position: relative;
+  z-index: 5;
+  max-width: 450px;
+  text-align: center;
+}
+
+.flowError button {
+  text-decoration: underline;
+}
 
 .panelConfirmed::before {
   background: transparent;
@@ -190,7 +249,7 @@
   white-space: nowrap;
   line-height: normal;
   margin-top: -6px;
-  font-size: var(--text-topblock-title-fluid);
+  font-size: clamp(var(--text-4xl), 2.385vw + 21.66px, 56px);
 }
 
 .askDescription {
@@ -210,19 +269,47 @@
 }
 
 @media (max-width: 768px) {
-  .panelLoading { background: transparent; }
-  .panelLoading::before { background: var(--gradient-topblock-mobile); }
-  .embedded .panel { margin-top: 0; }
-  .panel.panelReading { min-height: 0; padding-top: var(--reveal-mobile-section-space); padding-bottom: var(--reveal-controls-reserve); }
-  .panelReading .askTitle { font-size: var(--text-4xl); letter-spacing: var(--tracking-bona-4xl); }
-  .panelReading .askDescription { width: min(100%, var(--reveal-mobile-header-width)); }
-  .revealDesktopCopy { display: none; }
-  .revealMobileCopy { display: inline; }
-  .panelReading .pattern {
-    top: var(--reveal-pattern-mobile-top);
-    width: var(--reveal-pattern-mobile-width);
-    height: var(--reveal-pattern-mobile-height);
+  .panelLoading {
+    background: transparent;
   }
+
+  .panelLoading::before {
+    background: var(--gradient-topblock-mobile);
+  }
+
+  .embedded .panel {
+    margin-top: 0;
+  }
+
+  .panel.panelReading {
+    min-height: 0;
+    padding-top: 24px;
+    padding-bottom: 92px;
+  }
+
+  .panelReading .askTitle {
+    font-size: var(--text-4xl);
+    letter-spacing: var(--tracking-bona-4xl);
+  }
+
+  .panelReading .askDescription {
+    width: min(100%, 260px);
+  }
+
+  .revealDesktopCopy {
+    display: none;
+  }
+
+  .revealMobileCopy {
+    display: inline;
+  }
+
+  .panelReading .pattern {
+    top: -38px;
+    width: 990px;
+    height: 445px;
+  }
+
   .section {
     padding: 0;
   }
@@ -231,7 +318,7 @@
     max-width: none;
     height: 520px;
     padding: 8px 16px 96px;
-    border-radius: var(--radius-topblock-panel-mobile) var(--radius-topblock-panel-mobile) 0 0;
+    border-radius: 24px 24px 0 0;
     box-shadow: none;
     margin-top: 40px;
   }
@@ -242,7 +329,6 @@
    * footer also uses) so the fan fades cleanly and the panel meets the footer
    * with no visible seam.
    */
-
   .fadeOverlay {
     background: linear-gradient(0deg, transparent 0%, var(--color-white) 82%);
   }
@@ -266,7 +352,8 @@
     margin: 4px;
   }
 
-  .waves, .wavesLine {
+  .waves,
+  .wavesLine {
     display: none;
   }
 
@@ -293,7 +380,9 @@
   }
 
   .center {
-    padding-top: 0;
+    padding-top: 52px;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .askTitle {
@@ -307,13 +396,10 @@
     font-size: var(--text-xs);
   }
 
-  /* Pinned to the lower-right of the screen per the mock (node-id=1873-5522),
-     floating above the scrolling page. On the choose step a "Change Question"
-     button stacks above the guides trigger (node-id=1873-6211). */
   .triggerMobile {
-    position: fixed;
-    right: 20px;
-    bottom: 26px;
+    position: absolute;
+    top: 8px;
+    right: 16px;
     z-index: 30;
     display: flex;
     flex-direction: column;
@@ -323,9 +409,10 @@
 
   .triggerMobile :global(a),
   .triggerMobile :global(button) {
-    background: var(--color-white-50);
+    background: var(--color-white);
     box-shadow: var(--shadow-default);
     backdrop-filter: blur(var(--blur-shadow));
     -webkit-backdrop-filter: blur(var(--blur-shadow));
   }
+
 }

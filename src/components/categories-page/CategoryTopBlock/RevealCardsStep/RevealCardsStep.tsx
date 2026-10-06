@@ -111,7 +111,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   useLayoutEffect(() => {
     const media = window.matchMedia("(max-width: 768px)");
     const resize = () => { setIsMobile(media.matches); setSheet(null); setSelectedPosition(null); };
-    const frame = requestAnimationFrame(() => { setMetrics(readRevealMetrics(areaRef.current!)); setIsMobile(media.matches); });
+    const frame = requestAnimationFrame(() => { setMetrics(readRevealMetrics()); setIsMobile(media.matches); });
     media.addEventListener("change", resize);
     return () => { cancelAnimationFrame(frame); media.removeEventListener("change", resize); };
   }, []);

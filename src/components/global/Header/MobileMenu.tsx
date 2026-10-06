@@ -108,8 +108,8 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
         className={`${styles.toggle} ${open ? styles.toggleActive : ""}`}
         onClick={toggleMenu}
         style={{
-          backdropFilter: "var(--menu-toggle-blur)",
-          WebkitBackdropFilter: "var(--menu-toggle-blur)",
+          backdropFilter: open ? "blur(var(--blur-panel))" : "none",
+          WebkitBackdropFilter: open ? "blur(var(--blur-panel))" : "none",
         }}
       >
         {/* <span className={styles.toggleIcon} /> */}

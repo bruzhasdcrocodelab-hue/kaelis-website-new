@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
@@ -11,6 +11,7 @@ import TopBlockSection from "@/components/main-page/TopBlockSection";
 import { cardCount, type CatalogState } from "@/lib/categories/catalog";
 import { HOME_CARDS, type HomeCardSlug } from "@/lib/tarot/homeCards";
 import styles from "./HomeReading.module.css";
+import { scrollToCards } from "./scrollToCards";
 
 const MOBILE_QUERY = "(max-width: 768px)";
 const subscribeViewport = (listener: () => void) => {
@@ -57,9 +58,10 @@ function ReadingSession({ slug, dictionary, locale, present, onProgressChange }:
   );
 }
 
-function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange }: {
+function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange, onExpanded }: {
   selection: Selection; dictionary: Dictionary; locale: Locale; mobile: boolean;
   onProgressChange: (hasProgress: boolean) => void;
+  onExpanded: () => void;
 }) {
   const present = useIsPresent();
   const reduced = useReducedMotion();
@@ -79,7 +81,8 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange 
   return (
     <motion.div className={styles.reading} inert={!present} aria-hidden={!present}
       initial={{ height: mobile ? 520 : 0 }} animate={{ height: height || (mobile ? 520 : 470) }}
-      exit={{ height: mobile ? 520 : 0 }} transition={transition}>
+      exit={{ height: mobile ? 520 : 0 }} transition={transition}
+      onAnimationComplete={() => { if (present) onExpanded(); }}>
       <motion.div ref={contentRef} className={styles.readingContent}
         initial={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
         animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
@@ -98,8 +101,12 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const [exiting, setExiting] = useState(false);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
+  const reduced = useReducedMotion();
   const open = selection !== null || exiting;
+  const activeScroll = useRef<ReturnType<typeof scrollToCards>>(undefined);
+  useEffect(() => () => activeScroll.current?.cancel(), []);
   function startSession(slug: HomeCardSlug) {
+    activeScroll.current = scrollToCards(Boolean(reduced), true);
     setNeedsConfirmation(false);
     setSession(value => value + 1);
     setSelection({ slug, session: session + 1 });
@@ -107,6 +114,7 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   }
   function select(slug: HomeCardSlug) {
     if (selection?.slug === slug) {
+      activeScroll.current?.cancel();
       setExiting(true);
       setSelection(null);
     } else if (selection && needsConfirmation) {
@@ -123,11 +131,11 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
     <>
       <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
         selectedSlug={selection?.slug ?? null} onCardSelect={select} />
-      <div className={styles.panels}>
+      <div className={styles.panels} data-home-panels>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
-          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onProgressChange={setNeedsConfirmation} />}
+          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onProgressChange={setNeedsConfirmation} onExpanded={() => activeScroll.current?.finish()} />}
         </AnimatePresence>
-        <div className={styles.promo} inert={mobile && open}>
+        <div className={styles.promo} data-home-promo inert={mobile && open}>
           <TopBlockSection dictionary={dictionary.topBlock} className={styles.topBlock} />
         </div>
       </div>

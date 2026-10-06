@@ -1,9 +1,13 @@
 .node {
+  /* ---- Effects: subcategory node hover/idle float + icon pulse animation ---- */
+  /* Subcategory node icon + label, same 769px->1440px fluid construction. */
+}
+
+.node {
   display: block;
   width: 88px;
   text-decoration: none;
-  transition:
-    opacity 0.2s ease,
+  transition: opacity 0.2s ease,
     translate 0.2s ease;
 }
 
@@ -27,15 +31,15 @@
   flex-direction: column;
   align-items: center;
   gap: 15px;
-  animation: nodeFloat var(--node-float-duration) ease-in-out infinite;
+  animation: nodeFloat 6s ease-in-out infinite;
   animation-delay: var(--node-float-delay, 0s);
 }
 
 .icon {
   flex-shrink: 0;
-  width: var(--subcategory-node-icon-width-fluid);
-  height: var(--subcategory-node-icon-height-fluid);
-  animation: nodeIconPulse var(--node-icon-pulse-duration, 2.2s) ease-in-out infinite;
+  width: clamp(40px, 1.49vw + 28.54px, 50px);
+  height: clamp(49px, 1.937vw + 34.1px, 62px);
+  animation: nodeIconPulse 2.2s ease-in-out infinite;
   animation-delay: var(--node-icon-pulse-delay, 0s);
 }
 
@@ -45,37 +49,44 @@
   hyphens: auto;
   -webkit-hyphens: auto;
   overflow-wrap: break-word;
-  font-size: var(--subcategory-node-label-fluid);
+  font-size: clamp(var(--text-xs), 0.745vw + 7.27px, var(--text-lg));
 }
 
 @keyframes nodeFloat {
   0% {
     translate: 0 0;
   }
+
   25% {
-    translate: var(--node-float-distance) 0;
+    translate: 10px 0;
   }
+
   50% {
-    translate: calc(var(--node-float-distance) * 0.5) var(--node-float-distance);
+    translate: calc(10px * 0.5) 10px;
   }
+
   75% {
-    translate: calc(var(--node-float-distance) * -0.5) calc(var(--node-float-distance) * 0.5);
+    translate: calc(10px * -0.5) calc(10px * 0.5);
   }
+
   100% {
     translate: 0 0;
   }
+
 }
 
 @keyframes nodeIconPulse {
   0%,
   100% {
-    scale: var(--node-icon-pulse-scale-min);
-    opacity: var(--node-icon-pulse-opacity-min);
+    scale: 0.92;
+    opacity: 0.55;
   }
+
   50% {
-    scale: var(--node-icon-pulse-scale-max);
-    opacity: var(--node-icon-pulse-opacity-max);
+    scale: 1.08;
+    opacity: 1;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -83,6 +94,7 @@
   .icon {
     animation: none;
   }
+
 }
 
 @media (max-width: 768px) {
@@ -94,4 +106,5 @@
   .label {
     font-size: var(--text-xs);
   }
+
 }

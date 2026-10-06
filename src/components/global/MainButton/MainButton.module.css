@@ -2,11 +2,6 @@
   transition: filter 160ms ease, background-color 160ms ease, border-color 160ms ease;
 }
 
-.default { --hover-brightness: .96; --pressed-brightness: .9; }
-.gradient,
-.gradient-black { --hover-brightness: .94; --pressed-brightness: .87; }
-.stroke { --hover-brightness: .92; --pressed-brightness: .84; }
-
 .stroke .label,
 .stroke .icon {
   transition: color .3s;
@@ -26,8 +21,17 @@
 }
 
 @media (hover: hover) {
-  .button:not(:disabled):not([aria-disabled="true"]):hover {
-    filter: brightness(var(--hover-brightness));
+  .button:where(.default):not(:disabled):not([aria-disabled="true"]):hover {
+    filter: brightness(.96);
+  }
+  .button:where(.gradient):not(:disabled):not([aria-disabled="true"]):hover {
+    filter: brightness(.94);
+  }
+  .button:where(.gradient-black):not(:disabled):not([aria-disabled="true"]):hover {
+    filter: brightness(.94);
+  }
+  .button:where(.stroke):not(:disabled):not([aria-disabled="true"]):hover {
+    filter: brightness(.92);
   }
 
   .stroke:not(:disabled):not([aria-disabled="true"]):hover {
@@ -42,8 +46,20 @@
   }
 }
 
-.button:not(:disabled):not([aria-disabled="true"]):active {
-  filter: brightness(var(--pressed-brightness));
+.button:where(.default):not(:disabled):not([aria-disabled="true"]):active {
+  filter: brightness(.9);
+}
+
+.button:where(.gradient):not(:disabled):not([aria-disabled="true"]):active {
+  filter: brightness(.87);
+}
+
+.button:where(.gradient-black):not(:disabled):not([aria-disabled="true"]):active {
+  filter: brightness(.87);
+}
+
+.button:where(.stroke):not(:disabled):not([aria-disabled="true"]):active {
+  filter: brightness(.84);
 }
 
 /* .stroke:not(:disabled):not([aria-disabled="true"]):active {
@@ -72,5 +88,7 @@
 @media (prefers-reduced-motion: reduce) {
   .button,
   .stroke .label,
-  .stroke .icon { transition: none; }
+  .stroke .icon {
+    transition: none;
+  }
 }

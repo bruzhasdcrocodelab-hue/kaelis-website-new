@@ -55,22 +55,55 @@ export default function CategoryTopBlock({
   const step: Step = flow.reading?.reading && firstCycleComplete
     ? "reveal"
     : flow.busy || flow.reading ? "choose" : "ask";
-  const sectionRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const previousStep = useRef(step);
   useEffect(() => {
     if (previousStep.current === step) return;
+    const restarting = previousStep.current === "reveal" && step === "ask";
     previousStep.current = step;
-    if (step !== "reveal") return;
+    if (step !== "reveal" && !restarting) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    const anchor = restarting && embedded ? document.getElementById("cards") ?? panel : panel;
+    let frame = 0;
+    let previousTop: number | undefined;
+    let active = true;
+    const cancel = () => {
+      active = false;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+        window.removeEventListener(event, cancel);
+      }
+    };
     // Scroll after the new step is laid out; initial mount and data updates stay put.
-    const frame = requestAnimationFrame(() => {
-      sectionRef.current?.scrollIntoView({
-        block: "start",
-        inline: "nearest",
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-      });
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [step]);
+    const scroll = () => {
+      frame = 0;
+      if (!active) return;
+      const margin = parseFloat(getComputedStyle(anchor).scrollMarginTop) || 0;
+      const target = Math.max(0, window.scrollY + anchor.getBoundingClientRect().top - margin);
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      const top = Math.min(target, maxScroll);
+      if (top !== previousTop) {
+        window.scrollTo({
+          top,
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+        });
+        previousTop = top;
+      }
+      if (maxScroll >= target) cancel();
+    };
+    const schedule = () => {
+      if (active && !frame) frame = requestAnimationFrame(scroll);
+    };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(panel.closest("[data-home-panels]") ?? panel);
+    for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+      window.addEventListener(event, cancel, { passive: true });
+    }
+    schedule();
+    return cancel;
+  }, [step, embedded]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   useLayoutEffect(() => {
     onProgressChange?.(hasProgress);
@@ -97,8 +130,10 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section ref={sectionRef} id="category-top-block" className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
+    <section className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
+        ref={panelRef}
+        id="category-top-block"
         data-reading-panel={isConfirmed || undefined}
         className={`${styles.panel} ${step === "choose" ? styles.panelLoading : ""} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
         style={{
@@ -108,6 +143,32 @@ export default function CategoryTopBlock({
           WebkitBackdropFilter: "blur(12.5px)",
         }}
       >
+        {!loadingStatus && step === "ask" && (
+          <div className={styles.triggerMobile}>
+            {/* {step === "reveal" && (
+              <MainButton
+                variant="default"
+                size="large"
+                icon="/icons/edit.svg"
+                aria-label={dictionary.changeQuestion}
+                onClick={changeQuestion}
+                muted
+              />
+            )} */}
+            <MainButton
+              variant="default"
+              size="medium"
+              icon={speakerIcon(selectedSpeaker?.icon)}
+              aria-label={selectedSpeaker?.name ?? text.loading}
+              disabled={step !== "ask" || flow.busy || !flow.speakers.length}
+              onClick={() => setGuideSheetOpen(true)}
+              muted
+            >
+              {selectedSpeaker?.name ?? text.loading}
+            </MainButton>
+          </div>
+        )}
+
         {isConfirmed && (
           <Image
             src="/images/backgrounds/pattern-categories-top-block-2.svg"
@@ -158,7 +219,7 @@ export default function CategoryTopBlock({
             )} */}
           </div>
 
-          <div className={styles.center}>
+          <div className={styles.center} data-reading-heading>
             <div className={styles.categoryTag}>
               {!isConfirmed && <Image
                 src="/icons/eye-gradient.svg"
@@ -210,30 +271,6 @@ export default function CategoryTopBlock({
         {flow.speakerError && <div className={styles.flowError} role="alert">{text.error} <button type="button" onClick={flow.retrySpeakers}>{text.retry}</button></div>}
         </>}
       </div>
-
-      {!loadingStatus && step === "ask" && (
-        <div className={styles.triggerMobile}>
-          {/* {step === "reveal" && (
-            <MainButton
-              variant="default"
-              size="large"
-              icon="/icons/edit.svg"
-              aria-label={dictionary.changeQuestion}
-              onClick={changeQuestion}
-              muted
-            />
-          )} */}
-          <MainButton
-            variant="default"
-            size="large"
-            icon={speakerIcon(selectedSpeaker?.icon)}
-            aria-label={selectedSpeaker?.name ?? text.loading}
-            disabled={step !== "ask" || flow.busy || !flow.speakers.length}
-            onClick={() => setGuideSheetOpen(true)}
-            muted
-          />
-        </div>
-      )}
 
       <BottomSheetSelect<string>
         open={guideSheetOpen}

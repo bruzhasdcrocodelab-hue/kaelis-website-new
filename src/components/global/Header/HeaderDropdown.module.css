@@ -1,0 +1,16 @@
+.dropdown {
+  /*
+   * Viewport Y of the top edge of the header dropdown panels (Tarot Spreads and
+   * LanguageSelector), so both open at the same height at any desktop width.
+   * = header padding-top (40px) + pill height (82px) + 20px gap; drops by 8px
+   *   below 1300px where the header padding-top becomes 32px.
+   */
+  top: 142px;
+}
+
+@media (max-width: 1300px) {
+  .dropdown {
+    top: 134px;
+  }
+
+}

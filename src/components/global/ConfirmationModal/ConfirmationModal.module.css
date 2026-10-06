@@ -11,9 +11,19 @@
   background: transparent;
   color: var(--color-black);
 }
-.root[open] { display: grid; place-items: center; }
-.root::backdrop { background: transparent; }
-.backdrop { position: absolute; inset: 0; background: rgba(27, 20, 40, 0.3); backdrop-filter: blur(8px); }
+.root[open] {
+  display: grid;
+  place-items: center;
+}
+.root::backdrop {
+  background: transparent;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(27, 20, 40, 0.3);
+  backdrop-filter: blur(8px);
+}
 .panel {
   position: relative;
   width: min(100%, 460px);
@@ -26,5 +36,14 @@
   background: var(--color-greyish-blue);
   box-shadow: var(--shadow-medium);
 }
-.actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
-@media (max-width: 768px) { .panel { padding: 28px 20px; } }
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+@media (max-width: 768px) {
+  .panel {
+    padding: 28px 20px;
+  }
+}

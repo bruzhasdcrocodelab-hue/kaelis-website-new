@@ -1,4 +1,8 @@
 .section {
+  /* ---- Typography: Terms of Use hero title (one-off, node-id=1507-1475) ---- */
+}
+
+.section {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,9 +36,9 @@
   -webkit-background-clip: text;
   color: transparent;
   font-size: clamp(
-    var(--text-terms-title-mobile),
+    56px,
     5.5vw + 1rem,
-    var(--text-terms-title)
+    80px
   );
   text-align: center;
   line-height: .95;
@@ -45,7 +49,9 @@
   hyphens: none;
 }
 
-.titleWord { white-space: nowrap; }
+.titleWord {
+  white-space: nowrap;
+}
 
 .title.titleWrapped {
   margin-top: 10px;
@@ -68,6 +74,7 @@
   .eyebrow {
     margin-bottom: -20px;
   }
+
 }
 
 @media (max-width: 768px) {
@@ -84,7 +91,7 @@
   }
 
   .title {
-    letter-spacing: var(--tracking-terms-title-mobile);
+    letter-spacing: -3px;
   }
 
   .lastUpdated {
@@ -93,4 +100,5 @@
     text-align: center;
     font-size: var(--text-xxs);
   }
+
 }

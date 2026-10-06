@@ -3,7 +3,7 @@
   top: clamp(-820px, -56.944vw, -467.1px);
   left: 50%;
   display: block;
-  width: var(--constellation-pattern-width);
+  width: clamp(900px, 109.722vw, 1580px);
   height: auto;
   max-width: none;
   transform: translateX(-50%);
@@ -33,23 +33,23 @@
 }
 
 .spinClockwise {
-  animation: constellationSpin var(--constellation-spin-duration) linear infinite;
+  animation: constellationSpin 120s linear infinite;
 }
 
 .spinCounterClockwise {
-  animation: constellationSpinReverse var(--constellation-ring-spin-duration-reverse) linear infinite;
+  animation: constellationSpinReverse 95s linear infinite;
 }
 
 .spinClockwiseRelativeToCounterRing {
-  animation: constellationSpin var(--constellation-spin-relative-to-counter-ring-duration) linear infinite;
+  animation: constellationSpin 53.023s linear infinite;
 }
 
 .orbitClockwise {
-  animation: constellationSpin var(--constellation-orbit-duration) linear infinite;
+  animation: constellationSpin 70s linear infinite;
 }
 
 .orbitCounterClockwise {
-  animation: constellationSpinReverse var(--constellation-orbit-duration-reverse) linear infinite;
+  animation: constellationSpinReverse 55s linear infinite;
 }
 
 @keyframes constellationSpin {
