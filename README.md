@@ -2,7 +2,23 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Copy `.env.example` to `.env` in the project root and set
+`NEXT_PUBLIC_BACKEND_ORIGIN` to the backend HTTP(S) origin without a path.
+`.env` is ignored by Git; `.env.example` lists the required variable.
+
+The backend origin is shared by Next.js rewrites and validation of WebSocket
+authorization and answer URLs. It is public, embedded at build time, and is not
+a secret. Restart the development server after editing it; rebuild for production.
+
+Fixed API paths, the platform header, timeouts, guest session retention and the
+Google Play link are defined in `src/lib/config/constants.ts`. Localized social
+links are defined in `src/lib/config/social_links.ts`.
+
+AI requests go through the backend. WebSocket host, key, port and TLS settings
+come from `/configuration`. Private API or AI keys must stay on the backend,
+never in `NEXT_PUBLIC_*` variables.
+
+Then run the development server:
 
 ```bash
 npm run dev

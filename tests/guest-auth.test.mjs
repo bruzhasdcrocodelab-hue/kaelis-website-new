@@ -1,10 +1,11 @@
+import { bindEnv } from "./env-fixture.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { afterEach, beforeEach, test } from "node:test";
 import ts from "typescript";
 
 const source = await readFile(new URL("../src/lib/api.ts", import.meta.url), "utf8");
-const { outputText } = ts.transpileModule(source, {
+const { outputText } = ts.transpileModule(bindEnv(source), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 },
 });
 const key = "kaelis.guest-session";

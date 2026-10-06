@@ -1,15 +1,17 @@
 import type { NextConfig } from "next";
+import { API_BASE } from "./src/lib/config/constants";
+import { BACKEND_ORIGIN } from "./src/lib/config/env";
 
 const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/kaelis/broadcasting/auth",
-        destination: "https://stagtest.kaelisai.com/broadcasting/auth",
+        source: `${API_BASE}/broadcasting/auth`,
+        destination: `${BACKEND_ORIGIN}/broadcasting/auth`,
       },
       {
-        source: "/api/kaelis/:path*",
-        destination: "https://stagtest.kaelisai.com/api/:path*",
+        source: `${API_BASE}/:path*`,
+        destination: `${BACKEND_ORIGIN}/api/:path*`,
       },
     ];
   },

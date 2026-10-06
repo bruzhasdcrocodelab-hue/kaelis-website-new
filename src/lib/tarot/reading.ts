@@ -1,5 +1,7 @@
 import type { Locale } from "@/lang";
 import { apiFetch } from "../api";
+import { API_PLATFORM, REQUEST_TIMEOUT_MS } from "../config/constants";
+import { BACKEND_ORIGIN } from "../config/env";
 
 export type Speaker = { id: string; name: string; icon: string | null };
 export type ReadingCard = {
@@ -71,9 +73,9 @@ export function normalizeReading(value: unknown): Reading {
 }
 export async function tarotRequest(path: string, locale: Locale, init: RequestInit = {}): Promise<unknown> {
   const headers = new Headers(init.headers);
-  headers.set("Accept-Language", locale); headers.set("X-Platform", "site");
+  headers.set("Accept-Language", locale); headers.set("X-Platform", API_PLATFORM);
   if (init.body) headers.set("Content-Type", "application/json");
-  const signal = init.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(30_000)]) : AbortSignal.timeout(30_000);
+  const signal = init.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(REQUEST_TIMEOUT_MS)]) : AbortSignal.timeout(REQUEST_TIMEOUT_MS);
   const response = await apiFetch(path, { ...init, headers, signal });
   const body = await response.json().catch(() => null);
   if (!response.ok) {
@@ -101,8 +103,8 @@ export async function fetchReading(id: string, locale: Locale, signal: AbortSign
 export function messagePath(value: unknown, chatId: string): string | null {
   if (typeof value !== "string") return null;
   let url: URL;
-  try { url = new URL(value, "https://stagtest.kaelisai.com/api/"); } catch { return null; }
-  if (url.origin !== "https://stagtest.kaelisai.com" || url.search || url.hash || url.username || url.password) return null;
+  try { url = new URL(value, `${BACKEND_ORIGIN}/api/`); } catch { return null; }
+  if (url.origin !== BACKEND_ORIGIN || url.search || url.hash || url.username || url.password) return null;
   const path = url.pathname.replace(/^\/api(?=\/)/, "");
   return new RegExp(`^/chat/${apiId(chatId)}/message/\\d+$`).test(path) ? path : null;
 }

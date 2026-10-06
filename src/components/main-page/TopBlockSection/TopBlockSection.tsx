@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { GOOGLE_PLAY_URL } from "@/lib/config/constants";
 import type { Dictionary } from "@/lang";
 import styles from "./TopBlockSection.module.css";
 import MainButton from "@/components/global/MainButton";
@@ -52,7 +53,7 @@ export default function TopBlockSection({ dictionary, className = "" }: TopBlock
               <MainButton
                 icon="/icons/google-play.svg"
                 size="medium"
-                href="https://play.google.com/store/apps/details?id=io.kaelsi.app"
+                href={GOOGLE_PLAY_URL}
                 aria-label="Google Play"
               />
            

@@ -1,4 +1,5 @@
 "use client";
+import { READING_TIMEOUT_MS, READING_POLL_INTERVAL_MS, READING_WATCHDOG_MS } from "../config/constants";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lang";
 import { createReading, fetchReading, loadSpeakers, messagePath, normalizeInterpretation, readingPayload, record, tarotRequest, TarotError, type Reading, type Speaker } from "./reading";
@@ -51,7 +52,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     let watchdog: ReturnType<typeof setTimeout> | undefined;
     let checking = false;
     let fallback = false;
-    let deadline = Date.now() + 180_000;
+    let deadline = Date.now() + READING_TIMEOUT_MS;
     const queued: AnswerEvent[] = [];
     const clean = () => { closeSocket?.(); clearTimeout(fallbackTimer); clearTimeout(watchdog); };
     signal.addEventListener("abort", clean, { once: true });
@@ -77,12 +78,12 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
       if (signal.aborted || current.current?.reading) return;
       if (Date.now() >= deadline) { clean(); setError(text.waiting); return; }
       clearTimeout(fallbackTimer);
-      fallbackTimer = setTimeout(poll, 3000);
+      fallbackTimer = setTimeout(poll, READING_POLL_INTERVAL_MS);
     };
     const startFallback = () => {
       fallback = true;
       if (!signal.aborted && current.current && !current.current.reading) {
-        clearTimeout(fallbackTimer); fallbackTimer = setTimeout(poll, 3000);
+        clearTimeout(fallbackTimer); fallbackTimer = setTimeout(poll, READING_POLL_INTERVAL_MS);
       }
     };
     const answer = async (event: AnswerEvent) => {
@@ -102,7 +103,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     };
     retryRef.current = async () => {
       if (signal.aborted) return;
-      setError(""); deadline = Date.now() + 180_000;
+      setError(""); deadline = Date.now() + READING_TIMEOUT_MS;
       await check(); startFallback();
     };
     try {
@@ -116,7 +117,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
         for (const event of queued) void answer(event);
         if (fallback) startFallback();
         // Recover a missed event even when the socket appears connected.
-        watchdog = setTimeout(() => { void check(); startFallback(); }, 60_000);
+        watchdog = setTimeout(() => { void check(); startFallback(); }, READING_WATCHDOG_MS);
       }
     } catch (cause) {
       report(cause); clean();
