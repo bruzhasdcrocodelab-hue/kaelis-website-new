@@ -51,6 +51,7 @@ async function renderPage({ slug = "family", spreads = familySpreads, all = succ
     "@/components/categories/CatalogStatus": props => { retry = props.retry; return createElement("div", { "data-status": props.status }); },
     "@/components/global/Header": () => null,
     "@/components/global/Footer": () => null,
+    "@/components/categories/ConstellationGeometry.module.css": {},
     "@/components/categories-page/CategoryHeroSection": hero,
     "@/components/categories-page/CategoryTopBlock": props => { reading = props; return createElement("div", { "data-component": "reading" }); },
     "@/components/categories-page/ConstellationPattern": () => null,

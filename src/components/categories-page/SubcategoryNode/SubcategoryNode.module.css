@@ -1,9 +1,23 @@
 .node {
+  /* ---- Effects: subcategory node hover/idle float + icon pulse animation ---- */
+  --node-float-duration: 6s;
+  --node-float-distance: 10px;
+  --node-icon-pulse-duration: 2.2s;
+  --node-icon-pulse-scale-min: 0.92;
+  --node-icon-pulse-scale-max: 1.08;
+  --node-icon-pulse-opacity-min: 0.55;
+  --node-icon-pulse-opacity-max: 1;
+  /* Subcategory node icon + label, same 769px->1440px fluid construction. */
+  --subcategory-node-icon-width-fluid: clamp(40px, 1.49vw + 28.54px, 50px);
+  --subcategory-node-icon-height-fluid: clamp(49px, 1.937vw + 34.1px, 62px);
+  --subcategory-node-label-fluid: clamp(var(--text-xs), 0.745vw + 7.27px, var(--text-lg));
+}
+
+.node {
   display: block;
   width: 88px;
   text-decoration: none;
-  transition:
-    opacity 0.2s ease,
+  transition: opacity 0.2s ease,
     translate 0.2s ease;
 }
 
@@ -52,18 +66,23 @@
   0% {
     translate: 0 0;
   }
+
   25% {
     translate: var(--node-float-distance) 0;
   }
+
   50% {
     translate: calc(var(--node-float-distance) * 0.5) var(--node-float-distance);
   }
+
   75% {
     translate: calc(var(--node-float-distance) * -0.5) calc(var(--node-float-distance) * 0.5);
   }
+
   100% {
     translate: 0 0;
   }
+
 }
 
 @keyframes nodeIconPulse {
@@ -72,10 +91,12 @@
     scale: var(--node-icon-pulse-scale-min);
     opacity: var(--node-icon-pulse-opacity-min);
   }
+
   50% {
     scale: var(--node-icon-pulse-scale-max);
     opacity: var(--node-icon-pulse-opacity-max);
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -83,6 +104,7 @@
   .icon {
     animation: none;
   }
+
 }
 
 @media (max-width: 768px) {
@@ -94,4 +116,5 @@
   .label {
     font-size: var(--text-xs);
   }
+
 }

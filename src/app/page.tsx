@@ -72,7 +72,7 @@ export default async function Home() {
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
         <HomeReading locale={locale} dictionary={dictionary} />
-        <Footer dictionary={dictionary.footer} />
+        <Footer dictionary={dictionary.footer} locale={locale} />
       </div>
     </div>
   );

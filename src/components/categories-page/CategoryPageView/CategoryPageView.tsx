@@ -10,6 +10,7 @@ import { useAllSpreads, useCategories, useSpreads } from "@/components/categorie
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
+import geometryStyles from "@/components/categories/ConstellationGeometry.module.css";
 import ConfirmationModal from "@/components/global/ConfirmationModal/ConfirmationModal";
 import CategoryHeroSection from "@/components/categories-page/CategoryHeroSection";
 import CategoryTopBlock from "@/components/categories-page/CategoryTopBlock";
@@ -82,7 +83,7 @@ function CategoryPageContent({
     : !resolved ? "notFound" : null;
   const retry = categories.state.status === "error" ? categories.retry : spreads.retry;
   return (
-    <div className={styles.page}>
+    <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <Image
         src="/images/backgrounds/2.png"
         alt=""
@@ -146,7 +147,7 @@ function CategoryPageContent({
             ) : <CatalogStatus locale={locale} status="error" retry={needsDefaultSpread ? allSpreads.retry : spreads.retry} />}
           </>
         )}
-        <Footer dictionary={dictionary.footer} />
+        <Footer dictionary={dictionary.footer} locale={locale} />
       </div>
       <ConfirmationModal open={pendingHref !== null} title={dictionary.readingConfirmation.title}
         message={dictionary.readingConfirmation.message} confirmLabel={dictionary.readingConfirmation.confirm}

@@ -11,6 +11,7 @@ import {
   useTransition,
 } from "react";
 import { createPortal } from "react-dom";
+import dropdownStyles from "../Header/HeaderDropdown.module.css";
 import type { Dictionary, Locale } from "@/lang";
 import { setLocale } from "@/lib/locale-actions";
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
@@ -156,7 +157,7 @@ export default function LanguageSelector({
           <div
             id={menuId}
             ref={dropdownRef}
-            className={styles.dropdown}
+            className={`${dropdownStyles.dropdown} ${styles.dropdown}`}
             role="listbox"
             data-open={expanded || undefined}
             style={{

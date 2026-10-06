@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
@@ -65,6 +65,29 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange 
   const reduced = useReducedMotion();
   const [height, setHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const revealed = useRef(false);
+  const scrolledSession = useRef<number | null>(null);
+  const scrollToReading = useCallback(() => {
+    if (!present || !revealed.current || scrolledSession.current === selection.session) return;
+    const content = contentRef.current;
+    const fan = document.getElementById("cards");
+    const heading = content?.querySelector("[data-reading-heading]");
+    if (!content || !fan) return;
+    const cardBounds = Array.from(fan.querySelectorAll("button img"), card => card.getBoundingClientRect())
+      .filter(bounds => bounds.width > 0 && bounds.height > 0);
+    const fanTop = Math.min(fan.getBoundingClientRect().top, ...cardBounds.map(bounds => bounds.top));
+    const headingBottom = heading?.getBoundingClientRect().bottom ?? content.getBoundingClientRect().top;
+    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+    window.scrollTo({
+      top: window.scrollY + Math.max(fanTop, headingBottom - viewportHeight),
+      behavior: reduced ? "instant" : "smooth",
+    });
+    scrolledSession.current = selection.session;
+  }, [present, reduced, selection.session]);
+  useEffect(() => {
+    const frame = requestAnimationFrame(scrollToReading);
+    return () => cancelAnimationFrame(frame);
+  }, [scrollToReading]);
   useLayoutEffect(() => {
     const content = contentRef.current;
     if (!content) return;
@@ -83,7 +106,11 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange 
       <motion.div ref={contentRef} className={styles.readingContent}
         initial={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
         animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
-        transition={transition}>
+        transition={transition}
+        onAnimationComplete={() => {
+          revealed.current = true;
+          scrollToReading();
+        }}>
         {/* Only the session resets on card changes; the animated panel stays mounted. */}
         <ReadingSession key={selection.session} slug={selection.slug} dictionary={dictionary} locale={locale} present={present} onProgressChange={onProgressChange} />
       </motion.div>

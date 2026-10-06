@@ -1,4 +1,21 @@
 .section {
+  --text-category-title: 86px;
+  /*
+   * ---- Typography: categories-list heading fluid sizes ----
+   * Line through the 390px value (min) and the 1440px value (max):
+   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 390)
+   *   offset   = sizeMin - (vw-coeff / 100) * 390
+   * One continuous clamp() covers both the 390-768 and 769-1440 ranges so the
+   * heading keeps growing with the viewport instead of stepping at 768px.
+   */
+  --text-categories-list-eyebrow-fluid: clamp(var(--text-xs), 0.286vw + 11.89px, var(--text-base));
+  --text-categories-list-title-fluid: clamp(var(--text-4xl), 4.381vw + 22.91px, var(--text-category-title));
+  --tracking-categories-list-title-fluid: clamp(-3px, 0.286vw - 4.11px, 0px);
+  --text-categories-list-description-fluid: clamp(var(--text-xxs), 0.19vw + 11.26px, var(--text-sm));
+  --width-categories-list-description-fluid: clamp(230px, 6.667vw + 204px, 300px);
+}
+
+.section {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -79,6 +96,7 @@
     margin-top: 0;
     grid-column-start: auto;
   }
+
 }
 
 @media (max-width: 768px) {
@@ -120,4 +138,5 @@
     margin-top: 0;
     grid-column-start: auto;
   }
+
 }

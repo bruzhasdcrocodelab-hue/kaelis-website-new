@@ -1,4 +1,40 @@
 .hero {
+  /* ---- Typography: hero display sizes (one-off, larger than shared scale) ---- */
+  --text-hero: 48px;
+  --text-hero-emphasized: 116px;
+  --tracking-hero: -2.88px;
+  --tracking-hero-emphasized: -11.6px;
+  /* ---- Typography: main-page hero mobile (one-off, node-id=1888-7553) ---- */
+  --text-hero-mobile: 48px;
+  --text-hero-guide-mobile: 32px;
+  --tracking-hero-mobile: -3px;
+  /*
+   * ---- Typography: main-page hero fluid sizes ----
+   * Font size scales linearly with viewport width between the mobile value
+   * (min, ~375px viewport) and the desktop value (max, ~1440px viewport).
+   * The middle term of each clamp() is the line through those two points:
+   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 375)
+   *   offset   = sizeMin - (vw-coeff / 100) * 375
+   * Letter-spacing interpolates the same way between the mobile and desktop
+   * tracking tokens.
+   */
+  --text-hero-guide-fluid: clamp(
+    var(--text-hero-guide-mobile),
+    1.502vw + 26.37px,
+    var(--text-hero)
+  );
+  --tracking-hero-guide-fluid: clamp(-3px, 0.01127vw - 3.042px, -2.88px);
+  --text-hero-word-fluid: clamp(var(--text-lg), 1.315vw + 13.07px, var(--text-3xl));
+  --text-hero-highlight-fluid: clamp(
+    var(--text-hero-mobile),
+    6.385vw + 24.06px,
+    var(--text-hero-emphasized)
+  );
+  --tracking-hero-highlight-fluid: clamp(-11.6px, -0.8075vw + 0.028px, -3px);
+  --text-hero-description-fluid: clamp(var(--text-xxs), 0.188vw + 11.3px, var(--text-sm));
+}
+
+.hero {
   display: flex;
   flex-direction: column;
   gap: 60px;
@@ -202,4 +238,5 @@
   .ctaButtonWrap :global(button) :global(span) {
     font-size: var(--text-xs);
   }
+
 }

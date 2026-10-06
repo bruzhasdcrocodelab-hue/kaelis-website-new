@@ -18,6 +18,7 @@ import RevealCardsStep from "./RevealCardsStep/RevealCardsStep";
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
 import styles from "./CategoryTopBlock.module.css";
+import revealStyles from "./RevealCardsStep/RevealCardsStep.module.css";
 
 export interface CategoryTopBlockProps {
   dictionary: Dictionary["categoryPage"]["topBlock"];
@@ -97,7 +98,7 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section ref={sectionRef} id="category-top-block" className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
+    <section ref={sectionRef} id="category-top-block" className={`${revealStyles.tokens} ${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
         data-reading-panel={isConfirmed || undefined}
         className={`${styles.panel} ${step === "choose" ? styles.panelLoading : ""} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
@@ -108,6 +109,32 @@ export default function CategoryTopBlock({
           WebkitBackdropFilter: "blur(12.5px)",
         }}
       >
+        {!loadingStatus && step === "ask" && (
+          <div className={styles.triggerMobile}>
+            {/* {step === "reveal" && (
+              <MainButton
+                variant="default"
+                size="large"
+                icon="/icons/edit.svg"
+                aria-label={dictionary.changeQuestion}
+                onClick={changeQuestion}
+                muted
+              />
+            )} */}
+            <MainButton
+              variant="default"
+              size="medium"
+              icon={speakerIcon(selectedSpeaker?.icon)}
+              aria-label={selectedSpeaker?.name ?? text.loading}
+              disabled={step !== "ask" || flow.busy || !flow.speakers.length}
+              onClick={() => setGuideSheetOpen(true)}
+              muted
+            >
+              {selectedSpeaker?.name ?? text.loading}
+            </MainButton>
+          </div>
+        )}
+
         {isConfirmed && (
           <Image
             src="/images/backgrounds/pattern-categories-top-block-2.svg"
@@ -158,7 +185,7 @@ export default function CategoryTopBlock({
             )} */}
           </div>
 
-          <div className={styles.center}>
+          <div className={styles.center} data-reading-heading>
             <div className={styles.categoryTag}>
               {!isConfirmed && <Image
                 src="/icons/eye-gradient.svg"
@@ -210,30 +237,6 @@ export default function CategoryTopBlock({
         {flow.speakerError && <div className={styles.flowError} role="alert">{text.error} <button type="button" onClick={flow.retrySpeakers}>{text.retry}</button></div>}
         </>}
       </div>
-
-      {!loadingStatus && step === "ask" && (
-        <div className={styles.triggerMobile}>
-          {/* {step === "reveal" && (
-            <MainButton
-              variant="default"
-              size="large"
-              icon="/icons/edit.svg"
-              aria-label={dictionary.changeQuestion}
-              onClick={changeQuestion}
-              muted
-            />
-          )} */}
-          <MainButton
-            variant="default"
-            size="large"
-            icon={speakerIcon(selectedSpeaker?.icon)}
-            aria-label={selectedSpeaker?.name ?? text.loading}
-            disabled={step !== "ask" || flow.busy || !flow.speakers.length}
-            onClick={() => setGuideSheetOpen(true)}
-            muted
-          />
-        </div>
-      )}
 
       <BottomSheetSelect<string>
         open={guideSheetOpen}

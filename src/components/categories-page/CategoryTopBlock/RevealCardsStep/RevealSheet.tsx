@@ -46,7 +46,7 @@ export default function RevealSheet({ open, onClose, title, locale, transition, 
 
   if (typeof document === "undefined") return null;
   return createPortal(<AnimatePresence>
-    {open && <div ref={rootRef} className={styles.sheetRoot} data-reading-sheet>
+    {open && <div ref={rootRef} className={`${styles.tokens} ${styles.sheetRoot}`} data-reading-sheet>
       <motion.div className={styles.sheetBackdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={transition} onClick={onClose} data-sheet-backdrop />
       <motion.div ref={sheetRef} className={`${styles.sheet} ${card ? styles.cardSheet : ""}`} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}

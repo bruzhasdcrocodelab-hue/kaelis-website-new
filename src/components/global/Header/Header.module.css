@@ -9,6 +9,7 @@
 }
 
 .pill {
+  --radius-header-pill: 60px;
   position: relative;
   display: flex;
   gap: 20px;

@@ -240,7 +240,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     {!isMobile && <div className={styles.startOver}>
       <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={onStartOver}>{dictionary.startOver}</MainButton>
     </div>}
-    {isMobile && createPortal(<div className={styles.mobileControls} data-reveal-controls>
+    {isMobile && createPortal(<div className={`${styles.tokens} ${styles.mobileControls}`} data-reveal-controls>
       <MainButton variant="gradient" size="large" icon="/icons/sparkles.svg" className={styles.answerButton} disabled={phase !== "ready"}
         onClick={() => { setSelectedPosition(null); setSheet("answer"); }}>{labels.seeAnswer}</MainButton>
       <MainButton variant="default" size="large" icon="/icons/right-arrow.svg" muted onClick={onStartOver}>{labels.restart}</MainButton>

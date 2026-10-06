@@ -1,0 +1,23 @@
+.geometry {
+  /* ---- Effects: categories constellation pattern rotation (node-id=1494-744) ---- */
+  /*
+   * Rendered width of the constellation pattern. At the 1440px design width it
+   * resolves to 1580px (the SVG's native width); it scales with the viewport
+   * between a 900px floor (matching the mobile ceiling) and that 1580px cap.
+   * SubcategoryRing keys its arc geometry off this so the nodes stay pinned to
+   * the pattern's rings at every width.
+   */
+  --constellation-pattern-width: clamp(900px, 109.722vw, 1580px);
+  /* SubcategoryRing keys its arc geometry to the pattern width so the nodes stay pinned to the pattern's rings. */
+  --subcategory-ring-width: var(--constellation-pattern-width);
+  --constellation-spin-duration: 120s;
+  --constellation-ring-spin-duration-reverse: 95s;
+  --constellation-orbit-duration: 70s;
+  --constellation-orbit-duration-reverse: 55s;
+  /*
+   * "Beat" period between --constellation-spin-duration (120s) and
+   * --constellation-ring-spin-duration-reverse (95s): 1 / (1/120 + 1/95).
+   * Update this if either of those two durations changes.
+   */
+  --constellation-spin-relative-to-counter-ring-duration: 53.023s;
+}

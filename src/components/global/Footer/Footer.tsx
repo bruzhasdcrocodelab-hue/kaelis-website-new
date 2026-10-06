@@ -1,23 +1,20 @@
 import Link from "next/link";
 import MainButton from "@/components/global/MainButton";
-import type { Dictionary } from "@/lang";
+import type { Dictionary, Locale } from "@/lang";
+import { getSocialData } from "@/lib/config/social_links";
 import styles from "./Footer.module.css";
 
 export interface FooterProps {
   dictionary: Dictionary["footer"];
+  locale: Locale;
   variant?: "default" | "on-dark";
 }
 
-const SOCIAL_LINKS = [
-  { href: "/", label: "TikTok", icon: "/icons/tiktok.svg" },
-  { href: "/", label: "Instagram", icon: "/icons/instagram.svg" },
-];
-
-export default function Footer({ dictionary, variant = "default" }: FooterProps) {
+export default function Footer({ dictionary, locale, variant = "default" }: FooterProps) {
   return (
     <footer className={`${styles.footer} ${variant === "on-dark" ? styles.onDark : ""}`}>
       <div className={styles.social}>
-        {SOCIAL_LINKS.map(({ href, label, icon }) => (
+        {getSocialData(locale).map(({ href, label, icon }) => (
           <span key={label} className={styles.socialButton}>
             <span className={styles.socialButtonDesktop}>
               <MainButton icon={icon} size="medium" href={href} aria-label={label} />

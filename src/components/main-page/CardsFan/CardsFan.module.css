@@ -24,14 +24,16 @@
   justify-content: center;
 }
 
-.cardWrap, .mobileCardWrap {
+.cardWrap,
+.mobileCardWrap {
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 
-.cardWrap:focus-visible, .mobileCardWrap:focus-visible {
+.cardWrap:focus-visible,
+.mobileCardWrap:focus-visible {
   outline: 2px solid var(--color-black-75);
   outline-offset: 4px;
   border-radius: 12px;

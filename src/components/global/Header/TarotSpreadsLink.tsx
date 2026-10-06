@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import dropdownStyles from "./HeaderDropdown.module.css";
 import Link from "next/link";
 import type { Locale } from "@/lang";
 import { useCategories } from "@/components/categories/CatalogProvider";
@@ -110,7 +111,7 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
         createPortal(
           <div
             id={menuId}
-            className={styles.dropdown}
+            className={`${dropdownStyles.dropdown} ${styles.dropdown}`}
             role="menu"
             data-open={open || undefined}
             style={{

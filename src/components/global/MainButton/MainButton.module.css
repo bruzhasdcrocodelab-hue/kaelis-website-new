@@ -2,10 +2,19 @@
   transition: filter 160ms ease, background-color 160ms ease, border-color 160ms ease;
 }
 
-.default { --hover-brightness: .96; --pressed-brightness: .9; }
+.default {
+  --hover-brightness: .96;
+  --pressed-brightness: .9;
+}
 .gradient,
-.gradient-black { --hover-brightness: .94; --pressed-brightness: .87; }
-.stroke { --hover-brightness: .92; --pressed-brightness: .84; }
+.gradient-black {
+  --hover-brightness: .94;
+  --pressed-brightness: .87;
+}
+.stroke {
+  --hover-brightness: .92;
+  --pressed-brightness: .84;
+}
 
 .stroke .label,
 .stroke .icon {
@@ -72,5 +81,7 @@
 @media (prefers-reduced-motion: reduce) {
   .button,
   .stroke .label,
-  .stroke .icon { transition: none; }
+  .stroke .icon {
+    transition: none;
+  }
 }
