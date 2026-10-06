@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
@@ -66,17 +66,6 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange 
   const reduced = useReducedMotion();
   const [height, setHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
-  const revealed = useRef(false);
-  const scrolledSession = useRef<number | null>(null);
-  const scrollToReading = useCallback(() => {
-    if (!present || !revealed.current || scrolledSession.current === selection.session) return;
-    scrollToCards(Boolean(reduced));
-    scrolledSession.current = selection.session;
-  }, [present, reduced, selection.session]);
-  useEffect(() => {
-    const frame = requestAnimationFrame(scrollToReading);
-    return () => cancelAnimationFrame(frame);
-  }, [scrollToReading]);
   useLayoutEffect(() => {
     const content = contentRef.current;
     if (!content) return;
@@ -95,11 +84,7 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange 
       <motion.div ref={contentRef} className={styles.readingContent}
         initial={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
         animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
-        transition={transition}
-        onAnimationComplete={() => {
-          revealed.current = true;
-          scrollToReading();
-        }}>
+        transition={transition}>
         {/* Only the session resets on card changes; the animated panel stays mounted. */}
         <ReadingSession key={selection.session} slug={selection.slug} dictionary={dictionary} locale={locale} present={present} onProgressChange={onProgressChange} />
       </motion.div>
@@ -114,8 +99,10 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const [exiting, setExiting] = useState(false);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
+  const reduced = useReducedMotion();
   const open = selection !== null || exiting;
   function startSession(slug: HomeCardSlug) {
+    scrollToCards(Boolean(reduced));
     setNeedsConfirmation(false);
     setSession(value => value + 1);
     setSelection({ slug, session: session + 1 });
