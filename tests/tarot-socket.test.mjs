@@ -1,3 +1,4 @@
+import { bindEnv } from "./env-fixture.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
@@ -22,7 +23,7 @@ source = source.replace('import Echo from "laravel-echo";', 'const Echo = global
   .replace('import Pusher from "pusher-js";', 'const Pusher = {};')
   .replace('import { getGuestSession } from "../api";', 'const getGuestSession = async () => ({ guestId: "guest-test", token: "test-token" });')
   .replace('import { record, tarotRequest, TarotError } from "./reading";', 'const record = v => v; const tarotRequest = async () => globalThis.__configuration; class TarotError extends Error {}');
-const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
+const js = ts.transpileModule(bindEnv(source), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
 const { connectReadingSocket } = await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
 
 test("waits for private subscription, forwards answer events, resyncs and disconnects on abort", async () => {

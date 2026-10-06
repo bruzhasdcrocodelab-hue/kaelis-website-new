@@ -1,0 +1,9 @@
+export const API_BASE = "/api/kaelis";
+export const API_PLATFORM = "site";
+export const REQUEST_TIMEOUT_MS = 30000;
+export const GUEST_TOKEN_TTL_MS = 86400000;
+export const SOCKET_TIMEOUT_MS = 15000;
+export const READING_TIMEOUT_MS = 180000;
+export const READING_POLL_INTERVAL_MS = 3000;
+export const READING_WATCHDOG_MS = 60000;
+export const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=io.kaelsi.app";

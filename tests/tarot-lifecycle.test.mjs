@@ -1,3 +1,4 @@
+import { constants } from "./env-fixture.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
@@ -36,6 +37,7 @@ function mount({ delayed = false } = {}) {
   };
   const preference = { speakerId: "2", setSpeakerId() {}, getSpeakerId: () => "2" };
   const dependencies = {
+    "../config/constants": constants,
     react,
     "@/components/TarotStyleProvider": { useTarotStyle: () => preference },
     "./styleStore": { resolveSpeakerId: (items, id) => items.some(item => item.id === id) ? id : "" },

@@ -1,5 +1,6 @@
 import type { Locale } from "@/lang";
 import { apiFetch } from "../api";
+import { API_PLATFORM, REQUEST_TIMEOUT_MS } from "../config/constants";
 
 export interface TarotCategory {
   id: string;
@@ -41,8 +42,8 @@ export async function loadCatalog(locale: Locale, categoryId?: string | null): P
     const query = new URLSearchParams({ page: String(page), per_page: "50" });
     if (typeof categoryId === "string") query.set("category_id", categoryId);
     const response = await apiFetch(`${categoryId === undefined ? "/tarot/category" : "/tarot"}?${query}`, {
-      headers: { "Accept-Language": locale, "X-Platform": "site" },
-      signal: AbortSignal.timeout(30_000),
+      headers: { "Accept-Language": locale, "X-Platform": API_PLATFORM },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
     if (!response.ok) throw new Error(`Catalog request failed (${response.status})`);
     const body = await response.json();

@@ -1,5 +1,7 @@
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { API_BASE, API_PLATFORM, SOCKET_TIMEOUT_MS } from "../config/constants";
+import { BACKEND_ORIGIN } from "../config/env";
 import type { Locale } from "@/lang";
 import { getGuestSession } from "../api";
 import { record, tarotRequest, TarotError } from "./reading";
@@ -11,14 +13,14 @@ export async function connectReadingSocket(locale: Locale, signal: AbortSignal,
   const session = await getGuestSession();
   const config = record(record(await tarotRequest("/configuration", locale, { signal })).web_socket);
   if (typeof config.host !== "string" || !config.host || typeof config.key !== "string" || !config.key) throw new TarotError("WebSocket configuration unavailable");
-  const auth = new URL(String(config.auth), "https://stagtest.kaelisai.com");
-  if (auth.href !== "https://stagtest.kaelisai.com/broadcasting/auth") throw new TarotError("Invalid WebSocket authorization endpoint");
+  const auth = new URL(String(config.auth), BACKEND_ORIGIN);
+  if (auth.href !== `${BACKEND_ORIGIN}/broadcasting/auth`) throw new TarotError("Invalid WebSocket authorization endpoint");
   signal.throwIfAborted();
   const echo = new Echo({ broadcaster: "reverb", Pusher, key: config.key, wsHost: config.host,
     wsPort: Number(config.port) || 443, wssPort: Number(config.port) || 443,
     forceTLS: config.force_tls !== false, enabledTransports: ["ws", "wss"],
-    authEndpoint: "/api/kaelis/broadcasting/auth",
-    auth: { headers: { Authorization: `Bearer ${session.token}`, Accept: "application/json", "Accept-Language": locale, "X-Platform": "site" } },
+    authEndpoint: `${API_BASE}/broadcasting/auth`,
+    auth: { headers: { Authorization: `Bearer ${session.token}`, Accept: "application/json", "Accept-Language": locale, "X-Platform": API_PLATFORM } },
   });
   let connected = false;
   let closed = false;
@@ -28,7 +30,7 @@ export async function connectReadingSocket(locale: Locale, signal: AbortSignal,
   signal.addEventListener("abort", abort, { once: true });
   try {
     await new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(() => reject(new TarotError("WebSocket subscription timed out")), 15_000);
+      const timeout = setTimeout(() => reject(new TarotError("WebSocket subscription timed out")), SOCKET_TIMEOUT_MS);
       rejectReady = (error) => { clearTimeout(timeout); reject(error); };
       echo.private(`guest.${session.guestId}`)
         .listen(".answer", (event: AnswerEvent) => { if (!closed) onAnswer(event); })

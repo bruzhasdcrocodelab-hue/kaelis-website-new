@@ -1,9 +1,10 @@
+import { bindEnv } from "./env-fixture.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import ts from "typescript";
 
-const moduleUrl = source => `data:text/javascript;base64,${Buffer.from(ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText).toString("base64")}`;
+const moduleUrl = source => `data:text/javascript;base64,${Buffer.from(ts.transpileModule(bindEnv(source), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText).toString("base64")}`;
 let calls = [];
 globalThis.__tarotFetch = async (path, init) => { calls.push({ path, init }); return Response.json({ data: fixture }); };
 const source = (await readFile(new URL("../src/lib/tarot/reading.ts", import.meta.url), "utf8")).replace('import { apiFetch } from "../api";', 'const apiFetch = (...args) => globalThis.__tarotFetch(...args);');

@@ -1,9 +1,10 @@
+import { bindEnv } from "./env-fixture.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { afterEach, beforeEach, test } from "node:test";
 import ts from "typescript";
 
-const transpile = (source) => ts.transpileModule(source, {
+const transpile = (source) => ts.transpileModule(bindEnv(source), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 },
 }).outputText;
 const apiSource = transpile(await readFile(new URL("../src/lib/api.ts", import.meta.url), "utf8"));

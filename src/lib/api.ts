@@ -1,7 +1,7 @@
-const API_BASE = "/api/kaelis";
+import { API_BASE, GUEST_TOKEN_TTL_MS, REQUEST_TIMEOUT_MS } from "./config/constants";
 const STORAGE_KEY = "kaelis.guest-session";
 // The API supplies an opaque token with no expiry. This is a client retention policy.
-const TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
+const TOKEN_TTL_MS = GUEST_TOKEN_TTL_MS;
 
 type GuestSession = { token: string; expiresAt: number; guestId: string };
 
@@ -36,7 +36,7 @@ async function createSession(): Promise<string> {
     cache: "no-store",
     // Protected previews require the site's access cookie as well.
     credentials: "same-origin",
-    signal: AbortSignal.timeout(30_000),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new Error(`Guest authorization failed (${response.status})`);
