@@ -59,6 +59,7 @@ export default function CategoryTopBlock({
   const panelRef = useRef<HTMLDivElement>(null);
   const previousStep = useRef(step);
   useEffect(() => {
+    if (!sessionActive) { previousStep.current = step; return; }
     if (previousStep.current === step) return;
     const restarting = previousStep.current === "reveal" && step === "ask";
     previousStep.current = step;
@@ -104,7 +105,7 @@ export default function CategoryTopBlock({
     }
     schedule();
     return cancel;
-  }, [step, embedded]);
+  }, [step, embedded, sessionActive]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);

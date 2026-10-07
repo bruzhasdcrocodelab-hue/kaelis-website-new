@@ -77,19 +77,18 @@ test("empty sessions navigate immediately; old registration cleanup cannot remov
   assert.deepEqual(calls, ["reset", "navigate"]);
 });
 
-test("Our App waits for panel exit before scrolling and keeps the desktop session", async () => {
+test("Our App hands scrolling to the start of panel closing and keeps the desktop session", () => {
   const { navigation, render } = mount();
   const calls = [];
-  let finish;
+  let closeStart;
   navigation.register({ started: true, reset: () => calls.push("reset") });
   navigation.returnHome(() => calls.push("desktop-scroll"));
   assert.equal(render().modal.open, false);
-  navigation.registerHomeReturn(() => new Promise(resolve => { calls.push("exit"); finish = resolve; }));
+  navigation.registerHomeReturn(proceed => { calls.push("close"); closeStart = proceed; });
   navigation.returnHome(() => calls.push("mobile-scroll"));
   render().modal.onConfirm();
   render().modal.onExitComplete();
-  assert.deepEqual(calls, ["desktop-scroll", "reset", "exit"]);
-  finish();
-  await Promise.resolve();
-  assert.deepEqual(calls, ["desktop-scroll", "reset", "exit", "mobile-scroll"]);
+  assert.deepEqual(calls, ["desktop-scroll", "reset", "close"]);
+  closeStart();
+  assert.deepEqual(calls, ["desktop-scroll", "reset", "close", "mobile-scroll"]);
 });

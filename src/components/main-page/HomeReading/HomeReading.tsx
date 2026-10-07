@@ -97,7 +97,7 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const [session, setSession] = useState(0);
   const [exiting, setExiting] = useState(false);
   const navigation = useReadingNavigation();
-  const afterExit = useRef<(() => void) | null>(null);
+  const onCloseStart = useRef<(() => void | Promise<void>) | null>(null);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const reduced = useReducedMotion();
   const open = selection !== null || exiting;
@@ -105,19 +105,20 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   useEffect(() => () => activeScroll.current?.cancel(), []);
   useLayoutEffect(() => {
     if (!mobile || !open) return;
-    return navigation?.registerHomeReturn(() => new Promise<void>(resolve => {
+    return navigation?.registerHomeReturn(proceed => {
       activeScroll.current?.cancel();
-      afterExit.current = resolve;
+      if (!selection) { void proceed(); return; }
+      onCloseStart.current = proceed;
       setExiting(true);
       setSelection(null);
-    }));
-  }, [mobile, open, navigation]);
+    });
+  }, [mobile, open, selection, navigation]);
   useLayoutEffect(() => {
-    if (open || !afterExit.current) return;
-    const finish = afterExit.current;
-    afterExit.current = null;
-    finish();
-  }, [open]);
+    if (selection || !onCloseStart.current) return;
+    const proceed = onCloseStart.current;
+    onCloseStart.current = null;
+    void proceed();
+  }, [selection]);
   function startSession(slug: HomeCardSlug) {
     activeScroll.current = scrollToCards(Boolean(reduced), true);
     setSession(value => value + 1);

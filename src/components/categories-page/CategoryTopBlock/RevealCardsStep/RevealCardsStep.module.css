@@ -518,6 +518,7 @@
 }
 
 .mobileControls > button {
+  touch-action: manipulation;
   min-width: 0;
   height: auto;
   min-height: 52px;
@@ -542,6 +543,14 @@
   flex: 1.864;
   flex-direction: row-reverse;
   padding-inline: 6px 16px;
+}
+
+@supports (-webkit-touch-callout: none) {
+  @media (display-mode: browser) {
+    .mobileControls {
+      bottom: max(48px, calc(env(safe-area-inset-bottom) + 20px));
+    }
+  }
 }
 
 .mobileControls > button > span:first-child {

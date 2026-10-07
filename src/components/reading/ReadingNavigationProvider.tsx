@@ -6,10 +6,11 @@ import ConfirmationModal from "@/components/global/ConfirmationModal/Confirmatio
 
 type Session = { started: boolean; reset: () => void };
 type Action = () => void | Promise<void>;
+type HomeReturn = (proceed: Action) => void;
 type Reason = "leave" | "switch";
 type Navigation = {
   register: (session: Session) => () => void;
-  registerHomeReturn: (action: Action) => () => void;
+  registerHomeReturn: (action: HomeReturn) => () => void;
   request: (action: Action, reason?: Reason) => void;
   reset: () => void;
   returnHome: (action: Action) => void;
@@ -25,7 +26,7 @@ export default function ReadingNavigationProvider({ dictionary, children }: {
   dictionary: Dictionary["readingConfirmation"]; children: ReactNode;
 }) {
   const session = useRef<Session | null>(null);
-  const homeReturn = useRef<Action | null>(null);
+  const homeReturn = useRef<HomeReturn | null>(null);
   const pending = useRef<Action | null>(null);
   const confirmed = useRef(false);
   const [reason, setReason] = useState<Reason>("leave");
@@ -34,7 +35,7 @@ export default function ReadingNavigationProvider({ dictionary, children }: {
     session.current = value;
     return () => { if (session.current === value) session.current = null; };
   }, []);
-  const registerHomeReturn = useCallback((value: Action) => {
+  const registerHomeReturn = useCallback((value: HomeReturn) => {
     homeReturn.current = value;
     return () => { if (homeReturn.current === value) homeReturn.current = null; };
   }, []);
@@ -57,9 +58,9 @@ export default function ReadingNavigationProvider({ dictionary, children }: {
   }, [reset]);
   const returnHome = useCallback((action: Action) => {
     if (!homeReturn.current) { void action(); return; }
-    request(async () => {
-      await homeReturn.current?.();
-      await action();
+    request(() => {
+      if (homeReturn.current) homeReturn.current(action);
+      else void action();
     });
   }, [request]);
   const value = useMemo(() => ({ register, registerHomeReturn, request, reset, returnHome }),
