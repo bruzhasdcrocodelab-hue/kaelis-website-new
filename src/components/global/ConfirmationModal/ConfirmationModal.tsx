@@ -14,6 +14,7 @@ export interface ConfirmationModalProps {
   cancelLabel: string;
   onConfirm: () => void;
   onCancel: () => void;
+  onExitComplete?: () => void;
 }
 
 function Dialog({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel }: Omit<ConfirmationModalProps, "open">) {
@@ -52,7 +53,7 @@ function Dialog({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel
   );
 }
 
-export default function ConfirmationModal({ open, ...props }: ConfirmationModalProps) {
+export default function ConfirmationModal({ open, onExitComplete, ...props }: ConfirmationModalProps) {
   if (typeof document === "undefined") return null;
-  return createPortal(<AnimatePresence>{open && <Dialog key="confirmation" {...props} />}</AnimatePresence>, document.body);
+  return createPortal(<AnimatePresence onExitComplete={onExitComplete}>{open && <Dialog key="confirmation" {...props} />}</AnimatePresence>, document.body);
 }

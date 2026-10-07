@@ -75,4 +75,10 @@
     display: none;
   }
 
+  .inputBox.embedded {
+    border: 1.2px solid transparent;
+    padding: 11px 15px;
+    background: linear-gradient(var(--color-white), var(--color-white)) padding-box, var(--gradient-pink) border-box;
+  }
+
 }

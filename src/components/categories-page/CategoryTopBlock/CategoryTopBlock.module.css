@@ -415,4 +415,10 @@
     -webkit-backdrop-filter: blur(var(--blur-shadow));
   }
 
+  .embedded .triggerMobile button {
+    border: 1.2px solid transparent;
+    padding: 5px 7px 5px 23px;
+    background: linear-gradient(var(--color-white), var(--color-white)) padding-box, var(--gradient-pink) border-box;
+  }
+
 }

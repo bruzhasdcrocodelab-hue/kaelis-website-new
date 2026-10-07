@@ -15,6 +15,7 @@ import GradientWavesLineFrame from "./GradientWavesLineFrame/GradientWavesLineFr
 import AskQuestionStep from "./AskQuestionStep/AskQuestionStep";
 import ChooseCardsStep from "./ChooseCardsStep/ChooseCardsStep";
 import RevealCardsStep from "./RevealCardsStep/RevealCardsStep";
+import { useReadingNavigation } from "@/components/reading/ReadingNavigationProvider";
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
 import styles from "./CategoryTopBlock.module.css";
@@ -30,7 +31,6 @@ export interface CategoryTopBlockProps {
   spreadId: string;
   sessionActive?: boolean;
   embedded?: boolean;
-  onProgressChange?: (hasProgress: boolean) => void;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
     retry: () => void;
@@ -43,8 +43,9 @@ export default function CategoryTopBlock({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive = true, embedded = false, catalogStatus, onProgressChange,
+  categoryId, spreadId, sessionActive = true, embedded = false, catalogStatus,
 }: CategoryTopBlockProps) {
+  const navigation = useReadingNavigation();
   const flow = useReading(locale, categoryId, spreadId, sessionActive);
   const text = readingMessages[locale];
   const [firstCycleComplete, setFirstCycleComplete] = useState(false);
@@ -105,13 +106,18 @@ export default function CategoryTopBlock({
     return cancel;
   }, [step, embedded]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
-  useLayoutEffect(() => {
-    onProgressChange?.(hasProgress);
-  }, [hasProgress, onProgressChange]);
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
   const speakerIcon = (icon: string | null | undefined) => GUIDE_ICON[icon as keyof typeof GUIDE_ICON] ?? "/icons/analyst.svg";
-  const changeQuestion = () => { flow.reset(); flow.setQuestion(""); setFirstCycleComplete(false); };
+  const changeQuestion = () => {
+    flow.reset();
+    flow.setQuestion("");
+    setFirstCycleComplete(false);
+    setGuideSheetOpen(false);
+  };
+  useLayoutEffect(() => {
+    if (sessionActive) return navigation?.register({ started: hasProgress, reset: changeQuestion });
+  });
   const isConfirmed = step === "reveal";
   const loadingStatus = catalogStatus ?? (embedded && !flow.speakers.length
     ? { status: flow.speakerError ? "error" as const : "loading" as const, retry: flow.retrySpeakers }
@@ -257,7 +263,7 @@ export default function CategoryTopBlock({
         {step === "ask" && (
           <AskQuestionStep dictionary={dictionary} question={flow.question} onChange={flow.setQuestion}
             disabled={flow.busy || !flow.speakerId} loading={flow.busy} loadingLabel={text.loading}
-            error={flow.error} onContinue={() => { setFirstCycleComplete(false); void flow.submit(); }} />
+            embedded={embedded} error={flow.error} onContinue={() => { setFirstCycleComplete(false); void flow.submit(); }} />
         )}
         {step === "reveal" && flow.reading && (
           <RevealCardsStep

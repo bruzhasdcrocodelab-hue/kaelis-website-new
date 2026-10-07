@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link, { ReadingAnchor } from "@/components/reading/ReadingLink";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
 import { getSocialData } from "@/lib/config/social_links";
@@ -43,10 +43,9 @@ export default function Footer({ dictionary, locale, variant = "default" }: Foot
         </Link>
       </div>
       {/* A native link reloads the home page, including when already on it. */}
-      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-      <a href="/" className={`font-instrument-xl ${styles.logo}`}>
+      <ReadingAnchor href="/" className={`font-instrument-xl ${styles.logo}`}>
         {dictionary.logo}
-      </a>
+      </ReadingAnchor>
     </footer>
   );
 }

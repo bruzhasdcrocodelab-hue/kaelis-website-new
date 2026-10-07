@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/components/reading/ReadingLink";
 import styles from "./MainButton.module.css";
 
 /**

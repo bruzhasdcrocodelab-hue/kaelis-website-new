@@ -14,13 +14,14 @@ export interface AskQuestionStepProps {
   loading: boolean;
   loadingLabel: string;
   error: string;
+  embedded?: boolean;
 }
 
-export default function AskQuestionStep({ dictionary, onContinue, question, onChange, disabled, loading, loadingLabel, error }: AskQuestionStepProps) {
+export default function AskQuestionStep({ dictionary, onContinue, question, onChange, disabled, loading, loadingLabel, error, embedded = false }: AskQuestionStepProps) {
   return (
     <div className={styles.inputArea}>
       <textarea
-        className={`font-instrument-sm ${styles.inputBox}`}
+        className={`font-instrument-sm ${styles.inputBox} ${embedded ? styles.embedded : ""}`}
         placeholder={dictionary.placeholder}
         rows={1}
         value={question}

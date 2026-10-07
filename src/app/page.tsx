@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ReadingNavigationProvider from "@/components/reading/ReadingNavigationProvider";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import HomeReading from "@/components/main-page/HomeReading/HomeReading";
@@ -69,11 +70,13 @@ export default async function Home() {
         className={styles.patternRightMobile}
         priority
       />
-      <div className={styles.content}>
-        <Header dictionary={dictionary.header} locale={locale} />
-        <HomeReading locale={locale} dictionary={dictionary} />
-        <Footer dictionary={dictionary.footer} locale={locale} />
-      </div>
+      <ReadingNavigationProvider dictionary={dictionary.readingConfirmation}>
+        <div className={styles.content}>
+          <Header dictionary={dictionary.header} locale={locale} />
+          <HomeReading locale={locale} dictionary={dictionary} />
+          <Footer dictionary={dictionary.footer} locale={locale} />
+        </div>
+      </ReadingNavigationProvider>
     </div>
   );
 }
