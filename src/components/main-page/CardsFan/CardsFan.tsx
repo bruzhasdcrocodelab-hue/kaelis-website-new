@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
@@ -53,16 +53,9 @@ function rampCardWidth(viewportWidth: number) {
  */
 function useFanScale(computeScale: (viewportWidth: number) => number, active: boolean) {
   const ref = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
+  const subscribe = useCallback((update: () => void) => {
     const el = ref.current;
-    if (!el || !active) {
-      setScale(1);
-      return;
-    }
-    const update = () => setScale(computeScale(window.innerWidth || el.clientWidth));
-    update();
+    if (!el || !active) return () => {};
     const observer = new ResizeObserver(update);
     observer.observe(el);
     window.addEventListener("resize", update);
@@ -70,24 +63,23 @@ function useFanScale(computeScale: (viewportWidth: number) => number, active: bo
       observer.disconnect();
       window.removeEventListener("resize", update);
     };
-  }, [computeScale, active]);
+  }, [active]);
+  const scale = useSyncExternalStore(
+    subscribe,
+    () => active ? computeScale(window.innerWidth || ref.current?.clientWidth || 0) : 1,
+    () => 1,
+  );
 
   return { ref, scale };
 }
 
-/** Tracks a media query, SSR-safe (starts false, corrects on mount). */
 function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
+  const subscribe = useCallback((update: () => void) => {
     const mql = window.matchMedia(query);
-    const update = () => setMatches(mql.matches);
-    update();
     mql.addEventListener("change", update);
     return () => mql.removeEventListener("change", update);
   }, [query]);
-
-  return matches;
+  return useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => false);
 }
 
 const MOBILE_QUERY = "(max-width: 768px)";

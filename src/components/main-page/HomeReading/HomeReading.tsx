@@ -97,11 +97,31 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const [session, setSession] = useState(0);
   const [exiting, setExiting] = useState(false);
   const navigation = useReadingNavigation();
+  const { state: categories } = useCategories();
+  const pendingCatalogAnchor = useRef(false);
   const onCloseStart = useRef<(() => void | Promise<void>) | null>(null);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const reduced = useReducedMotion();
   const open = selection !== null || exiting;
   const activeScroll = useRef<ReturnType<typeof scrollToCards>>(undefined);
+  useEffect(() => {
+    if (window.location.hash !== "#top-block" || selection) {
+      pendingCatalogAnchor.current = false;
+      return;
+    }
+    if (categories.status !== "loading") {
+      if (pendingCatalogAnchor.current && categories.status === "success") {
+        document.getElementById("top-block")?.scrollIntoView({ behavior: "smooth" });
+      }
+      pendingCatalogAnchor.current = false;
+      return;
+    }
+    pendingCatalogAnchor.current = true;
+    const cancel = () => { pendingCatalogAnchor.current = false; };
+    const events = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+    events.forEach(event => window.addEventListener(event, cancel, { passive: true }));
+    return () => events.forEach(event => window.removeEventListener(event, cancel));
+  }, [categories.status, selection]);
   useEffect(() => () => activeScroll.current?.cancel(), []);
   useLayoutEffect(() => {
     if (!mobile || !open) return;
