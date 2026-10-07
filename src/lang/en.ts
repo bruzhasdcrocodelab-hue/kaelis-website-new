@@ -26,14 +26,14 @@ const en = {
     titleHighlight: "Esoteric",
     titleWorld: "World",
     description: "AI-powered tarot readings crafted for clarity,\nguidance, and self-discovery.",
-    cta: "Pick a Card to Start Your Reading",
+    cta: "Pick a Spread to Start Your Reading",
     ctaHover: "Get Your Readings",
   },
   readingConfirmation: {
     title: "Are you sure?",
-    message: "Switching cards will clear your question and reading result.",
-    confirm: "Switch reading",
-    cancel: "Keep reading",
+    message: "Changing the spread will clear your question and the current reading.",
+    confirm: "Switch Reading",
+    cancel: "Continue Reading",
   },
   cards: {
     love: "Love",
