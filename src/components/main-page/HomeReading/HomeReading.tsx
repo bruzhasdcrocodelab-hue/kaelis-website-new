@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
@@ -98,7 +98,9 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const [exiting, setExiting] = useState(false);
   const navigation = useReadingNavigation();
   const { state: categories } = useCategories();
-  const pendingCatalogAnchor = useRef(false);
+  const pendingCatalogAnchor = useRef(true);
+  const [fanReady, setFanReady] = useState(false);
+  const completeFan = useCallback(() => setFanReady(true), []);
   const onCloseStart = useRef<(() => void | Promise<void>) | null>(null);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const reduced = useReducedMotion();
@@ -109,19 +111,21 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
       pendingCatalogAnchor.current = false;
       return;
     }
-    if (categories.status !== "loading") {
-      if (pendingCatalogAnchor.current && categories.status === "success") {
-        document.getElementById("top-block")?.scrollIntoView({ behavior: "smooth" });
+    if (categories.status === "error" || (categories.status === "success" && fanReady)) {
+      if (pendingCatalogAnchor.current) {
+        const frame = requestAnimationFrame(() => {
+          pendingCatalogAnchor.current = false;
+          document.getElementById("top-block")?.scrollIntoView({ behavior: "smooth" });
+        });
+        return () => cancelAnimationFrame(frame);
       }
-      pendingCatalogAnchor.current = false;
       return;
     }
-    pendingCatalogAnchor.current = true;
     const cancel = () => { pendingCatalogAnchor.current = false; };
     const events = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
     events.forEach(event => window.addEventListener(event, cancel, { passive: true }));
     return () => events.forEach(event => window.removeEventListener(event, cancel));
-  }, [categories.status, selection]);
+  }, [categories.status, selection, fanReady]);
   useEffect(() => () => activeScroll.current?.cancel(), []);
   useLayoutEffect(() => {
     if (!mobile || !open) return;
@@ -159,7 +163,7 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   return (
     <>
       <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
-        selectedSlug={selection?.slug ?? null} onCardSelect={select} />
+        selectedSlug={selection?.slug ?? null} onCardSelect={select} onEntranceComplete={completeFan} />
       <div className={styles.panels} data-home-panels>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
           {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onExpanded={() => activeScroll.current?.finish()} />}

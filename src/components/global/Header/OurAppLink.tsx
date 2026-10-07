@@ -33,7 +33,7 @@ export default function OurAppLink({ className, children, role, onClick }: OurAp
   }
 
   return (
-    <Link href="/#top-block" className={className} role={role} onClick={handleClick}>
+    <Link href="/#top-block" scroll={false} className={className} role={role} onClick={handleClick}>
       {children}
     </Link>
   );

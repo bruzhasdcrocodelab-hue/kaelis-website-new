@@ -15,6 +15,7 @@ export interface CardsFanProps {
   onCardHoverChange: (index: number | null) => void;
   selectedSlug: HomeCardSlug | null;
   onCardSelect: (slug: HomeCardSlug) => void;
+  onEntranceComplete?: () => void;
 }
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
@@ -83,6 +84,17 @@ function useMediaQuery(query: string) {
 }
 
 const MOBILE_QUERY = "(max-width: 768px)";
+function useFanEntrance(count: number, active: boolean, onComplete?: () => void) {
+  const completed = useRef(new Set<string>());
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (active && ready) onComplete?.();
+  }, [active, ready, onComplete]);
+  return (key: string) => {
+    completed.current.add(key);
+    if (completed.current.size === count) setReady(true);
+  };
+}
 
 interface CardSpec {
   key: string;
@@ -247,6 +259,7 @@ interface FlippableCardProps {
   card: CardSpec;
   isHovered: boolean;
   isDealt: boolean;
+  onEntranceComplete: () => void;
   zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
@@ -258,6 +271,7 @@ function FlippableCard({
   card,
   isHovered,
   isDealt,
+  onEntranceComplete,
   zIndex,
   onHoverStart,
   onHoverEnd,
@@ -314,6 +328,7 @@ function FlippableCard({
           rotate: card.rotate,
           y: isDealt && isHovered ? -CARD_LIFT : 0,
         }}
+        onAnimationComplete={onEntranceComplete}
         transition={
           isDealt
             ? { type: "spring", stiffness: 300, damping: 24 }
@@ -346,10 +361,11 @@ function FlippableCard({
   );
 }
 
-export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
+export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect, onEntranceComplete }: CardsFanProps) {
   const cards = buildCards(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
+  const completeCard = useFanEntrance(cards.length, !isMobile, onEntranceComplete);
   const { ref: fanRef, scale } = useFanScale(desktopFanScale, !isMobile);
 
   useEffect(() => {
@@ -380,6 +396,7 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
             isSelected={selectedSlug === card.slug}
             onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
             isDealt={isDealt}
+            onEntranceComplete={() => completeCard(card.key)}
             /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
             zIndex={index}
             onHoverStart={() => onCardHoverChange(index)}
@@ -388,6 +405,7 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
         ))}
       </div>
       <MobileCardsFan
+        onEntranceComplete={onEntranceComplete}
         dictionary={dictionary}
         hoveredIndex={hoveredIndex}
         onCardHoverChange={onCardHoverChange}
@@ -538,6 +556,7 @@ interface MobileFlippableCardProps {
   rowCenterCx: number;
   isHovered: boolean;
   isDealt: boolean;
+  onEntranceComplete: () => void;
   zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
@@ -550,6 +569,7 @@ function MobileFlippableCard({
   rowCenterCx,
   isHovered,
   isDealt,
+  onEntranceComplete,
   zIndex,
   onHoverStart,
   onHoverEnd,
@@ -581,6 +601,7 @@ function MobileFlippableCard({
     <motion.div
       className={styles.mobileCard}
       initial={{ x: dealOffsetX, y: dealOffsetY, rotate: 0 }}
+      onAnimationComplete={onEntranceComplete}
       animate={{
         x: 0,
         rotate: card.rotate,
@@ -655,10 +676,11 @@ function MobileFlippableCard({
   );
 }
 
-function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
+function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect, onEntranceComplete }: CardsFanProps) {
   const { back, front } = buildMobileRows(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
+  const completeCard = useFanEntrance(back.length + front.length, isMobile, onEntranceComplete);
   const { ref: fanRef, scale } = useFanScale(mobileFanScale, isMobile);
 
   useEffect(() => {
@@ -686,6 +708,7 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedS
           isSelected={selectedSlug === card.slug}
           onSelect={() => { if (card.slug) { onCardHoverChange(null); onCardSelect(card.slug); } }}
           isDealt={isDealt}
+          onEntranceComplete={() => completeCard(card.key)}
           zIndex={rowBaseZ + i}
           onHoverStart={() => onCardHoverChange(globalIndex)}
           onHoverEnd={() => onCardHoverChange(null)}

@@ -14,9 +14,10 @@ export interface HeroCardsSectionProps {
   cardsDictionary: Dictionary["cards"];
   selectedSlug: HomeCardSlug | null;
   onCardSelect: (slug: HomeCardSlug) => void;
+  onEntranceComplete?: () => void;
 }
 
-export default function HeroCardsSection({ locale, heroDictionary, cardsDictionary, selectedSlug, onCardSelect }: HeroCardsSectionProps) {
+export default function HeroCardsSection({ locale, heroDictionary, cardsDictionary, selectedSlug, onCardSelect, onEntranceComplete }: HeroCardsSectionProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { state, retry } = useCategories();
 
@@ -35,6 +36,7 @@ export default function HeroCardsSection({ locale, heroDictionary, cardsDictiona
         onCardHoverChange={setHoveredIndex}
         selectedSlug={selectedSlug}
         onCardSelect={onCardSelect}
+        onEntranceComplete={onEntranceComplete}
       />
     </>
   );
