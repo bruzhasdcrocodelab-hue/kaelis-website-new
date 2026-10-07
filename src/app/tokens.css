@@ -97,6 +97,21 @@
     #9878cf 82%,
     #b49ad9 100%
   ); */
+  --gradient-main-bg: linear-gradient(
+    180deg,
+    #120e2b 0%,
+    #2e1b63 19.704747%,
+    #522d9b 35.269517%,
+    #7646c1 49.622658%,
+    #9b6cd6 70.033944%,
+    #b99eed 79.807693%,
+    #f7f6fa 90%
+  );
+  --gradient-main-bg-glow: linear-gradient(
+    180deg,
+    rgb(227.2265, 146.5364, 247.3990) 55%,
+    #f6f6fa 75%
+  );
   --gradient-main-bg-mobile: linear-gradient(
     180deg,
     #110D2B 0%,

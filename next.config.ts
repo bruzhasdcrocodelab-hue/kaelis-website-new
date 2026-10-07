@@ -3,6 +3,12 @@ import { API_BASE } from "./src/lib/config/constants";
 import { BACKEND_ORIGIN } from "./src/lib/config/env";
 
 const nextConfig: NextConfig = {
+  images: {
+    localPatterns: [
+      { pathname: "/**", search: "" },
+      { pathname: "/images/cards/deck/**", search: "?v=complete" },
+    ],
+  },
   async rewrites() {
     return [
       {

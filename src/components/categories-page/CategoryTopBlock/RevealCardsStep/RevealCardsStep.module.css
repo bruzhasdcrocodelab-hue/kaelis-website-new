@@ -131,14 +131,7 @@
 }
 
 .cardArtImage {
-  position: absolute;
-  max-width: none;
-}
-
-.cardFrame {
-  object-fit: cover;
-  mix-blend-mode: lighten;
-  pointer-events: none;
+  object-fit: fill;
 }
 
 .missingArt {

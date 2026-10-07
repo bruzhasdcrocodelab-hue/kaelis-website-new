@@ -6,7 +6,6 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
-import { frameOverlayImage } from "@/lib/tarotDeck";
 import { presentCards, type PresentedCard as TarotCard } from "@/lib/tarot/cardPresentation";
 import type { Reading } from "@/lib/tarot/reading";
 import { readingMessages } from "@/lib/tarot/messages";
@@ -30,13 +29,12 @@ export interface RevealCardsStepProps {
 
 type Phase = "preparing" | "dealing" | "flipping" | "focusing" | "ready";
 
-function CardArt({ card, locale }: { card: TarotCard; locale: Locale }) {
+function CardArt({ card, locale, sizes = "(max-width: 768px) 45vw, 226px" }: { card: TarotCard; locale: Locale; sizes?: string }) {
   return <>
     <div className={styles.cardArtWindow} style={{ transform: card.reversed ? "rotate(180deg)" : undefined }}>
-      <Image src={card.image} alt="" width={756} height={1228} loading="eager" sizes="(max-width: 768px) 45vw, 226px"
-        className={styles.cardArtImage} style={card.art} />
+      <Image src={card.missingArt ? card.image : `${card.image}?v=complete`} alt="" fill loading="eager" sizes={sizes}
+        className={styles.cardArtImage} />
     </div>
-    <Image src={frameOverlayImage} alt="" fill sizes="(max-width: 768px) 45vw, 226px" className={styles.cardFrame} />
     {card.missingArt && <span className={styles.missingArt}>{readingMessages[locale].noArt}</span>}
   </>;
 }
@@ -248,7 +246,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     <RevealSheet open={isMobile && sheet !== null} onClose={closeSheet} locale={locale} transition={transition} card={sheet === "card"}
       title={sheet === "card" ? labels.cardDescription : labels.interpretation}>
       {sheet === "card" && selectedCard
-        ? <ReadingContent key={selectedPosition} sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} />} />
+        ? <ReadingContent key={selectedPosition} sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} sizes="calc(100vw - 56px)" />} />
         : <ReadingContent sections={answerSections} locale={locale} />}
     </RevealSheet>
   </>;

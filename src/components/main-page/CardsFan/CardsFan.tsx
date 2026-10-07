@@ -610,7 +610,7 @@ function MobileFlippableCard({
             src={showFront && !frontAssets && card.srcFront ? card.srcFront : card.srcBack}
             alt={card.alt}
             fill
-            sizes="116px"
+            sizes="(max-width: 390px) 31.025641vw, (max-width: 768px) calc(104.657143px + 4.190476vw), 165px"
             style={{ visibility: showFront && frontAssets ? "hidden" : "visible" }}
           />
           {frontAssets && (
