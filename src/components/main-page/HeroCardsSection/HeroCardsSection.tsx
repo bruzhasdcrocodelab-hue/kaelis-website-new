@@ -13,10 +13,11 @@ export interface HeroCardsSectionProps {
   heroDictionary: Dictionary["hero"];
   cardsDictionary: Dictionary["cards"];
   selectedSlug: HomeCardSlug | null;
+  pendingSlug?: HomeCardSlug | null;
   onCardSelect: (slug: HomeCardSlug) => void;
 }
 
-export default function HeroCardsSection({ locale, heroDictionary, cardsDictionary, selectedSlug, onCardSelect }: HeroCardsSectionProps) {
+export default function HeroCardsSection({ locale, heroDictionary, cardsDictionary, selectedSlug, pendingSlug, onCardSelect }: HeroCardsSectionProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { state, retry } = useCategories();
 
@@ -34,6 +35,7 @@ export default function HeroCardsSection({ locale, heroDictionary, cardsDictiona
         hoveredIndex={hoveredIndex}
         onCardHoverChange={setHoveredIndex}
         selectedSlug={selectedSlug}
+        pendingSlug={pendingSlug}
         onCardSelect={onCardSelect}
       />
     </>

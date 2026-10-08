@@ -11,7 +11,7 @@ async function record(page, action, duration = 650) {
     window.motionSamples = [];
     const start = performance.now();
     const sample = () => {
-      const dialog = document.querySelector('[role="dialog"]');
+      const dialog = document.querySelector('[role="dialog"], [role="listbox"][tabindex="-1"]');
       const panel = document.querySelector('#category-top-block');
       const video = [...document.querySelectorAll('#cards button[aria-pressed="true"]')].find(node => node.getClientRects().length)?.querySelector('video');
       window.motionSamples.push({
@@ -21,7 +21,7 @@ async function record(page, action, duration = 650) {
         lock: document.body.style.overflow,
         title: dialog?.querySelector('h2')?.textContent,
         text: panel?.textContent,
-        opacity: panel ? Number(getComputedStyle(panel.parentElement.parentElement).opacity) : null,
+        opacity: panel ? Number(getComputedStyle(panel.querySelector("[data-reading-content]")).opacity) : null,
         videoTime: video?.currentTime,
         videoVisible: video?.style.visibility,
         frontVisible: video?.parentElement.style.opacity,
@@ -35,16 +35,16 @@ async function record(page, action, duration = 650) {
   return page.evaluate(() => window.motionSamples);
 }
 
-async function checkSheet(page, open, reduced) {
+async function checkSheet(page, open, reduced, selectSheet = false) {
   await open();
-  const dialog = page.getByRole('dialog');
+  const dialog = selectSheet ? page.locator('[role="listbox"][tabindex="-1"]') : page.getByRole('dialog');
   await dialog.waitFor();
   await page.waitForTimeout(reduced ? 30 : 450);
-  const title = await dialog.locator('h2').textContent();
+  const title = selectSheet ? undefined : await dialog.locator('h2').textContent();
   assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
   assert.ok(await dialog.evaluate(node => node.contains(document.activeElement)));
   const resting = await dialog.evaluate(node => node.getBoundingClientRect().y);
-  const shortHandle = await page.locator('[data-sheet-handle]').boundingBox();
+  const shortHandle = await (selectSheet ? dialog : page.locator('[data-sheet-handle]')).boundingBox();
   await page.mouse.move(shortHandle.x + shortHandle.width / 2, shortHandle.y + 25);
   await page.mouse.down();
   await page.mouse.move(shortHandle.x + shortHandle.width / 2, shortHandle.y + 60, { steps: 8 });
@@ -52,7 +52,7 @@ async function checkSheet(page, open, reduced) {
   await page.mouse.up();
   await page.waitForTimeout(reduced ? 30 : 450);
   assert.ok(Math.abs(await dialog.evaluate(node => node.getBoundingClientRect().y) - resting) < 1);
-  const handle = await page.locator('[data-sheet-handle]').boundingBox();
+  const handle = await (selectSheet ? dialog : page.locator('[data-sheet-handle]')).boundingBox();
   await page.mouse.move(handle.x + handle.width / 2, handle.y + 25);
   await page.mouse.down();
   await page.mouse.move(handle.x + handle.width / 2, handle.y + 145, { steps: 12 });
@@ -74,7 +74,7 @@ async function checkSheet(page, open, reduced) {
   await open();
   await dialog.waitFor();
   await page.waitForTimeout(reduced ? 30 : 450);
-  await page.locator('[data-sheet-backdrop]').click({ position: { x: 5, y: 5 } });
+  await (selectSheet ? dialog.locator('..').locator('> div').first() : page.locator('[data-sheet-backdrop]')).click({ position: { x: 5, y: 5 } });
   await dialog.waitFor({ state: 'detached' });
 }
 
@@ -120,6 +120,15 @@ try {
       await cards.nth(5).evaluate(node => node.click());
       await page.locator('textarea').waitFor();
       await page.waitForTimeout(750);
+      await page.evaluate(() => {
+        window.stablePanel = document.querySelector('#category-top-block');
+        window.stableWave = window.stablePanel.querySelector('path[id^="waves-path-"]');
+        window.stablePattern = window.stablePanel.querySelector('img[src*="pattern-categories"]');
+        window.stableFrame = window.stablePanel.querySelectorAll(':scope > svg')[1];
+        window.waveMutations = 0;
+        window.waveObserver = new MutationObserver(mutations => { window.waveMutations += mutations.length; });
+        window.waveObserver.observe(window.stableWave, { attributes: true, attributeFilter: ['d'] });
+      });
       const previous = await page.locator('#category-top-block').textContent();
       const switched = await record(page, () => cards.nth(6).evaluate(node => node.click()));
       assert.notEqual(await page.locator('#category-top-block').textContent(), previous);
@@ -127,6 +136,14 @@ try {
         assert.ok(switched.some(sample => sample.text === previous && sample.opacity < .95));
         assert.ok(switched.some(sample => sample.text !== previous && sample.opacity > 0 && sample.opacity < .95));
       }
+      assert.ok(await page.evaluate(() =>
+        window.stablePanel === document.querySelector('#category-top-block') &&
+        window.stableWave === window.stablePanel.querySelector('path[id^="waves-path-"]') &&
+        window.stablePattern === window.stablePanel.querySelector('img[src*="pattern-categories"]') &&
+        window.stableFrame === window.stablePanel.querySelectorAll(':scope > svg')[1]
+      ));
+      if (scenario.width > 768 && !scenario.reduced) assert.ok(await page.evaluate(() => window.waveMutations > 5));
+      await page.evaluate(() => window.waveObserver.disconnect());
       assert.equal(submissions, 0);
       await cards.nth(5).evaluate(node => node.click());
       await page.waitForTimeout(35);
@@ -149,6 +166,19 @@ try {
       assert.equal(await page.locator('#category-top-block').count(), 1);
       assert.equal(await page.locator('#category-top-block').evaluate(node => Boolean(node.closest('[inert]'))), false);
     }
+    if (scenario.width <= 768) {
+      const guide = () => page.locator('#category-top-block').getByRole('button', { name: 'Analyst', exact: true }).click();
+      await checkSheet(page, guide, scenario.reduced, true);
+      await guide();
+      await page.locator('[role="listbox"][tabindex="-1"]').getByRole('option').first().click();
+      await page.locator('[role="listbox"][tabindex="-1"]').waitFor({ state: 'detached' });
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+      const language = () => page.locator('header button[aria-haspopup="listbox"]:visible').click();
+      await checkSheet(page, language, scenario.reduced, true);
+      await language();
+      await page.locator('[role="listbox"][tabindex="-1"]').locator('[aria-selected="true"]').click();
+      await page.locator('[role="listbox"][tabindex="-1"]').waitFor({ state: 'detached' });
+    }
     await page.locator('textarea').fill('Animation regression');
     await page.locator('textarea').locator('..').getByRole('button').click();
     await page.locator('[data-reveal-phase="ready"]').waitFor({ timeout: 30000 });
@@ -161,6 +191,53 @@ try {
       assert.equal(await page.locator('[data-selected-detail]').count(), 1);
     }
     if (scenario.route === '/') {
+      const cards = page.locator('#cards button:visible');
+      const active = cards.nth(6), pending = cards.nth(5);
+      const readingText = await page.locator('#category-top-block').textContent();
+      const reveal = await page.locator('[data-reveal-phase]').elementHandle();
+      const front = card => card.locator('video').evaluate(node => node.parentElement.style.opacity);
+      for (const cancel of ['button', 'escape', 'backdrop']) {
+        await pending.evaluate(node => { node.focus(); node.click(); });
+        const confirmation = page.locator('dialog[open]');
+        await confirmation.waitFor();
+        await page.waitForTimeout(550);
+        assert.equal(await active.getAttribute('aria-pressed'), 'true');
+        assert.equal(await pending.getAttribute('aria-pressed'), 'false');
+        assert.equal(await front(active), '1');
+        assert.equal(await front(pending), '1');
+        assert.equal(await page.locator('#category-top-block').textContent(), readingText);
+        assert.equal(submissions, 1);
+        if (cancel === 'button') await confirmation.getByRole('button').first().click();
+        else if (cancel === 'escape') await page.keyboard.press('Escape');
+        else await confirmation.locator('> div').first().click({ position: { x: 5, y: 5 } });
+        await confirmation.waitFor({ state: 'detached' });
+        await page.waitForTimeout(550);
+        assert.equal(await active.getAttribute('aria-pressed'), 'true');
+        assert.equal(await pending.getAttribute('aria-pressed'), 'false');
+        assert.equal(await front(active), '1');
+        assert.equal(await front(pending), '0');
+        assert.equal(await page.locator('#category-top-block').textContent(), readingText);
+        assert.ok(await reveal.evaluate(node => node.isConnected));
+        assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+      }
+      await pending.evaluate(node => { node.focus(); node.click(); });
+      await page.locator('dialog[open]').waitFor();
+      await page.waitForTimeout(550);
+      const shell = await page.locator('#category-top-block').elementHandle();
+      const wave = await page.locator('path[id^="waves-path-"]').elementHandle();
+      await page.locator('dialog[open]').getByRole('button').last().click();
+      await page.locator('dialog[open]').waitFor({ state: 'detached' });
+      await page.locator('textarea').waitFor();
+      await page.waitForTimeout(600);
+      assert.equal(await active.getAttribute('aria-pressed'), 'false');
+      assert.equal(await pending.getAttribute('aria-pressed'), 'true');
+      assert.equal(await front(active), '0');
+      assert.equal(await front(pending), '1');
+      assert.ok(await shell.evaluate(node => node.isConnected));
+      assert.ok(await wave.evaluate(node => node.isConnected));
+      assert.equal(await reveal.evaluate(node => node.isConnected), false);
+      assert.equal(await page.locator('textarea').inputValue(), '');
+      assert.equal(submissions, 1);
       const exit = await page.evaluate(() => {
         [...document.querySelectorAll('#cards button[aria-pressed="true"]')].find(node => node.getClientRects().length).click();
         return new Promise(resolve => requestAnimationFrame(() => {

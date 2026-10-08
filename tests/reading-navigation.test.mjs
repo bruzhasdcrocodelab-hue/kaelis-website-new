@@ -66,6 +66,22 @@ test("confirm resets once before the original action and waits for modal exit", 
   assert.deepEqual(calls, ["reset", "first"]);
 });
 
+test("pending selection cancellation runs once after exit and never resets the active reading", () => {
+  const { navigation, render } = mount();
+  const calls = [];
+  navigation.register({ started: true, reset: () => calls.push("reset") });
+  navigation.request(() => calls.push("switch"), "switch", () => calls.push("cancel"));
+  render().modal.onCancel();
+  assert.deepEqual(calls, []);
+  render().modal.onExitComplete();
+  render().modal.onExitComplete();
+  assert.deepEqual(calls, ["cancel"]);
+  navigation.request(() => calls.push("switch"), "switch", () => calls.push("cancel"));
+  render().modal.onConfirm();
+  render().modal.onExitComplete();
+  assert.deepEqual(calls, ["cancel", "reset", "switch"]);
+});
+
 test("empty sessions navigate immediately; old registration cleanup cannot remove the new session", () => {
   const { navigation, render } = mount();
   const calls = [];

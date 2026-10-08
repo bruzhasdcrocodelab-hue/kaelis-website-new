@@ -11,7 +11,7 @@ type Reason = "leave" | "switch";
 type Navigation = {
   register: (session: Session) => () => void;
   registerHomeReturn: (action: HomeReturn) => () => void;
-  request: (action: Action, reason?: Reason) => void;
+  request: (action: Action, reason?: Reason, onCancel?: () => void) => void;
   reset: () => void;
   returnHome: (action: Action) => void;
 };
@@ -28,6 +28,7 @@ export default function ReadingNavigationProvider({ dictionary, children }: {
   const session = useRef<Session | null>(null);
   const homeReturn = useRef<HomeReturn | null>(null);
   const pending = useRef<Action | null>(null);
+  const pendingCancel = useRef<(() => void) | undefined>(undefined);
   const confirmed = useRef(false);
   const [reason, setReason] = useState<Reason>("leave");
   const [open, setOpen] = useState(false);
@@ -44,14 +45,15 @@ export default function ReadingNavigationProvider({ dictionary, children }: {
     session.current = null;
     current?.reset();
   }, []);
-  const request = useCallback((action: Action, nextReason: Reason = "leave") => {
-    if (pending.current) return;
+  const request = useCallback((action: Action, nextReason: Reason = "leave", onCancel?: () => void) => {
+    if (pending.current) { onCancel?.(); return; }
     if (!session.current?.started) {
       reset();
       void action();
       return;
     }
     pending.current = action;
+    pendingCancel.current = onCancel;
     confirmed.current = false;
     setReason(nextReason);
     setOpen(true);
@@ -75,8 +77,10 @@ export default function ReadingNavigationProvider({ dictionary, children }: {
       onCancel={() => { confirmed.current = false; setOpen(false); }}
       onExitComplete={() => {
         const action = pending.current;
+        const cancel = pendingCancel.current;
         pending.current = null;
-        if (!confirmed.current || !action) return;
+        pendingCancel.current = undefined;
+        if (!confirmed.current || !action) { cancel?.(); return; }
         confirmed.current = false;
         reset();
         void action();

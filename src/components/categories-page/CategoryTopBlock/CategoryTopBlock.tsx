@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton, {
   GUIDE_ICON,
@@ -30,6 +31,7 @@ export interface CategoryTopBlockProps {
   categoryId: string;
   spreadId: string;
   sessionActive?: boolean;
+  sessionKey?: number;
   embedded?: boolean;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
@@ -39,12 +41,63 @@ export interface CategoryTopBlockProps {
 
 type Step = "ask" | "choose" | "reveal";
 
-export default function CategoryTopBlock({
+type Appearance = { step: Step; hasFan: boolean };
+
+export default function CategoryTopBlock(props: CategoryTopBlockProps) {
+  const { embedded = false, sessionKey = 0 } = props;
+  const [firstSession] = useState(sessionKey);
+  const [{ step, hasFan }, setAppearance] = useState<Appearance>({ step: "ask", hasFan: true });
+  const panelRef = useRef<HTMLDivElement>(null);
+  const isConfirmed = step === "reveal";
+  return (
+    <section className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
+      <div
+        ref={panelRef}
+        id="category-top-block"
+        data-reading-panel={isConfirmed || undefined}
+        className={`${styles.panel} ${step === "choose" ? styles.panelLoading : ""} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
+        style={{
+          // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
+          // it blurs whatever the page paints behind this panel, within its bounds.
+          backdropFilter: "blur(12.5px)",
+          WebkitBackdropFilter: "blur(12.5px)",
+        }}
+      >
+        <Image
+          src="/images/backgrounds/pattern-categories-top-block-2.svg"
+          alt=""
+          width={1627}
+          height={731}
+          className={`${styles.pattern} ${isConfirmed ? styles.patternBehind : ""}`}
+          aria-hidden
+        />
+        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
+        {hasFan || step === "choose"
+          ? <WavesLineFrame className={styles.wavesLine} style={{ zIndex: 2 }} />
+          : <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />}
+        <AnimatePresence mode="wait">
+          <SessionContent key={sessionKey} {...props} panelRef={panelRef} onAppearance={setAppearance}
+            initialVisible={sessionKey === firstSession} />
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+}
+
+function SessionContent({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive = true, embedded = false, catalogStatus,
-}: CategoryTopBlockProps) {
+  categoryId, spreadId, sessionActive: active = true, embedded = false, catalogStatus,
+  panelRef, onAppearance, initialVisible,
+}: CategoryTopBlockProps & {
+  panelRef: RefObject<HTMLDivElement | null>;
+  onAppearance: (value: Appearance) => void;
+  initialVisible: boolean;
+}) {
+  const present = useIsPresent();
+  const sessionActive = active && present;
+  const reduced = useReducedMotion();
   const navigation = useReadingNavigation();
   const currentFlow = useReading(locale, categoryId, spreadId, sessionActive);
   const text = readingMessages[locale];
@@ -64,7 +117,6 @@ export default function CategoryTopBlock({
   const step: Step = flow.reading?.reading && (sessionActive ? firstCycleComplete : lastPresentation.firstCycleComplete)
     ? "reveal"
     : flow.busy || flow.reading ? "choose" : "ask";
-  const panelRef = useRef<HTMLDivElement>(null);
   const previousStep = useRef(step);
   useEffect(() => {
     if (!sessionActive) { previousStep.current = step; return; }
@@ -113,7 +165,7 @@ export default function CategoryTopBlock({
     }
     schedule();
     return cancel;
-  }, [step, embedded, sessionActive]);
+  }, [step, embedded, sessionActive, panelRef]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
@@ -131,7 +183,10 @@ export default function CategoryTopBlock({
   const loadingStatus = catalogStatus ?? (embedded && !flow.speakers.length
     ? { status: flow.speakerError ? "error" as const : "loading" as const, retry: flow.retrySpeakers }
     : undefined);
-  const hasFan = !loadingStatus && step === "ask";
+  const hasFan = step === "ask" && (embedded || !loadingStatus);
+  useLayoutEffect(() => {
+    if (present) onAppearance({ step, hasFan });
+  }, [step, hasFan, present, onAppearance]);
 
   const stepTitle: Record<Step, string> = {
     ask: dictionary.askTitle,
@@ -145,19 +200,9 @@ export default function CategoryTopBlock({
   };
 
   return (
-    <section className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
-      <div
-        ref={panelRef}
-        id="category-top-block"
-        data-reading-panel={isConfirmed || undefined}
-        className={`${styles.panel} ${step === "choose" ? styles.panelLoading : ""} ${isConfirmed ? `${styles.panelConfirmed} ${styles.panelReading}` : ""}`}
-        style={{
-          // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
-          // it blurs whatever the page paints behind this panel, within its bounds.
-          backdropFilter: "blur(12.5px)",
-          WebkitBackdropFilter: "blur(12.5px)",
-        }}
-      >
+    <motion.div className={styles.content} data-reading-content inert={!present} aria-hidden={!present}
+      initial={{ opacity: initialVisible ? 1 : 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: reduced ? 0 : 0.16, ease: [0.4, 0, 0.2, 1] }}>
         {!loadingStatus && step === "ask" && (
           <div className={styles.triggerMobile}>
             {/* {step === "reveal" && (
@@ -182,33 +227,6 @@ export default function CategoryTopBlock({
               {selectedSpeaker?.name ?? text.loading}
             </MainButton>
           </div>
-        )}
-
-        {isConfirmed && (
-          <Image
-            src="/images/backgrounds/pattern-categories-top-block-2.svg"
-            alt=""
-            width={1627}
-            height={731}
-            className={`${styles.pattern} ${styles.patternBehind}`}
-            aria-hidden
-          />
-        )}
-        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
-        {hasFan || step === "choose" ? (
-          <>
-            <WavesLineFrame className={styles.wavesLine} style={{ zIndex: 2 }} />
-            <Image
-              src="/images/backgrounds/pattern-categories-top-block-2.svg"
-              alt=""
-              width={1627}
-              height={731}
-              className={styles.pattern}
-              aria-hidden
-            />
-          </>
-        ):(
-          <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />
         )}
 
         {loadingStatus ? (
@@ -286,10 +304,8 @@ export default function CategoryTopBlock({
         )}
         {flow.speakerError && <div className={styles.flowError} role="alert">{text.error} <button type="button" onClick={flow.retrySpeakers}>{text.retry}</button></div>}
         </>}
-      </div>
-
       <BottomSheetSelect<string>
-        open={guideSheetOpen}
+        open={guideSheetOpen && sessionActive}
         onClose={() => setGuideSheetOpen(false)}
         options={flow.speakers.map(s => ({
           value: s.id,
@@ -300,6 +316,6 @@ export default function CategoryTopBlock({
         selectedValue={flow.speakerId}
         onSelect={flow.setSpeakerId}
       />
-    </section>
+    </motion.div>
   );
 }

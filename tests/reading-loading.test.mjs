@@ -6,9 +6,9 @@ import ts from "typescript";
 
 const require = createRequire(import.meta.url);
 const base = "../src/components/categories-page/CategoryTopBlock/";
-async function load(path, resolve) {
+async function load(path, resolve, extraSource = "") {
   const source = await readFile(new URL(path, import.meta.url), "utf8");
-  const { outputText } = ts.transpileModule(source, {
+  const { outputText } = ts.transpileModule(source + extraSource, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
   });
   const loaded = { exports: {} };
@@ -50,9 +50,10 @@ async function mountParent() {
     retry() {}, setQuestion(value) { this.question = value; },
   };
   const marker = name => name.split("/").at(-1);
-  const { default: Parent } = await load(base + "CategoryTopBlock.tsx", name => {
+  const { SessionContent: Parent } = await load(base + "CategoryTopBlock.tsx", name => {
     if (name === "react") return { ...state.react, useEffect() {}, useLayoutEffect: effect => effect() };
     if (name === "react/jsx-runtime") return require(name);
+    if (name === "motion/react") return { motion: { div: "div" }, useIsPresent: () => true, useReducedMotion: () => false };
     if (name === "@/lib/tarot/useReading") return { useReading: () => flow };
     if (name === "@/components/reading/ReadingNavigationProvider") return {
       useReadingNavigation: () => ({ register(value) { session = value; } }),
@@ -61,8 +62,8 @@ async function mountParent() {
     if (name.endsWith(".css")) return {};
     if (name.endsWith("TriggerButton")) return { default: marker(name), GUIDE_ICON: {} };
     return marker(name);
-  });
-  const props = { dictionary: { guideDescriptions: {} }, locale: "en", categoryLabel: "Family", categoryId: "1", spreadId: "1", maxSelectableCards: 3 };
+  }, "\nexport { SessionContent };");
+  const props = { dictionary: { guideDescriptions: {} }, locale: "en", categoryLabel: "Family", categoryId: "1", spreadId: "1", maxSelectableCards: 3, panelRef: { current: null }, onAppearance() {}, initialVisible: true };
   const render = () => { state.begin(); return Parent(props); };
   const start = () => { find(render(), "AskQuestionStep").props.onContinue(); return render(); };
   return { flow, render, start, props, get session() { return session; } };

@@ -24,21 +24,21 @@ const serverSnapshot = () => false;
 type Selection = { slug: HomeCardSlug; session: number; opening: number };
 
 // Preserve the current reading while the same selection's translations load.
-function useLastSuccess<T>(state: CatalogState<T>) {
-  const [last, setLast] = useState(state);
-  if (state.status === "success" && state !== last) setLast(state);
-  return state.status === "success" ? state : last;
+function useLastSuccess<T>(state: CatalogState<T>, scope?: string) {
+  const [last, setLast] = useState({ state, scope });
+  if (scope !== last.scope || (state.status === "success" && state !== last.state)) setLast({ state, scope });
+  return state.status === "success" || scope !== last.scope ? state : last.state;
 }
 
-function ReadingSession({ slug, dictionary, locale, present }: {
-  slug: HomeCardSlug; dictionary: Dictionary; locale: Locale; present: boolean;
+function ReadingSession({ slug, dictionary, locale, present, sessionKey }: {
+  slug: HomeCardSlug; dictionary: Dictionary; locale: Locale; present: boolean; sessionKey: number;
 }) {
   const mapping = HOME_CARDS[slug];
   const categoryRequest = useCategories();
   const categories = useLastSuccess(categoryRequest.state);
   const category = categories.status === "success" ? categories.data.find(item => item.slug === mapping.category) : undefined;
   const spreadRequest = useSpreads(category?.id);
-  const spreads = useLastSuccess(spreadRequest.state);
+  const spreads = useLastSuccess(spreadRequest.state, category?.id);
   const spread = spreads.status === "success" ? spreads.data.find(item => item.slug === mapping.spread) : undefined;
   const count = spread ? cardCount(spread) : null;
   const status: "loading" | "error" | "notFound" = categoryRequest.state.status !== "success" ? categoryRequest.state.status
@@ -50,23 +50,11 @@ function ReadingSession({ slug, dictionary, locale, present }: {
     ? categoryRequest.state.status === "error" || spreadRequest.state.status === "error" ? { status: "error" as const, retry } : undefined
     : { status, retry };
   return (
-    <CategoryTopBlock dictionary={dictionary.categoryPage.topBlock} locale={locale}
+    <CategoryTopBlock sessionKey={sessionKey} dictionary={dictionary.categoryPage.topBlock} locale={locale}
       categoryLabel={dictionary.cards[mapping.label]} categoryId={category?.id ?? ""} spreadId={spread?.id ?? ""}
       maxSelectableCards={count ?? 0} sessionActive={present && Boolean(ready)} embedded
       catalogStatus={catalogStatus} />
   );
-}
-
-function SessionTransition({ selection, dictionary, locale, panelPresent, initialVisible }: {
-  selection: Selection; dictionary: Dictionary; locale: Locale; panelPresent: boolean; initialVisible: boolean;
-}) {
-  const present = useIsPresent() && panelPresent;
-  const reduced = useReducedMotion();
-  return <motion.div inert={!present} aria-hidden={!present}
-    initial={{ opacity: initialVisible ? 1 : 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-    transition={{ duration: reduced ? 0 : 0.16, ease: [0.4, 0, 0.2, 1] }}>
-    <ReadingSession slug={selection.slug} dictionary={dictionary} locale={locale} present={present} />
-  </motion.div>;
 }
 
 function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
@@ -76,7 +64,6 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
   const present = useIsPresent();
   const reduced = useReducedMotion();
   const [height, setHeight] = useState(0);
-  const [firstSession] = useState(selection.session);
   const contentRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const content = contentRef.current;
@@ -102,9 +89,7 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
         animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
         transition={transition}>
         {/* Only the session resets on card changes; the animated panel stays mounted. */}
-        <AnimatePresence mode="wait">
-          <SessionTransition key={selection.session} selection={selection} dictionary={dictionary} locale={locale} panelPresent={present} initialVisible={selection.session === firstSession} />
-        </AnimatePresence>
+        <ReadingSession slug={selection.slug} sessionKey={selection.session} dictionary={dictionary} locale={locale} present={present} />
       </motion.div>
     </motion.div>
   );
@@ -112,6 +97,7 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
 
 export default function HomeReading({ dictionary, locale }: { dictionary: Dictionary; locale: Locale }) {
   const [selection, setSelection] = useState<Selection | null>(null);
+  const [pendingSlug, setPendingSlug] = useState<HomeCardSlug | null>(null);
   const session = useRef(0);
   const opening = useRef(0);
   const [exiting, setExiting] = useState(false);
@@ -159,19 +145,22 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
     void proceed();
   }, [selection]);
   function startSession(slug: HomeCardSlug) {
+    setPendingSlug(null);
     activeScroll.current = scrollToCards(Boolean(reduced), true);
     session.current += 1;
     if (!selection) opening.current += 1;
     setSelection({ slug, session: session.current, opening: opening.current });
   }
   function select(slug: HomeCardSlug) {
+    if (pendingSlug) return;
     if (selection?.slug === slug) {
       navigation?.reset();
       activeScroll.current?.cancel();
       setExiting(true);
       setSelection(null);
     } else if (navigation) {
-      navigation.request(() => startSession(slug), "switch");
+      setPendingSlug(slug);
+      navigation.request(() => startSession(slug), "switch", () => setPendingSlug(null));
     } else {
       startSession(slug);
     }
@@ -179,7 +168,7 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   return (
     <>
       <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
-        selectedSlug={selection?.slug ?? null} onCardSelect={select} />
+        selectedSlug={selection?.slug ?? null} pendingSlug={pendingSlug} onCardSelect={select} />
       <div className={styles.panels} data-home-panels>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
           {selection && <ReadingPanel key={selection.opening} selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onExpanded={() => activeScroll.current?.finish()} />}

@@ -14,6 +14,7 @@ export interface CardsFanProps {
   hoveredIndex: number | null;
   onCardHoverChange: (index: number | null) => void;
   selectedSlug: HomeCardSlug | null;
+  pendingSlug?: HomeCardSlug | null;
   onCardSelect: (slug: HomeCardSlug) => void;
 }
 
@@ -346,11 +347,15 @@ function FlippableCard({
   );
 }
 
-export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
+export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, pendingSlug, onCardSelect }: CardsFanProps) {
   const cards = buildCards(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const { ref: fanRef, scale } = useFanScale(desktopFanScale, !isMobile);
+
+  useEffect(() => {
+    if (!pendingSlug) onCardHoverChange(null);
+  }, [pendingSlug, onCardHoverChange]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsDealt(true), DEAL_DURATION);
@@ -376,13 +381,13 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
           <FlippableCard
             key={card.key}
             card={card}
-            isHovered={selectedSlug === card.slug || hoveredIndex === index}
+            isHovered={selectedSlug === card.slug || pendingSlug === card.slug || hoveredIndex === index}
             isSelected={selectedSlug === card.slug}
             onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
             isDealt={isDealt}
             /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
             zIndex={index}
-            onHoverStart={() => onCardHoverChange(index)}
+            onHoverStart={() => { if (!pendingSlug) onCardHoverChange(index); }}
             onHoverEnd={() => onCardHoverChange(null)}
           />
         ))}
@@ -392,6 +397,7 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
         hoveredIndex={hoveredIndex}
         onCardHoverChange={onCardHoverChange}
         selectedSlug={selectedSlug}
+        pendingSlug={pendingSlug}
         onCardSelect={onCardSelect}
       />
     </div>
@@ -655,7 +661,7 @@ function MobileFlippableCard({
   );
 }
 
-function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
+function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, pendingSlug, onCardSelect }: CardsFanProps) {
   const { back, front } = buildMobileRows(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -682,12 +688,12 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedS
           key={card.key}
           card={card}
           rowCenterCx={rowCenterCx}
-          isHovered={selectedSlug === card.slug || hoveredIndex === globalIndex}
+          isHovered={selectedSlug === card.slug || (Boolean(card.slug) && pendingSlug === card.slug) || hoveredIndex === globalIndex}
           isSelected={selectedSlug === card.slug}
           onSelect={() => { if (card.slug) { onCardHoverChange(null); onCardSelect(card.slug); } }}
           isDealt={isDealt}
           zIndex={rowBaseZ + i}
-          onHoverStart={() => onCardHoverChange(globalIndex)}
+          onHoverStart={() => { if (!pendingSlug) onCardHoverChange(globalIndex); }}
           onHoverEnd={() => onCardHoverChange(null)}
         />
       );
