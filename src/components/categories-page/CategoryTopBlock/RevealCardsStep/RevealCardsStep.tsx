@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
@@ -201,6 +200,11 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
       {error && <div className={styles.readingError} role="alert">{error} <button type="button" onClick={onRetry}>{text.retry}</button></div>}
     </div>
     {isMobile && <p className={styles.mobileHint}>{labels.chooseCard}</p>}
+    {isMobile && <div className={styles.mobileControls} data-reveal-controls inert={!sessionActive} aria-hidden={!sessionActive}>
+      <MainButton variant="gradient" size="large" icon="/icons/sparkles.svg" className={styles.answerButton} disabled={phase !== "ready"}
+        onClick={() => { setSelectedPosition(null); setSheet("answer"); }}>{labels.seeAnswer}</MainButton>
+      <MainButton variant="default" size="large" icon="/icons/right-arrow.svg" muted onClick={onStartOver}>{labels.restart}</MainButton>
+    </div>}
     {!isMobile && <div ref={detailRef} className={styles.detailLayer} data-reading-details>
       <div className={styles.detailSlot}>
         <AnimatePresence>
@@ -239,11 +243,6 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     {!isMobile && <div className={styles.startOver}>
       <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={onStartOver}>{dictionary.startOver}</MainButton>
     </div>}
-    {isMobile && createPortal(<div className={styles.mobileControls} data-reveal-controls inert={!sessionActive} aria-hidden={!sessionActive}>
-      <MainButton variant="gradient" size="large" icon="/icons/sparkles.svg" className={styles.answerButton} disabled={phase !== "ready"}
-        onClick={() => { setSelectedPosition(null); setSheet("answer"); }}>{labels.seeAnswer}</MainButton>
-      <MainButton variant="default" size="large" icon="/icons/right-arrow.svg" muted onClick={onStartOver}>{labels.restart}</MainButton>
-    </div>, document.body)}
     <RevealSheet open={sessionActive && isMobile && sheet !== null} onClose={closeSheet} locale={locale} transition={transition} card={sheet === "card"}
       title={sheet === "card" ? labels.cardDescription : labels.interpretation}>
       {sheet === "card" && selectedCard

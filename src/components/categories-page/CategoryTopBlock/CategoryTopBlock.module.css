@@ -284,7 +284,7 @@
   .panel.panelReading {
     min-height: 0;
     padding-top: 24px;
-    padding-bottom: 92px;
+    padding-bottom: 48px;
   }
 
   .panelReading .askTitle {
