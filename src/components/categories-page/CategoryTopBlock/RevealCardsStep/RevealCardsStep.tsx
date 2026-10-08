@@ -25,6 +25,7 @@ export interface RevealCardsStepProps {
   error: string;
   onRetry: () => void;
   onStartOver: () => void;
+  sessionActive?: boolean;
 }
 
 type Phase = "preparing" | "dealing" | "flipping" | "focusing" | "ready";
@@ -74,7 +75,7 @@ export default function RevealCardsStep(props: RevealCardsStepProps) {
   return <RevealSession key={props.reading.id} {...props} />;
 }
 
-function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOver }: RevealCardsStepProps) {
+function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOver, sessionActive = true }: RevealCardsStepProps) {
   const cards = useMemo(() => presentCards(reading, locale), [reading, locale]);
   const text = readingMessages[locale];
   const labels = revealMessages[locale];
@@ -170,7 +171,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     setSelectedPosition(previous => isMobile ? position : previous === position ? null : position);
     if (isMobile) setSheet("card");
   };
-  const transition = { duration: reduced ? 0 : metrics?.detail ?? 0, ease: metrics?.ease };
+  const transition = useMemo(() => ({ duration: reduced ? 0 : metrics?.detail ?? 0, ease: metrics?.ease }), [reduced, metrics]);
 
   return <>
     <div ref={areaRef} className={styles.revealArea} data-reveal-phase={phase} aria-busy={phase !== "ready"}>
@@ -238,12 +239,12 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     {!isMobile && <div className={styles.startOver}>
       <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={onStartOver}>{dictionary.startOver}</MainButton>
     </div>}
-    {isMobile && createPortal(<div className={styles.mobileControls} data-reveal-controls>
+    {isMobile && createPortal(<div className={styles.mobileControls} data-reveal-controls inert={!sessionActive} aria-hidden={!sessionActive}>
       <MainButton variant="gradient" size="large" icon="/icons/sparkles.svg" className={styles.answerButton} disabled={phase !== "ready"}
         onClick={() => { setSelectedPosition(null); setSheet("answer"); }}>{labels.seeAnswer}</MainButton>
       <MainButton variant="default" size="large" icon="/icons/right-arrow.svg" muted onClick={onStartOver}>{labels.restart}</MainButton>
     </div>, document.body)}
-    <RevealSheet open={isMobile && sheet !== null} onClose={closeSheet} locale={locale} transition={transition} card={sheet === "card"}
+    <RevealSheet open={sessionActive && isMobile && sheet !== null} onClose={closeSheet} locale={locale} transition={transition} card={sheet === "card"}
       title={sheet === "card" ? labels.cardDescription : labels.interpretation}>
       {sheet === "card" && selectedCard
         ? <ReadingContent key={selectedPosition} sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} sizes="calc(100vw - 56px)" />} />

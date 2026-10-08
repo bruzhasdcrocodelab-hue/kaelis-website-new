@@ -6,7 +6,9 @@ export function scrollToCards(reducedMotion: boolean, followExpansion = false) {
   const panels = document.querySelector<HTMLElement>("[data-home-panels]");
   if (!fan) return;
   let observer: ResizeObserver | undefined;
+  let frame = 0;
   const cancel = () => {
+    cancelAnimationFrame(frame);
     observer?.disconnect();
     for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
       window.removeEventListener(event, cancel);
@@ -37,7 +39,8 @@ export function scrollToCards(reducedMotion: boolean, followExpansion = false) {
   return {
     cancel,
     finish: () => {
-      requestAnimationFrame(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
         if (cancelPreviousScroll !== cancel) return;
         scroll();
         cancel();

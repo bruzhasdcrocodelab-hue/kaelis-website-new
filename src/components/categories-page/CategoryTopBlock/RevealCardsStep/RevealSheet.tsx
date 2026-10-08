@@ -1,21 +1,42 @@
 "use client";
 
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { useId, useLayoutEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useDragControls, type Transition } from "motion/react";
+import { AnimatePresence, animate, motion, useMotionValue, usePresence, type Transition } from "motion/react";
 import type { Locale } from "@/lang";
 import { revealMessages } from "./revealMessages";
 import styles from "./RevealCardsStep.module.css";
 
-export default function RevealSheet({ open, onClose, title, locale, transition, children, card = false }: {
+type RevealSheetProps = {
   open: boolean; onClose: () => void; title: string; locale: Locale; transition: Transition; children: ReactNode; card?: boolean;
-}) {
+};
+
+export default function RevealSheet({ open, ...props }: RevealSheetProps) {
+  if (typeof document === "undefined") return null;
+  return createPortal(<AnimatePresence>
+    {open && <SheetContent {...props} />}
+  </AnimatePresence>, document.body);
+}
+
+function SheetContent({ onClose, title, locale, transition, children, card = false }: Omit<RevealSheetProps, "open">) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-  const drag = useDragControls();
+  const [present, safeToRemove] = usePresence();
+  const y = useMotionValue(0);
+  const entered = useRef(false);
+  const panStart = useRef(0);
   const titleId = useId();
-  useEffect(() => {
-    if (!open) return;
+  useLayoutEffect(() => {
+    const height = sheetRef.current?.offsetHeight ?? 0;
+    if (!entered.current) {
+      y.set(height);
+      entered.current = true;
+    }
+    const animation = animate(y, present ? 0 : height, transition);
+    void animation.then(() => { if (!present) safeToRemove?.(); });
+    return () => y.stop();
+  }, [present, safeToRemove, transition, y]);
+  useLayoutEffect(() => {
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -42,29 +63,26 @@ export default function RevealSheet({ open, onClose, title, locale, transition, 
       background.forEach((node, index) => { node.inert = inert[index]; });
       if (previous?.isConnected) previous.focus({ preventScroll: true });
     };
-  }, [open, onClose]);
+  }, [onClose]);
 
-  if (typeof document === "undefined") return null;
-  return createPortal(<AnimatePresence>
-    {open && <div ref={rootRef} className={styles.sheetRoot} data-reading-sheet>
+  return <div ref={rootRef} className={styles.sheetRoot} data-reading-sheet>
       <motion.div className={styles.sheetBackdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={transition} onClick={onClose} data-sheet-backdrop />
       <motion.div ref={sheetRef} className={`${styles.sheet} ${card ? styles.cardSheet : ""}`} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}
-        initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={transition}
-        drag="y" dragListener={false} dragControls={drag} dragConstraints={{ top: 0, bottom: 0 }} dragElastic={{ top: 0, bottom: .9 }}
-        onDragEnd={(_, info) => {
-          if (info.offset.y > 90 ||
-            info.velocity.y > 500) onClose();
-        }}>
-        <div className={styles.sheetHeader} onPointerDown={event => {
-          if (!(event.target as HTMLElement).closest("button")) drag.start(event);
-        }} data-sheet-handle>
+        style={{ y }}>
+        <motion.div className={styles.sheetHeader}
+          onPanStart={() => { if (present) { y.stop(); panStart.current = y.get(); } }}
+          onPan={(_, info) => { if (present) y.set(Math.max(0, panStart.current + info.offset.y * .9)); }}
+          onPanEnd={(_, info) => {
+            if (!present) return;
+            if (info.offset.y > 90 || info.velocity.y > 500) onClose();
+            else void animate(y, 0, transition);
+          }} data-sheet-handle>
           <span className={styles.sheetGrabber} />
           <p className={styles.sheetEyebrow}>{card ? revealMessages[locale].discoverMeaning : revealMessages[locale].learnMore}</p>
           <h2 id={titleId} className={styles.sheetTitle}>{title}</h2>
-        </div>
+        </motion.div>
         <div className={styles.sheetContent} tabIndex={0}>{children}</div>
       </motion.div>
-    </div>}
-  </AnimatePresence>, document.body);
+    </div>;
 }

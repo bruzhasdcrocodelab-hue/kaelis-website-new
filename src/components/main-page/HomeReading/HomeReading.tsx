@@ -21,7 +21,7 @@ const subscribeViewport = (listener: () => void) => {
 };
 const mobileSnapshot = () => window.matchMedia(MOBILE_QUERY).matches;
 const serverSnapshot = () => false;
-type Selection = { slug: HomeCardSlug; session: number };
+type Selection = { slug: HomeCardSlug; session: number; opening: number };
 
 // Preserve the current reading while the same selection's translations load.
 function useLastSuccess<T>(state: CatalogState<T>) {
@@ -57,6 +57,18 @@ function ReadingSession({ slug, dictionary, locale, present }: {
   );
 }
 
+function SessionTransition({ selection, dictionary, locale, panelPresent, initialVisible }: {
+  selection: Selection; dictionary: Dictionary; locale: Locale; panelPresent: boolean; initialVisible: boolean;
+}) {
+  const present = useIsPresent() && panelPresent;
+  const reduced = useReducedMotion();
+  return <motion.div inert={!present} aria-hidden={!present}
+    initial={{ opacity: initialVisible ? 1 : 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+    transition={{ duration: reduced ? 0 : 0.16, ease: [0.4, 0, 0.2, 1] }}>
+    <ReadingSession slug={selection.slug} dictionary={dictionary} locale={locale} present={present} />
+  </motion.div>;
+}
+
 function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
   selection: Selection; dictionary: Dictionary; locale: Locale; mobile: boolean;
   onExpanded: () => void;
@@ -64,11 +76,15 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
   const present = useIsPresent();
   const reduced = useReducedMotion();
   const [height, setHeight] = useState(0);
+  const [firstSession] = useState(selection.session);
   const contentRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const content = contentRef.current;
     if (!content) return;
-    const measure = () => setHeight(content.getBoundingClientRect().height);
+    const measure = () => {
+      const nextHeight = content.getBoundingClientRect().height;
+      if (content.querySelector("#category-top-block")) setHeight(nextHeight);
+    };
     const observer = new ResizeObserver(measure);
     observer.observe(content);
     measure();
@@ -86,7 +102,9 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
         animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
         transition={transition}>
         {/* Only the session resets on card changes; the animated panel stays mounted. */}
-        <ReadingSession key={selection.session} slug={selection.slug} dictionary={dictionary} locale={locale} present={present} />
+        <AnimatePresence mode="wait">
+          <SessionTransition key={selection.session} selection={selection} dictionary={dictionary} locale={locale} panelPresent={present} initialVisible={selection.session === firstSession} />
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );
@@ -94,7 +112,8 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
 
 export default function HomeReading({ dictionary, locale }: { dictionary: Dictionary; locale: Locale }) {
   const [selection, setSelection] = useState<Selection | null>(null);
-  const [session, setSession] = useState(0);
+  const session = useRef(0);
+  const opening = useRef(0);
   const [exiting, setExiting] = useState(false);
   const navigation = useReadingNavigation();
   const { state: categories } = useCategories();
@@ -141,8 +160,9 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   }, [selection]);
   function startSession(slug: HomeCardSlug) {
     activeScroll.current = scrollToCards(Boolean(reduced), true);
-    setSession(value => value + 1);
-    setSelection({ slug, session: session + 1 });
+    session.current += 1;
+    if (!selection) opening.current += 1;
+    setSelection({ slug, session: session.current, opening: opening.current });
   }
   function select(slug: HomeCardSlug) {
     if (selection?.slug === slug) {
@@ -162,7 +182,7 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
         selectedSlug={selection?.slug ?? null} onCardSelect={select} />
       <div className={styles.panels} data-home-panels>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
-          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onExpanded={() => activeScroll.current?.finish()} />}
+          {selection && <ReadingPanel key={selection.opening} selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onExpanded={() => activeScroll.current?.finish()} />}
         </AnimatePresence>
         <div className={styles.promo} data-home-promo inert={mobile && open}>
           <TopBlockSection dictionary={dictionary.topBlock} className={styles.topBlock} />

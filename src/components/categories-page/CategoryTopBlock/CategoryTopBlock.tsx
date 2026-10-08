@@ -46,14 +46,22 @@ export default function CategoryTopBlock({
   categoryId, spreadId, sessionActive = true, embedded = false, catalogStatus,
 }: CategoryTopBlockProps) {
   const navigation = useReadingNavigation();
-  const flow = useReading(locale, categoryId, spreadId, sessionActive);
+  const currentFlow = useReading(locale, categoryId, spreadId, sessionActive);
   const text = readingMessages[locale];
   const [firstCycleComplete, setFirstCycleComplete] = useState(false);
+  const [lastPresentation, setLastPresentation] = useState({
+    reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete,
+  });
+  if (sessionActive && (lastPresentation.reading !== currentFlow.reading || lastPresentation.question !== currentFlow.question ||
+    lastPresentation.busy !== currentFlow.busy || lastPresentation.firstCycleComplete !== firstCycleComplete)) {
+    setLastPresentation({ reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete });
+  }
+  const flow = sessionActive ? currentFlow : { ...currentFlow, ...lastPresentation };
   const completeFirstCycle = useCallback(() => {
     if (sessionActive) setFirstCycleComplete(true);
   }, [sessionActive]);
   // Receiving cards alone does not mean the AI interpretation is ready.
-  const step: Step = flow.reading?.reading && firstCycleComplete
+  const step: Step = flow.reading?.reading && (sessionActive ? firstCycleComplete : lastPresentation.firstCycleComplete)
     ? "reveal"
     : flow.busy || flow.reading ? "choose" : "ask";
   const panelRef = useRef<HTMLDivElement>(null);
@@ -268,6 +276,7 @@ export default function CategoryTopBlock({
         )}
         {step === "reveal" && flow.reading && (
           <RevealCardsStep
+            sessionActive={sessionActive}
             dictionary={dictionary}
             locale={locale}
             reading={flow.reading}

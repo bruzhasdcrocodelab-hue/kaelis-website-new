@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import type { CardFrontAssets } from "./cardFrontAssets";
 import styles from "./AnimatedCardFront.module.css";
@@ -8,6 +8,10 @@ import styles from "./AnimatedCardFront.module.css";
 export default function AnimatedCardFront({ active, visible, assets }: { active: boolean; visible: boolean; assets: CardFrontAssets }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useLayoutEffect(() => {
+    if ((!visible || active) && videoRef.current) videoRef.current.style.visibility = "hidden";
+  }, [active, visible]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -19,6 +23,14 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
     let disposed = false;
     let requested = false;
     let generation = 0;
+    let videoFrame: number | undefined;
+    let frame: number | undefined;
+    const cancelFrame = () => {
+      if (videoFrame !== undefined) video.cancelVideoFrameCallback(videoFrame);
+      if (frame !== undefined) cancelAnimationFrame(frame);
+      videoFrame = undefined;
+      frame = undefined;
+    };
 
     const update = () => {
       if (inView && !reducedMotion.matches && !video.getAttribute("src")) {
@@ -29,6 +41,7 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
       if (shouldPlay === requested) return;
       requested = shouldPlay;
       const attempt = ++generation;
+      cancelFrame();
       if (!shouldPlay) {
         video.pause();
         // Freeze the last frame during the reverse flip; the front is hidden
@@ -40,7 +53,12 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
       video.style.visibility = "hidden";
       video.currentTime = 0;
       void video.play().then(() => {
-        if (!disposed && requested && attempt === generation) video.style.visibility = "visible";
+        if (disposed || !requested || attempt !== generation) return;
+        const reveal = () => {
+          if (!disposed && requested && attempt === generation && !video.seeking) video.style.visibility = "visible";
+        };
+        if (typeof video.requestVideoFrameCallback === "function") videoFrame = video.requestVideoFrameCallback(reveal);
+        else frame = requestAnimationFrame(reveal);
       }).catch(() => {
         if (!disposed && attempt === generation) video.style.visibility = "hidden";
       });
@@ -56,6 +74,7 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
     return () => {
       disposed = true;
       generation++;
+      cancelFrame();
       video.pause();
       observer.disconnect();
       document.removeEventListener("visibilitychange", update);
