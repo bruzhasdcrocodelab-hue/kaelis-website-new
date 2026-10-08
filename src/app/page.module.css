@@ -58,7 +58,7 @@
   transform: translateX(-50%);
   width: 68%;
   height: auto;
-  max-width: none;
+  max-width: 996px;
   pointer-events: none;
   z-index: 1;
   animation: patternFloatCenter var(--pattern-float-duration) ease-in-out infinite,
@@ -71,7 +71,7 @@
   top: 155px;
   width: 23%;
   height: auto;
-  max-width: none;
+  max-width: 340px;
   pointer-events: none;
   z-index: 0;
   animation: patternFloatSide var(--pattern-float-duration) ease-in-out infinite,
@@ -140,6 +140,17 @@
   align-items: center;
   width: 100%;
   z-index: 1;
+}
+
+@media (min-width: 1441px) {
+
+  .patternLeft {
+    left: 3.75%;
+  }
+
+  .patternRight {
+    right: 3.75%;
+  }
 }
 
 @media (max-width: 1200px) {

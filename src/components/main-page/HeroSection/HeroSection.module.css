@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 11.111vw 60px 4.167vw;
+  padding: 13.194vw 60px 4.167vw;
   position: relative;
   overflow: clip;
 }
@@ -155,6 +155,13 @@
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: 24px 24px;
+}
+
+@media (min-width: 1441px) {
+  .hero {
+    padding: 190px 60px 60px;
+  }
+
 }
 
 @media (max-width: 768px) {
