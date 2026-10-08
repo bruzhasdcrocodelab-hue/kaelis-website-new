@@ -2,14 +2,12 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  /* No stacking context: the parent's pattern and AnimatedWaves sit between
-     the card scene and the copy. The parent also owns clipping/background. */
 }
 
 .scene {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 6;
 }
 
 .fanPosition {
@@ -183,7 +181,7 @@
     display: block;
     position: absolute;
     inset: 0;
-    z-index: 4;
+    z-index: 6;
     mask-image: url("/images/reading-loading/mobile-mask.svg");
     mask-size: 100% 100%;
     mask-repeat: no-repeat;

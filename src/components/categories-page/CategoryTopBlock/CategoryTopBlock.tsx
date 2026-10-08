@@ -71,7 +71,7 @@ export default function CategoryTopBlock(props: CategoryTopBlockProps) {
           className={`${styles.pattern} ${isConfirmed ? styles.patternBehind : ""}`}
           aria-hidden
         />
-        <AnimatedWaves className={styles.waves} style={{ zIndex: 3 }} />
+        <AnimatedWaves className={styles.waves} style={{ zIndex: step === "choose" ? 7 : 3 }} />
         {hasFan || step === "choose"
           ? <WavesLineFrame className={styles.wavesLine} style={{ zIndex: 2 }} />
           : <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />}
