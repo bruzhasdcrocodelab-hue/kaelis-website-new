@@ -335,6 +335,7 @@
 
   .pattern,
   .panelLoading .pattern {
+    opacity: 0.8;
     position: absolute;
     left: calc(50% - 0.23px);
     top: -38px;
@@ -346,6 +347,10 @@
     transform: translateX(-50%);
     pointer-events: none;
     z-index: 2;
+  }
+
+  .embedded .pattern {
+    opacity: 0.5;
   }
 
   .eyeIcon {
