@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useEffect, useId, useMemo } from "react";
 import { motion, useAnimate, type AnimationSequence } from "motion/react";
 import PatternArtwork from "./PatternArtwork";
 import { desktopCenter, desktopSide, mobileCenter, mobileSide } from "./patternData";
@@ -61,7 +61,24 @@ const patterns = [
   { name: "right", mobile: true, width: 108, height: 605, nodes: mobileSide, className: pageStyles.patternRightMobile },
 ];
 
+type SidePatternClasses = { left: string; right: string };
+type PatternDefinition = (typeof patterns)[number];
+
+export function DesktopGradientPatterns({ left, right }: SidePatternClasses) {
+  const sides = useMemo(() => patterns.filter(pattern => !pattern.mobile && pattern.name !== "center").map(pattern => ({
+    ...pattern,
+    width: pattern.name === "left" ? 339 : 340,
+    className: pattern.name === "left" ? left : right,
+  })), [left, right]);
+
+  return <AnimatedPatterns patterns={sides} gradient />;
+}
+
 export default function HomePatterns() {
+  return <AnimatedPatterns patterns={patterns} />;
+}
+
+function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDefinition[]; gradient?: boolean }) {
   const prefix = useId().replace(/:/g, "");
   const [scope, animate] = useAnimate<HTMLDivElement>();
 
@@ -101,6 +118,8 @@ export default function HomePatterns() {
         return;
       }
 
+      if (!sequence.length) return;
+
       const playback = animate(sequence, { repeat: Infinity });
       stop = () => {
         playback.stop();
@@ -116,7 +135,7 @@ export default function HomePatterns() {
       mobile.removeEventListener("change", start);
       reduced.removeEventListener("change", start);
     };
-  }, [animate, scope]);
+  }, [animate, scope, patterns]);
 
   return (
     <div ref={scope} className={styles.scope} aria-hidden="true">
@@ -124,12 +143,27 @@ export default function HomePatterns() {
         const name = `${pattern.mobile ? "mobile" : "desktop"}-${pattern.name}`;
         const side = pattern.name !== "center";
         const offset = pattern.mobile ? "translate(-124 0)" : "translate(-124 -14)";
+        const fadeId = `${prefix}-${name}-fade`;
+        const gradientId = `${fadeId}-gradient`;
         return (
           <div key={name} className={pattern.className}>
             <motion.svg initial={{ y: 0 }} data-pattern={name} className={styles.canvas} width={pattern.width} height={pattern.height} viewBox={`0 0 ${pattern.width} ${pattern.height}`} fill="none" focusable="false">
-              <g transform={pattern.name === "left" ? `translate(${pattern.width} 0) scale(-1 1)` : undefined}>
-                <g transform={side ? offset : undefined}>
-                  <Layers nodes={pattern.nodes} prefix={`${prefix}-${name}`} />
+              {gradient && (
+                <defs>
+                  <linearGradient id={gradientId} x1={0} y1={13.7435} x2={0} y2={750} gradientUnits="userSpaceOnUse">
+                    <stop stopColor="currentColor" />
+                    <stop offset={1} stopColor="currentColor" stopOpacity={0} />
+                  </linearGradient>
+                  <mask id={fadeId} className={styles.mask} maskUnits="userSpaceOnUse" x={-1000} y={-1000} width={3000} height={3000}>
+                    <rect x={-1000} y={-1000} width={3000} height={3000} fill={`url(#${gradientId})`} />
+                  </mask>
+                </defs>
+              )}
+              <g mask={gradient ? `url(#${fadeId})` : undefined}>
+                <g transform={pattern.name === "left" ? `translate(${pattern.width} 0) scale(${-pattern.width / (gradient ? 340 : pattern.width)} 1)` : undefined}>
+                  <g transform={side ? offset : undefined}>
+                    <Layers nodes={pattern.nodes} prefix={`${prefix}-${name}`} />
+                  </g>
                 </g>
               </g>
             </motion.svg>
