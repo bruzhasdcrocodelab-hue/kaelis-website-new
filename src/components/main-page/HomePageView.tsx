@@ -1,4 +1,4 @@
-import Image from "next/image";
+import HomePatterns from "./HomePatterns/HomePatterns";
 import ReadingNavigationProvider from "@/components/reading/ReadingNavigationProvider";
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
@@ -14,54 +14,7 @@ export default function HomePageView({ locale, dictionary }: { locale: Locale; d
       <div className={styles.backgroundImage} aria-hidden>
         <div className={styles.backgroundGradientCanvas} />
       </div>
-      <Image
-        src="/images/backgrounds/patterns-center.svg"
-        alt=""
-        width={996}
-        height={491}
-        className={styles.patternCenter}
-        priority
-      />
-      <Image
-        src="/images/backgrounds/patterns-left.svg"
-        alt=""
-        width={340}
-        height={750}
-        className={styles.patternLeft}
-        priority
-      />
-      <Image
-        src="/images/backgrounds/patterns-right.svg"
-        alt=""
-        width={340}
-        height={750}
-        className={styles.patternRight}
-        priority
-      />
-      <Image
-        src="/images/backgrounds/mobile/patterns-center.svg"
-        alt=""
-        width={147}
-        height={79}
-        className={styles.patternCenterMobile}
-        priority
-      />
-      <Image
-        src="/images/backgrounds/mobile/patterns-left.svg"
-        alt=""
-        width={108}
-        height={605}
-        className={styles.patternLeftMobile}
-        priority
-      />
-      <Image
-        src="/images/backgrounds/mobile/patterns-right.svg"
-        alt=""
-        width={108}
-        height={605}
-        className={styles.patternRightMobile}
-        priority
-      />
+      <HomePatterns />
       <ReadingNavigationProvider dictionary={dictionary.readingConfirmation}>
         <div className={styles.content}>
           <Header dictionary={dictionary.header} locale={locale} />

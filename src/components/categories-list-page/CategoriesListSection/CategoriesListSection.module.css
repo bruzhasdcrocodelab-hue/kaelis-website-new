@@ -30,7 +30,7 @@
   color: var(--color-white);
   line-height: normal;
   white-space: nowrap;
-  margin-bottom: -15px;
+  margin-bottom: -10px;
   font-size: clamp(var(--text-xs), 0.286vw + 11.89px, var(--text-base));
 }
 
@@ -42,7 +42,7 @@
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  line-height: normal;
+  line-height: 90%;
   padding-right: 20px;
   margin-left: 20px;
   font-size: clamp(var(--text-4xl), 4.381vw + 22.91px, 86px);
@@ -51,7 +51,7 @@
 
 .description {
   width: clamp(230px, 6.667vw + 204px, 300px);
-  margin-top: -6px;
+  margin-top: 6px;
   color: var(--color-white-60);
   line-height: normal;
   font-size: clamp(var(--text-xxs), 0.19vw + 11.26px, var(--text-sm));
@@ -74,6 +74,16 @@
 
 .cellLastColumn {
   grid-column-start: 3;
+}
+
+@media (min-width: 1441px) {
+  .section {
+    gap: 120px;
+    padding-top: 60px;
+  }
+  .grid {
+    margin-top: -60px;
+  }
 }
 
 /* Desktop adaptivity: below the 3-column layout's natural width the grid drops
@@ -102,7 +112,7 @@
   }
 
   .eyebrow {
-    margin-bottom: -5px;
+    margin-bottom: -2px;
     font-weight: 400;
     opacity: 0.9;
   }
@@ -112,14 +122,14 @@
   }
 
   .description {
-    margin-top: 0;
+    margin-top: 8px;
     color: var(--color-white-60);
   }
 
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 24px;
-    row-gap: 24px;
+    column-gap: 6.154vw;
+    row-gap: 32px;
     padding-bottom: 0;
     margin-top: 0;
     /* width: 100%; */

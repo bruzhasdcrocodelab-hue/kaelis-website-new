@@ -94,7 +94,7 @@
 }
 
 /* Desktop resolves the checkerboard from the 3-column grid; hide the border
-   svg on the cards that carry a filled star there. */
+   svg on the cards that carry an outline star there. */
 @media (min-width: 769px) {
   .borderHiddenDesktop {
     display: none;
@@ -148,6 +148,18 @@
   }
 
   .star {
-    display: none;
+    bottom: -22px;
+    width: 36px;
+    height: 45px;
+  }
+
+  .starFilledMobile {
+    mask-image: url(/icons/filled-main-star.svg);
+    -webkit-mask-image: url(/icons/filled-main-star.svg);
+  }
+
+  .starOutlineMobile {
+    mask-image: url(/icons/main-star.svg);
+    -webkit-mask-image: url(/icons/main-star.svg);
   }
 }

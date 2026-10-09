@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { DesktopGradientPatterns } from "@/components/main-page/HomePatterns/HomePatterns";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
@@ -26,21 +27,9 @@ export default function CategoriesListView({
     <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <div className={styles.backgroundGradient} aria-hidden />
       <ConstellationPattern />
-      <Image
-        src="/images/backgrounds/patterns-left-gradient.svg"
-        alt=""
-        width={340}
-        height={750}
-        className={`${styles.patternLeft} ${styles.patternDesktop}`}
-        priority
-      />
-      <Image
-        src="/images/backgrounds/patterns-right-gradient.svg"
-        alt=""
-        width={340}
-        height={750}
-        className={`${styles.patternRight} ${styles.patternDesktop}`}
-        priority
+      <DesktopGradientPatterns
+        left={`${styles.patternLeft} ${styles.patternDesktop}`}
+        right={`${styles.patternRight} ${styles.patternDesktop}`}
       />
       <Image
         src="/images/backgrounds/mobile/patterns-left-gradient.svg"
