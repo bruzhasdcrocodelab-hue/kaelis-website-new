@@ -3,13 +3,10 @@ import ReadingNavigationProvider from "@/components/reading/ReadingNavigationPro
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import HomeReading from "@/components/main-page/HomeReading/HomeReading";
-import { dictionaries } from "@/lang";
-import { getLocale } from "@/lib/locale";
-import styles from "./page.module.css";
+import type { Dictionary, Locale } from "@/lang";
+import styles from "@/app/page.module.css";
 
-export default async function Home() {
-  const locale = await getLocale();
-  const dictionary = dictionaries[locale];
+export default function HomePageView({ locale, dictionary }: { locale: Locale; dictionary: Dictionary }) {
 
   return (
     <div className={styles.page} data-home-page>

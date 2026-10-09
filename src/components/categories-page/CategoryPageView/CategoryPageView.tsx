@@ -62,7 +62,7 @@ function CategoryPageContent({
     ? resolveCatalogPath(categories.state.data, spreads.state.data, path, defaultSpread) : null;
   const current = path.length === 2 ? resolved?.spread : category;
   const count = resolved?.spread ? cardCount(resolved.spread) : null;
-  const returnHref = path.length === 2 ? categoryHref(path[0]) : "/";
+  const returnHref = path.length === 2 ? categoryHref(path[0], locale) : "/";
   const returnLabel = path.length === 2 && category
     ? `${dictionary.categoryPage.returnToPrefix} ${category.name}` : dictionary.categoryPage.returnToMain;
   const status = categories.state.status !== "success" ? categories.state.status

@@ -1,3 +1,4 @@
+import { routingUrl } from "./routing-fixture.mjs";
 import { bindEnv } from "./env-fixture.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -8,7 +9,7 @@ const transpile = (source) => ts.transpileModule(bindEnv(source), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 },
 }).outputText;
 const apiSource = transpile(await readFile(new URL("../src/lib/api.ts", import.meta.url), "utf8"));
-const catalogSource = transpile(await readFile(new URL("../src/lib/categories/catalog.ts", import.meta.url), "utf8"));
+const catalogSource = transpile((await readFile(new URL("../src/lib/categories/catalog.ts", import.meta.url), "utf8")).replace('"@/lib/routing"', JSON.stringify(routingUrl)));
 const selectionSource = transpile(await readFile(new URL("../src/lib/categories/selectionFan.ts", import.meta.url), "utf8"));
 const dataUrl = (source) => `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
 const originalFetch = globalThis.fetch;

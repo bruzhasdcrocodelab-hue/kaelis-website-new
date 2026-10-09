@@ -1,6 +1,7 @@
 import type { Dictionary, Locale } from "@/lang";
 import { categoryHref, type TarotCategory } from "@/lib/categories/catalog";
 import CategoryCard from "@/components/categories-list-page/CategoryCard";
+import { getSeo } from "@/lib/seo";
 import styles from "./CategoriesListSection.module.css";
 
 export interface CategoriesListSectionProps {
@@ -18,7 +19,7 @@ export default function CategoriesListSection({
     <section className={styles.section}>
       <div className={styles.heading}>
         <p className={`font-instrument-base-emphasized ${styles.eyebrow}`}>{dictionary.eyebrow}</p>
-        <h1 className={`font-bona-category-title ${styles.title}`}>{dictionary.title}</h1>
+        <h1 className={`font-bona-category-title ${styles.title}`}>{getSeo(locale, "/tarot")?.h1 ?? dictionary.title}</h1>
         <p className={`font-instrument-sm ${styles.description}`}>{dictionary.description}</p>
       </div>
 
@@ -40,7 +41,7 @@ export default function CategoriesListSection({
               }`}
             >
               <CategoryCard
-                href={categoryHref(category.slug)}
+                href={categoryHref(category.slug, locale)}
                 title={category.name}
                 description={category.site_description}
                 locale={locale}

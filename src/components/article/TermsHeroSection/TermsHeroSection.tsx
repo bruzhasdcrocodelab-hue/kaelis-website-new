@@ -11,7 +11,7 @@ export interface TermsHeroSectionProps {
 }
 
 export default function TermsHeroSection({ dictionary, locale }: TermsHeroSectionProps) {
-  const ref = useRef<HTMLParagraphElement>(null);
+  const ref = useRef<HTMLHeadingElement>(null);
   const [wrapped, setWrapped] = useState(false);
 
   const title = dictionary.title.replace(/\u00ad/g, "");
@@ -71,13 +71,13 @@ export default function TermsHeroSection({ dictionary, locale }: TermsHeroSectio
     <section className={styles.section}>
       <div className={styles.titleBlock}>
         <p className={`font-instrument-base-emphasized ${styles.eyebrow}`}>{dictionary.eyebrow}</p>
-        <p
+        <h1
           ref={ref}
           className={`font-bona-terms-title ${styles.title} ${wrapped ? styles.titleWrapped : ""}`}
           lang={htmlLang[locale]}
         >
           {words.map((word, index) => <span key={index}>{index > 0 && " "}<span className={styles.titleWord}>{word}</span></span>)}
-        </p>
+        </h1>
       </div>
       <p className={`font-instrument-base ${styles.lastUpdated}`}>{dictionary.lastUpdated}</p>
     </section>

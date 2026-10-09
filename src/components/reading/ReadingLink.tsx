@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ComponentProps, AnchorHTMLAttributes } from "react";
+import { localizedHref } from "@/lib/routing";
+import { useLocale } from "@/components/LocaleContext";
 import { useReadingNavigation } from "./ReadingNavigationProvider";
 
 export default function ReadingLink({ onNavigate, ...props }: ComponentProps<typeof Link>) {
+  const locale = useLocale();
+  props = { ...props, href: typeof props.href === "string" ? localizedHref(locale, props.href) : props.href };
   const navigation = useReadingNavigation();
   const router = useRouter();
   return <Link {...props} onNavigate={event => {
@@ -24,6 +28,8 @@ export default function ReadingLink({ onNavigate, ...props }: ComponentProps<typ
 }
 
 export function ReadingAnchor({ onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const locale = useLocale();
+  props = { ...props, href: typeof props.href === "string" ? localizedHref(locale, props.href) : props.href };
   const navigation = useReadingNavigation();
   return <a {...props} onClick={event => {
     onClick?.(event);

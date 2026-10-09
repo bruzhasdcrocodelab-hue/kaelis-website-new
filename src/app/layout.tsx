@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
 import { Bona_Nova_SC, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import GuestAuth from "@/components/GuestAuth";
-import CatalogProvider from "@/components/categories/CatalogProvider";
+import LocalizedPages from "@/components/LocalizedPages";
 import TarotStyleProvider from "@/components/TarotStyleProvider";
 import { getLocale } from "@/lib/locale";
 
@@ -20,11 +19,6 @@ const instrumentSans = Instrument_Sans({
   style: ["normal", "italic"],
 });
 
-export const metadata: Metadata = {
-  title: "Kaelis",
-  description: "Kaelis",
-};
-
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const locale = await getLocale();
   return (
@@ -34,7 +28,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <GuestAuth />
-        <TarotStyleProvider><CatalogProvider locale={locale}>{children}</CatalogProvider></TarotStyleProvider>
+        <TarotStyleProvider><LocalizedPages>{children}</LocalizedPages></TarotStyleProvider>
       </body>
     </html>
   );

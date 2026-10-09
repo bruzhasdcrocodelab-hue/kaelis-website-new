@@ -47,7 +47,7 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
   if (subcategories.length === 0) return null;
 
   const positions = computeSubcategoryPositions(subcategories.length);
-  const hrefFor = (subcategory: TarotSpread) => spreadHref(basePath[0], subcategory.slug);
+  const hrefFor = (subcategory: TarotSpread) => spreadHref(basePath[0], subcategory.slug, locale);
 
   const rowSizes = computeSubcategoryMobileRows(subcategories.length);
   const rows: TarotSpread[][] = [];

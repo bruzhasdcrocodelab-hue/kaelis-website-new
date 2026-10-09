@@ -6,6 +6,7 @@ import type { TarotCategory, TarotSpread } from "@/lib/categories/catalog";
 import MainButton from "@/components/global/MainButton";
 import SubcategoryRing from "@/components/categories-page/SubcategoryRing";
 import CategoryTitle from "./CategoryTitle";
+import { getSeo } from "@/lib/seo";
 import styles from "./CategoryHeroSection.module.css";
 
 export interface CategoryHeroSectionProps {
@@ -43,7 +44,7 @@ export default function CategoryHeroSection({
               {dictionary.categoryLabel}
             </p>
             <div className={styles.titleWrap}>
-              <CategoryTitle title={current.name} locale={locale} />
+              <CategoryTitle title={getSeo(locale, `/tarot/${path.join("/")}`)?.h1 ?? current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
                 {current.site_description || ("description" in current ? current.description : "")}
               </p>
