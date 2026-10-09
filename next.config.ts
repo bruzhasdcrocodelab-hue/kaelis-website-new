@@ -3,6 +3,9 @@ import { API_BASE } from "./src/lib/config/constants";
 import { BACKEND_ORIGIN } from "./src/lib/config/env";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    turbopackFileSystemCacheForDev: false,
+  },
   images: {
     localPatterns: [
       { pathname: "/**", search: "" },
