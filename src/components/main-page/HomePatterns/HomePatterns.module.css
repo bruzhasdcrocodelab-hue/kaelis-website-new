@@ -1,0 +1,15 @@
+.scope {
+  display: contents;
+  color: var(--color-gold);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mask {
+  mask-type: alpha;
+}
