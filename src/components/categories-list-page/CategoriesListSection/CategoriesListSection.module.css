@@ -30,11 +30,13 @@
   color: var(--color-white);
   line-height: normal;
   white-space: nowrap;
-  margin-bottom: -25px;
+  margin-bottom: -15px;
   font-size: clamp(var(--text-xs), 0.286vw + 11.89px, var(--text-base));
 }
 
 .title {
+  text-align: center;
+  white-space: pre;
   margin-top: 6px;
   background-image: var(--gradient-pink);
   background-clip: text;

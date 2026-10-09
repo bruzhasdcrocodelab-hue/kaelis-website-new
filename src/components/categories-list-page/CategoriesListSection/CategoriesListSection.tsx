@@ -15,11 +15,16 @@ export default function CategoriesListSection({
   locale,
   categories,
 }: CategoriesListSectionProps) {
+  const title = getSeo(locale, "/tarot")?.h1 ?? dictionary.title;
+  const formattedTitle = locale === "en"
+    ? title.replace(" Reading", "\nReading")
+    : title.replace(" ", "\n").replace(" на ", "\nна ");
+
   return (
     <section className={styles.section}>
       <div className={styles.heading}>
         <p className={`font-instrument-base-emphasized ${styles.eyebrow}`}>{dictionary.eyebrow}</p>
-        <h1 className={`font-bona-category-title ${styles.title}`}>{getSeo(locale, "/tarot")?.h1 ?? dictionary.title}</h1>
+        <h1 className={`font-bona-category-title ${styles.title}`}>{formattedTitle}</h1>
         <p className={`font-instrument-sm ${styles.description}`}>{dictionary.description}</p>
       </div>
 
