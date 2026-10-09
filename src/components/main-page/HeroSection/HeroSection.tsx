@@ -43,20 +43,20 @@ export default function HeroSection({ dictionary, isCardHovered = false }: HeroS
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.heading}>
-          <div className={styles.titleTop}>
-            <p className={`font-bona-hero ${styles.titleLine1}`}>{dictionary.titleLine1}</p>
-            <div className={styles.titleRow}>
-              <p className={`font-bona-3xl-emphasized ${styles.titleWord}`} style={{marginRight: 6}}>
+          <h1 className={styles.titleTop}>
+            <span className={`font-bona-hero ${styles.titleLine1}`}>{dictionary.titleLine1}</span>{" "}
+            <span className={styles.titleRow}>
+              <span className={`font-bona-3xl-emphasized ${styles.titleWord}`} style={{marginRight: 6}}>
                 {dictionary.titleToThe}
-              </p>
-              <p className={`font-bona-hero-emphasized ${styles.titleHighlight}`}>
+              </span>{" "}
+              <span className={`font-bona-hero-emphasized ${styles.titleHighlight}`}>
                 {dictionary.titleHighlight}
-              </p>
-              <p className={`font-bona-3xl-emphasized ${styles.titleWord}`} style={{marginLeft: 16}}>
+              </span>{" "}
+              <span className={`font-bona-3xl-emphasized ${styles.titleWord}`} style={{marginLeft: 16}}>
                 {dictionary.titleWorld}
-              </p>
-            </div>
-          </div>
+              </span>
+            </span>
+          </h1>
           <p className={`font-instrument-sm ${styles.description}`}>{dictionary.description}</p>
         </div>
         <motion.div layout className={styles.ctaButtonWrap} transition={CTA_LAYOUT_TRANSITION}>

@@ -1,4 +1,5 @@
 import type { Locale } from "@/lang";
+import { localizedHref } from "@/lib/routing";
 import { apiFetch } from "../api";
 import { API_PLATFORM, REQUEST_TIMEOUT_MS } from "../config/constants";
 
@@ -95,9 +96,9 @@ export function cardCount(spread: TarotSpread): number | null {
     ? positions.length : null;
 }
 
-export function categoryHref(slug: string) { return `/categories/${encodeURIComponent(slug)}`; }
-export function spreadHref(categorySlug: string, spreadSlug: string) {
-  return `${categoryHref(categorySlug)}/${encodeURIComponent(spreadSlug)}`;
+export function categoryHref(slug: string, locale: Locale) { return localizedHref(locale, `/tarot/${encodeURIComponent(slug)}`); }
+export function spreadHref(categorySlug: string, spreadSlug: string, locale: Locale) {
+  return `${categoryHref(categorySlug, locale)}/${encodeURIComponent(spreadSlug)}`;
 }
 
 const DEFAULT_SPREADS: Readonly<Record<string, string>> = {

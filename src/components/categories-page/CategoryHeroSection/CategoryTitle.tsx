@@ -10,7 +10,7 @@ export interface CategoryTitleProps {
 }
 
 export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
-  const ref = useRef<HTMLParagraphElement>(null);
+  const ref = useRef<HTMLHeadingElement>(null);
   const words = title.replace(/\u00ad/g, "").trim().split(/\s+/);
 
   useLayoutEffect(() => {
@@ -59,8 +59,8 @@ export default function CategoryTitle({ title, locale }: CategoryTitleProps) {
   }, [title, locale, words.length]);
 
   return (
-    <p ref={ref} className={`font-bona-category-title ${styles.title}`} lang={htmlLang[locale]}>
+    <h1 ref={ref} className={`font-bona-category-title ${styles.title}`} lang={htmlLang[locale]}>
       {words.map((word, index) => <span key={index}>{index > 0 && " "}<span className={styles.titleWord}>{word}</span></span>)}
-    </p>
+    </h1>
   );
 }

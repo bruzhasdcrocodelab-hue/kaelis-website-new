@@ -13,7 +13,10 @@ import {
 import { createPortal } from "react-dom";
 import dropdownStyles from "../Header/HeaderDropdown.module.css";
 import type { Dictionary, Locale } from "@/lang";
-import { setLocale } from "@/lib/locale-actions";
+import { usePathname, useRouter } from "next/navigation";
+import { useCatalogStores } from "@/components/categories/CatalogProvider";
+import { localizedHref, routeFromPath } from "@/lib/routing";
+import { catalogMessages } from "@/lib/categories/messages";
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
 import styles from "./LanguageSelector.module.css";
 
@@ -60,7 +63,11 @@ export default function LanguageSelector({
   languageShort,
 }: LanguageSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
+  const [switchError, setSwitchError] = useState(false);
+  const getStore = useCatalogStores();
+  const pathname = usePathname();
+  const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -116,9 +123,40 @@ export default function LanguageSelector({
 
   function handleSelect(next: Locale) {
     setOpen(false);
-    if (next === locale) return;
-    startTransition(() => {
-      setLocale(next);
+    if (next === locale || pending) return;
+    setSwitchError(false);
+    startTransition(async () => {
+      try {
+        const route = routeFromPath(pathname);
+        let target = localizedHref(next, pathname);
+        if (route?.kind === "category") {
+          const currentStore = getStore(locale);
+          const targetStore = getStore(next);
+          await Promise.all([currentStore.load(undefined, true), targetStore.load(undefined, true)]);
+          const current = currentStore.getSnapshot();
+          const translated = targetStore.getSnapshot();
+          if (current.status !== "success" || translated.status !== "success") throw new Error("Catalog unavailable");
+          const category = current.data.find(item => item.slug === route.path[0]);
+          const nextCategory = translated.data.find(item => item.id === category?.id);
+          if (!category || !nextCategory) throw new Error("Category unavailable");
+          const parts = [nextCategory.slug];
+          await Promise.all([currentStore.load(category.id, true), targetStore.load(nextCategory.id, true)]);
+          const spreads = currentStore.getSnapshot(category.id);
+          const nextSpreads = targetStore.getSnapshot(nextCategory.id);
+          if (spreads.status !== "success" || nextSpreads.status !== "success") throw new Error("Spreads unavailable");
+          if (route.path.length === 2) {
+            const spread = spreads.data.find(item => item.slug === route.path[1]);
+            const nextSpread = nextSpreads.data.find(item => item.id === spread?.id);
+            if (!nextSpread) throw new Error("Spread unavailable");
+            parts.push(nextSpread.slug);
+          }
+          target = localizedHref(next, "/tarot/" + parts.map(encodeURIComponent).join("/"));
+        }
+        if (window.location.pathname !== pathname) return;
+        router.push(target + window.location.search + window.location.hash, { scroll: false });
+      } catch {
+        setSwitchError(true);
+      }
     });
   }
 
@@ -131,6 +169,7 @@ export default function LanguageSelector({
       <button
         ref={triggerRef}
         type="button"
+        disabled={pending}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={menuId}
@@ -151,6 +190,8 @@ export default function LanguageSelector({
           />
         </span>
       </button>
+
+      {switchError && <span role="alert">{catalogMessages[locale].error}</span>}
 
       {isClient &&
         createPortal(

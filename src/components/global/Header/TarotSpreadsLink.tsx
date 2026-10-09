@@ -131,7 +131,7 @@ export default function TarotSpreadsLink({ className, locale, children }: TarotS
                   {column.map((category) => (
                     <Link
                       key={category.slug}
-                      href={categoryHref(category.slug)}
+                      href={categoryHref(category.slug, locale)}
                       role="menuitem"
                       className={`font-instrument-base ${styles.item}`}
                       onClick={() => setOpen(false)}

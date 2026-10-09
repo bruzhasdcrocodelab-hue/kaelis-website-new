@@ -164,7 +164,7 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
                     {categories.map((category) => (
                       <Link
                         key={category.slug}
-                        href={categoryHref(category.slug)}
+                        href={categoryHref(category.slug, locale)}
                         role="menuitem"
                         className={`font-instrument-sm-emphasized ${styles.gridItem}`}
                         onClick={closeMenu}

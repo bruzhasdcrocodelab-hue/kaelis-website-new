@@ -1,14 +1,32 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useState, useSyncExternalStore } from "react";
 import type { Locale } from "@/lang";
+import { localizedHref } from "@/lib/routing";
+import { useLocale } from "@/components/LocaleContext";
 import { createCatalogStore, INITIAL_STATE, type CatalogState, type TarotCategory, type TarotSpread } from "@/lib/categories/catalog";
 
 const CatalogContext = createContext<ReturnType<typeof createCatalogStore> | null>(null);
+const CatalogStoresContext = createContext<((locale: Locale) => ReturnType<typeof createCatalogStore>) | null>(null);
+
+export function useCatalogStores() {
+  const getStore = useContext(CatalogStoresContext);
+  if (!getStore) throw new Error("CatalogProvider is required");
+  return getStore;
+}
 
 export default function CatalogProvider({ locale, children }: { locale: Locale; children: React.ReactNode }) {
-  const store = useMemo(() => createCatalogStore(locale), [locale]);
-  return <CatalogContext.Provider value={store}>{children}</CatalogContext.Provider>;
+  const [getStore] = useState(() => {
+    const stores = new Map<Locale, ReturnType<typeof createCatalogStore>>();
+    return (language: Locale) => {
+      let store = stores.get(language);
+      if (!store) { store = createCatalogStore(language); stores.set(language, store); }
+      return store;
+    };
+  });
+  return <CatalogStoresContext.Provider value={getStore}>
+    <CatalogContext.Provider value={getStore(locale)}>{children}</CatalogContext.Provider>
+  </CatalogStoresContext.Provider>;
 }
 
 export function useCatalog(categoryId?: string | null, enabled = true) {
@@ -37,7 +55,8 @@ export function useAllSpreads(enabled: boolean) {
 }
 
 export function useCategoryLink(slug?: string) {
+  const locale = useLocale();
   const { state } = useCategories();
   const category = state.status === "success" ? state.data.find((item) => item.slug === slug) : undefined;
-  return category ? `/categories/${encodeURIComponent(category.slug)}` : "/categories";
+  return localizedHref(locale, category ? `/tarot/${encodeURIComponent(category.slug)}` : "/tarot");
 }

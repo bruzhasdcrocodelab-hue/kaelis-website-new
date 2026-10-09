@@ -1,3 +1,4 @@
+import { routing, seoContent } from "./routing-fixture.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -22,13 +23,14 @@ async function loadComponent(path, dependencies) {
 
 const marker = name => function Marker() { return createElement("div", { "data-component": name }); };
 const hero = (await loadComponent("../src/components/categories-page/CategoryHeroSection/CategoryHeroSection.tsx", {
+  "@/lib/seo": { getSeo: (locale, path) => seoContent[locale][path] },
   "next/navigation": { useRouter: () => ({ replace() {} }) },
   "@/components/global/MainButton": ({ children }) => createElement("button", null, children),
   "@/components/categories-page/SubcategoryRing": marker("ring"),
   "./CategoryTitle": ({ title }) => createElement("h1", null, title),
   "./CategoryHeroSection.module.css": { container: "container", containerWithRows: "with-rows" },
 })).default;
-const catalog = await loadComponent("../src/lib/categories/catalog.ts", { "../api": {}, "../config/constants": constants });
+const catalog = await loadComponent("../src/lib/categories/catalog.ts", { "../api": {}, "../config/constants": constants, "@/lib/routing": routing });
 const success = data => ({ status: "success", data });
 const spread = (id, slug, count = 4) => ({ id, slug, name: slug, site_description: "", description: "", matrix: Object.fromEntries(Array.from({ length: count }, (_, i) => [i, [i, 0]])) });
 const triplet = spread("62", "triplet");
