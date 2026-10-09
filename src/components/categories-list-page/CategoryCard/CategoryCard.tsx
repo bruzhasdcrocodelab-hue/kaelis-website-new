@@ -32,8 +32,8 @@ export default function CategoryCard({
 
   const borderClassName = [
     styles.border,
-    filled ? styles.borderHiddenDesktop : "",
-    mobileFilled ? styles.borderHiddenMobile : "",
+    filled ? "" : styles.borderHiddenDesktop,
+    mobileFilled ? "" : styles.borderHiddenMobile,
   ]
     .filter(Boolean)
     .join(" ");

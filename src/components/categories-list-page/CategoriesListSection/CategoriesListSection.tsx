@@ -50,7 +50,7 @@ export default function CategoriesListSection({
                 title={category.name}
                 description={category.site_description}
                 locale={locale}
-                filled={(row + column) % 2 === 0}
+                filled={(row + column) % 2 !== 0}
                 mobileFilled={(mobileRow + mobileColumn) % 2 !== 0}
                 starDelay={-((index * 0.53) % 2.6)}
               />
