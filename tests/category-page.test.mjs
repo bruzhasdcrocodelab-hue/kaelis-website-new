@@ -5,6 +5,7 @@ import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
+import { constants } from "./env-fixture.mjs";
 
 const require = createRequire(import.meta.url);
 async function loadComponent(path, dependencies) {
@@ -27,14 +28,14 @@ const hero = (await loadComponent("../src/components/categories-page/CategoryHer
   "./CategoryTitle": ({ title }) => createElement("h1", null, title),
   "./CategoryHeroSection.module.css": { container: "container", containerWithRows: "with-rows" },
 })).default;
-const catalog = await loadComponent("../src/lib/categories/catalog.ts", { "../api": {} });
+const catalog = await loadComponent("../src/lib/categories/catalog.ts", { "../api": {}, "../config/constants": constants });
 const success = data => ({ status: "success", data });
 const spread = (id, slug, count = 4) => ({ id, slug, name: slug, site_description: "", description: "", matrix: Object.fromEntries(Array.from({ length: count }, (_, i) => [i, [i, 0]])) });
 const triplet = spread("62", "triplet");
 const familySpreads = [spread("11", "my-family", 14), spread("12", "children", 10)];
 const dictionary = { header: {}, footer: {}, categoryPage: { topBlock: {}, categoryLabel: "Category", getYourReadings: "Read" } };
 
-async function renderPage({ slug = "family", spreads = familySpreads, all = success([triplet]), nested } = {}) {
+async function renderPage({ slug = "other", spreads = familySpreads, all = success([triplet]), nested } = {}) {
   let enabled;
   let reading;
   let retry;
@@ -42,6 +43,8 @@ async function renderPage({ slug = "family", spreads = familySpreads, all = succ
   const Page = (await loadComponent("../src/components/categories-page/CategoryPageView/CategoryPageView.tsx", {
     "next/image": () => null,
     "next/link": ({ children }) => createElement("a", null, children),
+    "@/components/reading/ReadingLink": ({ children }) => createElement("a", null, children),
+    "@/components/reading/ReadingNavigationProvider": ({ children }) => children,
     "@/lib/categories/catalog": catalog,
     "@/components/categories/CatalogProvider": {
       useCategories: () => ({ state: success([{ id: "4", slug, name: slug, site_description: "" }]), retry() {} }),
@@ -72,7 +75,7 @@ test("multi-spread category renders its ring and reads the global triplet with t
 });
 
 test("dreams and other single-spread categories omit the ring and its spacing without loading all spreads", async () => {
-  for (const slug of ["dreams", "family"]) {
+  for (const slug of ["dreams", "other"]) {
     const result = await renderPage({ slug, spreads: [spread("1", "dream", 8)], all: { status: "loading" } });
     assert.equal(result.enabled, false);
     assert.doesNotMatch(result.html, /data-component="ring"|with-rows/);

@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import Link, { type LinkProps } from "next/link";
+import type { LinkProps } from "next/link";
+import Link from "@/components/reading/ReadingLink";
 import type { SubcategoryPosition } from "@/lib/categories/subcategoryLayout";
 import styles from "./SubcategoryNode.module.css";
 import { htmlLang, Locale } from "@/lang";

@@ -131,14 +131,7 @@
 }
 
 .cardArtImage {
-  position: absolute;
-  max-width: none;
-}
-
-.cardFrame {
-  object-fit: cover;
-  mix-blend-mode: lighten;
-  pointer-events: none;
+  object-fit: fill;
 }
 
 .missingArt {
@@ -506,11 +499,10 @@
 }
 
 .mobileControls {
-  position: fixed;
-  left: 20px;
-  right: 20px;
-  bottom: max(20px, env(safe-area-inset-bottom));
-  z-index: 30;
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  margin-top: 20px;
   display: flex;
   gap: 12px;
   align-items: stretch;
@@ -518,6 +510,7 @@
 }
 
 .mobileControls > button {
+  touch-action: manipulation;
   min-width: 0;
   height: auto;
   min-height: 52px;
@@ -538,10 +531,35 @@
 }
 
 .mobileControls > .answerButton {
+  position: relative;
+  isolation: isolate;
   max-width: 198px;
   flex: 1.864;
   flex-direction: row-reverse;
   padding-inline: 6px 16px;
+}
+
+.answerButton:not(:disabled)::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--gradient-pink);
+  filter: blur(9px);
+  pointer-events: none;
+  animation: answerGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes answerGlow {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 .mobileControls > button > span:first-child {
@@ -715,6 +733,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .answerButton:not(:disabled)::before {
+    animation: none;
+    opacity: 0.4;
+  }
+
   .revealCardHoverOverlay,
   .chevronIcon,
   .sectionCollapse,

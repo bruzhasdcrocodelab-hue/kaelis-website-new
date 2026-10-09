@@ -30,6 +30,8 @@ const en = {
     ctaHover: "Get Your Readings",
   },
   readingConfirmation: {
+    leaveMessage: "Leaving will clear your question and reset the unfinished reading.",
+    leaveConfirm: "Leave Reading",
     title: "Are you sure?",
     message: "Changing the spread will clear your question and the current reading.",
     confirm: "Switch Reading",

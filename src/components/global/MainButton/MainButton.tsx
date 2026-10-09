@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
-import Link from "next/link";
+import Link from "@/components/reading/ReadingLink";
 import styles from "./MainButton.module.css";
 
 /**
@@ -72,7 +72,7 @@ const ICON_FILL_CLASS: Record<MainButtonVariant, string> = {
   default: "bg-black",
   gradient: "bg-white",
   "gradient-black": "bg-black",
-  stroke: "bg-gradient-pink-purple",
+  stroke: "bg-gradient-pink",
 };
 
 function Icon({

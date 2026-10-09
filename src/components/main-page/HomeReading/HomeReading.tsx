@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
 import CategoryTopBlock, { type CategoryTopBlockProps } from "@/components/categories-page/CategoryTopBlock";
-import ConfirmationModal from "@/components/global/ConfirmationModal/ConfirmationModal";
+import { useReadingNavigation } from "@/components/reading/ReadingNavigationProvider";
 import HeroCardsSection from "@/components/main-page/HeroCardsSection";
 import TopBlockSection from "@/components/main-page/TopBlockSection";
 import { cardCount, type CatalogState } from "@/lib/categories/catalog";
@@ -21,25 +21,24 @@ const subscribeViewport = (listener: () => void) => {
 };
 const mobileSnapshot = () => window.matchMedia(MOBILE_QUERY).matches;
 const serverSnapshot = () => false;
-type Selection = { slug: HomeCardSlug; session: number };
+type Selection = { slug: HomeCardSlug; session: number; opening: number };
 
 // Preserve the current reading while the same selection's translations load.
-function useLastSuccess<T>(state: CatalogState<T>) {
-  const [last, setLast] = useState(state);
-  if (state.status === "success" && state !== last) setLast(state);
-  return state.status === "success" ? state : last;
+function useLastSuccess<T>(state: CatalogState<T>, scope?: string) {
+  const [last, setLast] = useState({ state, scope });
+  if (scope !== last.scope || (state.status === "success" && state !== last.state)) setLast({ state, scope });
+  return state.status === "success" || scope !== last.scope ? state : last.state;
 }
 
-function ReadingSession({ slug, dictionary, locale, present, onProgressChange }: {
-  slug: HomeCardSlug; dictionary: Dictionary; locale: Locale; present: boolean;
-  onProgressChange: (hasProgress: boolean) => void;
+function ReadingSession({ slug, dictionary, locale, present, sessionKey }: {
+  slug: HomeCardSlug; dictionary: Dictionary; locale: Locale; present: boolean; sessionKey: number;
 }) {
   const mapping = HOME_CARDS[slug];
   const categoryRequest = useCategories();
   const categories = useLastSuccess(categoryRequest.state);
   const category = categories.status === "success" ? categories.data.find(item => item.slug === mapping.category) : undefined;
   const spreadRequest = useSpreads(category?.id);
-  const spreads = useLastSuccess(spreadRequest.state);
+  const spreads = useLastSuccess(spreadRequest.state, category?.id);
   const spread = spreads.status === "success" ? spreads.data.find(item => item.slug === mapping.spread) : undefined;
   const count = spread ? cardCount(spread) : null;
   const status: "loading" | "error" | "notFound" = categoryRequest.state.status !== "success" ? categoryRequest.state.status
@@ -51,16 +50,15 @@ function ReadingSession({ slug, dictionary, locale, present, onProgressChange }:
     ? categoryRequest.state.status === "error" || spreadRequest.state.status === "error" ? { status: "error" as const, retry } : undefined
     : { status, retry };
   return (
-    <CategoryTopBlock dictionary={dictionary.categoryPage.topBlock} locale={locale}
+    <CategoryTopBlock sessionKey={sessionKey} dictionary={dictionary.categoryPage.topBlock} locale={locale}
       categoryLabel={dictionary.cards[mapping.label]} categoryId={category?.id ?? ""} spreadId={spread?.id ?? ""}
       maxSelectableCards={count ?? 0} sessionActive={present && Boolean(ready)} embedded
-      catalogStatus={catalogStatus} onProgressChange={onProgressChange} />
+      catalogStatus={catalogStatus} />
   );
 }
 
-function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange, onExpanded }: {
+function ReadingPanel({ selection, dictionary, locale, mobile, onExpanded }: {
   selection: Selection; dictionary: Dictionary; locale: Locale; mobile: boolean;
-  onProgressChange: (hasProgress: boolean) => void;
   onExpanded: () => void;
 }) {
   const present = useIsPresent();
@@ -70,7 +68,10 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange,
   useLayoutEffect(() => {
     const content = contentRef.current;
     if (!content) return;
-    const measure = () => setHeight(content.getBoundingClientRect().height);
+    const measure = () => {
+      const nextHeight = content.getBoundingClientRect().height;
+      if (content.querySelector("#category-top-block")) setHeight(nextHeight);
+    };
     const observer = new ResizeObserver(measure);
     observer.observe(content);
     measure();
@@ -88,7 +89,7 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange,
         animate={{ y: 0, opacity: 1 }} exit={{ y: mobile ? "100%" : 24, opacity: mobile ? 1 : 0 }}
         transition={transition}>
         {/* Only the session resets on card changes; the animated panel stays mounted. */}
-        <ReadingSession key={selection.session} slug={selection.slug} dictionary={dictionary} locale={locale} present={present} onProgressChange={onProgressChange} />
+        <ReadingSession slug={selection.slug} sessionKey={selection.session} dictionary={dictionary} locale={locale} present={present} />
       </motion.div>
     </motion.div>
   );
@@ -96,52 +97,86 @@ function ReadingPanel({ selection, dictionary, locale, mobile, onProgressChange,
 
 export default function HomeReading({ dictionary, locale }: { dictionary: Dictionary; locale: Locale }) {
   const [selection, setSelection] = useState<Selection | null>(null);
-  const [session, setSession] = useState(0);
-  const [pending, setPending] = useState<HomeCardSlug | null>(null);
+  const [pendingSlug, setPendingSlug] = useState<HomeCardSlug | null>(null);
+  const session = useRef(0);
+  const opening = useRef(0);
   const [exiting, setExiting] = useState(false);
-  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const navigation = useReadingNavigation();
+  const { state: categories } = useCategories();
+  const pendingCatalogAnchor = useRef(false);
+  const onCloseStart = useRef<(() => void | Promise<void>) | null>(null);
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const reduced = useReducedMotion();
   const open = selection !== null || exiting;
   const activeScroll = useRef<ReturnType<typeof scrollToCards>>(undefined);
+  useEffect(() => {
+    if (window.location.hash !== "#top-block" || selection) {
+      pendingCatalogAnchor.current = false;
+      return;
+    }
+    if (categories.status !== "loading") {
+      if (pendingCatalogAnchor.current && categories.status === "success") {
+        document.getElementById("top-block")?.scrollIntoView({ behavior: "smooth" });
+      }
+      pendingCatalogAnchor.current = false;
+      return;
+    }
+    pendingCatalogAnchor.current = true;
+    const cancel = () => { pendingCatalogAnchor.current = false; };
+    const events = ["wheel", "touchstart", "pointerdown", "keydown"] as const;
+    events.forEach(event => window.addEventListener(event, cancel, { passive: true }));
+    return () => events.forEach(event => window.removeEventListener(event, cancel));
+  }, [categories.status, selection]);
   useEffect(() => () => activeScroll.current?.cancel(), []);
+  useLayoutEffect(() => {
+    if (!mobile || !open) return;
+    return navigation?.registerHomeReturn(proceed => {
+      activeScroll.current?.cancel();
+      if (!selection) { void proceed(); return; }
+      onCloseStart.current = proceed;
+      setExiting(true);
+      setSelection(null);
+    });
+  }, [mobile, open, selection, navigation]);
+  useLayoutEffect(() => {
+    if (selection || !onCloseStart.current) return;
+    const proceed = onCloseStart.current;
+    onCloseStart.current = null;
+    void proceed();
+  }, [selection]);
   function startSession(slug: HomeCardSlug) {
+    setPendingSlug(null);
     activeScroll.current = scrollToCards(Boolean(reduced), true);
-    setNeedsConfirmation(false);
-    setSession(value => value + 1);
-    setSelection({ slug, session: session + 1 });
-    setPending(null);
+    session.current += 1;
+    if (!selection) opening.current += 1;
+    setSelection({ slug, session: session.current, opening: opening.current });
   }
   function select(slug: HomeCardSlug) {
+    if (pendingSlug) return;
     if (selection?.slug === slug) {
+      navigation?.reset();
       activeScroll.current?.cancel();
       setExiting(true);
       setSelection(null);
-    } else if (selection && needsConfirmation) {
-      setPending(slug);
+    } else if (navigation) {
+      setPendingSlug(slug);
+      navigation.request(() => startSession(slug), "switch", () => setPendingSlug(null));
     } else {
       startSession(slug);
     }
   }
-  function confirm() {
-    if (!pending) return;
-    startSession(pending);
-  }
   return (
     <>
       <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
-        selectedSlug={selection?.slug ?? null} onCardSelect={select} />
+        selectedSlug={selection?.slug ?? null} pendingSlug={pendingSlug} onCardSelect={select} />
       <div className={styles.panels} data-home-panels>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
-          {selection && <ReadingPanel key="reading" selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onProgressChange={setNeedsConfirmation} onExpanded={() => activeScroll.current?.finish()} />}
+          {selection && <ReadingPanel key={selection.opening} selection={selection} dictionary={dictionary} locale={locale} mobile={mobile} onExpanded={() => activeScroll.current?.finish()} />}
         </AnimatePresence>
         <div className={styles.promo} data-home-promo inert={mobile && open}>
           <TopBlockSection dictionary={dictionary.topBlock} className={styles.topBlock} />
         </div>
       </div>
-      <ConfirmationModal open={pending !== null} title={dictionary.readingConfirmation.title}
-        message={dictionary.readingConfirmation.message} confirmLabel={dictionary.readingConfirmation.confirm}
-        cancelLabel={dictionary.readingConfirmation.cancel} onConfirm={confirm} onCancel={() => setPending(null)} />
     </>
   );
 }

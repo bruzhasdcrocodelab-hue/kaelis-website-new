@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import type { Dictionary } from "@/lang";
@@ -14,6 +14,7 @@ export interface CardsFanProps {
   hoveredIndex: number | null;
   onCardHoverChange: (index: number | null) => void;
   selectedSlug: HomeCardSlug | null;
+  pendingSlug?: HomeCardSlug | null;
   onCardSelect: (slug: HomeCardSlug) => void;
 }
 
@@ -53,16 +54,9 @@ function rampCardWidth(viewportWidth: number) {
  */
 function useFanScale(computeScale: (viewportWidth: number) => number, active: boolean) {
   const ref = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
+  const subscribe = useCallback((update: () => void) => {
     const el = ref.current;
-    if (!el || !active) {
-      setScale(1);
-      return;
-    }
-    const update = () => setScale(computeScale(window.innerWidth || el.clientWidth));
-    update();
+    if (!el || !active) return () => {};
     const observer = new ResizeObserver(update);
     observer.observe(el);
     window.addEventListener("resize", update);
@@ -70,24 +64,23 @@ function useFanScale(computeScale: (viewportWidth: number) => number, active: bo
       observer.disconnect();
       window.removeEventListener("resize", update);
     };
-  }, [computeScale, active]);
+  }, [active]);
+  const scale = useSyncExternalStore(
+    subscribe,
+    () => active ? computeScale(window.innerWidth || ref.current?.clientWidth || 0) : 1,
+    () => 1,
+  );
 
   return { ref, scale };
 }
 
-/** Tracks a media query, SSR-safe (starts false, corrects on mount). */
 function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
+  const subscribe = useCallback((update: () => void) => {
     const mql = window.matchMedia(query);
-    const update = () => setMatches(mql.matches);
-    update();
     mql.addEventListener("change", update);
     return () => mql.removeEventListener("change", update);
   }, [query]);
-
-  return matches;
+  return useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => false);
 }
 
 const MOBILE_QUERY = "(max-width: 768px)";
@@ -354,11 +347,15 @@ function FlippableCard({
   );
 }
 
-export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
+export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, pendingSlug, onCardSelect }: CardsFanProps) {
   const cards = buildCards(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const { ref: fanRef, scale } = useFanScale(desktopFanScale, !isMobile);
+
+  useEffect(() => {
+    if (!pendingSlug) onCardHoverChange(null);
+  }, [pendingSlug, onCardHoverChange]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsDealt(true), DEAL_DURATION);
@@ -384,13 +381,13 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
           <FlippableCard
             key={card.key}
             card={card}
-            isHovered={selectedSlug === card.slug || hoveredIndex === index}
+            isHovered={selectedSlug === card.slug || pendingSlug === card.slug || hoveredIndex === index}
             isSelected={selectedSlug === card.slug}
             onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
             isDealt={isDealt}
             /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
             zIndex={index}
-            onHoverStart={() => onCardHoverChange(index)}
+            onHoverStart={() => { if (!pendingSlug) onCardHoverChange(index); }}
             onHoverEnd={() => onCardHoverChange(null)}
           />
         ))}
@@ -400,6 +397,7 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
         hoveredIndex={hoveredIndex}
         onCardHoverChange={onCardHoverChange}
         selectedSlug={selectedSlug}
+        pendingSlug={pendingSlug}
         onCardSelect={onCardSelect}
       />
     </div>
@@ -618,7 +616,7 @@ function MobileFlippableCard({
             src={showFront && !frontAssets && card.srcFront ? card.srcFront : card.srcBack}
             alt={card.alt}
             fill
-            sizes="116px"
+            sizes="(max-width: 390px) 31.025641vw, (max-width: 768px) calc(104.657143px + 4.190476vw), 165px"
             style={{ visibility: showFront && frontAssets ? "hidden" : "visible" }}
           />
           {frontAssets && (
@@ -663,7 +661,7 @@ function MobileFlippableCard({
   );
 }
 
-function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, onCardSelect }: CardsFanProps) {
+function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedSlug, pendingSlug, onCardSelect }: CardsFanProps) {
   const { back, front } = buildMobileRows(dictionary);
   const [isDealt, setIsDealt] = useState(false);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -690,12 +688,12 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedS
           key={card.key}
           card={card}
           rowCenterCx={rowCenterCx}
-          isHovered={selectedSlug === card.slug || hoveredIndex === globalIndex}
+          isHovered={selectedSlug === card.slug || (Boolean(card.slug) && pendingSlug === card.slug) || hoveredIndex === globalIndex}
           isSelected={selectedSlug === card.slug}
           onSelect={() => { if (card.slug) { onCardHoverChange(null); onCardSelect(card.slug); } }}
           isDealt={isDealt}
           zIndex={rowBaseZ + i}
-          onHoverStart={() => onCardHoverChange(globalIndex)}
+          onHoverStart={() => { if (!pendingSlug) onCardHoverChange(globalIndex); }}
           onHoverEnd={() => onCardHoverChange(null)}
         />
       );

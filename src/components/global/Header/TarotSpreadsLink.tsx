@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import dropdownStyles from "./HeaderDropdown.module.css";
-import Link from "next/link";
+import Link from "@/components/reading/ReadingLink";
 import type { Locale } from "@/lang";
 import { useCategories } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";

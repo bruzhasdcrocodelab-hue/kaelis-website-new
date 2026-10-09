@@ -14,6 +14,7 @@ export interface ConfirmationModalProps {
   cancelLabel: string;
   onConfirm: () => void;
   onCancel: () => void;
+  onExitComplete?: () => void;
 }
 
 function Dialog({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel }: Omit<ConfirmationModalProps, "open">) {
@@ -36,8 +37,11 @@ function Dialog({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel
   }, []);
   return (
     <dialog ref={ref} className={styles.root} inert={!present} aria-labelledby={`${id}-title`} aria-describedby={`${id}-message`}
+      onKeyDown={event => {
+        if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); onCancel(); }
+      }}
       onCancel={event => { event.preventDefault(); onCancel(); }}>
-      <motion.div className={styles.backdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      <motion.div className={styles.backdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: reduced ? 0 : 0.32 } }}
         transition={{ duration: reduced ? 0 : 0.25 }} onClick={onCancel} />
       <motion.div className={styles.panel} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
         transition={{ duration: reduced ? 0 : 0.32, ease: [0.32, 0.72, 0, 1] }}>
@@ -52,7 +56,7 @@ function Dialog({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel
   );
 }
 
-export default function ConfirmationModal({ open, ...props }: ConfirmationModalProps) {
+export default function ConfirmationModal({ open, onExitComplete, ...props }: ConfirmationModalProps) {
   if (typeof document === "undefined") return null;
-  return createPortal(<AnimatePresence>{open && <Dialog key="confirmation" {...props} />}</AnimatePresence>, document.body);
+  return createPortal(<AnimatePresence onExitComplete={onExitComplete}>{open && <Dialog key="confirmation" {...props} />}</AnimatePresence>, document.body);
 }

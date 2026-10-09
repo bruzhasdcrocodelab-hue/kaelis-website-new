@@ -29,6 +29,7 @@ export default function TopBlockSection({ dictionary, className = "" }: TopBlock
             src="/images/backgrounds/TopBlock-3.png"
             alt=""
             fill
+            sizes="(max-width: 768px) 891.081px, 1320.12px"
             className={styles.backgroundImage}
           />
         </div>

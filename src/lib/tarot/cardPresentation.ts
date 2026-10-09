@@ -31,7 +31,7 @@ export function presentCards(reading: Reading, locale: Locale): PresentedCard[] 
     const [x, y] = reading.tarot.matrix[card.position];
     return { slug: card.position, position: card.position, name: { en: name, ru: name, uk: name },
       image: art?.image ?? "/images/cards/default-card.png",
-      art: art?.art ?? { left: "0%", top: "0%", width: "100%", height: "100%" }, missingArt: !art,
+      missingArt: !art,
       description: [card.description, reading.reading?.cards.find(c => c.position === card.position)?.text].filter(Boolean).join("\n\n"),
       reversed: card.orientation === 0 || card.orientation === false,
       x: x - minX, y: y - minY };

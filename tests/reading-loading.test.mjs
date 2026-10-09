@@ -6,9 +6,9 @@ import ts from "typescript";
 
 const require = createRequire(import.meta.url);
 const base = "../src/components/categories-page/CategoryTopBlock/";
-async function load(path, resolve) {
+async function load(path, resolve, extraSource = "") {
   const source = await readFile(new URL(path, import.meta.url), "utf8");
-  const { outputText } = ts.transpileModule(source, {
+  const { outputText } = ts.transpileModule(source + extraSource, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
   });
   const loaded = { exports: {} };
@@ -42,6 +42,7 @@ function find(node, type) {
 
 async function mountParent() {
   const state = hooks();
+  let session;
   const flow = {
     reading: null, busy: false, error: "", speakers: [{ id: "1" }], speakerId: "1", question: "Question",
     submit() { this.busy = true; this.error = ""; },
@@ -49,21 +50,51 @@ async function mountParent() {
     retry() {}, setQuestion(value) { this.question = value; },
   };
   const marker = name => name.split("/").at(-1);
-  const { default: Parent } = await load(base + "CategoryTopBlock.tsx", name => {
-    if (name === "react") return { ...state.react, useEffect() {} };
+  const { SessionContent: Parent } = await load(base + "CategoryTopBlock.tsx", name => {
+    if (name === "react") return { ...state.react, useEffect() {}, useLayoutEffect: effect => effect() };
     if (name === "react/jsx-runtime") return require(name);
+    if (name === "motion/react") return { motion: { div: "div" }, useIsPresent: () => true, useReducedMotion: () => false };
     if (name === "@/lib/tarot/useReading") return { useReading: () => flow };
+    if (name === "@/components/reading/ReadingNavigationProvider") return {
+      useReadingNavigation: () => ({ register(value) { session = value; } }),
+    };
     if (name === "@/lib/tarot/messages") return { readingMessages: { en: {} } };
     if (name.endsWith(".css")) return {};
     if (name.endsWith("TriggerButton")) return { default: marker(name), GUIDE_ICON: {} };
     return marker(name);
-  });
-  const props = { dictionary: { guideDescriptions: {} }, locale: "en", categoryLabel: "Family", categoryId: "1", spreadId: "1", maxSelectableCards: 3 };
+  }, "\nexport { SessionContent };");
+  const props = { dictionary: { guideDescriptions: {} }, locale: "en", categoryLabel: "Family", categoryId: "1", spreadId: "1", maxSelectableCards: 3, panelRef: { current: null }, onAppearance() {}, initialVisible: true };
   const render = () => { state.begin(); return Parent(props); };
   const start = () => { find(render(), "AskQuestionStep").props.onContinue(); return render(); };
-  return { flow, render, start, props };
+  return { flow, render, start, props, get session() { return session; } };
 }
 const ready = { id: "10", question: "Question", cards: [{ position: "0" }], reading: { sections: [{ text: "Interpretation" }] } };
+
+test("navigation protects nonempty questions, choosing and revealed readings and exposes a full reset", async () => {
+  const parent = await mountParent();
+  for (const question of ["", "   ", "Question"]) {
+    parent.flow.question = question;
+    parent.render();
+    assert.equal(parent.session.started, Boolean(question.trim()));
+  }
+  parent.flow.question = "";
+  parent.flow.busy = true;
+  parent.render();
+  assert.equal(parent.session.started, true);
+  parent.flow.busy = false;
+  parent.flow.reading = ready;
+  find(parent.render(), "ChooseCardsStep").props.onFirstCycleComplete();
+  assert.ok(find(parent.render(), "RevealCardsStep"));
+  assert.equal(parent.session.started, true);
+  parent.flow.question = "Question";
+  parent.flow.error = "Error";
+  parent.session.reset();
+  assert.ok(find(parent.render(), "AskQuestionStep"));
+  assert.equal(parent.flow.question, "");
+  assert.equal(parent.flow.reading, null);
+  assert.equal(parent.flow.error, "");
+  assert.equal(parent.session.started, false);
+});
 
 test("an immediate interpretation waits for the first complete cycle and passes the original reading to Reveal", async () => {
   const app = await mountParent();

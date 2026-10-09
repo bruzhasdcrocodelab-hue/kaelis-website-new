@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useMemo, type CSSProperties } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useId, useSyncExternalStore, type CSSProperties } from "react";
+import { animate, interpolate, motion, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 
 /**
  * "Running waves" effect — a narrow wavy ribbon running endlessly along a fixed
@@ -153,7 +153,7 @@ const GRAD_Y1 = 291.794; // offset 0  — transparent end
 const GRAD_Y2 = -45.7297; // offset 1  — opaque end
 
 interface RibbonSideProps {
-  animate: boolean;
+  pathId: string;
   maskId: string;
   gradientId: string;
   /** false = left ribbon, true = right ribbon (mirror of the left). */
@@ -169,18 +169,31 @@ const GRAD_STOPS = (
   </>
 );
 
-function RibbonSide({ animate, maskId, gradientId, mirror }: RibbonSideProps) {
+const frames = (() => {
   // One period of phase keyframes; first frame repeated at the end so the loop
   // closes exactly.
-  const frames = useMemo(() => {
-    const out: string[] = [];
-    // Negative phase so crests travel down-and-outward along +y (toward the
-    // outer corner), not up the axis.
-    for (let i = 0; i <= PHASE_FRAMES; i += 1) {
-      out.push(buildRibbonPath(-(i / PHASE_FRAMES) * 2 * Math.PI));
-    }
-    return out;
-  }, []);
+  const out: string[] = [];
+  // Negative phase so crests travel down-and-outward along +y (toward the
+  // outer corner), not up the axis.
+  for (let i = 0; i <= PHASE_FRAMES; i += 1) {
+    out.push(buildRibbonPath(-(i / PHASE_FRAMES) * 2 * Math.PI));
+  }
+  return out;
+})();
+
+const ribbonAt = interpolate(frames.map((_, index) => index / PHASE_FRAMES), frames);
+
+function AnimatedRibbonPath({ id }: { id: string }) {
+  const progress = useMotionValue(0);
+  const d = useTransform(progress, ribbonAt);
+  useEffect(() => {
+    const animation = animate(progress, 1, { duration: LOOP_DURATION_SECONDS, ease: "linear", repeat: Infinity, repeatType: "loop" });
+    return () => animation.stop();
+  }, [progress]);
+  return <motion.path id={id} fill="#fff" d={d} />;
+}
+
+function RibbonSide({ pathId, maskId, gradientId, mirror }: RibbonSideProps) {
 
   const place = `translate(${ORIGIN_X} ${ORIGIN_Y}) rotate(${DIAGONAL_ANGLE_DEG})`;
   const mirrorT = `translate(${VIEW_W} 0) scale(-1 1)`;
@@ -197,21 +210,7 @@ function RibbonSide({ animate, maskId, gradientId, mirror }: RibbonSideProps) {
         height={VIEW_H}
       >
         <g transform={placed}>
-          {animate ? (
-            <motion.path
-              fill="#fff"
-              initial={{ d: frames[0] }}
-              animate={{ d: frames }}
-              transition={{
-                duration: LOOP_DURATION_SECONDS,
-                ease: "linear",
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-            />
-          ) : (
-            <path d={frames[0]} fill="#fff" />
-          )}
+          <use href={`#${pathId}`} />
         </g>
       </mask>
 
@@ -233,14 +232,24 @@ export interface AnimatedWavesProps {
   style?: CSSProperties;
 }
 
+const desktopSnapshot = () => window.matchMedia("(min-width: 769px)").matches;
+const serverSnapshot = () => false;
+const subscribeViewport = (listener: () => void) => {
+  const media = window.matchMedia("(min-width: 769px)");
+  media.addEventListener("change", listener);
+  return () => media.removeEventListener("change", listener);
+};
+
 export default function AnimatedWaves({ className, style }: AnimatedWavesProps) {
   const prefersReducedMotion = useReducedMotion();
+  const desktop = useSyncExternalStore(subscribeViewport, desktopSnapshot, serverSnapshot);
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const leftMaskId = `waves-mask-l-${rawId}`;
   const rightMaskId = `waves-mask-r-${rawId}`;
   const gradId = `waves-grad-${rawId}`;
+  const pathId = `waves-path-${rawId}`;
 
-  const animate = !prefersReducedMotion;
+  const animated = desktop && !prefersReducedMotion;
 
   return (
     <svg
@@ -254,6 +263,7 @@ export default function AnimatedWaves({ className, style }: AnimatedWavesProps) 
       aria-hidden
     >
       <defs>
+        {animated ? <AnimatedRibbonPath id={pathId} /> : <path id={pathId} d={frames[0]} fill="#fff" />}
         {/* Plain vertical pink-to-transparent wash from the mock token. Shared
             by both ribbons (a vertical gradient needs no mirroring). */}
         <linearGradient
@@ -269,13 +279,13 @@ export default function AnimatedWaves({ className, style }: AnimatedWavesProps) 
       </defs>
 
       <RibbonSide
-        animate={animate}
+        pathId={pathId}
         maskId={leftMaskId}
         gradientId={gradId}
         mirror={false}
       />
       <RibbonSide
-        animate={animate}
+        pathId={pathId}
         maskId={rightMaskId}
         gradientId={gradId}
         mirror
