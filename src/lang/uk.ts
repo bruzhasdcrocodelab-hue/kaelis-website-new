@@ -62,7 +62,7 @@ const uk: Dictionary = {
   },
   categoryPage: {
     categoryLabel: "Категорія",
-    returnToMain: "Повернутися на головну",
+    returnToMain: "Повернутися до Таро",
     returnToPrefix: "Повернутися до",
     getYourReadings: "Отримати розклад",
     topBlock: {

@@ -62,7 +62,7 @@ const ru: Dictionary = {
   },
   categoryPage: {
     categoryLabel: "Категория",
-    returnToMain: "Вернуться на главную",
+    returnToMain: "Вернуться к Таро",
     returnToPrefix: "Вернуться к",
     getYourReadings: "Получить расклад",
     topBlock: {
