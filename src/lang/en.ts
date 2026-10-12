@@ -60,7 +60,7 @@ const en = {
   },
   categoryPage: {
     categoryLabel: "Category",
-    returnToMain: "Return to Main",
+    returnToMain: "Return to Tarot",
     returnToPrefix: "Return to",
     getYourReadings: "Get Your Readings",
     topBlock: {
