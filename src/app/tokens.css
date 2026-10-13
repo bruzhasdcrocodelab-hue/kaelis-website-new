@@ -107,6 +107,21 @@
     #b99eed 79.807693%,
     #f7f6fa 90%
   );
+  --gradient-category-page-bg: linear-gradient(
+    180deg,
+    #120e2b 0%,
+    #2e1b63 19.7047%,
+    #522d9b 35.2695%,
+    #7646c1 49.6227%,
+    #9b6cd6 60%,
+    #b99eed 65%,
+    #f5f5f7 75%
+  );
+  --gradient-category-page-glow: linear-gradient(
+    180deg,
+    #f793e0 55%,
+    #f6f6fa 75%
+  );
   --gradient-main-bg-glow: linear-gradient(
     180deg,
     rgb(227.2265, 146.5364, 247.3990) 55%,
