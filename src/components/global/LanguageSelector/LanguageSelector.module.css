@@ -5,12 +5,13 @@
 }
 
 .trigger {
+  composes: stroke from "../GradientStroke/GradientStroke.module.css";
   display: inline-flex;
   gap: 2px;
   align-items: center;
   height: 44px;
   padding: 6px 6px 6px 16px;
-  border: 1.2px solid #d3aced;
+  border: 1.2px solid transparent;
   border-radius: 30px;
   background: transparent;
   cursor: pointer;

@@ -5,10 +5,8 @@
 
 .node {
   display: block;
-  width: 88px;
+  width: clamp(88px, 4.173vw + 55.91px, 116px);
   text-decoration: none;
-  transition: opacity 0.2s ease,
-    translate 0.2s ease;
 }
 
 .nodeArc {
@@ -21,16 +19,11 @@
   flex-shrink: 0;
 }
 
-.node:hover {
-  opacity: 0.85;
-  translate: 0 -2px;
-}
-
 .float {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   animation: nodeFloat 6s ease-in-out infinite;
   animation-delay: var(--node-float-delay, 0s);
 }
@@ -44,12 +37,56 @@
 }
 
 .label {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 20px;
   color: var(--color-white);
   text-align: center;
   hyphens: auto;
   -webkit-hyphens: auto;
   overflow-wrap: break-word;
   font-size: clamp(var(--text-xs), 0.745vw + 7.27px, var(--text-lg));
+  line-height: 1.222222;
+}
+
+.label::before,
+.label::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.label::before {
+  background: var(--gradient-pink-purple);
+  opacity: 0.1;
+  transition: opacity 0.3s ease;
+}
+
+.label::after {
+  inset: -2px;
+  border-radius: 0;
+  background: var(--gradient-pink);
+  background-size: calc(100% - 4px) calc(100% - 4px);
+  background-position: center;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect x='2.5' y='2.5' fill='none' stroke='white' stroke-width='1' style='--radius:min(19.5px,calc((100vw - 5px) / 2),calc((100vh - 5px) / 2));rx:var(--radius);ry:var(--radius);width:calc(100%25 - 5px);height:calc(100%25 - 5px)'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}
+
+.node:focus-visible .label::before {
+  opacity: 0.3;
+}
+
+@media (hover: hover) {
+  .node:hover .label::before {
+    opacity: 0.3;
+  }
 }
 
 @keyframes nodeFloat {
@@ -95,15 +132,25 @@
     animation: none;
   }
 
+  .label::before {
+    transition: none;
+  }
+
 }
 
 @media (max-width: 768px) {
+  .node {
+    width: min(88px, calc((100vw - 48px) / 4));
+  }
+
   .icon {
     width: 40px;
     height: 49px;
   }
 
   .label {
+    width: calc(100% - clamp(0px, 136px - 33.333vw, 16px));
+    padding-inline: 6px;
     font-size: var(--text-xs);
   }
 
