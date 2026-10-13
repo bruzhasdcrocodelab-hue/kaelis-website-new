@@ -5,6 +5,7 @@ import type { Locale } from "@/lang";
 import { spreadHref, type TarotSpread } from "@/lib/categories/catalog";
 import {
   computeSubcategoryMobileRows,
+  computeSubcategoryTabletRows,
   computeSubcategoryPositions,
   isFilledStarCell,
   isFilledStarSlot,
@@ -120,13 +121,30 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
 
   const hrefFor = (subcategory: TarotSpread) => spreadHref(basePath[0], subcategory.slug, locale);
 
-  const rowSizes = computeSubcategoryMobileRows(subcategories.length);
-  const rows: TarotSpread[][] = [];
-  let cursor = 0;
-  for (const size of rowSizes) {
-    rows.push(subcategories.slice(cursor, cursor + size));
-    cursor += size;
-  }
+  const renderRows = (rowSizes: number[], className: string) => {
+    let cursor = 0;
+    return (
+      <div className={className}>
+        {rowSizes.map((size, rowIndex) => {
+          const row = subcategories.slice(cursor, cursor + size);
+          cursor += size;
+          return (
+            <div key={rowIndex} className={styles.row}>
+              {row.map((subcategory, colIndex) => (
+                <SubcategoryNode
+                  key={subcategory.slug}
+                  href={hrefFor(subcategory)}
+                  label={subcategory.name}
+                  filled={isFilledStarCell(rowIndex, colIndex)}
+                  locale={locale}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -143,21 +161,8 @@ export default function SubcategoryRing({ subcategories, basePath, locale }: Sub
         ))}
       </div>
 
-      <div className={styles.rows}>
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className={styles.row}>
-            {row.map((subcategory, colIndex) => (
-              <SubcategoryNode
-                key={subcategory.slug}
-                href={hrefFor(subcategory)}
-                label={subcategory.name}
-                filled={isFilledStarCell(rowIndex, colIndex)}
-                locale={locale}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      {renderRows(computeSubcategoryMobileRows(subcategories.length), styles.rows)}
+      {renderRows(computeSubcategoryTabletRows(subcategories.length), `${styles.rows} ${styles.rowsTablet}`)}
     </>
   );
 }

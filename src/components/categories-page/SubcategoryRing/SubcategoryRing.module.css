@@ -27,21 +27,33 @@
   gap: 32px;
 }
 
-.ring[data-layout="arc"] + .rows {
+.rowsTablet {
   display: none;
+}
+
+@media (width > 1280px) {
+  .ring[data-layout="arc"] ~ .rows {
+    display: none;
+  }
 }
 
 @media (max-width: 1280px) {
   .ring {
     display: none;
   }
+}
 
-  .ring[data-layout="arc"] + .rows {
+@media (min-width: 769px) and (max-width: 1280px) {
+  .rows {
+    display: none;
+  }
+
+  .rowsTablet {
     display: flex;
   }
 
-  .row{
-    gap: 7.813vw;
+  .row {
+    gap: clamp(28px, calc((100vw - 680px) / 4), 100px);
   }
 }
 
@@ -57,5 +69,9 @@
     display: flex;
     justify-content: center;
     gap: clamp(-14px, calc((100vw - 352px) / 3 - 2.67px), 32px);
+  }
+
+  .rowsTablet {
+    display: none;
   }
 }

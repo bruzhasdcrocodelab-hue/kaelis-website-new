@@ -131,6 +131,20 @@ export function computeSubcategoryMobileRows(count: number): number[] {
   return rows;
 }
 
+export function computeSubcategoryTabletRows(count: number): number[] {
+  if (count <= 0) return [];
+  if (count <= 5) return [count];
+
+  const rowCount = Math.ceil(count / 5);
+  const rows = Array.from({ length: rowCount }, (_, index) =>
+    index < rowCount - 1 ? 5 : count - 5 * (rowCount - 1),
+  );
+  const tail = rows[rowCount - 2] + rows[rowCount - 1];
+  rows[rowCount - 2] = Math.ceil(tail / 2);
+  rows[rowCount - 1] = Math.floor(tail / 2);
+  return rows;
+}
+
 /**
  * Whether a subcategory tile should use the filled star icon, based purely on
  * its position (a checkerboard, per the design references) rather than any

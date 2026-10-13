@@ -5,7 +5,7 @@ import ts from "typescript";
 
 const source = await readFile(new URL("../src/lib/categories/subcategoryLayout.ts", import.meta.url), "utf8");
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ES2022 } }).outputText).toString("base64")}`;
-const { computeSubcategoryPositions, computeSubcategoryMobileRows, subcategoryBounds } = await import(moduleUrl);
+const { computeSubcategoryPositions, computeSubcategoryMobileRows, computeSubcategoryTabletRows, subcategoryBounds } = await import(moduleUrl);
 
 const size = { width: 88, height: 102, iconWidth: 40, iconHeight: 49, gap: 8 };
 const overlaps = (a, b) => a.left < b.right + 7.99 && a.right + 7.99 > b.left && a.top < b.bottom + 7.99 && a.bottom + 7.99 > b.top;
@@ -80,5 +80,18 @@ test("mobile row distribution remains balanced and preserves every node", () => 
     const rows = computeSubcategoryMobileRows(count);
     assert.equal(rows.reduce((sum, row) => sum + row, 0), count);
     assert.ok(rows.every(row => row >= 2 && row <= 4));
+  }
+});
+
+test("tablet rows hold five nodes and balance the final two rows", () => {
+  const examples = [[], [1], [2], [3], [4], [5], [3, 3], [4, 3], [4, 4], [5, 4], [5, 5], [5, 3, 3], [5, 4, 3], [5, 4, 4], [5, 5, 4], [5, 5, 5], [5, 5, 3, 3]];
+  examples.forEach((rows, count) => assert.deepEqual(computeSubcategoryTabletRows(count), rows));
+  for (let count = 2; count <= 100; count++) {
+    const rows = computeSubcategoryTabletRows(count);
+    assert.equal(rows.reduce((sum, row) => sum + row, 0), count);
+    assert.equal(rows.length, Math.ceil(count / 5));
+    assert.ok(rows.every(row => row >= 2 && row <= 5));
+    assert.ok(rows.every((row, index) => index === 0 || row <= rows[index - 1]));
+    if (rows.length > 1) assert.ok(rows.at(-2) - rows.at(-1) <= 1);
   }
 });
