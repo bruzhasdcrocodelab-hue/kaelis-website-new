@@ -2,6 +2,10 @@
   transition: filter 160ms ease, background-color 160ms ease, border-color 160ms ease;
 }
 
+.stroke {
+  composes: stroke from "../GradientStroke/GradientStroke.module.css";
+}
+
 .stroke .label,
 .stroke .icon {
   transition: color .3s;
@@ -83,6 +87,11 @@
 .stroke:disabled,
 .stroke[aria-disabled="true"] {
   background: #f3eff6;
+}
+
+.stroke:disabled::before,
+.stroke[aria-disabled="true"]::before {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

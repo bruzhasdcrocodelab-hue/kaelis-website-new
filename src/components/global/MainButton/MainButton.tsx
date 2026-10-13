@@ -8,7 +8,7 @@ import styles from "./MainButton.module.css";
  *
  * variant "gradient" / "gradient-black" share the same pink gradient fill and
  * differ only in label/icon color (white vs black) — matching the Figma naming.
- * variant "stroke" has a transparent fill, a solid `#d3aced` border, and a
+ * variant "stroke" has a transparent fill, a pink gradient border, and a
  * pink-purple gradient label/icon (Figma's "pink-gradient" token).
  *
  * The icon is provided as a path to a single-color SVG (e.g. "/icons/edit.svg")
@@ -148,7 +148,7 @@ export default function MainButton({
     styles[variant],
     layoutClasses,
     isStroke
-      ? `bg-transparent border-solid border-[#d3aced] ${STROKE_BORDER_WIDTH[size]}`
+      ? `bg-transparent border-solid ${STROKE_BORDER_WIDTH[size]}`
       : variant === "default"
         ? "bg-white"
         : "bg-gradient-pink",
