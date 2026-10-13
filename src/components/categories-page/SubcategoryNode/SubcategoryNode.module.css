@@ -11,7 +11,24 @@
 
 .nodeArc {
   position: absolute;
+  left: var(--node-x, 0px);
+  top: var(--node-y, 0px);
+  width: calc(88px + 28px * var(--arc-density, 1));
   transform: translateX(-50%);
+}
+
+.nodeArc .float {
+  gap: calc(8px + 4px * var(--arc-density, 1));
+}
+
+.nodeArc .icon {
+  width: calc(40px + 10px * var(--arc-density, 1));
+  height: calc(49px + 13px * var(--arc-density, 1));
+}
+
+.nodeArc .label {
+  padding: calc(6px + 2px * var(--arc-density, 1)) calc(6px + 4px * var(--arc-density, 1));
+  font-size: calc(var(--text-xs) + (var(--text-lg) - var(--text-xs)) * var(--arc-density, 1));
 }
 
 .nodeFlow {

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import Link from "@/components/reading/ReadingLink";
 import type { Dictionary, Locale } from "@/lang";
@@ -73,22 +72,7 @@ function CategoryPageContent({
   const retry = categories.state.status === "error" ? categories.retry : spreads.retry;
   return (
     <div className={`${geometryStyles.geometry} ${styles.page}`}>
-      <Image
-        src="/images/backgrounds/2.png"
-        alt=""
-        width={1440}
-        height={990}
-        className={styles.backgroundImage}
-        priority
-      />
-      <Image
-        src="/images/backgrounds/mobile/background-celestial.png"
-        alt=""
-        width={390}
-        height={1000}
-        className={styles.backgroundImageMobile}
-        priority
-      />
+      <div className={styles.background} aria-hidden="true" />
       <ConstellationPattern />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />

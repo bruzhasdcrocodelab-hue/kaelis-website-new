@@ -1,144 +1,103 @@
-/**
- * Positions subcategory tiles along the "subcategory reference line" from the
- * Figma design (KAELIS design file, node-id=1464-3086 for the reference guide).
- *
- * The tiles are NOT evenly distributed on a fixed-radius arc, and cross-referencing
- * the exact tile coordinates across references with different counts (Dreams: 1,
- * Forecast: 3, Family: 4, Love: 13, nodes 1464-2341/2931/1491/2479) shows the
- * per-tile placement isn't a single closed-form function of index — it reads as
- * hand-placed per screen. What IS consistent is the outer envelope: a maximum
- * per-side slot table (angle from vertical + radial distance from a pivot) that
- * spans from close-to-center/high up to far-from-center/low, derived from Love's
- * 13 tiles (7 right + 6 left, the densest reference, which fully populates the
- * table) with a pivot at (720, 156) in the 1440px-wide "Categories" page frame.
- *
- * To reproduce the "fewer items -> more spread out" behavior visible across
- * references (e.g. Family's 2-per-side tiles sit much farther apart than two
- * consecutive Love tiles would), each side's N tiles are sampled at evenly
- * spaced indices across the FULL slot table for that count, rather than taking
- * the first N (densely-packed) slots — this is an approximation the max-density
- * table doesn't fully pin down analytically, but it matches the observed trend.
- *
- * The pivot is expressed here relative to the hero section (`CategoryHeroSection`),
- * not the page: Figma's page-absolute pivot y=156 sits 124px below the page's
- * Top Bar (the "section" frame that holds the reference line starts at
- * page y=124), so the section-relative pivot y is 156 - 124 = 32.
- *
- * Slots beyond the last known one are extrapolated by continuing the average
- * angle/distance step of the last few known slots on that side.
- */
-
-export const SLOT_PIVOT = { x: 720, y: 32 };
-export const DESIGN_WIDTH = 1440;
-
-interface Slot {
-  /** Degrees from vertical "up" (positive = right side, negative = left side). */
-  angle: number;
-  /** Distance in px from the pivot to the tile's icon center. */
-  distance: number;
+export interface LayoutRect {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
 }
 
-const RIGHT_SLOTS: Slot[] = [
-  { angle: 95.0, distance: 160.6 },
-  { angle: 99.02, distance: 255.2 },
-  { angle: 101.58, distance: 333.8 },
-  { angle: 107.24, distance: 425.1 },
-  { angle: 110.62, distance: 513.9 },
-  { angle: 114.05, distance: 601.2 },
-  { angle: 117.82, distance: 696.5 },
-];
-
-const LEFT_SLOTS: Slot[] = [
-  { angle: -96.08, distance: 170.0 },
-  { angle: -98.88, distance: 259.1 },
-  { angle: -103.48, distance: 351.7 },
-  { angle: -108.91, distance: 459.8 },
-  { angle: -113.03, distance: 565.0 },
-  { angle: -116.29, distance: 657.0 },
-];
-
-function extrapolateSlots(slots: Slot[], count: number): Slot[] {
-  if (count <= slots.length) return slots.slice(0, count);
-
-  const sampleSize = Math.min(3, slots.length - 1);
-  let angleStep = 0;
-  let distanceStep = 0;
-  for (let i = slots.length - sampleSize; i < slots.length; i++) {
-    angleStep += slots[i].angle - slots[i - 1].angle;
-    distanceStep += slots[i].distance - slots[i - 1].distance;
-  }
-  angleStep /= sampleSize;
-  distanceStep /= sampleSize;
-
-  const extended = slots.slice();
-  while (extended.length < count) {
-    const last = extended[extended.length - 1];
-    extended.push({ angle: last.angle + angleStep, distance: last.distance + distanceStep });
-  }
-  return extended;
-}
-
-/**
- * Picks `count` slots out of `slots` (the max-density table for one side),
- * evenly spaced across a fractional window of the index range that widens
- * as `count` approaches the table's full size — so a small count spreads out
- * across a moderate middle portion of the range (matching the "fewer items
- * sit farther apart" trend observed across references) while a count near
- * the table's max density uses the full range (matching Love's 13-tile case).
- */
-function sampleEvenly(slots: Slot[], count: number): Slot[] {
-  if (count <= 0) return [];
-
-  const density = Math.min(count / slots.length, 1);
-  const lo = 0.15 * (1 - density);
-  const hi = 0.7 + 0.3 * density;
-  const lastIndex = slots.length - 1;
-
-  if (count === 1) return [slots[Math.round(((lo + hi) / 2) * lastIndex)]];
-
-  const picked: Slot[] = [];
-  for (let i = 0; i < count; i++) {
-    const t = lo + ((hi - lo) * i) / (count - 1);
-    picked.push(slots[Math.round(t * lastIndex)]);
-  }
-  return picked;
-}
-
-/**
- * The reference frame's width matches DESIGN_WIDTH, but `.ring` is laid out
- * inside the hero section's padded container (see CategoryHeroSection's
- * `.section` padding), which at DESIGN_WIDTH is CONTAINER_WIDTH wide. The
- * historical `xPct` placement was a percentage of that container, so a design
- * offset of `d` px landed at `d * CONTAINER_WIDTH / DESIGN_WIDTH` from centre —
- * that ratio is folded into `xOffset` here to keep the 1440px layout identical.
- */
-const CONTAINER_WIDTH = 1320;
-
-/** The constellation pattern's native width; --subcategory-ring-width resolves to this at DESIGN_WIDTH. */
-const PATTERN_NATIVE_WIDTH = 1580;
-
-function slotToPoint(slot: Slot): { xOffset: number; yOffset: number } {
-  const rad = (slot.angle * Math.PI) / 180;
-  const dx = Math.sin(rad) * slot.distance;
-  const y = SLOT_PIVOT.y - Math.cos(rad) * slot.distance;
-  return {
-    xOffset: (dx * (CONTAINER_WIDTH / DESIGN_WIDTH)) / PATTERN_NATIVE_WIDTH,
-    yOffset: y / PATTERN_NATIVE_WIDTH,
-  };
+export interface SubcategorySize {
+  width: number;
+  height: number;
+  iconWidth: number;
+  iconHeight: number;
+  gap: number;
 }
 
 export interface SubcategoryPosition {
-  /**
-   * Horizontal offset from the arc's centre as a multiple of
-   * --subcategory-ring-width, so the node tracks the pattern's rings as that
-   * width scales with the viewport.
-   */
-  xOffset: number;
-  /** Vertical position as a multiple of --subcategory-ring-width, from the arc container's top. */
-  yOffset: number;
+  x: number;
+  y: number;
   side: "left" | "right";
-  /** Index of the slot within its side, 0 = closest to the pivot (top of the arc). */
   slotIndex: number;
+}
+
+export interface SubcategoryLayoutInput {
+  width: number;
+  patternWidth: number;
+  nodes: SubcategorySize[];
+  obstacles: LayoutRect[];
+  sweep?: number;
+}
+
+export function subcategoryBounds(node: SubcategorySize, position: SubcategoryPosition): LayoutRect[] {
+  const { x, y } = position;
+  return [
+    {
+      left: x - node.iconWidth * 0.54 - 5,
+      right: x + node.iconWidth * 0.54 + 10,
+      top: y - node.iconHeight * 0.04,
+      bottom: y + node.iconHeight * 1.04 + 10,
+    },
+    {
+      left: x - node.width / 2 - 7,
+      right: x + node.width / 2 + 12,
+      top: y + node.iconHeight + node.gap - 2,
+      bottom: y + node.height + 12,
+    },
+  ];
+}
+
+export function layoutRectsOverlap(a: LayoutRect, b: LayoutRect, gap = 8): boolean {
+  return a.left < b.right + gap && a.right + gap > b.left
+    && a.top < b.bottom + gap && a.bottom + gap > b.top;
+}
+
+export function computeSubcategoryPositions({ width, patternWidth, nodes, obstacles, sweep = Math.PI / 2 }: SubcategoryLayoutInput): SubcategoryPosition[] | null {
+  if (nodes.length === 0) return [];
+  if (width <= 0 || patternWidth <= 0) return null;
+
+  const scale = patternWidth / 1580;
+  const radius = 644 * scale;
+  const radiusX = Math.min(radius, width / 2 - Math.max(...nodes.map(node => node.width)) / 2 - 28);
+  if (radiusX <= 0) return null;
+  const apex = 32 * scale;
+  const steps = 360;
+
+  for (const spread of [1, 0.75, 0.5, 0.25, 0]) {
+    const positions: SubcategoryPosition[] = [];
+    const occupied: LayoutRect[] = [];
+    const last = { left: -1, right: -1 };
+
+    for (let index = 0; index < nodes.length; index++) {
+      const side = index % 2 === 0 ? "right" : "left";
+      const slotIndex = Math.floor(index / 2);
+      const count = side === "right" ? Math.ceil(nodes.length / 2) : Math.floor(nodes.length / 2);
+      const preferred = Math.round(((slotIndex + 0.5) / count) * steps * spread);
+      const node = nodes[index];
+
+      for (let step = Math.max(last[side] + 1, preferred); step <= steps; step++) {
+        const angle = (step / steps) * sweep;
+        const position: SubcategoryPosition = {
+          x: width / 2 + (side === "right" ? 1 : -1) * radiusX * Math.sin(angle),
+          y: apex + radius * (1 - Math.cos(angle)) - node.iconHeight / 2,
+          side,
+          slotIndex,
+        };
+        const bounds = subcategoryBounds(node, position);
+        if (bounds.some(box => box.left < 16 || box.right > width - 16 || box.top < 8
+          || obstacles.some(obstacle => layoutRectsOverlap(box, obstacle))
+          || occupied.some(other => layoutRectsOverlap(box, other)))) continue;
+
+        positions.push(position);
+        occupied.push(...bounds);
+        last[side] = step;
+        break;
+      }
+      if (positions.length !== index + 1) break;
+    }
+
+    if (positions.length === nodes.length) return positions;
+  }
+  return null;
 }
 
 /**
@@ -172,30 +131,18 @@ export function computeSubcategoryMobileRows(count: number): number[] {
   return rows;
 }
 
-/**
- * Computes tile positions for `count` subcategories, alternating right/left
- * (right gets the extra tile when count is odd) for visual balance. Each
- * side's tiles are spread evenly across that side's full slot range so a
- * small count doesn't cluster near the center.
- */
-export function computeSubcategoryPositions(count: number): SubcategoryPosition[] {
-  const rightCount = Math.ceil(count / 2);
-  const leftCount = Math.floor(count / 2);
+export function computeSubcategoryTabletRows(count: number): number[] {
+  if (count <= 0) return [];
+  if (count <= 5) return [count];
 
-  const rightTable = extrapolateSlots(RIGHT_SLOTS, Math.max(rightCount, RIGHT_SLOTS.length));
-  const leftTable = extrapolateSlots(LEFT_SLOTS, Math.max(leftCount, LEFT_SLOTS.length));
-
-  const rightSlots = sampleEvenly(rightTable, rightCount);
-  const leftSlots = sampleEvenly(leftTable, leftCount);
-
-  const positions: SubcategoryPosition[] = [];
-  for (let i = 0; i < count; i++) {
-    const isRight = i % 2 === 0;
-    const slotIndex = isRight ? i / 2 : (i - 1) / 2;
-    const slot = isRight ? rightSlots[slotIndex] : leftSlots[slotIndex];
-    positions.push({ ...slotToPoint(slot), side: isRight ? "right" : "left", slotIndex });
-  }
-  return positions;
+  const rowCount = Math.ceil(count / 5);
+  const rows = Array.from({ length: rowCount }, (_, index) =>
+    index < rowCount - 1 ? 5 : count - 5 * (rowCount - 1),
+  );
+  const tail = rows[rowCount - 2] + rows[rowCount - 1];
+  rows[rowCount - 2] = Math.ceil(tail / 2);
+  rows[rowCount - 1] = Math.floor(tail / 2);
+  return rows;
 }
 
 /**

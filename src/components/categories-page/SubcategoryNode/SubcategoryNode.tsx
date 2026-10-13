@@ -2,7 +2,6 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import type { LinkProps } from "next/link";
 import Link from "@/components/reading/ReadingLink";
-import type { SubcategoryPosition } from "@/lib/categories/subcategoryLayout";
 import styles from "./SubcategoryNode.module.css";
 import { htmlLang, Locale } from "@/lang";
 import { isSingleWord, withSoftHyphens } from "@/lib/hyphenate";
@@ -12,8 +11,7 @@ export interface SubcategoryNodeProps {
   label: string;
   /** Whether this tile uses the filled star icon, chosen by its position (checkerboard). */
   filled: boolean;
-  /** Absolute position on the desktop arc. Omitted for the in-flow mobile rows. */
-  position?: SubcategoryPosition;
+  arc?: boolean;
   locale: Locale;
   onNavigate?: LinkProps["onNavigate"];
 }
@@ -34,7 +32,7 @@ function seededUnit(seed: string): number {
 const NODE_FLOAT_DURATION_S = 6;
 const NODE_ICON_PULSE_DURATION_S = 2.2;
 
-export default function SubcategoryNode({ href, label, filled, position, locale, onNavigate }: SubcategoryNodeProps) {
+export default function SubcategoryNode({ href, label, filled, arc, locale, onNavigate }: SubcategoryNodeProps) {
   const floatDelay = -(seededUnit(`${href}:float`) * NODE_FLOAT_DURATION_S).toFixed(2);
   const pulseDelay = -(seededUnit(`${href}:pulse`) * NODE_ICON_PULSE_DURATION_S).toFixed(2);
   const displayLabel = isSingleWord(label) ? withSoftHyphens(label) : label;
@@ -43,15 +41,7 @@ export default function SubcategoryNode({ href, label, filled, position, locale,
     <Link
       href={href}
       onNavigate={onNavigate}
-      className={`${styles.node} ${position ? styles.nodeArc : styles.nodeFlow}`}
-      style={
-        position
-          ? {
-              left: `calc(50% + (${position.xOffset} * clamp(900px, 109.722vw, 1580px)))`,
-              top: `calc(${position.yOffset} * clamp(900px, 109.722vw, 1580px))`,
-            }
-          : undefined
-      }
+      className={`${styles.node} ${arc ? styles.nodeArc : styles.nodeFlow}`}
     >
       <span
         className={styles.float}
