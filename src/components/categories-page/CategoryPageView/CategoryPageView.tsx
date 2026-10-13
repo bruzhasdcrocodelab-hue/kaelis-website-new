@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "@/components/reading/ReadingLink";
 import type { Dictionary, Locale } from "@/lang";
+import { localizedHref } from "@/lib/routing";
 import { cardCount, categoryHref, defaultSpreadSlug, resolveCatalogPath, type CatalogState } from "@/lib/categories/catalog";
 import { useAllSpreads, useCategories, useSpreads } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
@@ -62,7 +63,7 @@ function CategoryPageContent({
     ? resolveCatalogPath(categories.state.data, spreads.state.data, path, defaultSpread) : null;
   const current = path.length === 2 ? resolved?.spread : category;
   const count = resolved?.spread ? cardCount(resolved.spread) : null;
-  const returnHref = path.length === 2 ? categoryHref(path[0], locale) : `/${locale}/tarot`;
+  const returnHref = path.length === 2 ? categoryHref(path[0], locale) : localizedHref(locale, "/tarot");
   const returnLabel = path.length === 2 && category
     ? `${dictionary.categoryPage.returnToPrefix} ${category.name}` : dictionary.categoryPage.returnToMain;
   const status = categories.state.status !== "success" ? categories.state.status
