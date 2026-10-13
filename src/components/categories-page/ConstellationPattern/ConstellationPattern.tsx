@@ -135,6 +135,7 @@ const ELLIPSE9_R = 14.2709;
 export default function ConstellationPattern() {
   return (
     <svg
+      data-subcategory-pattern
       className={styles.pattern}
       width="1580"
       height="764"
