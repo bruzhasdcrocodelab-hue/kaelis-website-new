@@ -36,13 +36,13 @@
 
 .title {
   text-align: center;
-  white-space: pre;
+  white-space: pre-line;
   margin-top: 6px;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  line-height: 90%;
+  line-height: var(--leading-heading);
   padding-right: 20px;
   margin-left: 20px;
   font-size: clamp(var(--text-4xl), 4.381vw + 22.91px, 86px);

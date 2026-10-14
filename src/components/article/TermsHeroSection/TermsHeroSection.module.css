@@ -41,7 +41,7 @@
     80px
   );
   text-align: center;
-  line-height: .95;
+  line-height: var(--leading-heading);
   text-wrap: balance;
   padding-inline: .15em;
   overflow-wrap: normal;
