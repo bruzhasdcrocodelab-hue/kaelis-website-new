@@ -190,8 +190,8 @@
   --color-loading-progress-surface: #fff;
   --mask-solid: linear-gradient(#fff 0 0);
   /* ---- Typography: font families ---- */
-  --font-bona-nova-sc: "Bona Nova SC", serif;
-  --font-instrument-sans: "Instrument Sans", sans-serif;
+  --font-cormorant-garamond: "Cormorant Garamond", serif;
+  --font-manrope: "Manrope", sans-serif;
   /* ---- Typography: shared type scale (px) ---- */
   --text-4xl: 40px;
   --text-3xl: 32px;
@@ -241,8 +241,8 @@
   --color-black-7: var(--color-black-7);
   --color-gold: var(--color-gold);
   --color-gold-light: var(--color-gold-light);
-  --font-heading: var(--font-bona-nova-sc);
-  --font-sans: var(--font-instrument-sans);
+  --font-heading: var(--font-cormorant-garamond);
+  --font-sans: var(--font-manrope);
   --text-4xl: var(--text-4xl);
   --text-3xl: var(--text-3xl);
   --text-2xl: var(--text-2xl);

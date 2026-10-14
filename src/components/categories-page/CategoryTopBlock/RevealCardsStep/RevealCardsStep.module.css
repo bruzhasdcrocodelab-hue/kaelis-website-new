@@ -638,7 +638,7 @@
 }
 
 .sheetTitle {
-  font-family: var(--font-bona-nova-sc);
+  font-family: var(--font-cormorant-garamond);
   font-size: var(--text-4xl);
   letter-spacing: var(--tracking-bona-4xl);
   font-weight: normal;

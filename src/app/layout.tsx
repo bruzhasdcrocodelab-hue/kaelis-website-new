@@ -1,4 +1,4 @@
-import { Bona_Nova_SC, Instrument_Sans } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import GuestAuth from "@/components/GuestAuth";
@@ -7,18 +7,18 @@ import TarotStyleProvider from "@/components/TarotStyleProvider";
 import { GOOGLE_ANALYTICS_ID } from "@/lib/config/constants";
 import { getLocale } from "@/lib/locale";
 
-const bonaNovaSC = Bona_Nova_SC({
-  variable: "--font-bona-nova-sc",
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-cormorant-garamond",
   subsets: ["latin", "cyrillic"],
   weight: ["400", "700"],
   style: ["normal", "italic"],
 });
 
-const instrumentSans = Instrument_Sans({
-  variable: "--font-instrument-sans",
-  subsets: ["latin"],
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  style: "normal",
 });
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang={locale}
-      className={`${bonaNovaSC.variable} ${instrumentSans.variable} h-full antialiased`}
+      className={`${cormorantGaramond.variable} ${manrope.variable} h-full antialiased`}
     >
       <head>
         <Script id="google-analytics-consent" strategy="beforeInteractive">
