@@ -7,3 +7,4 @@ export const READING_TIMEOUT_MS = 180000;
 export const READING_POLL_INTERVAL_MS = 3000;
 export const READING_WATCHDOG_MS = 60000;
 export const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=io.kaelsi.app";
+export const GOOGLE_ANALYTICS_ID = "G-B6EK9NFKV5";
