@@ -28,11 +28,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang={locale}
       className={`${bonaNovaSC.variable} ${instrumentSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <GuestAuth />
-        <TarotStyleProvider><LocalizedPages>{children}</LocalizedPages></TarotStyleProvider>
-      </body>
-      <Script id="google-analytics-consent" strategy="beforeInteractive">
+      <head>
+        <Script id="google-analytics-consent" strategy="beforeInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
@@ -50,11 +47,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             allow_ad_personalization_signals: false
           });
         `}
-      </Script>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
-        strategy="afterInteractive"
-      />
+        </Script>
+      </head>
+      <body className="min-h-full flex flex-col">
+        <GuestAuth />
+        <TarotStyleProvider><LocalizedPages>{children}</LocalizedPages></TarotStyleProvider>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
+          strategy="afterInteractive"
+        />
+      </body>
     </html>
   );
 }
