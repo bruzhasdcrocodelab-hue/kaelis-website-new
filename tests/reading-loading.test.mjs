@@ -55,6 +55,7 @@ async function mountParent() {
     if (name === "react/jsx-runtime") return require(name);
     if (name === "motion/react") return { motion: { div: "div" }, useIsPresent: () => true, useReducedMotion: () => false };
     if (name === "@/lib/tarot/useReading") return { useReading: () => flow };
+    if (name === "@/lib/analytics") return { trackEvent() {} };
     if (name === "@/components/reading/ReadingNavigationProvider") return {
       useReadingNavigation: () => ({ register(value) { session = value; } }),
     };

@@ -19,6 +19,7 @@ import RevealCardsStep from "./RevealCardsStep/RevealCardsStep";
 import { useReadingNavigation } from "@/components/reading/ReadingNavigationProvider";
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
+import { trackEvent } from "@/lib/analytics";
 import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {
@@ -124,6 +125,13 @@ function SessionContent({
     const restarting = previousStep.current === "reveal" && step === "ask";
     previousStep.current = step;
     if (step !== "reveal" && !restarting) return;
+    if (step === "reveal") {
+      trackEvent("tarot_reading_complete", {
+        locale,
+        category_id: categoryId,
+        spread_id: spreadId,
+      });
+    }
     const panel = panelRef.current;
     if (!panel) return;
     const anchor = restarting && embedded ? document.getElementById("cards") ?? panel : panel;
@@ -165,7 +173,7 @@ function SessionContent({
     }
     schedule();
     return cancel;
-  }, [step, embedded, sessionActive, panelRef]);
+  }, [step, embedded, sessionActive, panelRef, locale, categoryId, spreadId]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
@@ -290,7 +298,15 @@ function SessionContent({
         {step === "ask" && (
           <AskQuestionStep dictionary={dictionary} question={flow.question} onChange={flow.setQuestion}
             disabled={flow.busy || !flow.speakerId} loading={flow.busy} loadingLabel={text.loading}
-            embedded={embedded} error={flow.error} onContinue={() => { setFirstCycleComplete(false); void flow.submit(); }} />
+            embedded={embedded} error={flow.error} onContinue={() => {
+              trackEvent("tarot_question_submit", {
+                locale,
+                category_id: categoryId,
+                spread_id: spreadId,
+              });
+              setFirstCycleComplete(false);
+              void flow.submit();
+            }} />
         )}
         {step === "reveal" && flow.reading && (
           <RevealCardsStep
