@@ -80,12 +80,13 @@
 }
 
 .titleHighlight {
+  line-height: var(--leading-heading);
   background-image: var(--gradient-pink-purple);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  padding-top: 11.5px;
-  padding-bottom: 11.5px;
+  /* padding-top: 11.5px;
+  padding-bottom: 11.5px; */
   padding-right: 10px;
   margin-left: 10px;
   font-size: clamp(
@@ -97,6 +98,7 @@
 }
 
 .description {
+  line-height: var(--leading-interface);
   color: var(--color-white);
   text-align: center;
   white-space: pre-line;

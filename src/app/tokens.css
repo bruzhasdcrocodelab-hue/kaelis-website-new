@@ -192,6 +192,8 @@
   /* ---- Typography: font families ---- */
   --font-cormorant-garamond: "Cormorant Garamond", serif;
   --font-manrope: "Manrope", sans-serif;
+  --leading-heading: 1.2;
+  --leading-interface: 1.25;
   /* ---- Typography: shared type scale (px) ---- */
   --text-4xl: 40px;
   --text-3xl: 32px;

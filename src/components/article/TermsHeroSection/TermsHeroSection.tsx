@@ -27,7 +27,7 @@ export default function TermsHeroSection({ dictionary, locale }: TermsHeroSectio
       if (disposed) return;
       el.style.removeProperty("font-size");
       const base = parseFloat(getComputedStyle(el).fontSize);
-      const maxHeight = base * .95 * (words.length > 1 ? 2 : 1) + 1;
+      const maxHeight = parseFloat(getComputedStyle(el).lineHeight) * (words.length > 1 ? 2 : 1) + 1;
       const fits = () => {
         const box = el.getBoundingClientRect();
         const style = getComputedStyle(el);
