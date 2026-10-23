@@ -16,6 +16,64 @@
   color: var(--color-black-40);
 }
 
+.body {
+  width: 100%;
+  color: var(--color-black-75);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.block {
+  white-space: pre-wrap;
+  min-height: 1em;
+}
+
+.body p,
+.body blockquote {
+  margin: 0 0 16px;
+}
+
+.body ol,
+.body ul {
+  padding-left: 1.5em;
+  margin: 0 0 16px;
+}
+
+.body ol {
+  list-style-type: decimal;
+}
+
+.body ul {
+  list-style-type: disc;
+}
+
+.body li {
+  padding-left: 0.25em;
+}
+
+.body strong {
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.body h1,
+.body h2,
+.body h3,
+.body h4,
+.body h5,
+.body h6 {
+  font-family: var(--font-cormorant-garamond);
+  font-size: var(--text-2xl);
+  color: var(--color-black);
+  margin: 24px 0 12px;
+}
+
 .sections {
   display: flex;
   flex-direction: column;
@@ -84,8 +142,8 @@
   width: 100%;
   padding: 16px;
   border: 1px solid var(--color-black-15);
-  border-radius: 12;
-  margin-top: 20;
+  border-radius: 12px;
+  margin-top: 20px;
 }
 
 .contactName {
@@ -103,7 +161,7 @@
     gap: 16px;
     padding: 24px 24px 32px;
     border-radius: var(--radius-panel-mobile);
-    margin-top: 24;
+    margin-top: 24px;
   }
 
   .marker {
@@ -119,7 +177,8 @@
   }
 
   .paragraph,
-  .note {
+  .note,
+  .body {
     font-size: var(--text-sm);
   }
 }

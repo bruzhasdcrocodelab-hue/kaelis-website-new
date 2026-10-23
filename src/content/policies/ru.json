@@ -1,0 +1,4100 @@
+[
+  {
+    "_id": "8fa978bb-cfab-41cc-b27b-614f3890dc36",
+    "_rev": "M0XCV1jxYKjlp6VCQgsjsT",
+    "content": [
+      {
+        "_key": "638ceea5525a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d9f8c79ec574",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Kaelis AI: Tarot & Astrology"
+          },
+          {
+            "_key": "9b30ba4504e3",
+            "_type": "span",
+            "marks": [],
+            "text": " («Приложение», «мы», «наш») уважает конфиденциальность молодых людей. Защита личной информации детей особенно важна для нас."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a2064cacd422",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "84109d41b971",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ограничение по возрасту"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "da236e263abf",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "093058017d69",
+            "_type": "span",
+            "marks": [],
+            "text": "Приложение предназначено исключительно для взрослых в возрасте 18 лет и старше."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d58bdf60e607",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9c87e536dba4",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы не собираем, не используем и не распространяем личную информацию лиц младше 18 лет сознательно."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "23798239ca54",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "3a6c6af23d17",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Отсутствие сбора данных детей"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d23be8f4fd64",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "73a664d0cf0a",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы не запрашиваем, не собираем и не обрабатываем персональные данные детей."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a214f8035e6b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ee4155bba4ca",
+            "_type": "span",
+            "marks": [],
+            "text": "Если пользователь младше 18 лет попытается создать учетную запись, мы примем меры для ее блокировки или удаления."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ef700f39907a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ceb05ed5f446",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Родители и опекуны"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7cb4c1c9d523",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "17fd0b3cf842",
+            "_type": "span",
+            "marks": [],
+            "text": "Если вы являетесь родителем или опекуном и полагаете, что ваш ребенок мог передать нам свои персональные данные, пожалуйста, немедленно свяжитесь с нами по адресу info.kaelis@gmail.com."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d1895af81b94",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bc0650e27be5",
+            "_type": "span",
+            "marks": [],
+            "text": "После проверки мы незамедлительно удалим эту информацию."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7b7e5c68c2c7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "795316269d54",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Соответствие COPPA"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4504fe823b5e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "707f1e5de674",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы соблюдаем Закон о защите конфиденциальности детей в Интернете (COPPA) и международные законы, касающиеся конфиденциальности детей."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2853100d8ea9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9ef07288a676",
+            "_type": "span",
+            "marks": [],
+            "text": "Наше Приложение не ориентировано на детей младше 18 лет и явно ограничено для использования только взрослыми."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ca6402bab073",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e7a6d0f25572",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обновления данной Политики"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a26a87bc6057",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "33b3678e0fc6",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы можем обновлять данную Политику конфиденциальности для детей в соответствии с требованиями закона или правил платформ. Обновления будут публиковаться в Приложении и на нашем веб-сайте."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0fcaec50e22e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d1fa01739576",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Свяжитесь с нами"
+          },
+          {
+            "_key": "7c085e43a8d2",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЕсли у вас есть вопросы о нашей практике защиты конфиденциальности детей, пожалуйста, обращайтесь:\n"
+          },
+          {
+            "_key": "60c1c4326df0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "d4430d120245",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "5635da0e6995",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ru",
+    "published": "Последнее обновление, Сентябрь, 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "children-s-privacy-policy-ru"
+    },
+    "title": "Политика конфиденциальности для детей"
+  },
+  {
+    "_id": "c1edb54e-0c04-4218-8abd-2897eb22fed8",
+    "_rev": "Iur60F15On6N7EF4TYAzJx",
+    "content": [
+      {
+        "_key": "dfd4ee582b84",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1447e68fe534",
+            "_type": "span",
+            "marks": [],
+            "text": "Приложение Kaelis AI: Tarot & Astrology («Приложение») предназначено для предоставления пользователям безопасной и уважительной среды для самопознания и развлечения. Используя Приложение, вы соглашаетесь соблюдать приведенные ниже правила в отношении пользовательского контента."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "982784848ed9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "51cc74e020d5",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Пользовательский контент"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ea75fc3684ff",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f9d71567d4b0",
+            "_type": "span",
+            "marks": [],
+            "text": "Пользователи могут сохранять в Приложении вопросы по таро, расклады, дневниковые записи и другие личные заметки."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e24a7f0054df",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "3a0ecd2ce540",
+            "_type": "span",
+            "marks": [],
+            "text": "Вы остаетесь владельцем вашего контента. Однако вы предоставляете нам ограниченную лицензию на его хранение, обработку и отображение исключительно для обеспечения функционала Приложения."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a2f3e0aa93f5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "071b4780fc32",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Запрещенный контент"
+          },
+          {
+            "_key": "83894e27d4bb",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВам запрещено создавать, хранить или распространять контент, который:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0f4fa38b48a9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2ffcee767ad9",
+            "_type": "span",
+            "marks": [],
+            "text": "Содержит язык вражды, преследование или оскорбительные высказывания."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "08eb4ad270fc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "42c0b7cb5b70",
+            "_type": "span",
+            "marks": [],
+            "text": "Пропагандирует насилие, причинение вреда себе или противоправную деятельность."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "598535adf56b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d644dd3d9dfb",
+            "_type": "span",
+            "marks": [],
+            "text": "Включает сексуально откровенные, порнографические или непристойные материалы."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "356c96b3b4e1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "07cbe50521c6",
+            "_type": "span",
+            "marks": [],
+            "text": "Нарушает авторские права, товарные знаки или другие права на интеллектуальную собственность."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "790f804f0911",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "675711e0cb67",
+            "_type": "span",
+            "marks": [],
+            "text": "Распространяет личные данные третьих лиц без их согласия."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "25e6d6f27fd1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8550adc1f88e",
+            "_type": "span",
+            "marks": [],
+            "text": "Предпринимает попытки эксплуатации, обмана или причинения вреда другим."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c3c43cc70311",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9688a4e57caa",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Мониторинг и соблюдение"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "26e822b40c80",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a9de3a64ac63",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы оставляем за собой право проверять и удалять контент, который нарушает настоящую Политику или применимое законодательство."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "3f572d486759",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "50f0cddbc8ee",
+            "_type": "span",
+            "marks": [],
+            "text": "В случае серьезных нарушений мы можем приостановить или прекратить действие вашей учетной записи без предварительного уведомления."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "800562b28466",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad7143b69284",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Жалобы на контент"
+          },
+          {
+            "_key": "49cd51d5394c",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЕсли вы столкнулись с контентом, который нарушает эту Политику, вы можете сообщить об этом, связавшись с нами по адресу:\ninfo.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "cc2d9c851ee9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c519425de2db",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ограничение ответственности"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c4fdff374ede",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4ede115d0237",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы не несем ответственности за пользовательский контент, сохраненный в Приложении."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9a6f2a2e1969",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7438ec32d7db",
+            "_type": "span",
+            "marks": [],
+            "text": "Вы несете исключительную ответственность за то, чтобы ваши записи и вопросы соответствовали настоящей Политике и применимому законодательству вашей страны."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "dd5ab09c20a0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e28ab1b08b4c",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обновления данной Политики"
+          },
+          {
+            "_key": "ade43b476f6f",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы можем время от времени обновлять эту Политику в отношении контента. При внесении существенных изменений мы уведомим пользователей через Приложение или по электронной почте."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "72a72ee99270",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bb38a3bcc402",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Свяжитесь с нами"
+          },
+          {
+            "_key": "6df84733f6b4",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "296b679b7894",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "eb97e5d5ae3b",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "dc59bacc343f",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5c756e532153",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e06c7ecf618b",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ru",
+    "published": "Последнее обновление, Сентябрь, 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "content-policy-ru"
+    },
+    "title": "Политика в отношении контента"
+  },
+  {
+    "_id": "41f6c510-e7e8-49dd-81c2-e4ecde8a21b7",
+    "_rev": "M0XCV1jxYKjlp6VCQglxq9",
+    "content": [
+      {
+        "_key": "4c8c1ac88234",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "58243359cc61",
+            "_type": "span",
+            "marks": [],
+            "text": "Настоящее Соглашение с конечным пользователем («Соглашение») заключено между вами («Пользователь», «вы») и Максимом Шамко («Компания», «мы», «наш» или «нас») в отношении использования вами мобильного приложения Kaelis AI: Tarot & Astrology («Приложение»). Загружая, устанавливая или используя Приложение, вы соглашаетесь соблюдать условия настоящего Соглашения."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b6b06923c109",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "23ac524f69b8",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Предоставление лицензии\n"
+          },
+          {
+            "_key": "17b5a89c3bf4",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы предоставляем вам ограниченную, неисключительную, непередаваемую, отзывную лицензию на использование Приложения в личных, некоммерческих целях в соответствии с настоящим Соглашением.\nВы не получаете каких-либо прав собственности на Приложение."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "30d536b1a1d9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "413e83136f27",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ограничения"
+          },
+          {
+            "_key": "4fd29bbd8d5c",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВам не разрешается:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "16fb9ead20cf",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "aaa79f30879f",
+            "_type": "span",
+            "marks": [],
+            "text": "Копировать, воспроизводить, изменять или распространять Приложение или любую его часть."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "272bacfb7808",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d607c92ef0da",
+            "_type": "span",
+            "marks": [],
+            "text": "Обратно проектировать, декомпилировать, дизассемблировать или пытаться извлечь исходный код."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "acab3d1cbbf7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1c9f6c0c8e99",
+            "_type": "span",
+            "marks": [],
+            "text": "Сдавать в аренду, лизинг, продавать, сублицензировать или передавать Приложение."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9861ba6cbe89",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae706148493c",
+            "_type": "span",
+            "marks": [],
+            "text": "Использовать Приложение в противоправных целях или с нарушением применимого законодательства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b6620a65c823",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "266c1c49b86b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Собственность\n"
+          },
+          {
+            "_key": "a40d1cc79e40",
+            "_type": "span",
+            "marks": [],
+            "text": "Приложение, включая все права на интеллектуальную собственность, является и остается исключительной собственностью Компании.\nВсе товарные знаки, логотипы и знаки обслуживания принадлежат Компании или ее лицензиарам."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "085b6ab8df92",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "130b93e98cd6",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обновления и изменения\n"
+          },
+          {
+            "_key": "542e8e55594f",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы можем предоставлять обновления, исправления ошибок или новые функции.\nНастоящее Соглашение распространяется на все обновления, если не предусмотрена отдельная лицензия."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "154a33a5b58f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4764710218b3",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Отказ от ответственности\n"
+          },
+          {
+            "_key": "5e477ba8fc06",
+            "_type": "span",
+            "marks": [],
+            "text": "Приложение предоставляет услуги только для образа жизни и развлечений.\nОно не предоставляет медицинских, психологических, юридических или финансовых консультаций.\nВы используете Приложение на свой собственный риск."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "72a02fac0d87",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a4e0ae7baa91",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ограничение ответственности"
+          },
+          {
+            "_key": "7d65b25fec2f",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВ максимальной степени, разрешенной законом:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a7b84d6b3cc0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "253ab2671c52",
+            "_type": "span",
+            "marks": [],
+            "text": "Компания не несет ответственности за любые косвенные, случайные или последующие убытки."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad2e5dfb403b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "14c9461092d8",
+            "_type": "span",
+            "marks": [],
+            "text": "Наша совокупная ответственность ограничивается суммой, уплаченной (если таковая была) за использование Приложения в течение последних 12 месяцев."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c0df737a7cfe",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bad1db12f7f2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Прекращение действия\n"
+          },
+          {
+            "_key": "935b9f26035a",
+            "_type": "span",
+            "marks": [],
+            "text": "Настоящее Соглашение действует до его прекращения.\nМы можем приостановить или прекратить ваш доступ, если вы нарушите настоящее Соглашение.\nПосле прекращения действия вы должны прекратить использование Приложения и удалить все его копии."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9fdad493225d",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "419f246badc7",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Применимое право\n"
+          },
+          {
+            "_key": "4a8e254944a6",
+            "_type": "span",
+            "marks": [],
+            "text": "Настоящее Соглашение регулируется и толкуется в соответствии с законодательством Польши, без учета принципов коллизионного права.\nПользователи из других регионов сохраняют права в соответствии с применимым местным законодательством."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "54136eb7a770",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "57e9a65c8ebe",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Свяжитесь с нами"
+          },
+          {
+            "_key": "1e24bfa48705",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЕсли у вас есть вопросы относительно данного Соглашения, пожалуйста, свяжитесь с нами:\n"
+          },
+          {
+            "_key": "1da316454e86",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "7054bcad5b29",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "e92066f53d06",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ru",
+    "published": "Последнее обновление, Сентябрь, 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "end-user-license-agreement-eula-ru"
+    },
+    "title": "Соглашение с конечным пользователем"
+  },
+  {
+    "_id": "addfab34-191d-4e63-9828-0018268ca44e",
+    "_rev": "3yAWN9uYeyS9jUpYnU8PXb",
+    "content": [
+      {
+        "_key": "8640218ba7f4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "213b64187539",
+            "_type": "span",
+            "marks": [],
+            "text": "Добро пожаловать в Kaelis AI: Tarot & Astrology («Приложение»). Настоящие Условия использования («Условия») представляют собой юридическое соглашение между вами («пользователь», «вы») и Максимом Шамко («Компания», «мы», «наш» или «нас»). Загружая, получая доступ или используя Приложение, вы соглашаетесь с этими Условиями. Если вы не согласны, пожалуйста, не используйте Приложение."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7ac35230b7ed",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "446f3ae9bdde",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Право на использование"
+          },
+          {
+            "_key": "70c59322c1a0",
+            "_type": "span",
+            "marks": [],
+            "text": "\nПриложение предназначено для лиц в возрасте 18 лет и старше.\nИспользуя Приложение, вы подтверждаете, что вам не менее 18 лет."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f14ffee2a4f0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f0b9d563af1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Лицензия на использование"
+          },
+          {
+            "_key": "1cc5a882be98",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы предоставляем вам ограниченную, неисключительную, непередаваемую, отзывную лицензию на использование Приложения в личных, некоммерческих целях в соответствии с настоящими Условиями."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0f5ced0971a4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "10b4fabf2401",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ограничения"
+          },
+          {
+            "_key": "87c19505f60b",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВы соглашаетесь не:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0217f4a6c5d1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "831be6fa3e5a",
+            "_type": "span",
+            "marks": [],
+            "text": "Копировать, изменять или создавать производные работы на основе Приложения."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a5072d6feee9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "dc176b172c93",
+            "_type": "span",
+            "marks": [],
+            "text": "Обратно проектировать, декомпилировать или пытаться извлечь исходный код."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "19e8ea56fc14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8b97c1a49127",
+            "_type": "span",
+            "marks": [],
+            "text": "Использовать Приложение в противоправных или вредоносных целях."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f0ea24494057",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8276161d4ffc",
+            "_type": "span",
+            "marks": [],
+            "text": "Мешать функционированию Приложения, его серверов или системе безопасности."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "27ec152f458f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9a1909492b12",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Подписки и платежи"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "445bc1a47b3b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4039294cd95f",
+            "_type": "span",
+            "marks": [],
+            "text": "Приложение работает по модели freemium с автоматически возобновляемыми подписками (ежемесячными или годовыми)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4214f83904f1",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "07ec6ca9ed19",
+            "_type": "span",
+            "marks": [],
+            "text": "Подписки оплачиваются через Apple App Store и Google Play Billing."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5ee41d9e52f0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "38ca0e5109f6",
+            "_type": "span",
+            "marks": [],
+            "text": "Подписки автоматически продлеваются, если они не отменены как минимум за 24 часа до даты продления."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f121d2e4ca33",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "46b0d52a0d4f",
+            "_type": "span",
+            "marks": [],
+            "text": "Управлять подписками или отменять их можно в настройках вашего Apple ID или учетной записи Google Play."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6688398d4023",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "3aacc5de7ece",
+            "_type": "span",
+            "marks": [],
+            "text": "Возвраты средств регулируются правилами Apple и Google. Мы не обрабатываем платежи и возвраты напрямую."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "517af722ccc7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7a80f0889729",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Контент пользователя"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f8abbaef2497",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "88207bec9d43",
+            "_type": "span",
+            "marks": [],
+            "text": "Пользователи могут сохранять вопросы, записи в дневнике и расклады в Приложении."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "dccc1c057602",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c8f09aac3cdf",
+            "_type": "span",
+            "marks": [],
+            "text": "Вы остаетесь владельцем вашего контента. Используя Приложение, вы предоставляете нам ограниченную лицензию на хранение, обработку и отображение вашего контента исключительно для обеспечения функциональности Приложения."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8a4524947acc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7f9a562ff1d4",
+            "_type": "span",
+            "marks": [],
+            "text": "Вы несете ответственность за соответствие вашего контента применимому законодательству и нашей Политике в отношении контента."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "3560a29e6b95",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "be804dd32b56",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Отказ от ответственности за профессиональные советы"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ac40f200d9b3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6306c948ff01",
+            "_type": "span",
+            "marks": [],
+            "text": "Приложение предоставляет материалы для образа жизни, развлечений и самопознания."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "42ba6bc236de",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7c6626de0f95",
+            "_type": "span",
+            "marks": [],
+            "text": "Оно не является заменой медицинской, психологической, юридической или финансовой консультации."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7123e67a7b19",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bce97645cab6",
+            "_type": "span",
+            "marks": [],
+            "text": "Вам не следует полагаться на Приложение при принятии решений, связанных с вашим здоровьем, финансами или юридическими вопросами."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d98395961786",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d18de51da2da",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ограничение ответственности"
+          },
+          {
+            "_key": "afbba78ea147",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВ максимальной степени, разрешенной законом:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d0b267ffbc4b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "509694ca2906",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы не несем ответственности за косвенные, случайные, специальные или последующие убытки, возникшие в результате вашего использования Приложения."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8df193351b92",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "cabcbed8334c",
+            "_type": "span",
+            "marks": [],
+            "text": "Наша совокупная ответственность не должна превышать сумму, которую вы заплатили (если таковая была) за использование Приложения за последние 12 месяцев."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ebd41e359386",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "22fc590f5f66",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Прекращение действия"
+          },
+          {
+            "_key": "d47d17018926",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы можем приостановить или прекратить ваш доступ к Приложению в любое время, если вы нарушите эти Условия или применимые законы. После прекращения действия ваша лицензия на использование Приложения немедленно аннулируется."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9fb326286608",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c96b7f283996",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Применимое право и юрисдикция"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9b392d0e2a7f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4a14bff7336b",
+            "_type": "span",
+            "marks": [],
+            "text": "Настоящие Условия регулируются законодательством Польши."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d789f20af75c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f4b9c5e3a9c9",
+            "_type": "span",
+            "marks": [],
+            "text": "Пользователи из ЕС/ЕЭЗ дополнительно защищены императивными нормами местного потребительского законодательства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d84fe032e2d3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "18ceb954b895",
+            "_type": "span",
+            "marks": [],
+            "text": "Пользователи из других юрисдикций могут иметь дополнительные права в соответствии с местным законодательством."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "fd9de6b2677e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6c221bfb96d0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Изменения в Условиях"
+          },
+          {
+            "_key": "4ceec0d620a8",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы можем время от времени обновлять эти Условия. При внесении существенных изменений мы уведомим вас через Приложение или по электронной почте. Продолжение использования Приложения после изменений означает, что вы принимаете обновленные Условия."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9a3ab7b8788a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2e9fa5e7d4a9",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Свяжитесь с нами"
+          },
+          {
+            "_key": "da5f8cc9532d",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЕсли у вас есть вопросы относительно этих Условий, пожалуйста, свяжитесь с нами:\n"
+          },
+          {
+            "_key": "a606fccb20b7",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "2bfb245b4a83",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "50d18bb4177b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ru",
+    "published": "Последнее обновление, Сентябрь, 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "terms-of-use-ru"
+    },
+    "title": "Условия использования"
+  },
+  {
+    "_id": "da717d9a-6fdc-4278-bb64-92729b167212",
+    "_rev": "Iur60F15On6N7EF4TYAAXP",
+    "content": [
+      {
+        "_key": "f7b3ecf15c59",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4ff044127a2f",
+            "_type": "span",
+            "marks": [],
+            "text": "Настоящая Политика возвратов и подписок объясняет, как работают подписки, продления, отмены и возвраты средств в приложении Kaelis AI: Tarot & Astrology («Приложение»)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e4c09638ca89",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "95012ea7aad2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Подписки\n"
+          },
+          {
+            "_key": "8327f5d55d08",
+            "_type": "span",
+            "marks": [],
+            "text": "Приложение использует модель freemium: бесплатные базовые функции + платные подписки по желанию (ежемесячные или годовые).\nПлатные подписки разблокируют премиум-функции, включая расширенные расклады таро и астрологические прогнозы, множество стилей интерпретаций и персонализированные инсайты.\nВсе подписки управляются через Apple App Store или Google Play Store."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7fd471f01993",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c3e7637730da",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Автоматическое продление\n"
+          },
+          {
+            "_key": "3e5a29fb401e",
+            "_type": "span",
+            "marks": [],
+            "text": "Подписки продлеваются автоматически.\nВаша подписка будет автоматически продлеваться в конце каждого расчетного периода, если вы не отмените ее как минимум за 24 часа до даты продления."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "38fe911a975a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "cbe42ba3f206",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Бесплатные пробные периоды\n"
+          },
+          {
+            "_key": "cd3e527e0348",
+            "_type": "span",
+            "marks": [],
+            "text": "Некоторые тарифные планы могут включать бесплатный пробный период.\nЕсли вы не отмените подписку до окончания пробного периода, с вас будет автоматически списана плата за выбранную подписку."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "39be1908994b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a0ec28162f7f",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Управление подписками"
+          },
+          {
+            "_key": "db3211c39ffe",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВы можете управлять своей подпиской или отменить ее в любое время:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "347588c9d9f5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e417ce6a0e37",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "iOS (Apple App Store):"
+          },
+          {
+            "_key": "e7bf88b6f5fa",
+            "_type": "span",
+            "marks": [],
+            "text": " Откройте «Настройки» → [Ваше имя] → «Подписки»."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4fe7def0b3fb",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1a9a19d732f0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Android (Google Play):"
+          },
+          {
+            "_key": "aabfdd3e1983",
+            "_type": "span",
+            "marks": [],
+            "text": " Откройте Google Play Маркет → «Профиль» → «Платежи и подписки»."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "206d2201c734",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e55282a836ba",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Возвраты средств\n"
+          },
+          {
+            "_key": "d019d29feab7",
+            "_type": "span",
+            "marks": [],
+            "text": "Все платежи и возвраты обрабатываются непосредственно Apple App Store и Google Play Billing.\nМы не можем самостоятельно выдавать возвраты средств или управлять спорами по платежам.\nЧтобы запросить возврат, пожалуйста, используйте:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ec37d29245fa",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "280322ec4542",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Apple:"
+          },
+          {
+            "_key": "2493c88a23be",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "fefc7a04c5df",
+            "_type": "span",
+            "marks": [
+              "b31e4ed26bdb"
+            ],
+            "text": "https://support.apple.com/en-us/HT204084"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "b31e4ed26bdb",
+            "_type": "link",
+            "href": "https://support.apple.com/en-us/HT204084"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "92c1335c0c6e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "efe5d09886e8",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Google:"
+          },
+          {
+            "_key": "923d594b46ee",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "b90b9714b62e",
+            "_type": "span",
+            "marks": [
+              "8e52369a0e87"
+            ],
+            "text": "https://support.google.com/googleplay/answer/2479637"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "8e52369a0e87",
+            "_type": "link",
+            "href": "https://support.google.com/googleplay/answer/2479637"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "5aa08199aad0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8ee393e880f9",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Неуспешные платежи\n"
+          },
+          {
+            "_key": "23aab729b24b",
+            "_type": "span",
+            "marks": [],
+            "text": "Если платеж не прошел, ваша подписка может быть приостановлена до тех пор, пока платеж не будет успешно обработан."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4d22475892cf",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "94679b2f881b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Изменения цен\n"
+          },
+          {
+            "_key": "599e621790ca",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы можем время от времени корректировать цены на подписки.\nВ случае изменения цен Apple или Google уведомят вас до начала следующего расчетного периода."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "880412625c20",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "13fb80b72241",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Свяжитесь с нами"
+          },
+          {
+            "_key": "3f9277d639a5",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЕсли у вас есть вопросы относительно данной Политики, пожалуйста, свяжитесь с нами:\nМаксим Шамко\ninfo.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ru",
+    "published": "Последнее обновление, Сентябрь, 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "refund-and-subscription-policy-ru"
+    },
+    "title": "Политика возвратов и подписок"
+  },
+  {
+    "_id": "520d5661-12a3-49a9-8afc-742c1b7538fc",
+    "_rev": "Iur60F15On6N7EF4TYA2T2",
+    "content": [
+      {
+        "_key": "529e2cb39f51",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "dc8ce2098465",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы стремимся защищать вашу конфиденциальность в соответствии с "
+          },
+          {
+            "_key": "128261f5a488",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Общим регламентом по защите данных"
+          },
+          {
+            "_key": "e3543ade4924",
+            "_type": "span",
+            "marks": [],
+            "text": " (GDPR), "
+          },
+          {
+            "_key": "4c43c2435012",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Калифорнийским законом о защите прав потребителей (CCPA/CPRA)"
+          },
+          {
+            "_key": "627ffa1e6dfa",
+            "_type": "span",
+            "marks": [],
+            "text": ", "
+          },
+          {
+            "_key": "1e9dc199b0c5",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Законом о защите конфиденциальности детей в Интернете (COPPA)"
+          },
+          {
+            "_key": "c72b10aabe09",
+            "_type": "span",
+            "marks": [],
+            "text": " и другими применимыми международными законами."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b8130a80cccb",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "273bf7f5dcf3",
+            "_type": "span",
+            "marks": [],
+            "text": "Information We CollectWe may collect the following categories of information when you use the App:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c1ec04d0f4d4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b69d8afbe374",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Account and Login Data"
+          },
+          {
+            "_key": "140257054935",
+            "_type": "span",
+            "marks": [],
+            "text": ": email, login via Apple ID, Google, or social networks."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "95417298be56",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "3741a7c92e4d",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Profile Information"
+          },
+          {
+            "_key": "cc0e8e1e7347",
+            "_type": "span",
+            "marks": [],
+            "text": ": name, gender, birth date, birth time, birth timezone, birth place (including latitude and longitude)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "35665525f99b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4badf74dba12",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Usage Data"
+          },
+          {
+            "_key": "c703872b2bf7",
+            "_type": "span",
+            "marks": [],
+            "text": ": tarot questions, readings, diary entries, language and style preferences, in-app behavior."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1f55eba7b059",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "394d0b0bab0a",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Device Data"
+          },
+          {
+            "_key": "2e2be7d0f256",
+            "_type": "span",
+            "marks": [],
+            "text": ": device model, OS version, push notification token, app analytics identifiers."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7567848c92e6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9ffddf6433c9",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Payment Data"
+          },
+          {
+            "_key": "44c6fe736d77",
+            "_type": "span",
+            "marks": [],
+            "text": ": processed by Apple App Store and Google Play Billing. We do not store payment details."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "bf131517c0b8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b201a751d5f3",
+            "_type": "span",
+            "marks": [],
+            "text": "How We Use Your InformationWe process data to:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4c92843729f7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "28f4cd54d53e",
+            "_type": "span",
+            "marks": [],
+            "text": "Provide and personalize readings and astrological insights."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "030eac469376",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0766b7c7b8ac",
+            "_type": "span",
+            "marks": [],
+            "text": "Enable login, subscriptions, and personal diary features."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1730428d9dbf",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "3839e33531b7",
+            "_type": "span",
+            "marks": [],
+            "text": "Send push notifications (if enabled)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a037d37f7563",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "45d1fe6d212c",
+            "_type": "span",
+            "marks": [],
+            "text": "Improve the App through analytics."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2b89df30aa78",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "df00f9328f38",
+            "_type": "span",
+            "marks": [],
+            "text": "Comply with legal and regulatory requirements."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1d6c7eb66882",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c3250b8c5d6c",
+            "_type": "span",
+            "marks": [],
+            "text": "Legal Basis for Processing (GDPR)We process personal data under the following lawful bases:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "018d6fade36d",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "529122bbef98",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Consent"
+          },
+          {
+            "_key": "d76fda69941d",
+            "_type": "span",
+            "marks": [],
+            "text": ": for birth data, gender, push notifications."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "36698dc38cb2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "92cc12ae0c0f",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Contractual necessity"
+          },
+          {
+            "_key": "34917b8820a9",
+            "_type": "span",
+            "marks": [],
+            "text": ": to provide services and manage subscriptions."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b25053b0db16",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b96b61a8bc14",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Legitimate interests"
+          },
+          {
+            "_key": "49aae7d7b5c3",
+            "_type": "span",
+            "marks": [],
+            "text": ": analytics, service improvement, fraud prevention."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "efa576169f20",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "fbd85074aa7f",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Legal obligation"
+          },
+          {
+            "_key": "0779a7934655",
+            "_type": "span",
+            "marks": [],
+            "text": ": compliance with applicable law."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d067dcd62d2c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e8a74d92764a",
+            "_type": "span",
+            "marks": [],
+            "text": "Sharing of DataWe do not sell your personal information. Data may be shared only with:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e66c2d2239e0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad784c8e4e22",
+            "_type": "span",
+            "marks": [],
+            "text": "Service providers (hosting, analytics, push notifications)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a7d5d88e3bdc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "cf4a45610356",
+            "_type": "span",
+            "marks": [],
+            "text": "Payment processors (Apple, Google)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7dd0d482908f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "037a5181f064",
+            "_type": "span",
+            "marks": [],
+            "text": "Legal authorities (if required by law)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "84dc2679a5fc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "73de8db852ca",
+            "_type": "span",
+            "marks": [],
+            "text": "Data RetentionWe keep your data while your account is active.Upon deletion request, personal data will be erased within "
+          },
+          {
+            "_key": "b10052b4381c",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "30 days."
+          },
+          {
+            "_key": "f27dd8768a7e",
+            "_type": "span",
+            "marks": [],
+            "text": "Anonymized usage data may be stored longer for analytics."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a2729edcd73a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6e757936e1b4",
+            "_type": "span",
+            "marks": [],
+            "text": "International Data TransfersYour data may be processed and stored in the "
+          },
+          {
+            "_key": "4c695fb5261e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "European Union"
+          },
+          {
+            "_key": "9a8db427b1fd",
+            "_type": "span",
+            "marks": [],
+            "text": " and other countries.When transferring outside the EEA, we apply safeguards such as:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9facd1d19445",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "70e4f256a821",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Standard Contractual Clauses (SCCs)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "48651a871437",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6659884fddd5",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "EU–U.S. Data Privacy Framework (if applicable)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "18e25732b0ce",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "40268fe9db84",
+            "_type": "span",
+            "marks": [],
+            "text": "Your RightsYou may exercise the following rights depending on your location:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a836c2e86d21",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "460a8d10e5ff",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "EU / EEA (GDPR)"
+          }
+        ],
+        "level": 2,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5f64928e2f78",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5c03a38666c5",
+            "_type": "span",
+            "marks": [],
+            "text": "Right of access, correction, deletion (“right to be forgotten”)."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "94596c137dff",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bf91863aed0f",
+            "_type": "span",
+            "marks": [],
+            "text": "Right to restrict or object to processing."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "718bb1dbbbd4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ecb99e3e4991",
+            "_type": "span",
+            "marks": [],
+            "text": "Right to data portability."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2ef003375803",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "457457ad2c6d",
+            "_type": "span",
+            "marks": [],
+            "text": "Right to lodge a complaint with your local Data Protection Authority."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "3e65508d2be3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "786785c08571",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "California, USA (CCPA/CPRA)"
+          }
+        ],
+        "level": 2,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b9bfb9082b38",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6bfcb3ea6d54",
+            "_type": "span",
+            "marks": [],
+            "text": "Right to know what personal information is collected and how it is used."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "78d0ef106c46",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "91a34b88bf90",
+            "_type": "span",
+            "marks": [],
+            "text": "Right to request deletion of personal information."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "73ddd60a6030",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "24d5b8679048",
+            "_type": "span",
+            "marks": [],
+            "text": "Right to opt-out of the sale of personal information (we do not sell data)."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "029bbb52ff93",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0aa9f45c4f00",
+            "_type": "span",
+            "marks": [],
+            "text": "Right to non-discrimination for exercising privacy rights."
+          }
+        ],
+        "level": 3,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e76e1e857fc6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "33229e041b34",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "United Kingdom (UK GDPR)"
+          },
+          {
+            "_key": "da3c93ce758e",
+            "_type": "span",
+            "marks": [],
+            "text": "Same rights as GDPR, under the UK Data Protection Act 2018."
+          }
+        ],
+        "level": 2,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4597624d0982",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e084e61a3ff9",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Other Regions (Ukraine, CIS, Canada, Australia, etc.)"
+          },
+          {
+            "_key": "3b9395e227b1",
+            "_type": "span",
+            "marks": [],
+            "text": "You may contact us to request access, correction, or deletion of your data. We will review and handle requests in accordance with applicable local laws."
+          }
+        ],
+        "level": 2,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "55359637ab54",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d2753191ddeb",
+            "_type": "span",
+            "marks": [],
+            "text": "Children’s Privacy"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0e331e250589",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "50f1b8d7bb2f",
+            "_type": "span",
+            "marks": [],
+            "text": "This App is "
+          },
+          {
+            "_key": "5f6e8a1161d1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "not directed to children under 18."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5ce361a0cb11",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4cfae6ec462a",
+            "_type": "span",
+            "marks": [],
+            "text": "We do not knowingly collect information from minors."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "62ca44eba931",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8562b5fa03e5",
+            "_type": "span",
+            "marks": [],
+            "text": "If you believe a child has provided personal data, please contact us at "
+          },
+          {
+            "_key": "6a75b0f5a15b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          },
+          {
+            "_key": "08f5041d8b3e",
+            "_type": "span",
+            "marks": [],
+            "text": " and we will delete it promptly."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "df56c40598d9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e85adc02d7c3",
+            "_type": "span",
+            "marks": [],
+            "text": "Security of Your DataWe apply technical and organizational safeguards, including:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "529ccf7de481",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1092f7b37dbe",
+            "_type": "span",
+            "marks": [],
+            "text": "Data encryption (SSL/TLS)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a78124dc46d0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9cb5591d84f7",
+            "_type": "span",
+            "marks": [],
+            "text": "Secure hosting with access restrictions."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6491c97d5b0c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1fece19c1cdc",
+            "_type": "span",
+            "marks": [],
+            "text": "Regular security audits."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "92c4d5e9a626",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "407c1bdd4d53",
+            "_type": "span",
+            "marks": [],
+            "text": "No system is completely secure, and we cannot guarantee absolute security."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "21c4d1f814ed",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e1d74d635204",
+            "_type": "span",
+            "marks": [],
+            "text": "Subscriptions and Payments"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "23f04f58decc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6a724b09fb34",
+            "_type": "span",
+            "marks": [],
+            "text": "Subscriptions are managed by Apple "
+          },
+          {
+            "_key": "54eeefcc714f",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "App Store"
+          },
+          {
+            "_key": "f0d2992013a3",
+            "_type": "span",
+            "marks": [],
+            "text": " and "
+          },
+          {
+            "_key": "0d0b0222fa2f",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Google Play Billing"
+          },
+          {
+            "_key": "d0b57245c167",
+            "_type": "span",
+            "marks": [],
+            "text": "."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "3f88e5e43166",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4c77047a0554",
+            "_type": "span",
+            "marks": [],
+            "text": "We do not process or store credit card data."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ab7c11accb66",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2c002f72b4d2",
+            "_type": "span",
+            "marks": [],
+            "text": "Refunds and cancellations must be handled through Apple or Google according to their policies."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "fcf8ae8e66e4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5807b1fca0c2",
+            "_type": "span",
+            "marks": [],
+            "text": "Changes to this PolicyWe may update this Policy occasionally. If material changes are made, we will notify users via the App or email."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c58b90dc80eb",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7bf031d00705",
+            "_type": "span",
+            "marks": [],
+            "text": "Governing Law and JurisdictionThis Policy is governed by the laws of "
+          },
+          {
+            "_key": "d68b17584964",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Poland"
+          },
+          {
+            "_key": "7f30cce47d15",
+            "_type": "span",
+            "marks": [],
+            "text": ".For EU/EEA users, GDPR rights apply.For other jurisdictions, local consumer protection and privacy laws may apply additionally."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "fe4f5046cfaa",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e34f4e54856a",
+            "_type": "span",
+            "marks": [],
+            "text": "Contact UsIf you have any questions, requests, or complaints about this Policy, please contact us:"
+          },
+          {
+            "_key": "b11b4962e4a5",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Maksim Shamkouinfo.kaelis@gmail.com"
+          },
+          {
+            "_key": "b3317328ac8b",
+            "_type": "span",
+            "marks": [],
+            "text": "\n\nНастоящая Политика конфиденциальности объясняет, как Максим Шамко («Компания», «мы», «наш» или «нас») собирает, использует, хранит и защищает вашу личную информацию, когда вы используете наше мобильное приложение Kaelis AI: Tarot & Astrology («Приложение»)."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c4a30b489474",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "faf576bebe00",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы стремимся защищать вашу конфиденциальность в соответствии с Общим регламентом по защите данных (GDPR), Калифорнийским законом о защите прав потребителей (CCPA/CPRA), Законом о защите конфиденциальности детей в Интернете (COPPA) и другими применимыми международными законами."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b14be645aafa",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "93bb032fac2b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Информация, которую мы собираем"
+          },
+          {
+            "_key": "b8379e3a9021",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы можем собирать следующие категории информации, когда вы используете Приложение:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "012835f9e3df",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "05898ba0d311",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Данные учетной записи и входа:"
+          },
+          {
+            "_key": "46f88f4ea4d4",
+            "_type": "span",
+            "marks": [],
+            "text": " адрес электронной почты, вход через Apple ID, Google или социальные сети."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "31976ec86c89",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e419b952cc5a",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Информация профиля:"
+          },
+          {
+            "_key": "aaffe496b02f",
+            "_type": "span",
+            "marks": [],
+            "text": " имя, пол, дата рождения, время рождения, часовой пояс места рождения, место рождения (включая широту и долготу)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9a0580e1710e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2a68a5b516c1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Данные об использовании:"
+          },
+          {
+            "_key": "fefa28c082c7",
+            "_type": "span",
+            "marks": [],
+            "text": " вопросы по таро, расклады, дневниковые записи, языковые и стилевые предпочтения, поведение в приложении."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7178758d65dc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0f8ad67849a2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Данные устройства:"
+          },
+          {
+            "_key": "ce61cd00f2ad",
+            "_type": "span",
+            "marks": [],
+            "text": " модель устройства, версия ОС, токен push-уведомлений, идентификаторы аналитики приложения."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b685888f7d26",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "263406851899",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Платежные данные:"
+          },
+          {
+            "_key": "3b322d655aae",
+            "_type": "span",
+            "marks": [],
+            "text": " обрабатываются Apple App Store и Google Play Billing. Мы не храним платежные реквизиты."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "906dfbe490dc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4a4b46b1467c",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Как мы используем вашу информацию"
+          },
+          {
+            "_key": "d4a1fe9965c6",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы обрабатываем данные для:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "962fa8916395",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e2883622e9e0",
+            "_type": "span",
+            "marks": [],
+            "text": "Предоставления и персонализации раскладов и астрологических insights."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "530c7b364b21",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "01a84bd53748",
+            "_type": "span",
+            "marks": [],
+            "text": "Обеспечения входа в систему, функций подписки и личного дневника."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "05faf460e67a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5c81f9cb754e",
+            "_type": "span",
+            "marks": [],
+            "text": "Отправки push-уведомлений (если они включены)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8edf260d2c84",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6ad41b70e35e",
+            "_type": "span",
+            "marks": [],
+            "text": "Улучшения Приложения с помощью аналитики."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f4bc3ea0e31a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e1141991c09c",
+            "_type": "span",
+            "marks": [],
+            "text": "Соблюдения правовых и нормативных требований."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b638a7e2ad2e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "90b362eb061f",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Правовое основание для обработки (GDPR)"
+          },
+          {
+            "_key": "40b1b4a3f48f",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы обрабатываем персональные данные на следующих законных основаниях:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a089d338f779",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ffee3a0d5926",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Согласие:"
+          },
+          {
+            "_key": "6c51b2edf6ec",
+            "_type": "span",
+            "marks": [],
+            "text": " для данных о рождении, пола, push-уведомлений."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9d5439656e55",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6b0a036b38b8",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Необходимость для выполнения договора:"
+          },
+          {
+            "_key": "63c6cbd1ac3b",
+            "_type": "span",
+            "marks": [],
+            "text": " для предоставления услуг и управления подписками."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a955ab64508a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "dace7ce53fcf",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Законные интересы:"
+          },
+          {
+            "_key": "cd76506630a3",
+            "_type": "span",
+            "marks": [],
+            "text": " аналитика, улучшение сервиса, предотвращение мошенничества."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "72122af4d378",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "13f558595a95",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Правовое обязательство:"
+          },
+          {
+            "_key": "bd28b42783f4",
+            "_type": "span",
+            "marks": [],
+            "text": " соблюдение применимого законодательства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6cd71a612609",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "240d22593423",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Передача данных"
+          },
+          {
+            "_key": "6fd10ef79cef",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы не продаем вашу личную информацию. Данные могут передаваться только:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "dbd48204368c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ca9fe27ff431",
+            "_type": "span",
+            "marks": [],
+            "text": "Поставщикам услуг (хостинг, аналитика, push-уведомления)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "277a3014612a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b99b993d57f9",
+            "_type": "span",
+            "marks": [],
+            "text": "Платежным процессорам (Apple, Google)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "208713762540",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b91a6deb990c",
+            "_type": "span",
+            "marks": [],
+            "text": "Правовым органам (если это требуется по закону)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "95831b7b65f2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae6c52a7b1ed",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Срок хранения данных"
+          },
+          {
+            "_key": "af3a6c367a7f",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы храним ваши данные, пока ваша учетная запись активна.\nПо запросу на удаление персональные данные будут удалены в течение 30 дней.\nОбезличенные данные об использовании могут храниться дольше для аналитики."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "01a443b3e246",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7f7c06bc3ce8",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Международная передача данных"
+          },
+          {
+            "_key": "840adc7bdb3d",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВаши данные могут обрабатываться и храниться в Европейском союзе и других странах.\nПри передаче за пределы ЕЭЗ мы применяем защитные меры, такие как:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "20e709094125",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5c76b440c404",
+            "_type": "span",
+            "marks": [],
+            "text": "Стандартные договорные положения (SCCs)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6cb795c9525c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0595db4182f0",
+            "_type": "span",
+            "marks": [],
+            "text": "Рамочная основа защиты приватности данных ЕС-США (если применимо)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "3cc7d557ebcf",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "61892c77e922",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ваши права"
+          },
+          {
+            "_key": "836808d6b228",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВ зависимости от вашего местоположения вы можете воспользоваться следующими правами:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9f867f995756",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "49cb598a8cb9",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "ЕС / ЕЭЗ (GDPR):"
+          },
+          {
+            "_key": "dedacbac83b7",
+            "_type": "span",
+            "marks": [],
+            "text": " Право на доступ, исправление, удаление («право на забвение»). Право на ограничение обработки или возражение против нее. Право на переносимость данных. Право подать жалобу в местный надзорный орган по защите данных."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2ba9a1e1e75c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f1e1e4dabff2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Калифорния, США (CCPA/CPRA):"
+          },
+          {
+            "_key": "3da643951bcf",
+            "_type": "span",
+            "marks": [],
+            "text": " Право знать, какая личная информация собирается и как используется. Право запросить удаление личной информации. Право отказаться от продажи личной информации (мы не продаем данные). Право на недискриминацию за осуществление прав на конфиденциальность."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "06a6c00be2cd",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "81d298a6f952",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Великобритания (UK GDPR):"
+          },
+          {
+            "_key": "3eeadf19bfef",
+            "_type": "span",
+            "marks": [],
+            "text": " Те же права, что и по GDPR, в соответствии с Законом о защите данных Великобритании 2018 года."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "12dae0804512",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "64962944a183",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Другие регионы (Украина, СНГ, Канада, Австралия и др.):"
+          },
+          {
+            "_key": "3d5d869b56e3",
+            "_type": "span",
+            "marks": [],
+            "text": " Вы можете связаться с нами, чтобы запросить доступ, исправление или удаление ваших данных. Мы рассмотрим и обработаем запросы в соответствии с применимым местным законодательством."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "485a14d40788",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7d63e89f788e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Конфиденциальность детей"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b4bd286cd212",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7143d92b9de2",
+            "_type": "span",
+            "marks": [],
+            "text": "Это Приложение не предназначено для детей младше 18 лет."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "cd1a9e659719",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8c9a801820d9",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы не собираем информацию от несовершеннолетних сознательно."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9976f71afdef",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "64fff68cb94c",
+            "_type": "span",
+            "marks": [],
+            "text": "Если вы считаете, что ребенок предоставил персональные данные, пожалуйста, свяжитесь с нами по адресу info.kaelis@gmail.com, и мы немедленно удалим их."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "80d1f7ca4f14",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "324aa6098235",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Безопасность ваших данных\n"
+          },
+          {
+            "_key": "d34304e7c740",
+            "_type": "span",
+            "marks": [],
+            "text": "Ни одна система не является полностью безопасной, и мы не можем гарантировать абсолютную безопасность.\nМы применяем технические и организационные защитные меры, включая:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7a9ba5b1ab13",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a7d38a280627",
+            "_type": "span",
+            "marks": [],
+            "text": "Шифрование данных (SSL/TLS)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "064ab0492c50",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "acf132dc85a8",
+            "_type": "span",
+            "marks": [],
+            "text": "Защищенный хостинг с ограничением доступа."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "82870d4c963f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a34afb184112",
+            "_type": "span",
+            "marks": [],
+            "text": "Регулярные проверки безопасности."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "95f671ec0314",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ae10259317d4",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Подписки и платежи"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a02ea64bc532",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "861be9ac039d",
+            "_type": "span",
+            "marks": [],
+            "text": "Подписками управляют Apple App Store и Google Play Billing."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "312a15c29465",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b979e3ef69b0",
+            "_type": "span",
+            "marks": [],
+            "text": "Мы не обрабатываем и не храним данные кредитных карт."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4d55b86cb910",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7f8709077948",
+            "_type": "span",
+            "marks": [],
+            "text": "Возвраты средств и отмены должны осуществляться через Apple или Google в соответствии с их политиками."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8cd69cf8bccf",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9dbe4db2826e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Изменения в данной Политике"
+          },
+          {
+            "_key": "0ec2b98a4e91",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМы можем время от времени обновлять эту Политику. При внесении существенных изменений мы уведомим пользователей через Приложение или по электронной почте."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7d22a25bbac4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "388bc8bb3b96",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Применимое право и юрисдикция"
+          },
+          {
+            "_key": "5b72f4068782",
+            "_type": "span",
+            "marks": [],
+            "text": "\nНастоящая Политика регулируется законодательством Польши.\nДля пользователей из ЕС/ЕЭЗ применяются права по GDPR.\nДля других юрисдикций могут также применяться местные законы о защите прав потребителей и конфиденциальности."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a8ef1670e0ef",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "66d5aa0df7a8",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Свяжитесь с нами"
+          },
+          {
+            "_key": "b44877fad42b",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЕсли у вас есть какие-либо вопросы, запросы или жалобы относительно данной Политики, пожалуйста, свяжитесь с нами:\nМаксим Шамко\ninfo.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ru",
+    "published": "Последнее обновление, Сентябрь, 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "privacy-policy-ru"
+    },
+    "title": "Политика конфиденциальности"
+  }
+]

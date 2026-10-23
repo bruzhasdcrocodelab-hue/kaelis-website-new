@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/reading/ReadingLink";
 import type { Dictionary, Locale } from "@/lang";
+import { policyHref } from "@/lib/policies/catalog";
 import { useCategories } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import { categoryHref } from "@/lib/categories/catalog";
@@ -186,7 +187,7 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
             </OurAppLink>
             <div className={styles.divider} />
             <Link
-              href="/terms-of-use"
+              href={policyHref(locale, "terms-of-use")}
               role="menuitem"
               className={`font-instrument-sm-emphasized ${styles.item}`}
               onClick={closeMenu}

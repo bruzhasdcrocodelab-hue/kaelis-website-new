@@ -1,6 +1,7 @@
 import Link, { ReadingAnchor } from "@/components/reading/ReadingLink";
 import MainButton from "@/components/global/MainButton";
 import type { Dictionary, Locale } from "@/lang";
+import { policyHref, policyTitles, type PolicyKey } from "@/lib/policies/catalog";
 import { getSocialData } from "@/lib/config/social_links";
 import styles from "./Footer.module.css";
 
@@ -11,6 +12,7 @@ export interface FooterProps {
 }
 
 export default function Footer({ dictionary, locale, variant = "default" }: FooterProps) {
+  const policies: PolicyKey[] = ["children-s-privacy-policy", "refund-and-subscription-policy", "privacy-policy", "content-policy", "end-user-license-agreement-eula"];
   return (
     <footer className={`${styles.footer} ${variant === "on-dark" ? styles.onDark : ""}`}>
       <div className={styles.social}>
@@ -32,15 +34,11 @@ export default function Footer({ dictionary, locale, variant = "default" }: Foot
         ))}
       </div>
       <div className={`font-instrument-base ${styles.links}`}>
-        <Link href="/" className={styles.link}>
-          {dictionary.links.childrensPrivacyPolicy}
-        </Link>
-        <Link href="/" className={styles.link}>
-          {dictionary.links.refundSubscriptionPolicy}
-        </Link>
-        <Link href="/" className={styles.link}>
-          {dictionary.links.privacyPolicy}
-        </Link>
+        {policies.map(key => (
+          <Link key={key} href={policyHref(locale, key)} className={styles.link}>
+            {policyTitles[locale][key]}
+          </Link>
+        ))}
       </div>
       {/* A native link reloads the home page, including when already on it. */}
       <ReadingAnchor href="/" className={`font-instrument-xl ${styles.logo}`}>

@@ -26,13 +26,14 @@
 
 .links {
   display: flex;
+  flex-wrap: wrap;
   flex-shrink: 1;
   min-width: 0;
-  gap: 42px;
+  gap: 12px 24px;
   align-items: center;
   justify-content: center;
   color: var(--color-black-75);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .link {
