@@ -1,3 +1,4 @@
+import RouteAnalytics from "@/components/RouteAnalytics";
 import { notFound } from "next/navigation";
 import { dictionaries } from "@/lang";
 import { isUrlLocale, toLocale } from "@/lib/routing";
@@ -21,12 +22,15 @@ export async function generateMetadata({ params }: Props) {
   const { language, policy } = resolvePolicy(locale, slug);
   return {
     ...pageMetadata(language, `/policy/${slug}`),
-    title: { absolute: policy.title },
+    title: { absolute: policy.title.trim() || "Kaelis" },
   };
 }
 
 export default async function PolicyPage({ params }: Props) {
   const { locale, slug } = await params;
   const { language, policy } = resolvePolicy(locale, slug);
-  return <TermsPageView dictionary={dictionaries[language]} locale={language} policy={policy} />;
+  return <>
+    <RouteAnalytics pathname={`/${locale}/policy/${slug}`} pageTitle={policy.title.trim() || "Kaelis"} />
+    <TermsPageView dictionary={dictionaries[language]} locale={language} policy={policy} />
+  </>;
 }

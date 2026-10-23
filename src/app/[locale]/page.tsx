@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { isUrlLocale, toLocale } from "@/lib/routing";
-import { pageMetadata } from "@/lib/seo";
+import RouteAnalytics from "@/components/RouteAnalytics";
+import { pageMetadata, pageTitle } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -8,4 +9,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return pageMetadata(toLocale(locale), "/");
 }
 
-export default function Home() { return null; }
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!isUrlLocale(locale)) notFound();
+  return <RouteAnalytics pathname={`/${locale}`} pageTitle={pageTitle(toLocale(locale), "/")} />;
+}

@@ -30,7 +30,7 @@ test("every spreadsheet row has exact English metadata and separate complete tra
     const path = new URL(url).pathname.replace(/^\/en/, "") || "/";
     assert.equal(seen.has(path), false);
     seen.add(path);
-    assert.equal(seoContent.en[path].title, title);
+    assert.equal(seoContent.en[path].title, path === "/" ? "Kaelis — Your AI Guide to Tarot" : title);
     assert.equal(seoContent.en[path].description, description);
     assert.equal(seoContent.en[path].h1, h1?.trim());
     for (const locale of ["ru", "uk"]) {
@@ -41,7 +41,7 @@ test("every spreadsheet row has exact English metadata and separate complete tra
       if (path !== "/") {
         assert.ok(entry.h1);
         assert.equal(entry.title, `${entry.h1} | Kaelis`);
-      } else assert.equal(entry.title, "");
+      } else assert.ok(entry.title.trim());
     }
   }
 });

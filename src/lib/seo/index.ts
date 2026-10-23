@@ -15,12 +15,16 @@ export function getSeo(locale: Locale, path: string): SeoContent | undefined {
   return entries[locale][path];
 }
 
+export function pageTitle(locale: Locale, path: string): string {
+  return getSeo(locale, path)?.title.trim() || "Kaelis";
+}
+
 export function pageMetadata(locale: Locale, path: string): Metadata {
   const entry = getSeo(locale, path);
   const origin = process.env.NEXT_PUBLIC_SITE_URL || "https://kaelisai.com";
   return {
     metadataBase: new URL(origin),
-    title: { absolute: entry?.title ?? "Kaelis" },
+    title: { absolute: pageTitle(locale, path) },
     description: entry?.description ?? "Kaelis",
     alternates: {
       canonical: localizedHref(locale, path),

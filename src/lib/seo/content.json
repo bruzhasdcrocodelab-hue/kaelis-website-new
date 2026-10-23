@@ -1,7 +1,7 @@
 {
   "ru": {
     "/": {
-      "title": "",
+      "title": "Kaelis — Ваш ИИ-проводник в мир Таро",
       "description": "🌑 Kaelis 🌑 Ваш ИИ-проводник в мир Таро"
     },
     "/tarot": {
@@ -391,7 +391,7 @@
   },
   "uk": {
     "/": {
-      "title": "",
+      "title": "Kaelis — Ваш ШІ-провідник у світ Таро",
       "description": "🌑 Kaelis 🌑 Ваш ШІ-провідник у світ Таро"
     },
     "/tarot": {
@@ -781,7 +781,7 @@
   },
   "en": {
     "/": {
-      "title": "",
+      "title": "Kaelis — Your AI Guide to Tarot",
       "description": "🌑 Kaelis 🌑 Your AI Guide to the World of Tarot"
     },
     "/tarot": {
