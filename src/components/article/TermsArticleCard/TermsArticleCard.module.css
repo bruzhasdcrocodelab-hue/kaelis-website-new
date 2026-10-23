@@ -108,7 +108,10 @@
   gap: 6px;
 }
 
-.body li > ol,
+.body li > ol {
+  margin-top: 48px;
+}
+
 .body li > ul {
   margin-top: 6px;
 }
@@ -206,7 +209,10 @@
     gap: 8px;
   }
 
-  .body li > ol,
+  .body li > ol {
+    margin-top: 32px;
+  }
+
   .body li > ul {
     margin-top: 8px;
   }
