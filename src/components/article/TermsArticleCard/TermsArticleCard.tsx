@@ -25,11 +25,14 @@ function blockText(block: PolicyBlock) {
   const props = { "data-policy-block": block._key, className: styles.block };
   if (block.listItem === "number") {
     const length = numberedHeadingLength(block);
+    const text = block.children.map(span => span.text).join("");
+    const bodyStart = length + (text.slice(length).match(/^\s*/)?.[0].length ?? 0);
+    const bodyEnd = text.trimEnd().length;
     return (
-      <div {...props}>
+      <div {...props} className={styles.numberedBlock}>
         <h2 className={styles.numberedTitle}>{spans({ ...block, children: slicePolicySpans(block, 0, length) })}</h2>
-        {length < block.children.map(span => span.text).join("").length && (
-          <p>{spans({ ...block, children: slicePolicySpans(block, length) })}</p>
+        {bodyStart < bodyEnd && (
+          <p className={styles.block}>{spans({ ...block, children: slicePolicySpans(block, bodyStart, bodyEnd) })}</p>
         )}
       </div>
     );
@@ -47,7 +50,10 @@ function blockText(block: PolicyBlock) {
   }
 }
 
-function renderBlocks(blocks: PolicyBlock[]): ReactNode[] {
+function renderBlocks(blocks: PolicyBlock[], contactPlate: ReactNode): ReactNode[] {
+  const contactKey = [...blocks].reverse().find(block =>
+    /^(Contact Us|Свяжитесь с нами|Зв'яжіться з нами)/.test(block.children.map(span => span.text).join(""))
+  )?._key;
   let index = 0;
   function list(level: number, type: string): ReactNode {
     const key = blocks[index]._key;
@@ -60,7 +66,13 @@ function renderBlocks(blocks: PolicyBlock[]): ReactNode[] {
       while (index < blocks.length && blocks[index].listItem && (blocks[index].level ?? 1) > level) {
         nested.push(list(blocks[index].level ?? 1, blocks[index].listItem!));
       }
-      items.push(<li key={block._key} className={type === "number" ? styles.numberedItem : undefined}>{blockText(block)}{nested}</li>);
+      items.push(
+        <li key={block._key} className={type === "number" ? styles.numberedItem : undefined}>
+          {blockText(block)}
+          {nested}
+          {block._key === contactKey && contactPlate}
+        </li>
+      );
     }
     return type === "number" ? <ol key={key}>{items}</ol> : <ul key={key}>{items}</ul>;
   }
@@ -77,15 +89,20 @@ function renderBlocks(blocks: PolicyBlock[]): ReactNode[] {
 }
 
 export default function TermsArticleCard({ policy }: TermsArticleCardProps) {
+  const contactPlate = (
+    <div className={styles.contactPlate}>
+      <p className={`font-instrument-base-emphasized ${styles.contactName}`}>{policy.language === "en" ? "Maksim Shamkou" : "Максим Шамко"}</p>
+      <a className={`font-instrument-sm ${styles.contactLine}`} href="mailto:info.kaelis@gmail.com">Email: info.kaelis@gmail.com</a>
+    </div>
+  );
   return (
     <article className={`shadow-medium ${styles.card}`}>
       <p className={`font-instrument-xs ${styles.marker}`}>Kaela AI {policy.title}</p>
       <div className={`font-instrument-base ${styles.body}`} data-policy-content>
-        {renderBlocks(policy.content.map(withoutContactDetails))}
-      </div>
-      <div className={styles.contactPlate}>
-        <p className={`font-instrument-base-emphasized ${styles.contactName}`}>{policy.language === "en" ? "Maksim Shamkou" : "Максим Шамко"}</p>
-        <a className={`font-instrument-sm ${styles.contactLine}`} href="mailto:info.kaelis@gmail.com">Email: info.kaelis@gmail.com</a>
+        {renderBlocks(
+          policy.content.map(withoutContactDetails).filter(block => block.children.some(span => span.text.trim())),
+          contactPlate
+        )}
       </div>
     </article>
   );
