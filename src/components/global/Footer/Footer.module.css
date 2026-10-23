@@ -10,8 +10,7 @@
 
 .social {
   display: flex;
-  flex: 1 0 0;
-  min-width: 0;
+  flex: 0 0 auto;
   gap: 10px;
   align-items: center;
 }
@@ -26,13 +25,14 @@
 
 .links {
   display: flex;
-  flex-shrink: 1;
+  flex-wrap: wrap;
+  flex: 1 1 0;
   min-width: 0;
-  gap: 42px;
+  gap: 12px 24px;
   align-items: center;
   justify-content: center;
   color: var(--color-black-75);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .link {
@@ -47,8 +47,8 @@
 }
 
 .logo {
-  flex: 1 0 0;
-  min-width: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
   color: var(--color-black-75);
   text-align: right;
   text-decoration: none;

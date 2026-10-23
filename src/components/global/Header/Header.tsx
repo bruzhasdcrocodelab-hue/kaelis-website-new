@@ -2,6 +2,7 @@ import Link, { ReadingAnchor } from "@/components/reading/ReadingLink";
 import MainButton from "@/components/global/MainButton";
 import LanguageSelector from "@/components/global/LanguageSelector";
 import type { Dictionary, Locale } from "@/lang";
+import { policyHref } from "@/lib/policies/catalog";
 import styles from "./Header.module.css";
 import OurAppLink from "./OurAppLink";
 import TarotSpreadsLink from "./TarotSpreadsLink";
@@ -37,7 +38,7 @@ export default function Header({ dictionary, locale }: HeaderProps) {
             {dictionary.nav.tarotSpreads}
           </TarotSpreadsLink>
           <OurAppLink className={styles.navLink}>{dictionary.nav.ourApp}</OurAppLink>
-          <Link href="/terms-of-use" className={styles.navLink} lang={locale}>
+          <Link href={policyHref(locale, "terms-of-use")} className={styles.navLink} lang={locale}>
             {dictionary.nav.termsOfUse}
           </Link>
         </nav>
