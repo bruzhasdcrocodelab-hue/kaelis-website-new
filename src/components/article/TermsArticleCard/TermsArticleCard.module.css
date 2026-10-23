@@ -19,7 +19,7 @@
 .body {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 12px;
   width: 100%;
   color: var(--color-black-75);
   font-family: var(--font-manrope);
@@ -53,10 +53,11 @@
 .body ol {
   gap: 48px;
   list-style-type: decimal;
+  margin-top: 36px;
 }
 
 .body ul {
-  gap: 6px;
+  gap: 12px;
   list-style-type: disc;
 }
 
@@ -200,9 +201,17 @@
 }
 
 @media (max-width: 768px) {
-  .body,
+  .body{
+    gap: 10px;
+  }
+
   .body ol {
     gap: 32px;
+    margin-top: 22px;
+  }
+
+  .body ul {
+    gap: 10px;
   }
 
   .numberedBlock {

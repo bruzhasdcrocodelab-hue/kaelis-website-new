@@ -3333,8 +3333,16 @@
           {
             "_key": "40268fe9db84",
             "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Your Rights"
+          },
+          {
+            "_key": "5f64928e2f78",
+            "_type": "span",
             "marks": [],
-            "text": "Your RightsYou may exercise the following rights depending on your location:"
+            "text": "\nYou may exercise the following rights depending on your location:"
           }
         ],
         "level": 1,
@@ -3352,74 +3360,16 @@
             "marks": [
               "strong"
             ],
-            "text": "EU / EEA (GDPR)"
-          }
-        ],
-        "level": 2,
-        "listItem": "number",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "5f64928e2f78",
-        "_type": "block",
-        "children": [
+            "text": "EU / EEA (GDPR):"
+          },
           {
             "_key": "5c03a38666c5",
             "_type": "span",
             "marks": [],
-            "text": "Right of access, correction, deletion (“right to be forgotten”)."
+            "text": " Right of access, correction, deletion (“right to be forgotten”). Right to restrict or object to processing. Right to data portability. Right to lodge a complaint with your local Data Protection Authority."
           }
         ],
-        "level": 3,
-        "listItem": "bullet",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "94596c137dff",
-        "_type": "block",
-        "children": [
-          {
-            "_key": "bf91863aed0f",
-            "_type": "span",
-            "marks": [],
-            "text": "Right to restrict or object to processing."
-          }
-        ],
-        "level": 3,
-        "listItem": "bullet",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "718bb1dbbbd4",
-        "_type": "block",
-        "children": [
-          {
-            "_key": "ecb99e3e4991",
-            "_type": "span",
-            "marks": [],
-            "text": "Right to data portability."
-          }
-        ],
-        "level": 3,
-        "listItem": "bullet",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "2ef003375803",
-        "_type": "block",
-        "children": [
-          {
-            "_key": "457457ad2c6d",
-            "_type": "span",
-            "marks": [],
-            "text": "Right to lodge a complaint with your local Data Protection Authority."
-          }
-        ],
-        "level": 3,
+        "level": 2,
         "listItem": "bullet",
         "markDefs": [],
         "style": "normal"
@@ -3434,74 +3384,16 @@
             "marks": [
               "strong"
             ],
-            "text": "California, USA (CCPA/CPRA)"
-          }
-        ],
-        "level": 2,
-        "listItem": "number",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "b9bfb9082b38",
-        "_type": "block",
-        "children": [
+            "text": "California, USA (CCPA/CPRA):"
+          },
           {
             "_key": "6bfcb3ea6d54",
             "_type": "span",
             "marks": [],
-            "text": "Right to know what personal information is collected and how it is used."
+            "text": " Right to know what personal information is collected and how it is used. Right to request deletion of personal information. Right to opt-out of the sale of personal information (we do not sell data). Right to non-discrimination for exercising privacy rights."
           }
         ],
-        "level": 3,
-        "listItem": "bullet",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "78d0ef106c46",
-        "_type": "block",
-        "children": [
-          {
-            "_key": "91a34b88bf90",
-            "_type": "span",
-            "marks": [],
-            "text": "Right to request deletion of personal information."
-          }
-        ],
-        "level": 3,
-        "listItem": "bullet",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "73ddd60a6030",
-        "_type": "block",
-        "children": [
-          {
-            "_key": "24d5b8679048",
-            "_type": "span",
-            "marks": [],
-            "text": "Right to opt-out of the sale of personal information (we do not sell data)."
-          }
-        ],
-        "level": 3,
-        "listItem": "bullet",
-        "markDefs": [],
-        "style": "normal"
-      },
-      {
-        "_key": "029bbb52ff93",
-        "_type": "block",
-        "children": [
-          {
-            "_key": "0aa9f45c4f00",
-            "_type": "span",
-            "marks": [],
-            "text": "Right to non-discrimination for exercising privacy rights."
-          }
-        ],
-        "level": 3,
+        "level": 2,
         "listItem": "bullet",
         "markDefs": [],
         "style": "normal"
@@ -3516,17 +3408,17 @@
             "marks": [
               "strong"
             ],
-            "text": "United Kingdom (UK GDPR)"
+            "text": "United Kingdom (UK GDPR):"
           },
           {
             "_key": "da3c93ce758e",
             "_type": "span",
             "marks": [],
-            "text": "Same rights as GDPR, under the UK Data Protection Act 2018."
+            "text": " Same rights as GDPR, under the UK Data Protection Act 2018."
           }
         ],
         "level": 2,
-        "listItem": "number",
+        "listItem": "bullet",
         "markDefs": [],
         "style": "normal"
       },
@@ -3540,17 +3432,17 @@
             "marks": [
               "strong"
             ],
-            "text": "Other Regions (Ukraine, CIS, Canada, Australia, etc.)"
+            "text": "Other Regions (Ukraine, CIS, Canada, Australia, etc.):"
           },
           {
-            "_key": "3b9395e227b1",
+            "_key": "3d5d869b56e3",
             "_type": "span",
             "marks": [],
-            "text": "You may contact us to request access, correction, or deletion of your data. We will review and handle requests in accordance with applicable local laws."
+            "text": " You may contact us to request access, correction, or deletion of your data. We will review and handle requests in accordance with applicable local laws."
           }
         ],
         "level": 2,
-        "listItem": "number",
+        "listItem": "bullet",
         "markDefs": [],
         "style": "normal"
       },
