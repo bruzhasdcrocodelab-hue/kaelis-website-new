@@ -1,5 +1,6 @@
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import Script from "next/script";
+import { consentBootstrap } from "@/lib/consent";
 import "./globals.css";
 import GuestAuth from "@/components/GuestAuth";
 import LocalizedPages from "@/components/LocalizedPages";
@@ -39,6 +40,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             ad_user_data: 'denied',
             ad_personalization: 'denied'
           });
+          ${consentBootstrap()}
           window.gtag('set', 'ads_data_redaction', true);
           window.gtag('js', new Date());
           window.gtag('config', ${JSON.stringify(GOOGLE_ANALYTICS_ID)}, {

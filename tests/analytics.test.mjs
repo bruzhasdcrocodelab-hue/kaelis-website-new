@@ -28,9 +28,9 @@ test("analytics sends sanitized route and tarot funnel events", () => {
     },
     gtag: (...args) => calls.push(args),
   };
-  globalThis.document = { title: "Tarot", referrer: "https://example.com/path?email=private" };
+  globalThis.document = { title: "", referrer: "https://example.com/path?email=private" };
   try {
-    loaded.exports.trackRoute("/ua/tarot/love/between-us");
+    loaded.exports.trackRoute("/ua/tarot/love/between-us", "Tarot");
     loaded.exports.trackEvent("tarot_question_submit", {
       locale: "uk",
       category_id: "7",

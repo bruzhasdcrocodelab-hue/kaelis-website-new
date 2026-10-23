@@ -115,6 +115,13 @@ const en = {
       privacyPolicy: "Private Policy",
     },
   },
+  cookieConsent: {
+    title: "Cookies and analytics",
+    description: "We use analytics cookies with your permission to understand how our website is used. Without consent, limited analytics signals may still be sent without cookies.",
+    policy: "Privacy Policy",
+    accept: "Accept analytics",
+    reject: "Reject",
+  },
   termsOfUse: {
     eyebrow: "Legal Agreement",
   },

@@ -49,10 +49,10 @@ export function trackEvent(name: string, parameters: AnalyticsParameters = {}) {
   send("event", name, { ...parameters, page_location: safePageLocation() });
 }
 
-export function trackRoute(pathname: string) {
+export function trackRoute(pathname: string, pageTitle: string) {
   if (typeof window === "undefined") return;
   trackEvent("page_view", {
-    page_title: document.title,
+    page_title: pageTitle.trim() || "Kaelis",
     page_referrer: safeReferrer(),
     page_location: safePageLocation(pathname),
   });
