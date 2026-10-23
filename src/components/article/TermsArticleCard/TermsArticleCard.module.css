@@ -214,7 +214,7 @@
   .numberedItem::marker,
   .body .numberedTitle,
   .body .numberedTitle strong {
-    letter-spacing: -2px;
+    letter-spacing: var(--tracking-bona-2xl);
   }
 
   .card {
