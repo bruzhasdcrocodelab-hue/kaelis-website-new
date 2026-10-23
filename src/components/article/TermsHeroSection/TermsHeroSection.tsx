@@ -6,7 +6,7 @@ import { htmlLang } from "@/lang";
 import styles from "./TermsHeroSection.module.css";
 
 export interface TermsHeroSectionProps {
-  dictionary: Dictionary["termsOfUse"];
+  dictionary: Dictionary["termsOfUse"] & { title: string; lastUpdated: string };
   locale: Locale;
 }
 

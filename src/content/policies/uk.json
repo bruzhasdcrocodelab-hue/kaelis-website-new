@@ -1,0 +1,3012 @@
+[
+  {
+    "_id": "8ffd2a7e-1ab8-404a-b5ff-7c078791443f",
+    "_rev": "AT3m2ak6bZ701LMshsPAaA",
+    "content": [
+      {
+        "_key": "01fbb91d6b81",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f3333bf2a700",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Kaelis AI: Tarot & Astrology"
+          },
+          {
+            "_key": "10151f0fe312",
+            "_type": "span",
+            "marks": [],
+            "text": " («Додаток», «ми», «наш») поважає конфіденційність молоді. Захист особистої інформації дітей є особливо важливим для нас."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2d30ea547b71",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e76bc061baa6",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Вікове обмеження"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ad96f3dccb35",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "56b737a45295",
+            "_type": "span",
+            "marks": [],
+            "text": "Додаток призначений виключно для дорослих віком від 18 років."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "dd394d0567d2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "13bf38f7b878",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми не здійснюємо свідомого збору, використання чи поширення особистої інформації осіб молодше 18 років."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "954271d83e2c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "224e448f0b91",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Відсутність збору даних дітей"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a8531f544bbd",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "28e9e2465ec1",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми не запитуємо, не збираємо та не обробляємо персональні дані дітей."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f632323db6d0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "87e9ab9ba30d",
+            "_type": "span",
+            "marks": [],
+            "text": "Якщо користувач молодше 18 років спробує створити обліковий запис, ми вживемо заходів для його блокування або видалення."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9fbe21d106cd",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1a92a0befe04",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Батьки та опікуни"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a9330e892143",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "fb025fd253c8",
+            "_type": "span",
+            "marks": [],
+            "text": "Якщо ви є батьком або опікуном і вважаєте, що ваша дитина могла надати нам свої персональні дані, будь ласка, негайно зв'яжіться з нами за адресою info.kaelis@gmail.com."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5c7eb8f06725",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a79ac8dd693d",
+            "_type": "span",
+            "marks": [],
+            "text": "Після перевірки ми негайно видалимо цю інформацію."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e2561b9c0a7b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e705dc22be99",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Відповідність COPPA"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "78a8bc894f48",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "551575420b95",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми дотримуємося Закону про захист конфіденційності дітей в Інтернеті (COPPA) та міжнародних законів щодо конфіденційності дітей."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0a6a75de33e0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "90f6c5282c77",
+            "_type": "span",
+            "marks": [],
+            "text": "Наш Додаток не орієнтований на дітей молодше 18 років і явно обмежений для використання лише дорослими."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "98b632079eb7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "aeb302565797",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Оновлення цієї Політики"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "af60776989a3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f81f4213a0d6",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми можемо оновлювати цю Політику конфіденційності для дітей відповідно до вимог закону або правил платформ. Оновлення будуть публікуватися в Додатку та на нашому веб-сайті."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d9f50d8f4aed",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "027499024818",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зв'яжіться з нами"
+          },
+          {
+            "_key": "2a4476f703c2",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЯкщо у вас є питання щодо нашої практики захисту конфіденційності дітей, будь ласка, звертайтесь:\n"
+          },
+          {
+            "_key": "23e9e89698fd",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "b82765460c15",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "7574b3b371de",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ua",
+    "published": "Останнє оновлення: Вересень 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "children-s-privacy-policy-uk"
+    },
+    "title": "Політика конфіденційності для дітей"
+  },
+  {
+    "_id": "b0c69a93-4442-47ac-91ae-03e45c542e41",
+    "_rev": "aTyEzoIOpN01v5uHSdOipD",
+    "content": [
+      {
+        "_key": "22b7cf14c951",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "cd17c3d30a88",
+            "_type": "span",
+            "marks": [],
+            "text": "Ласкаво просимо до Kaelis AI: Tarot & Astrology («Додаток»). Ці Умови використання («Умови») є юридичною угодою між вами («користувач», «ви») та Максимом Шамко («Компанія», «ми», «наш» або «нас»). Завантажуючи, отримуючи доступ або використовуючи Додаток, ви погоджуєтеся з цими Умовами. Якщо ви не згодні, будь ласка, не використовуйте Додаток."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "33bc931d169e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ad2a59115d45",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Право на використання"
+          },
+          {
+            "_key": "bae3787c44e3",
+            "_type": "span",
+            "marks": [],
+            "text": "\nДодаток призначений для осіб віком 18 років і старше.\nВикористовуючи Додаток, ви підтверджуєте, що вам виповнилося щонайменше 18 років."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e81fb64d8cc9",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0c110f96c732",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ліцензія на використання"
+          },
+          {
+            "_key": "ca7b8c3c4295",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи надаємо вам обмежену, невиключну, непередавану, відкличну ліцензію на використання Додатка в особистих, некомерційних цілях відповідно до цих Умов."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "3444eacb2624",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f010317580bf",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обмеження"
+          },
+          {
+            "_key": "df56eef6de2b",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВи погоджуєтеся не:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "fc6e6270a4ef",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "545896275c1b",
+            "_type": "span",
+            "marks": [],
+            "text": "Копіювати, модифікувати або створювати похідні роботи на основі Додатка."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0c34912cc444",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ff3246297060",
+            "_type": "span",
+            "marks": [],
+            "text": "Здійснювати зворотню розробку, декомпілювати або намагатися витягти вихідний код."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "17d5fe27b07e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "450a207f9606",
+            "_type": "span",
+            "marks": [],
+            "text": "Використовувати Додаток для протиправних або шкідливих цілей."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4964ac68bc4e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "db61ef27ff92",
+            "_type": "span",
+            "marks": [],
+            "text": "Заважати функціонуванню Додатка, його серверів або системі безпеки."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1948115163a5",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "084577bd7a35",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Підписки та платежі"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a6fcf3e0ee64",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ce9d93118913",
+            "_type": "span",
+            "marks": [],
+            "text": "Додаток працює за моделлю freemium з автоматично поновлюваними підписками (щомісячними або щорічними)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2ee7d4e8208d",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "aeefed3194e9",
+            "_type": "span",
+            "marks": [],
+            "text": "Підписки оплачуються через Apple App Store та Google Play Billing."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "54a8c80d06e4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "616435a2b90a",
+            "_type": "span",
+            "marks": [],
+            "text": "Підписки автоматично поновлюються, якщо вони не скасовані щонайменше за 24 години до дати поновлення."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "adeddddacd6f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6c7a810b32b3",
+            "_type": "span",
+            "marks": [],
+            "text": "Керувати підписками або скасовувати їх можна в налаштуваннях вашого Apple ID або облікового запису Google Play."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b70d04386379",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "48149afa0245",
+            "_type": "span",
+            "marks": [],
+            "text": "Повернення коштів регулюються правилами Apple та Google. Ми не обробляємо платежі та повернення напряму."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "642960aad48f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "eb2eec22c52a",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Контент користувача"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7ca6954e8bc0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7411153a455d",
+            "_type": "span",
+            "marks": [],
+            "text": "Користувачі можуть зберігати питання, щоденникові записи та розклади в Додатку."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e9c594028562",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e12747baef1a",
+            "_type": "span",
+            "marks": [],
+            "text": "Ви залишаєтеся власником вашого контенту. Використовуючи Додаток, ви надаєте нам обмежену ліцензію на зберігання, обробку та відображення вашого контенту виключно для забезпечення функціональності Додатка."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5c770cc48c18",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c3c71bbd1e15",
+            "_type": "span",
+            "marks": [],
+            "text": "Ви несете відповідальність за те, щоб ваш контент відповідав чинному законодавству та нашій Політиці щодо контенту."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b0e48aa34051",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d62a21f9c3ac",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Відмова від відповідальності за професійні поради"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c1e3d538a90d",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "47b2a7bcb13c",
+            "_type": "span",
+            "marks": [],
+            "text": "Додаток надає матеріали для способу життя, розваг та самопізнання."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "85648fbcdad0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6297c07d59a0",
+            "_type": "span",
+            "marks": [],
+            "text": "Він не є заміною медичної, психологічної, юридичної чи фінансової консультації."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f650e17b840f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a6fa330aaad4",
+            "_type": "span",
+            "marks": [],
+            "text": "Вам не слід покладатися на Додаток при прийнятті рішень, пов’язаних зі здоров'ям, фінансами чи юридичними питаннями."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c961e622ad6e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "de06c3e5f24e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обмеження відповідальності"
+          },
+          {
+            "_key": "37738e49feae",
+            "_type": "span",
+            "marks": [],
+            "text": "\nУ максимальному обсязі, дозволеному законом:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "65cb9e9db2ab",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0f394da38bab",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми не несемо відповідальності за непрямі, випадкові, спеціальні або наслідкові збитки, що виникли внаслідок вашого використання Додатка."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9a30e69eb1eb",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7b436a32bd80",
+            "_type": "span",
+            "marks": [],
+            "text": "Наша сукупна відповідальність не повинна перевищувати суму, яку ви сплатили (якщо така була) за використання Додатка за останні 12 місяців."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5b288483d2df",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a3ccda57029b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Припинення дії"
+          },
+          {
+            "_key": "a93cf33e5091",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи можемо призупинити або припинити ваш доступ до Додатка у будь-який час, якщо ви порушите ці Умови або чинне законодавство. Після припинення дії ваша ліцензія на використання Додатка негайно анулюється."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1586c2749f89",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7227eeae5e2c",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Застосовне право та юрисдикція"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4bfe2ee10749",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "94d697f10492",
+            "_type": "span",
+            "marks": [],
+            "text": "Ці Умови регулюються законодавством Польщі."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8fa9dd3db7a8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f279fa3e6fed",
+            "_type": "span",
+            "marks": [],
+            "text": "Користувачі з ЄС/ЄЕЗ додатково захищені імперативними нормами місцевого споживчого законодавства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b492d5c6b076",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "239c03a6d85f",
+            "_type": "span",
+            "marks": [],
+            "text": "Користувачі з інших юрисдикцій можуть мати додаткові права відповідно до місцевого законодавства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1ee9544a31e2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "59af8b77a3c1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зміни в Умовах"
+          },
+          {
+            "_key": "388272238a85",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи можемо час від часу оновлювати ці Умови. Якщо будуть внесені суттєві зміни, ми повідомимо вас через Додаток або електронною поштою. Продовження використання Додатка після змін означає, що ви приймаєте оновлені Умови."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6da2e2f9797f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "badac3e305dc",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зв'яжіться з нами"
+          },
+          {
+            "_key": "a5ae1ef45663",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЯкщо у вас є питання щодо цих Умов, будь ласка, зв'яжіться з нами:\n"
+          },
+          {
+            "_key": "1aac8ed6b6be",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "60e2b49de98b",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "cbed6a4f67f2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ua",
+    "published": "Останнє оновлення: Вересень 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "terms-of-use-uk"
+    },
+    "title": "Умови використання"
+  },
+  {
+    "_id": "2f8260ee-dbd9-41ec-8568-a85f01a70d6b",
+    "_rev": "anLEFGyRCiqmNOLzppXgdL",
+    "content": [
+      {
+        "_key": "6892203f5372",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a98148b5fe4d",
+            "_type": "span",
+            "marks": [],
+            "text": "Додаток Kaelis AI: Tarot & Astrology («Додаток») створений для надання користувачам безпечного та поважного середовища для самопізнання та розваг. Використовуючи Додаток, ви погоджуєтеся дотримуватися наведених нижче правил щодо контенту, що створюється користувачами."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d03ae8275006",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "950dc03c31f0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Контент користувача"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "211da99121c2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2c5d35dfe810",
+            "_type": "span",
+            "marks": [],
+            "text": "Користувачі можуть зберігати в Додатку питання з таро, розклади, щоденникові записи та інші особисті нотатки."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a6a66c261239",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "eb6c7eee36e2",
+            "_type": "span",
+            "marks": [],
+            "text": "Ви залишаєтеся власником вашого контенту. Однак ви надаєте нам обмежену ліцензію на його зберігання, обробку та відображення виключно для забезпечення функціоналу Додатка."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c97fce171f75",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "306f14b5f477",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Заборонений контент"
+          },
+          {
+            "_key": "f7c1e3d26978",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВам заборонено створювати, зберігати чи поширювати контент, який:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9213ffc606d8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2997b187e23c",
+            "_type": "span",
+            "marks": [],
+            "text": "Містить мову ворожнечі, переслідування або образливі висловлювання."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d0c20e2a71ab",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "77c3b9acbdda",
+            "_type": "span",
+            "marks": [],
+            "text": "Пропагує насильство, заподіяння шкоди собі чи протиправну діяльність."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "388aa4b92add",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2169ae1bb266",
+            "_type": "span",
+            "marks": [],
+            "text": "Включає сексуально відверті, порнографічні або непристойні матеріали."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "167fb6f665c2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "669f018b0d7b",
+            "_type": "span",
+            "marks": [],
+            "text": "Порушує авторські права, товарні знаки чи інші права на інтелектуальну власність."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7b061876c941",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1aa6f69032a8",
+            "_type": "span",
+            "marks": [],
+            "text": "Поширює особисті дані третіх осіб без їхньої згоди."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "03b45c66722e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "3986bd4a4e42",
+            "_type": "span",
+            "marks": [],
+            "text": "Робить спроби експлуатації, обману чи заподіяння шкоди іншим."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1a2e177a8773",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1cdd70da5ba4",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Моніторинг та дотримання"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b18dd347cf5f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e7eca1689f8f",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми залишаємо за собою право перевіряти та видаляти контент, який порушує цю Політику або чинне законодавство."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4f42a5488a85",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "90942d7a24a7",
+            "_type": "span",
+            "marks": [],
+            "text": "У разі серйозних порушень ми можемо призупинити або припинити дію вашого облікового запису без попереднього повідомлення."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f213c135ce1c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ec64d6faebb",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Скарги на контент"
+          },
+          {
+            "_key": "bb0d6f477025",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЯкщо ви зіткнулися з контентом, який порушує цю Політику, ви можете повідомити про це, зв’язавшись з нами за адресою:\ninfo.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6f5e8dfe0c75",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a6ed9e1dd583",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обмеження відповідальності"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "583d845fc1c0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "cf4362759578",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми не несемо відповідальності за контент користувачів, збережений у Додатку."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c6849faa5d81",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e2d397e7850d",
+            "_type": "span",
+            "marks": [],
+            "text": "Ви несете виключну відповідальність за те, щоб ваші записи та питання відповідали цій Політиці та чинному законодавству вашої країни."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "229c569945a0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "665a094df38e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Оновлення цієї Політики"
+          },
+          {
+            "_key": "a026924e99f7",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи можемо час від часу оновлювати цю Політику щодо контенту. Якщо будуть внесені суттєві зміни, ми повідомимо користувачів через Додаток або електронною поштою."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "54cca3295a65",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e9051c85e6d0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зв'яжіться з нами"
+          },
+          {
+            "_key": "7031f3cb387c",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "79849f15f3c4",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "7368da5587f0",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "09c8788cf85e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          },
+          {
+            "_key": "b0eb3bfa632a",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ua",
+    "published": "Останнє оновлення: Вересень 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "content-policy-uk"
+    },
+    "title": "Політика щодо контенту"
+  },
+  {
+    "_id": "26dbf96b-29f4-4eeb-8609-bcfda03d19db",
+    "_rev": "AgREHZjv74XhlckShqKSJC",
+    "content": [
+      {
+        "_key": "5dbf097de61b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ceba1df31d0b",
+            "_type": "span",
+            "marks": [],
+            "text": "Ця Угода з кінцевим користувачем («Угода») укладена між вами («Користувач», «ви») та Максимом Шамко («Компанія», «ми», «наш» або «нас») щодо вашого використання мобільного додатку Kaelis AI: Tarot & Astrology («Додаток»). Завантажуючи, встановлюючи або використовуючи Додаток, ви погоджуєтеся дотримуватися умов цієї Угоди."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9abd9421c334",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "047d7110b43c",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Надання ліцензії\n"
+          },
+          {
+            "_key": "f8d3dd48d3ce",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми надаємо вам обмежену, невиключну, непередавану, відкличну ліцензію на використання Додатка в особистих, некомерційних цілях відповідно до цієї Угоди.\nВи не отримуєте жодних прав власності на Додаток."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "912dfa74f766",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "95df71ac3a4e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обмеження"
+          },
+          {
+            "_key": "2980bd328b24",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВам не дозволяється:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "15eea555a859",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "de277331c403",
+            "_type": "span",
+            "marks": [],
+            "text": "Копіювати, відтворювати, змінювати або поширювати Додаток або будь-яку його частину."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6135ad044073",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "cab5dcdc9e87",
+            "_type": "span",
+            "marks": [],
+            "text": "Зворотно проектувати, декомпілювати, дизасемблювати або намагатися витягти вихідний код."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "22edb9528a00",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b73bb5154f1e",
+            "_type": "span",
+            "marks": [],
+            "text": "Здавати в оренду, лізинг, продавати, субліцензувати або передавати Додаток."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0c2301c90ff3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a88505bd3b2a",
+            "_type": "span",
+            "marks": [],
+            "text": "Використовувати Додаток для протиправних цілей або з порушенням чинного законодавства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "eb001169635b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d7dff8b4afc0",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Власність\n"
+          },
+          {
+            "_key": "e716b88dfce6",
+            "_type": "span",
+            "marks": [],
+            "text": "Додаток, включаючи всі права на інтелектуальну власність, є і залишається виключною власністю Компанії.\nВсі товарні знаки, логотипи та знаки обслуговування належать Компанії або її ліцензіарам."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ca70a32502fb",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ede5455f1956",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Оновлення та зміни\n"
+          },
+          {
+            "_key": "d0be28788140",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми можемо надавати оновлення, виправлення помилок або нові функції.\nЦя Угода поширюється на всі оновлення, якщо не передбачено окрему ліцензію."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4315df9ddd7c",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "a16a7924907c",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Відмова від відповідальності\n"
+          },
+          {
+            "_key": "cac4df11ea4e",
+            "_type": "span",
+            "marks": [],
+            "text": "Додаток надає послуги лише для способу життя та розваг.\nВін не надає медичних, психологічних, юридичних чи фінансових консультацій.\nВи використовуєте Додаток на свій власний ризик."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0fc0eaaba576",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ef2fcd6d9c7b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Обмеження відповідальності"
+          },
+          {
+            "_key": "ef0859ff4cd4",
+            "_type": "span",
+            "marks": [],
+            "text": "\nУ максимальному обсязі, дозволеному законом:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "19539759fe23",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "93463a7cf203",
+            "_type": "span",
+            "marks": [],
+            "text": "Компанія не несе відповідальності за будь-які непрямі, випадкові або наслідкові збитки."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "cc817dc4b907",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0b963f13575b",
+            "_type": "span",
+            "marks": [],
+            "text": "Наша загальна відповідальність обмежується сумою, сплаченою (якщо така була) за використання Додатка протягом останніх 12 місяців."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "3bc3d8e35767",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0693f91d5658",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Припинення дії\n"
+          },
+          {
+            "_key": "867691e03bc8",
+            "_type": "span",
+            "marks": [],
+            "text": "Ця Угода діє до її припинення.\nМи можемо призупинити або припинити ваш доступ, якщо ви порушите цю Угоду.\nПісля припинення дії ви повинні припинити використання Додатка та видалити всі його копії."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "4434454584c2",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "abe77ddb1c9e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Застосовне право\n"
+          },
+          {
+            "_key": "9b8aed10ca58",
+            "_type": "span",
+            "marks": [],
+            "text": "Ця Угода регулюється та тлумачиться відповідно до законодавства Польщі, без урахування принципів колізійного права.\nКористувачі з інших регіонів зберігають права відповідно до чинного місцевого законодавства."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0ffa8e7cb925",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "25ba0a3647bc",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зв'яжіться з нами"
+          },
+          {
+            "_key": "b7794a0c630f",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЯкщо у вас виникли питання щодо цієї Угоди, будь ласка, зв'яжіться з нами:\n"
+          },
+          {
+            "_key": "5c9fd1490056",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Максим Шамко"
+          },
+          {
+            "_key": "55b90c614a80",
+            "_type": "span",
+            "marks": [],
+            "text": "\n"
+          },
+          {
+            "_key": "d4705cb34a93",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "info.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ua",
+    "published": "Останнє оновлення: Вересень 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "end-user-license-agreement-eula-uk"
+    },
+    "title": "Угода з кінцевим користувачем"
+  },
+  {
+    "_id": "103ec062-7ab4-4795-a233-755bd1768cce",
+    "_rev": "aTyEzoIOpN01v5uHSdOuRX",
+    "content": [
+      {
+        "_key": "903409a2e0e7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9f5079eed025",
+            "_type": "span",
+            "marks": [],
+            "text": "Ця Політика повернень коштів та підписок пояснює, як працюють підписки, поновлення, скасування та повернення коштів у додатку Kaelis AI: Tarot & Astrology («Додаток»)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "07019f8d97e3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6a45e2da3d29",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Підписки\n"
+          },
+          {
+            "_key": "a714f19d6e8a",
+            "_type": "span",
+            "marks": [],
+            "text": "Додаток використовує модель freemium: безкоштовні базові функції + опціональні платні підписки (щомісячні або щорічні).\nПлатні підписки розблоковують преміум-функції, включаючи розширені розклади таро та астрологічні прогнози, безліч стилів інтерпретацій та персоналізовані інсайти.\nУсі підписки керуються через Apple App Store або Google Play Store."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "14e41b2946e0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e2f0ac384bc2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Автоматичне поновлення\n"
+          },
+          {
+            "_key": "d58d75cd0718",
+            "_type": "span",
+            "marks": [],
+            "text": "Підписки поновлюються автоматично.\nВаша підписка автоматично поновлюватиметься в кінці кожного розрахункового циклу, якщо ви не скасуєте її щонайменше за 24 години до дати поновлення."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "030eb4b3e60b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5a2a9d4b84e6",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Безкоштовні пробні періоди\n"
+          },
+          {
+            "_key": "a9f38ddfdd60",
+            "_type": "span",
+            "marks": [],
+            "text": "Деякі тарифні плани можуть включати безкоштовний пробний період.\nЯкщо ви не скасуєте підписку до закінчення пробного періоду, з вас буде автоматично списано плату за обрану підписку."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d7f0b75d9fb8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "0ec38a354e92",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Керування підписками"
+          },
+          {
+            "_key": "a45d0c310749",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВи можете керувати своєю підпискою або скасувати її у будь-який час:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "55111034b077",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "035919302337",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "iOS (Apple App Store):"
+          },
+          {
+            "_key": "2bef385bd42b",
+            "_type": "span",
+            "marks": [],
+            "text": " Відкрийте «Налаштування» → [Ваше ім’я] → «Підписки»."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be446951794e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1867af962960",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Android (Google Play):"
+          },
+          {
+            "_key": "fd8ba0deb7f6",
+            "_type": "span",
+            "marks": [],
+            "text": " Відкрийте Google Play Маркет → «Профіль» → «Платежі та підписки»."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "be500bac6520",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "3da91a2f5c02",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Повернення коштів\n"
+          },
+          {
+            "_key": "55207976596a",
+            "_type": "span",
+            "marks": [],
+            "text": "Усі платежі та повернення коштів обробляються безпосередньо Apple App Store та Google Play Billing.\nМи не можемо самостійно здійснювати повернення коштів або вирішувати суперечки щодо платежів.\nЩоб запросити повернення коштів, будь ласка, скористайтеся:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d2ce2324e2ae",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "11fbf2590443",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Apple:"
+          },
+          {
+            "_key": "88f6d47f4b52",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "a952822e6164",
+            "_type": "span",
+            "marks": [
+              "6b2c63f48925"
+            ],
+            "text": "https://support.apple.com/en-us/HT204084"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "6b2c63f48925",
+            "_type": "link",
+            "href": "https://support.apple.com/en-us/HT204084"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "af1f000ad459",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "b1370707b1e1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Google:"
+          },
+          {
+            "_key": "93c3d6fe7a99",
+            "_type": "span",
+            "marks": [],
+            "text": " "
+          },
+          {
+            "_key": "293096839077",
+            "_type": "span",
+            "marks": [
+              "d8a3d5ca2777"
+            ],
+            "text": "https://support.google.com/googleplay/answer/2479637"
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [
+          {
+            "_key": "d8a3d5ca2777",
+            "_type": "link",
+            "href": "https://support.google.com/googleplay/answer/2479637"
+          }
+        ],
+        "style": "normal"
+      },
+      {
+        "_key": "f21ebebff901",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c20d485d0c74",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Неуспішні платежі\n"
+          },
+          {
+            "_key": "712f08ab80e0",
+            "_type": "span",
+            "marks": [],
+            "text": "Якщо платіж не пройшов, ваша підписка може бути призупинена до успішної обробки платежу."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "94bb06eec875",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "2c4c11f41daf",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зміни цін\n"
+          },
+          {
+            "_key": "347fca318603",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми можемо час від часу коригувати ціни на підписки.\nУ разі зміни цін Apple або Google сповістять вас до наступного розрахункового циклу."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "473e9c84591e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ddb3c5f9adcf",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зв'яжіться з нами"
+          },
+          {
+            "_key": "0991ff5601d7",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЯкщо у вас виникли питання щодо цієї Політики, будь ласка, зв'яжіться з нами:\nМаксим Шамко\ninfo.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ua",
+    "published": "Останнє оновлення: Вересень 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "refund-and-subscription-policy-uk"
+    },
+    "title": "Політика повернень коштів та підписок"
+  },
+  {
+    "_id": "a9f6067d-2b0b-476b-9cfb-110389b30089",
+    "_rev": "anLEFGyRCiqmNOLzppXj44",
+    "content": [
+      {
+        "_key": "fad6fee3f463",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "500612c24b76",
+            "_type": "span",
+            "marks": [],
+            "text": "Ця Політика конфіденційності пояснює, як Максим Шамко («Компанія», «ми», «наш» або «нас») збирає, використовує, зберігає та захищає вашу особисту інформацію, коли ви використовуєте наш мобільний додаток Kaelis AI: Tarot & Astrology («Додаток»)."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "82020b2938a0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d70f2b731344",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми зобов'язані захищати вашу конфіденційність відповідно до "
+          },
+          {
+            "_key": "3f04266b1659",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Загального регламенту захисту даних (GDPR)"
+          },
+          {
+            "_key": "ba875d5eddc8",
+            "_type": "span",
+            "marks": [],
+            "text": ", "
+          },
+          {
+            "_key": "cc1cf3571594",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Каліфорнійського закону про конфіденційність споживачів (CCPA/CPRA)"
+          },
+          {
+            "_key": "ebf646718342",
+            "_type": "span",
+            "marks": [],
+            "text": ", Закону про захист конфіденційності дітей в Інтернеті (COPPA) та інших застосовних міжнародних законів."
+          }
+        ],
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a8553ae6e1eb",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bef24c4db284",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Інформація, яку ми збираємо"
+          },
+          {
+            "_key": "69aa20a1a668",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи можемо збирати такі категорії інформації, коли ви використовуєте Додаток:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "312edf2c82f8",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e05bf249b470",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Дані облікового запису та входу:"
+          },
+          {
+            "_key": "7e2e4996177d",
+            "_type": "span",
+            "marks": [],
+            "text": " електронна пошта, вхід через Apple ID, Google або соціальні мережі."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0eff2ce16ffd",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "516eb4321f99",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Інформація профілю:"
+          },
+          {
+            "_key": "87d62bd74266",
+            "_type": "span",
+            "marks": [],
+            "text": " ім'я, стать, дата народження, час народження, часовий пояс місця народження, місце народження (включаючи широту та довготу)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f2af165aa311",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "71d1391718ae",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Дані про використання:"
+          },
+          {
+            "_key": "1f108ccff1dc",
+            "_type": "span",
+            "marks": [],
+            "text": " питання з таро, розклади, щоденникові записи, мовні та стильові уподобання, поведінка в додатку."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c69b84c10cf0",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1308287420f4",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Дані пристрою:"
+          },
+          {
+            "_key": "0da2202e6eb4",
+            "_type": "span",
+            "marks": [],
+            "text": " модель пристрою, версія ОС, токен push-сповіщень, ідентифікатори аналітики додатку."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "1ccd6c1baa37",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "448f5ca0aac4",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Платіжні дані:"
+          },
+          {
+            "_key": "b65dde5564d1",
+            "_type": "span",
+            "marks": [],
+            "text": " обробляються Apple App Store та Google Play Billing. Ми не зберігаємо платіжні реквізити."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6d6a851bc676",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "619150f44682",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Як ми використовуємо вашу інформацію"
+          },
+          {
+            "_key": "0c1c6ec44905",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи обробляємо дані для:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "5a3741d29856",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8b2af3f3cabc",
+            "_type": "span",
+            "marks": [],
+            "text": "Надання та персоналізації розкладів та астрологічних інсайтів."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ebe454eeabbf",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "cadce958c51e",
+            "_type": "span",
+            "marks": [],
+            "text": "Забезпечення входу в систему, функцій підписки та особистого щоденника."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e5d9bdafee28",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "56f0b547ab9b",
+            "_type": "span",
+            "marks": [],
+            "text": "Надсилання push-сповіщень (якщо вони увімкнені)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "0914d7ae55ff",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "83ef41e42920",
+            "_type": "span",
+            "marks": [],
+            "text": "Вдосконалення Додатку за допомогою аналітики."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b20b38d6a0ed",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4fed5eb128a3",
+            "_type": "span",
+            "marks": [],
+            "text": "Дотримання правових та нормативних вимог."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6f25aafa1f06",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "64dd2012d16b",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Правова підстава для обробки (GDPR)"
+          },
+          {
+            "_key": "68aa3bf919e9",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи обробляємо персональні дані на таких правомірних підставах:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2be56f38eee7",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "368d381f6330",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Згода:"
+          },
+          {
+            "_key": "1993ec76b09b",
+            "_type": "span",
+            "marks": [],
+            "text": " для даних про народження, статі, push-сповіщень."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "ba30e7887682",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e69c7bff56a1",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Необхідність для виконання договору:"
+          },
+          {
+            "_key": "5ba6c4530ce1",
+            "_type": "span",
+            "marks": [],
+            "text": " для надання послуг та керування підписками."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "97ce87fe2d45",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "21f2f00aecb4",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Законні інтереси:"
+          },
+          {
+            "_key": "9d65f7c24c4e",
+            "_type": "span",
+            "marks": [],
+            "text": " аналітика, покращення сервісу, запобігання шахрайству."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "fdd623d2b3bc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "fb303bac92d6",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Правове зобов'язання:"
+          },
+          {
+            "_key": "b8ed9c1a1375",
+            "_type": "span",
+            "marks": [],
+            "text": " дотримання чинного законодавства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "9d2689c7889a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8894d8c30172",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Поширення даних"
+          },
+          {
+            "_key": "ca89f43179d0",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи не продаємо вашу особисту інформацію. Дані можуть передаватися лише:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d09dff83ce5a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8305081dc038",
+            "_type": "span",
+            "marks": [],
+            "text": "Постачальникам послуг (хостинг, аналітика, push-сповіщення)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "88a13352e50f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "1f8a60dd2ff4",
+            "_type": "span",
+            "marks": [],
+            "text": "Платіжним процесорам (Apple, Google)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e753c7edd945",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "8189ded700f6",
+            "_type": "span",
+            "marks": [],
+            "text": "Правоохоронним органам (якщо цього вимагає закон)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "7d04d02ff6f3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "c4ae94c904cb",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зберігання даних"
+          },
+          {
+            "_key": "c55dac90b503",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи зберігаємо ваші дані, поки ваш обліковий запис активний.\nЗа запитом на видалення персональні дані будуть вилучені протягом 30 днів.\nАнонімні дані про використання можуть зберігатися довше для аналітики."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e5b02f4219f3",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d128925c5773",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Міжнародна передача даних"
+          },
+          {
+            "_key": "df6dfe869bc6",
+            "_type": "span",
+            "marks": [],
+            "text": "\nВаші дані можуть оброблятися та зберігатися в Європейському Союзі та інших країнах.\nПід час передачі за межі ЄЕЗ ми застосовуємо захисні заходи, такі як:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e29f837d546b",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "81b7807ef77d",
+            "_type": "span",
+            "marks": [],
+            "text": "Стандартні договірні положення (SCCs)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "cc59371237fc",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "720804588e1d",
+            "_type": "span",
+            "marks": [],
+            "text": "Рамкова угода про захист приватності даних ЄС-США (якщо застосовно)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6f97c7a307a4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "336caf5f9901",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Ваші права"
+          },
+          {
+            "_key": "830fd6a68368",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЗалежно від вашого місцезнаходження, ви можете скористатися такими правами:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "8d9ccf76fe6a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d272c7b7dc15",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "ЄС / ЄЕЗ (GDPR):"
+          },
+          {
+            "_key": "a2b223251280",
+            "_type": "span",
+            "marks": [],
+            "text": " Право на доступ, виправлення, вилучення («право на забуття»). Право на обмеження обробки або заперечення проти неї. Право на портативність даних. Право подати скаргу до місцевого наглядового органу із захисту даних."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b1471f44a28e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "7caf7021578d",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Каліфорнія, США (CCPA/CPRA):"
+          },
+          {
+            "_key": "b9c2fd92ef9f",
+            "_type": "span",
+            "marks": [],
+            "text": " Право знати, яка особиста інформація збирається та як використовується. Право вимагати видалення особистої інформації. Право відмовитися від продажу особистої інформації (ми не продаємо дані). Право на недискримінацію за реалізацію прав на конфіденційність."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "d6028ba8ef72",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6f2c1e5f86a9",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Великобританія (UK GDPR):"
+          },
+          {
+            "_key": "1e50561be3a7",
+            "_type": "span",
+            "marks": [],
+            "text": " Ті самі права, що й за GDPR, відповідно до Закону про захист даних Великобританії 2018 року."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "6525891806bd",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "784abc3d0141",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Інші регіони (Україна, СНД, Канада, Австралія тощо):"
+          },
+          {
+            "_key": "1c3e50a4b428",
+            "_type": "span",
+            "marks": [],
+            "text": " Ви можете зв'язатися з нами, щоб запросити доступ, виправлення або видалення ваших даних. Ми розглянемо та обробимо запити відповідно до чинного місцевого законодавства."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a6573a167b31",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "9cfd793adc6e",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Конфіденційність дітей"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "42c01a268452",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "f5477927757d",
+            "_type": "span",
+            "marks": [],
+            "text": "Цей Додаток не призначений для дітей молодше 18 років."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "bd75e2f6c84a",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d97b6b2411f8",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми не здійснюємо свідомого збору інформації від неповнолітніх."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "f8f3608df046",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "ff9a40e0b7fb",
+            "_type": "span",
+            "marks": [],
+            "text": "Якщо ви вважаєте, що дитина надала персональні дані, будь ласка, зв'яжіться з нами за адресою info.kaelis@gmail.com, і ми негайно їх видалимо."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "e58338b6d0d6",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bfeb7ca540d2",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Безпека ваших даних\n"
+          },
+          {
+            "_key": "56582e4f2826",
+            "_type": "span",
+            "marks": [],
+            "text": "Жодна система не є повністю безпечною, і ми не можемо гарантувати абсолютну безпеку.\nМи застосовуємо технічні та організаційні заходи безпеки, включаючи:"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "dda95b1fc295",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "98bcea482f3b",
+            "_type": "span",
+            "marks": [],
+            "text": "Шифрування даних (SSL/TLS)."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "789df08e561f",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "885274881321",
+            "_type": "span",
+            "marks": [],
+            "text": "Захищений хостинг з обмеженням доступу."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "b98560a780f4",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "bca1afe70ccb",
+            "_type": "span",
+            "marks": [],
+            "text": "Регулярні перевірки безпеки."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c118cf8e9a08",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "e5132d7e2fe4",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Підписки та платежі"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "a75be2ce568e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "42b792824f06",
+            "_type": "span",
+            "marks": [],
+            "text": "Підписками керують Apple App Store та Google Play Billing."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "570a0b1a310e",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "d196d64056d7",
+            "_type": "span",
+            "marks": [],
+            "text": "Ми не обробляємо та не зберігаємо дані кредитних карток."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "da72bd9a2b4d",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "36498b751a44",
+            "_type": "span",
+            "marks": [],
+            "text": "Повернення коштів та скасування мають оброблятися через Apple або Google відповідно до їх політик."
+          }
+        ],
+        "level": 2,
+        "listItem": "bullet",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "205fea963585",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "4e28f9a76d6d",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зміни до цієї Політики"
+          },
+          {
+            "_key": "4a029e6dc485",
+            "_type": "span",
+            "marks": [],
+            "text": "\nМи можемо час від часу оновлювати цю Політику. Якщо будуть внесені суттєві зміни, ми повідомимо користувачів через Додаток або електронною поштою."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "2c6b2f03ba36",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "6d1be5aaa4ce",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Застосовне право та юрисдикція"
+          },
+          {
+            "_key": "7d7b74a3405e",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЦя Політика регулюється законодавством Польщі.\nДля користувачів з ЄС/ЄЕЗ застосовуються права з GDPR.\nДля інших юрисдикцій також можуть застосовуватися місцеві закони про захист прав споживачів та конфіденційність."
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      },
+      {
+        "_key": "c933b2b0ed55",
+        "_type": "block",
+        "children": [
+          {
+            "_key": "5219dfb0d751",
+            "_type": "span",
+            "marks": [
+              "strong"
+            ],
+            "text": "Зв'яжіться з нами"
+          },
+          {
+            "_key": "c13e86b4ecbf",
+            "_type": "span",
+            "marks": [],
+            "text": "\nЯкщо у вас виникли будь-які питання, запити чи скарги щодо цієї Політики, будь ласка, зв'яжіться з нами:\nМаксим Шамко\ninfo.kaelis@gmail.com"
+          }
+        ],
+        "level": 1,
+        "listItem": "number",
+        "markDefs": [],
+        "style": "normal"
+      }
+    ],
+    "language": "ua",
+    "published": "Останнє оновлення: Вересень 8, 2025",
+    "slug": {
+      "_type": "slug",
+      "current": "privacy-policy-uk"
+    },
+    "title": "Політика конфіденційності"
+  }
+]

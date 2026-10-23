@@ -5,7 +5,9 @@ export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const prefix = pathname.split("/")[1];
   const locale = isUrlLocale(prefix) ? prefix : negotiateLocale(request.cookies.get(LOCALE_COOKIE)?.value, request.headers.get("accept-language"));
-  const target = localizedHref(toLocale(locale), pathname);
+  const target = isUrlLocale(prefix) && pathname.startsWith(`/${prefix}/policy/`)
+    ? pathname
+    : localizedHref(toLocale(locale), pathname);
   if (target !== pathname) {
     const url = request.nextUrl.clone();
     url.pathname = target;

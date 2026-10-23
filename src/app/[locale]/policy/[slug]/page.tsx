@@ -1,17 +1,32 @@
 import { notFound } from "next/navigation";
+import { dictionaries } from "@/lang";
 import { isUrlLocale, toLocale } from "@/lib/routing";
 import { pageMetadata } from "@/lib/seo";
+import { policyKeyFromSlug } from "@/lib/policies/catalog";
+import { getPolicy } from "@/lib/policies/content";
+import TermsPageView from "@/components/article/TermsPageView";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
-export async function generateMetadata({ params }: Props) {
-  const { locale, slug } = await params;
-  if (!isUrlLocale(locale) || slug !== `terms-of-use-${locale}`) notFound();
-  return pageMetadata(toLocale(locale), "/terms-of-use");
+function resolvePolicy(locale: string, slug: string) {
+  if (!isUrlLocale(locale)) notFound();
+  const key = policyKeyFromSlug(slug, locale);
+  if (!key) notFound();
+  const language = toLocale(locale);
+  return { language, policy: getPolicy(language, key) };
 }
 
-export default async function Terms({ params }: Props) {
+export async function generateMetadata({ params }: Props) {
   const { locale, slug } = await params;
-  if (slug !== `terms-of-use-${locale}`) notFound();
-  return null;
+  const { language, policy } = resolvePolicy(locale, slug);
+  return {
+    ...pageMetadata(language, `/policy/${slug}`),
+    title: { absolute: policy.title },
+  };
+}
+
+export default async function PolicyPage({ params }: Props) {
+  const { locale, slug } = await params;
+  const { language, policy } = resolvePolicy(locale, slug);
+  return <TermsPageView dictionary={dictionaries[language]} locale={language} policy={policy} />;
 }

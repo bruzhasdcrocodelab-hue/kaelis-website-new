@@ -16,6 +16,107 @@
   color: var(--color-black-40);
 }
 
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  color: var(--color-black-75);
+  font-family: var(--font-manrope);
+  font-size: var(--text-base);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  overflow-wrap: anywhere;
+}
+
+.block {
+  white-space: pre-wrap;
+  min-height: 1em;
+}
+
+.body p,
+.body blockquote {
+  margin: 0;
+  /* margin: 0 0 16px; */
+}
+
+.body ol,
+.body ul {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1.5em;
+  margin: 0;
+  /* margin: 0 0 16px; */
+}
+
+.body ol {
+  gap: 48px;
+  list-style-type: decimal;
+  margin-top: 36px;
+}
+
+.body ul {
+  gap: 12px;
+  list-style-type: disc;
+}
+
+.body li {
+  padding-left: 0.25em;
+}
+
+.body strong {
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.body h1,
+.body h2,
+.body h3,
+.body h4,
+.body h5,
+.body h6 {
+  font-family: var(--font-cormorant-garamond);
+  font-size: var(--text-2xl);
+  color: var(--color-black);
+  margin: 24px 0 12px;
+}
+
+.numberedItem::marker,
+.body .numberedTitle,
+.body .numberedTitle strong {
+  color: var(--color-black);
+  font-family: var(--font-cormorant-garamond);
+  font-size: var(--text-2xl);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.body .numberedTitle {
+  margin: 0;
+}
+
+.numberedBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.body li > ol {
+  margin-top: 48px;
+}
+
+.body li > ul {
+  margin-top: 6px;
+}
+
 .sections {
   display: flex;
   flex-direction: column;
@@ -84,8 +185,8 @@
   width: 100%;
   padding: 16px;
   border: 1px solid var(--color-black-15);
-  border-radius: 12;
-  margin-top: 20;
+  border-radius: 12px;
+  margin-top: 32px;
 }
 
 .contactName {
@@ -93,17 +194,49 @@
   line-height: normal;
 }
 
-.contactLine {
+.body .contactLine {
   color: var(--color-black-75);
   line-height: normal;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
+  .body{
+    gap: 10px;
+  }
+
+  .body ol {
+    gap: 32px;
+    margin-top: 22px;
+  }
+
+  .body ul {
+    gap: 10px;
+  }
+
+  .numberedBlock {
+    gap: 8px;
+  }
+
+  .body li > ol {
+    margin-top: 32px;
+  }
+
+  .body li > ul {
+    margin-top: 8px;
+  }
+
+  .numberedItem::marker,
+  .body .numberedTitle,
+  .body .numberedTitle strong {
+    letter-spacing: var(--tracking-bona-2xl);
+  }
+
   .card {
     gap: 16px;
     padding: 24px 24px 32px;
     border-radius: var(--radius-panel-mobile);
-    margin-top: 24;
+    margin-top: 24px;
   }
 
   .marker {
@@ -119,7 +252,8 @@
   }
 
   .paragraph,
-  .note {
+  .note,
+  .body {
     font-size: var(--text-sm);
   }
 }

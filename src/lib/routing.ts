@@ -1,4 +1,5 @@
 import type { Locale } from "@/lang";
+import { policyKeyFromSlug } from "./policies/catalog";
 
 export const urlLocales = ["en", "ru", "ua"] as const;
 export type UrlLocale = typeof urlLocales[number];
@@ -22,7 +23,8 @@ export function localizedHref(locale: Locale, path = "/"): string {
   const normalized = path.replace(/^\/(en|ru|ua)(?=\/|[?#]|$)/, "")
     .replace(/^\/categories(?=\/|[?#]|$)/, "/tarot")
     .replace(/^\/terms-of-use(?=[?#]|$)/, `/policy/terms-of-use-${prefix}`)
-    .replace(/^\/policy\/terms-of-use-(en|ru|ua)(?=[?#]|$)/, `/policy/terms-of-use-${prefix}`);
+    .replace(/^\/policy\/([^/?#]+)-(en|ru|ua|uk)(?=[?#]|$)/, (match, base, suffix) =>
+      policyKeyFromSlug(`${base}-${suffix}`, suffix) ? `/policy/${base}-${prefix}` : match);
   return `/${prefix}${normalized === "/" ? "" : normalized.replace(/^\/(?=[?#])/, "")}`;
 }
 
@@ -36,8 +38,8 @@ export function routeFromPath(pathname: string) {
   if (path[0] === "tarot" && path.length <= 3) {
     return { locale, kind: path.length === 1 ? "catalog" as const : "category" as const, path: path.slice(1), key: path.join("/") };
   }
-  if (path.length === 2 && path[0] === "policy" && path[1] === `terms-of-use-${prefix}`) {
-    return { locale, kind: "terms" as const, path: [], key: "terms" };
+  if (path.length === 2 && path[0] === "policy" && policyKeyFromSlug(path[1], prefix)) {
+    return { locale, kind: "policy" as const, path: [], key: path[1] };
   }
   return null;
 }
