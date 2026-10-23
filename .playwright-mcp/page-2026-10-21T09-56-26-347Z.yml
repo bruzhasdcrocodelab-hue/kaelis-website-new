@@ -1,0 +1,45 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - link "Kaelis AI" [ref=e7] [cursor=pointer]:
+          - /url: /en
+        - navigation [ref=e8]:
+          - link "Tarot Spreads" [ref=e10] [cursor=pointer]:
+            - /url: /en/tarot
+          - link "Our App" [ref=e13] [cursor=pointer]:
+            - /url: /en#top-block
+          - link "Terms of Use" [ref=e14] [cursor=pointer]:
+            - /url: /en/policy/terms-of-use-en
+        - generic [ref=e15]:
+          - button "Download App" [ref=e16]
+          - button "EN" [ref=e19] [cursor=pointer]
+    - status [ref=e24]:
+      - paragraph [ref=e26]: Loading…
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - paragraph [ref=e31]: AI Powered
+        - generic [ref=e32]:
+          - paragraph [ref=e33]: Discover Yourself,
+          - paragraph [ref=e34]: One Insight at a Time
+        - paragraph [ref=e35]: Understand your thoughts, emotions, and patterns with AI-guided reflections, personalized readings, and mindful tools designed for self-discovery
+      - generic [ref=e37]:
+        - button "App Store" [disabled] [ref=e38]
+        - link "Google Play" [ref=e40] [cursor=pointer]:
+          - /url: https://play.google.com/store/apps/details?id=io.kaelsi.app
+    - contentinfo [ref=e42]:
+      - generic [ref=e43]:
+        - link "TikTok" [ref=e46] [cursor=pointer]:
+          - /url: https://www.tiktok.com/@kaelisai?_t=ZM-8zPlIGKEeAf
+        - link "Instagram" [ref=e50] [cursor=pointer]:
+          - /url: https://www.instagram.com/kaelis_ai_media?igsh=MXczMW5wajJ4ODgxdQ==
+      - generic [ref=e52]:
+        - link "Children’s Privacy Policy" [ref=e53] [cursor=pointer]:
+          - /url: /en
+        - link "Refund & Subscription Policy" [ref=e54] [cursor=pointer]:
+          - /url: /en
+        - link "Private Policy" [ref=e55] [cursor=pointer]:
+          - /url: /en
+      - link "Kaelis AI" [ref=e56] [cursor=pointer]:
+        - /url: /en
+  - alert [ref=e57]
