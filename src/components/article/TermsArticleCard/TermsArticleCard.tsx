@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import type { PolicyBlock, PolicyDocument } from "@/lib/policies/content";
+import { numberedHeadingLength, slicePolicySpans, withoutContactDetails } from "@/lib/policies/presentation";
 import styles from "./TermsArticleCard.module.css";
 
 export interface TermsArticleCardProps {
@@ -22,6 +23,17 @@ function spans(block: PolicyBlock) {
 
 function blockText(block: PolicyBlock) {
   const props = { "data-policy-block": block._key, className: styles.block };
+  if (block.listItem === "number") {
+    const length = numberedHeadingLength(block);
+    return (
+      <div {...props}>
+        <h2 className={styles.numberedTitle}>{spans({ ...block, children: slicePolicySpans(block, 0, length) })}</h2>
+        {length < block.children.map(span => span.text).join("").length && (
+          <p>{spans({ ...block, children: slicePolicySpans(block, length) })}</p>
+        )}
+      </div>
+    );
+  }
   const content = spans(block);
   switch (block.style) {
     case "h1": return <h1 {...props}>{content}</h1>;
@@ -48,7 +60,7 @@ function renderBlocks(blocks: PolicyBlock[]): ReactNode[] {
       while (index < blocks.length && blocks[index].listItem && (blocks[index].level ?? 1) > level) {
         nested.push(list(blocks[index].level ?? 1, blocks[index].listItem!));
       }
-      items.push(<li key={block._key}>{blockText(block)}{nested}</li>);
+      items.push(<li key={block._key} className={type === "number" ? styles.numberedItem : undefined}>{blockText(block)}{nested}</li>);
     }
     return type === "number" ? <ol key={key}>{items}</ol> : <ul key={key}>{items}</ul>;
   }
@@ -69,10 +81,10 @@ export default function TermsArticleCard({ policy }: TermsArticleCardProps) {
     <article className={`shadow-medium ${styles.card}`}>
       <p className={`font-instrument-xs ${styles.marker}`}>Kaela AI {policy.title}</p>
       <div className={`font-instrument-base ${styles.body}`} data-policy-content>
-        {renderBlocks(policy.content)}
+        {renderBlocks(policy.content.map(withoutContactDetails))}
       </div>
       <div className={styles.contactPlate}>
-        <p className={`font-instrument-base-emphasized ${styles.contactName}`}>Maksim Shamkou</p>
+        <p className={`font-instrument-base-emphasized ${styles.contactName}`}>{policy.language === "en" ? "Maksim Shamkou" : "Максим Шамко"}</p>
         <a className={`font-instrument-sm ${styles.contactLine}`} href="mailto:info.kaelis@gmail.com">Email: info.kaelis@gmail.com</a>
       </div>
     </article>

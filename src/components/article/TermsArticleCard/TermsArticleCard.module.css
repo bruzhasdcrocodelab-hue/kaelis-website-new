@@ -74,6 +74,21 @@
   margin: 24px 0 12px;
 }
 
+.numberedItem::marker,
+.body .numberedTitle,
+.body .numberedTitle strong {
+  color: var(--color-black);
+  font-family: var(--font-cormorant-garamond);
+  font-size: var(--text-2xl);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.body .numberedTitle {
+  margin: 0 0 6px;
+}
+
 .sections {
   display: flex;
   flex-direction: column;
@@ -143,7 +158,6 @@
   padding: 16px;
   border: 1px solid var(--color-black-15);
   border-radius: 12px;
-  margin-top: 20px;
 }
 
 .contactName {
