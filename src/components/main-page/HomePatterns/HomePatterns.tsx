@@ -87,20 +87,32 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let stop = () => {};
     const effectId = performance.now();
-    const log = (phase: string, trigger?: string) => console.info("[PatternAnimation]", JSON.stringify({
+    const viewport = window.visualViewport;
+    const log = (phase: string, trigger?: string, eventMatches?: boolean) => console.info("[PatternAnimation]", JSON.stringify({
       phase,
       trigger,
+      eventMatches,
       effectId,
       time: performance.now(),
       pathname: window.location.pathname,
       patterns: patterns.map(pattern => `${pattern.mobile ? "mobile" : "desktop"}-${pattern.name}`),
       mobile: mobile.matches,
       reducedMotion: reduced.matches,
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight,
+      clientWidth: document.documentElement.clientWidth,
+      outerWidth: window.outerWidth,
+      outerHeight: window.outerHeight,
+      dpr: window.devicePixelRatio,
+      visualViewport: viewport ? { width: viewport.width, height: viewport.height, scale: viewport.scale } : null,
+      visibility: document.visibilityState,
     }));
+    const onWindowResize = () => log("viewport", "window.resize");
+    const onVisualResize = () => log("viewport", "visualViewport.resize");
     log("effect");
 
     function start(event?: MediaQueryListEvent) {
-      log("start", event?.media ?? "effect");
+      log("start", event?.media ?? "effect", event?.matches);
       stop();
       const sequence: AnimationSequence = [];
       const resets: (() => void)[] = [];
@@ -144,11 +156,15 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
     start();
     mobile.addEventListener("change", start);
     reduced.addEventListener("change", start);
+    window.addEventListener("resize", onWindowResize);
+    viewport?.addEventListener("resize", onVisualResize);
     return () => {
       log("cleanup");
       stop();
       mobile.removeEventListener("change", start);
       reduced.removeEventListener("change", start);
+      window.removeEventListener("resize", onWindowResize);
+      viewport?.removeEventListener("resize", onVisualResize);
     };
   }, [animate, scope, patterns]);
 
