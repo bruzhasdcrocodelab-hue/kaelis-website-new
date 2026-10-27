@@ -1,5 +1,5 @@
 .card {
-  --category-card-blur: 0px;
+  --category-card-backdrop-filter: none;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -127,7 +127,7 @@
 
 @media (max-width: 768px) {
   .card {
-    --category-card-blur: var(--blur-default);
+    --category-card-backdrop-filter: blur(var(--blur-default));
     width: 100%;
     max-width: 230px;
     height: 140px;

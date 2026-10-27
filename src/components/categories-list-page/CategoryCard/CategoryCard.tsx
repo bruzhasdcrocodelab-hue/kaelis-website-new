@@ -45,9 +45,9 @@ export default function CategoryCard({
       lang={htmlLang[locale]}
       style={{
         // Inline so the build's CSS pipeline doesn't drop the unprefixed property.
-        // --category-card-blur is 0 on desktop and --blur-default on mobile.
-        backdropFilter: "blur(var(--category-card-blur))",
-        WebkitBackdropFilter: "blur(var(--category-card-blur))",
+        // --category-card-backdrop-filter is none on desktop and blur(--blur-default) on mobile.
+        backdropFilter: "var(--category-card-backdrop-filter)",
+        WebkitBackdropFilter: "var(--category-card-backdrop-filter)",
       }}
     >
       <svg className={borderClassName} preserveAspectRatio="none" aria-hidden focusable="false">
