@@ -86,8 +86,21 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
     const mobile = window.matchMedia("(max-width: 768px)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let stop = () => {};
+    const effectId = performance.now();
+    const log = (phase: string, trigger?: string) => console.info("[PatternAnimation]", JSON.stringify({
+      phase,
+      trigger,
+      effectId,
+      time: performance.now(),
+      pathname: window.location.pathname,
+      patterns: patterns.map(pattern => `${pattern.mobile ? "mobile" : "desktop"}-${pattern.name}`),
+      mobile: mobile.matches,
+      reducedMotion: reduced.matches,
+    }));
+    log("effect");
 
-    function start() {
+    function start(event?: MediaQueryListEvent) {
+      log("start", event?.media ?? "effect");
       stop();
       const sequence: AnimationSequence = [];
       const resets: (() => void)[] = [];
@@ -122,6 +135,7 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
 
       const playback = animate(sequence, { repeat: Infinity });
       stop = () => {
+        log("stop");
         playback.stop();
         resets.forEach(reset => reset());
       };
@@ -131,6 +145,7 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
     mobile.addEventListener("change", start);
     reduced.addEventListener("change", start);
     return () => {
+      log("cleanup");
       stop();
       mobile.removeEventListener("change", start);
       reduced.removeEventListener("change", start);
