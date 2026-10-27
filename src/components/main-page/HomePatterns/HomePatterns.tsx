@@ -83,6 +83,10 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
   const [scope, animate] = useAnimate<HTMLDivElement>();
 
   useEffect(() => {
+    console.info("[PatternRender]", JSON.stringify({ prefix, gradient, time: performance.now() }));
+  });
+
+  useEffect(() => {
     const mobile = window.matchMedia("(max-width: 768px)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let stop = () => {};
