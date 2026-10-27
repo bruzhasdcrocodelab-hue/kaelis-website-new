@@ -24,6 +24,15 @@
   transform-origin: 790px 764px;
 }
 
+@media (min-width: 769px) {
+  .pattern {
+    will-change: transform;
+    transform: translateX(-50%) translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
 @media (max-width: 768px) {
   .pattern {
     top: clamp(-495.7px, -97.436vw, -308.4px);

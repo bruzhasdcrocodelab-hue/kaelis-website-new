@@ -43,6 +43,13 @@
   right: 1.389vw;
 }
 
+.patternDesktop {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 .patternMobile {
   display: none;
   animation: patternFloatSide var(--pattern-float-duration) ease-in-out infinite,
