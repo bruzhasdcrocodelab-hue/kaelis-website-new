@@ -48,7 +48,7 @@
 .star {
   position: absolute;
   left: 50%;
-  bottom: -32px;
+  bottom: -30.5px;
   width: 50.27px;
   height: 62px;
   transform: translateX(-50%);
@@ -148,7 +148,7 @@
   }
 
   .star {
-    bottom: -22px;
+    bottom: -22.3px;
     width: 36px;
     height: 45px;
   }
