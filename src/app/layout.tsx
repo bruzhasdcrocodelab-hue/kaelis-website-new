@@ -30,6 +30,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${cormorantGaramond.variable} ${manrope.variable} h-full antialiased`}
     >
       <head>
+        <meta name="google-site-verification" content="g-jH6mhfzaLWhtC-UJdgtCxQA1kFZ06dp-Vqyn5w5zQ" />
         <Script id="google-analytics-consent" strategy="beforeInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
