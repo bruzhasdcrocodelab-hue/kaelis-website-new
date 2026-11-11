@@ -4,7 +4,13 @@ import { createContext, useContext, useEffect, useState, useSyncExternalStore } 
 import type { Locale } from "@/lang";
 import { localizedHref } from "@/lib/routing";
 import { useLocale } from "@/components/LocaleContext";
-import { createCatalogStore, INITIAL_STATE, type CatalogState, type TarotCategory, type TarotSpread } from "@/lib/categories/catalog";
+import { createCatalogStore, type CatalogState, type TarotCategory, type TarotSpread } from "@/lib/categories/catalog";
+
+export interface InitialCatalog {
+  categories?: TarotCategory[];
+  spreadsByCategory?: Record<string, TarotSpread[]>;
+  allSpreads?: TarotSpread[];
+}
 
 const CatalogContext = createContext<ReturnType<typeof createCatalogStore> | null>(null);
 const CatalogStoresContext = createContext<((locale: Locale) => ReturnType<typeof createCatalogStore>) | null>(null);
@@ -15,12 +21,12 @@ export function useCatalogStores() {
   return getStore;
 }
 
-export default function CatalogProvider({ locale, children }: { locale: Locale; children: React.ReactNode }) {
+export default function CatalogProvider({ locale, children, initialCatalog }: { locale: Locale; children: React.ReactNode; initialCatalog?: InitialCatalog }) {
   const [getStore] = useState(() => {
     const stores = new Map<Locale, ReturnType<typeof createCatalogStore>>();
     return (language: Locale) => {
       let store = stores.get(language);
-      if (!store) { store = createCatalogStore(language); stores.set(language, store); }
+      if (!store) { store = createCatalogStore(language, language === locale ? initialCatalog : undefined); stores.set(language, store); }
       return store;
     };
   });
@@ -32,7 +38,7 @@ export default function CatalogProvider({ locale, children }: { locale: Locale; 
 export function useCatalog(categoryId?: string | null, enabled = true) {
   const store = useContext(CatalogContext);
   if (!store) throw new Error("CatalogProvider is required");
-  const state = useSyncExternalStore(store.subscribe, () => store.getSnapshot(categoryId), () => INITIAL_STATE);
+  const state = useSyncExternalStore(store.subscribe, () => store.getSnapshot(categoryId), () => store.getSnapshot(categoryId));
   useEffect(() => {
     if (enabled) void store.load(categoryId);
   }, [store, categoryId, enabled]);

@@ -7,6 +7,7 @@ import type { Dictionary, Locale } from "@/lang";
 import { useCategories } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import type { HomeCardSlug } from "@/lib/tarot/homeCards";
+import styles from "./HeroCardsSection.module.css";
 
 export interface HeroCardsSectionProps {
   locale: Locale;
@@ -21,23 +22,19 @@ export default function HeroCardsSection({ locale, heroDictionary, cardsDictiona
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { state, retry } = useCategories();
 
-  if (state.status !== "success" && !selectedSlug) {
-    return <div style={{ minHeight: "60vh", display: "grid", placeContent: "center" }}>
-      <CatalogStatus locale={locale} status={state.status} retry={retry} />
-    </div>;
-  }
-
   return (
     <>
       <HeroSection dictionary={heroDictionary} isCardHovered={hoveredIndex !== null} />
-      <CardsFan
+      {state.status !== "success" && !selectedSlug ? <section id="cards" className={styles.pending}>
+        <CatalogStatus locale={locale} status={state.status} retry={retry} />
+      </section> : <CardsFan
         dictionary={cardsDictionary}
         hoveredIndex={hoveredIndex}
         onCardHoverChange={setHoveredIndex}
         selectedSlug={selectedSlug}
         pendingSlug={pendingSlug}
         onCardSelect={onCardSelect}
-      />
+      />}
     </>
   );
 }

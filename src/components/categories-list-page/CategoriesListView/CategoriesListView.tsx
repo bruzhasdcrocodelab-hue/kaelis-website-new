@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { DesktopGradientPatterns } from "@/components/main-page/HomePatterns/HomePatterns";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories } from "@/components/categories/CatalogProvider";
@@ -11,16 +12,19 @@ import geometryStyles from "@/components/categories/ConstellationGeometry.module
 import ConstellationPattern from "@/components/categories-list-page/ConstellationPattern";
 import StarField from "@/components/categories-list-page/StarField";
 import CategoriesListSection from "@/components/categories-list-page/CategoriesListSection";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import styles from "./CategoriesListView.module.css";
 
 export interface CategoriesListViewProps {
   dictionary: Dictionary;
   locale: Locale;
+  children?: ReactNode;
 }
 
 export default function CategoriesListView({
   dictionary,
   locale,
+  children,
 }: CategoriesListViewProps) {
   const { state, retry } = useCategories();
   return (
@@ -50,6 +54,10 @@ export default function CategoriesListView({
       <StarField />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
+        <Breadcrumbs locale={locale} items={[
+          { label: dictionary.header.logo, href: "/" },
+          { label: dictionary.header.allTarotSpreads },
+        ]} />
         {state.status === "success" && <CategoriesListSection
           dictionary={dictionary.categoriesList}
           locale={locale}
@@ -57,6 +65,7 @@ export default function CategoriesListView({
         />}
         {state.status !== "success" && <div className={styles.pending}><CatalogStatus locale={locale} status={state.status} retry={retry} /></div>}
         {state.status === "success" && state.data.length === 0 && <CatalogStatus locale={locale} status="empty" />}
+        {state.status === "success" && children}
         <Footer dictionary={dictionary.footer} locale={locale} variant="on-dark" />
       </div>
     </div>

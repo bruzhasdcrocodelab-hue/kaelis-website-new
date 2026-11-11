@@ -62,8 +62,17 @@ export async function loadCatalog(locale: Locale, categoryId?: string | null): P
 }
 
 /** One store per locale/provider: shared requests, no cross-language responses. */
-export function createCatalogStore(locale: Locale) {
+export function createCatalogStore(locale: Locale, initial?: {
+  categories?: TarotCategory[];
+  spreadsByCategory?: Record<string, TarotSpread[]>;
+  allSpreads?: TarotSpread[];
+}) {
   const states = new Map<string, CatalogState<TarotCategory | TarotSpread>>();
+  if (initial?.categories) states.set("categories", { status: "success", data: initial.categories });
+  if (initial?.allSpreads) states.set("all-spreads", { status: "success", data: initial.allSpreads });
+  for (const [categoryId, spreads] of Object.entries(initial?.spreadsByCategory ?? {})) {
+    states.set(`spreads:${categoryId}`, { status: "success", data: spreads });
+  }
   const pending = new Map<string, Promise<void>>();
   const listeners = new Set<() => void>();
   const keyFor = (categoryId?: string | null) => categoryId === undefined ? "categories" : categoryId === null ? "all-spreads" : `spreads:${categoryId}`;

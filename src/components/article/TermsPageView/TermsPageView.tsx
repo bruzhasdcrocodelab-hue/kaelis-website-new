@@ -5,6 +5,7 @@ import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import TermsHeroSection from "@/components/article/TermsHeroSection";
 import TermsArticleCard from "@/components/article/TermsArticleCard";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import styles from "./TermsPageView.module.css";
 
 export interface TermsPageViewProps {
@@ -27,6 +28,10 @@ export default function TermsPageView({ dictionary, locale, policy }: TermsPageV
             priority
           />
           <Header dictionary={dictionary.header} locale={locale} />
+          <Breadcrumbs locale={locale} items={[
+            { label: dictionary.header.logo, href: "/" },
+            { label: policy.title },
+          ]} />
           <TermsHeroSection dictionary={{ ...dictionary.termsOfUse, title: policy.title, lastUpdated: policy.published }} locale={locale} />
         </div>
         <div className={styles.articleWrap}>

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { routing, seoContent } from "./routing-fixture.mjs";
+import { routing, seo, seoContent } from "./routing-fixture.mjs";
 
 test("localized links preserve logical pages, query, hash and backend language", () => {
   for (const [locale, prefix] of [["en", "en"], ["ru", "ru"], ["uk", "ua"]]) {
@@ -21,6 +21,20 @@ test("locale detection follows the reference cookie, weighted header, then Engli
   assert.equal(routing.negotiateLocale(undefined, "invalid;q=oops"), "en");
   assert.equal(routing.routeFromPath("/en/tarot/a/b/c"), null);
   assert.equal(routing.routeFromPath("/en/policy/terms-of-use-ru"), null);
+});
+
+test("only known canonical tarot paths resolve and locale paths redirect to canonical URL locales", () => {
+  assert.equal(seo.resolveTarotSeo("ru", ["dreams"])?.path, "/tarot/dreams");
+  assert.equal(seo.resolveTarotSeo("ru", ["dreams-xyz"]), undefined);
+  assert.equal(seo.resolveTarotSeo("ru", ["personality", "state", "extra"]), undefined);
+  assert.equal(seo.resolveTarotSeo("ru", ["DREAMS"]), undefined);
+  assert.equal(routing.lowercaseKnownLocalePathname("/ru/tarot/DREAMS"), "/ru/tarot/dreams");
+  assert.equal(routing.lowercaseKnownLocalePathname("/RU/tarot/DREAMS"), "/ru/tarot/dreams");
+  assert.equal(routing.lowercaseKnownLocalePathname("/UK/tarot/DREAMS"), "/ua/tarot/dreams");
+  assert.equal(routing.isUnsupportedLocalePrefix("es"), true);
+  assert.equal(routing.isUnsupportedLocalePrefix("pt-BR"), true);
+  assert.equal(routing.isUnsupportedLocalePrefix("tarot"), false);
+  assert.equal(routing.isUnsupportedLocalePrefix("uk"), false);
 });
 
 test("every spreadsheet row has exact English metadata and separate complete translations", async () => {

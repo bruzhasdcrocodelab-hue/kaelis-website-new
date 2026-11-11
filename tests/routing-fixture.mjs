@@ -13,3 +13,12 @@ const { outputText } = ts.transpileModule(source, {
 export const routingUrl = `data:text/javascript;base64,${Buffer.from(outputText.replace('"./policies/catalog"', JSON.stringify(policyUrl))).toString("base64")}`;
 export const routing = await import(routingUrl);
 export const seoContent = JSON.parse(await readFile(new URL("../src/lib/seo/content.json", import.meta.url), "utf8"));
+const seoSource = await readFile(new URL("../src/lib/seo/index.ts", import.meta.url), "utf8");
+const seoOutput = ts.transpileModule(seoSource, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022, resolveJsonModule: true },
+}).outputText;
+const contentUrl = `data:text/javascript;base64,${Buffer.from(`export default ${JSON.stringify(seoContent)};`).toString("base64")}`;
+const seoUrl = `data:text/javascript;base64,${Buffer.from(seoOutput
+  .replace('"@/lib/routing"', JSON.stringify(routingUrl))
+  .replace('"./content.json"', JSON.stringify(contentUrl))).toString("base64")}`;
+export const seo = await import(seoUrl);
