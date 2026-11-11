@@ -3,6 +3,7 @@ import ReadingNavigationProvider from "@/components/reading/ReadingNavigationPro
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import HomeReading from "@/components/main-page/HomeReading/HomeReading";
+import HomeTarotLinks from "@/components/seo/HomeTarotLinks";
 import type { Dictionary, Locale } from "@/lang";
 import styles from "@/app/page.module.css";
 
@@ -19,6 +20,7 @@ export default function HomePageView({ locale, dictionary }: { locale: Locale; d
         <div className={styles.content}>
           <Header dictionary={dictionary.header} locale={locale} />
           <HomeReading locale={locale} dictionary={dictionary} />
+          <HomeTarotLinks locale={locale} />
           <Footer dictionary={dictionary.footer} locale={locale} />
         </div>
       </ReadingNavigationProvider>

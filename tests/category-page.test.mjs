@@ -48,6 +48,7 @@ async function renderPage({ slug = "other", spreads = familySpreads, all = succe
     "@/components/reading/ReadingLink": ({ children }) => createElement("a", null, children),
     "@/components/reading/ReadingNavigationProvider": ({ children }) => children,
     "@/lib/categories/catalog": catalog,
+    "@/lib/routing": routing,
     "@/components/categories/CatalogProvider": {
       useCategories: () => ({ state: success([{ id: "4", slug, name: slug, site_description: "" }]), retry() {} }),
       useSpreads: () => ({ state: success(spreads), retry() {} }),
@@ -60,6 +61,7 @@ async function renderPage({ slug = "other", spreads = familySpreads, all = succe
     "@/components/categories-page/CategoryHeroSection": hero,
     "@/components/categories-page/CategoryTopBlock": props => { reading = props; return createElement("div", { "data-component": "reading" }); },
     "@/components/categories-page/ConstellationPattern": () => null,
+    "@/components/seo/Breadcrumbs": () => null,
     "./CategoryPageView.module.css": {},
   })).default;
   const html = renderToStaticMarkup(createElement(Page, { dictionary, locale: "en", path: nested ? [slug, nested] : [slug] }));

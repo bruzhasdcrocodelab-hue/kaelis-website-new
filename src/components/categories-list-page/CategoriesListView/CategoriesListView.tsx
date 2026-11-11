@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { DesktopGradientPatterns } from "@/components/main-page/HomePatterns/HomePatterns";
 import type { Dictionary, Locale } from "@/lang";
 import { useCategories } from "@/components/categories/CatalogProvider";
@@ -16,11 +17,13 @@ import styles from "./CategoriesListView.module.css";
 export interface CategoriesListViewProps {
   dictionary: Dictionary;
   locale: Locale;
+  children?: ReactNode;
 }
 
 export default function CategoriesListView({
   dictionary,
   locale,
+  children,
 }: CategoriesListViewProps) {
   const { state, retry } = useCategories();
   return (
@@ -57,6 +60,7 @@ export default function CategoriesListView({
         />}
         {state.status !== "success" && <div className={styles.pending}><CatalogStatus locale={locale} status={state.status} retry={retry} /></div>}
         {state.status === "success" && state.data.length === 0 && <CatalogStatus locale={locale} status="empty" />}
+        {state.status === "success" && children}
         <Footer dictionary={dictionary.footer} locale={locale} variant="on-dark" />
       </div>
     </div>

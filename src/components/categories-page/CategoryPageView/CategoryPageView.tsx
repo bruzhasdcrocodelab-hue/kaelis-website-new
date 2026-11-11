@@ -14,6 +14,7 @@ import ReadingNavigationProvider from "@/components/reading/ReadingNavigationPro
 import CategoryHeroSection from "@/components/categories-page/CategoryHeroSection";
 import CategoryTopBlock from "@/components/categories-page/CategoryTopBlock";
 import ConstellationPattern from "@/components/categories-page/ConstellationPattern";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import styles from "./CategoryPageView.module.css";
 
 export interface CategoryPageViewProps {
@@ -89,15 +90,23 @@ function CategoryPageContent({
           </>
         )}
         {!status && current && (
-          <CategoryHeroSection
-            dictionary={dictionary.categoryPage}
-            locale={locale}
-            current={current}
-            spreads={path.length === 1 && spreads.state.status === "success" ? spreads.state.data : []}
-            path={path}
-            returnHref={returnHref}
-            returnLabel={returnLabel}
-          />
+          <>
+            <Breadcrumbs
+              locale={locale}
+              home={dictionary.header.logo}
+              hub={dictionary.header.allTarotSpreads}
+              current={current.name}
+            />
+            <CategoryHeroSection
+              dictionary={dictionary.categoryPage}
+              locale={locale}
+              current={current}
+              spreads={path.length === 1 && spreads.state.status === "success" ? spreads.state.data : []}
+              path={path}
+              returnHref={returnHref}
+              returnLabel={returnLabel}
+            />
+          </>
         )}
         {!status && needsDefaultSpread && (allSpreadsRequest.state.status === "error" || !resolved?.spread) && (
           <CatalogStatus locale={locale} status={allSpreads.state.status === "loading" ? "loading" : "error"} retry={allSpreads.retry} />
