@@ -1,9 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { isUrlLocale, localizedHref, LOCALE_COOKIE, negotiateLocale, toLocale } from "@/lib/routing";
+import { isUrlLocale, localizedHref, lowercaseKnownLocalePathname, LOCALE_COOKIE, negotiateLocale, toLocale } from "@/lib/routing";
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const prefix = pathname.split("/")[1];
+  const lowercasePathname = lowercaseKnownLocalePathname(pathname);
+  if (lowercasePathname !== pathname) {
+    const url = request.nextUrl.clone();
+    url.pathname = lowercasePathname;
+    return NextResponse.redirect(url, 308);
+  }
   const locale = isUrlLocale(prefix) ? prefix : negotiateLocale(request.cookies.get(LOCALE_COOKIE)?.value, request.headers.get("accept-language"));
   const target = isUrlLocale(prefix) && pathname.startsWith(`/${prefix}/policy/`)
     ? pathname

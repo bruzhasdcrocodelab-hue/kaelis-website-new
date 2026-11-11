@@ -9,6 +9,13 @@ export function isUrlLocale(value: string): value is UrlLocale {
   return urlLocales.includes(value as UrlLocale);
 }
 
+export function lowercaseKnownLocalePathname(pathname: string): string {
+  const prefix = pathname.split("/")[1];
+  if (!isUrlLocale(prefix)) return pathname;
+  const suffix = pathname.slice(prefix.length + 1);
+  return suffix === suffix.toLowerCase() ? pathname : `/${prefix}${suffix.toLowerCase()}`;
+}
+
 export function toLocale(value: UrlLocale): Locale {
   return value === "ua" ? "uk" : value;
 }

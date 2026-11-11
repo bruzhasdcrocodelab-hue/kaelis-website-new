@@ -15,6 +15,14 @@ export function getSeo(locale: Locale, path: string): SeoContent | undefined {
   return entries[locale][path];
 }
 
+export function resolveTarotSeo(locale: Locale, slug: string[]): { path: string; entry: SeoContent } | undefined {
+  if (!slug.length) return undefined;
+  const path = `/tarot/${slug.join("/")}`;
+  if (path !== path.toLowerCase()) return undefined;
+  const entry = getSeo(locale, path);
+  return entry ? { path, entry } : undefined;
+}
+
 export function pageTitle(locale: Locale, path: string): string {
   return getSeo(locale, path)?.title.trim() || "Kaelis";
 }
