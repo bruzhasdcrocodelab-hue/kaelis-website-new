@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { isUrlLocale, localizedHref, lowercaseKnownLocalePathname, LOCALE_COOKIE, negotiateLocale, toLocale } from "@/lib/routing";
+import { isUnsupportedLocalePrefix, isUrlLocale, localizedHref, lowercaseKnownLocalePathname, LOCALE_COOKIE, negotiateLocale, toLocale } from "@/lib/routing";
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -10,14 +10,16 @@ export function proxy(request: NextRequest) {
     url.pathname = lowercasePathname;
     return NextResponse.redirect(url, 308);
   }
-  const locale = isUrlLocale(prefix) ? prefix : negotiateLocale(request.cookies.get(LOCALE_COOKIE)?.value, request.headers.get("accept-language"));
-  const target = isUrlLocale(prefix) && pathname.startsWith(`/${prefix}/policy/`)
-    ? pathname
-    : localizedHref(toLocale(locale), pathname);
-  if (target !== pathname) {
+  if (isUnsupportedLocalePrefix(prefix)) {
     const url = request.nextUrl.clone();
-    url.pathname = target;
-    return NextResponse.redirect(url, isUrlLocale(prefix) ? 308 : 307);
+    url.pathname = localizedHref("en", pathname.slice(prefix.length + 1) || "/");
+    return NextResponse.redirect(url, 308);
+  }
+  const locale = isUrlLocale(prefix) ? prefix : negotiateLocale(request.cookies.get(LOCALE_COOKIE)?.value, request.headers.get("accept-language"));
+  if (!isUrlLocale(prefix)) {
+    const url = request.nextUrl.clone();
+    url.pathname = localizedHref(toLocale(locale), pathname);
+    return NextResponse.redirect(url, 307);
   }
   const headers = new Headers(request.headers);
   headers.set("x-site-locale", locale);

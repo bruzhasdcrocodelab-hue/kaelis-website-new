@@ -11,9 +11,16 @@ export function isUrlLocale(value: string): value is UrlLocale {
 
 export function lowercaseKnownLocalePathname(pathname: string): string {
   const prefix = pathname.split("/")[1];
-  if (!isUrlLocale(prefix)) return pathname;
+  const normalizedPrefix = prefix.toLowerCase();
+  const urlLocale = normalizedPrefix === "uk" ? "ua" : normalizedPrefix;
+  if (!isUrlLocale(urlLocale)) return pathname;
   const suffix = pathname.slice(prefix.length + 1);
-  return suffix === suffix.toLowerCase() ? pathname : `/${prefix}${suffix.toLowerCase()}`;
+  const normalizedPathname = `/${urlLocale}${suffix.toLowerCase()}`;
+  return normalizedPathname === pathname ? pathname : normalizedPathname;
+}
+
+export function isUnsupportedLocalePrefix(value: string): boolean {
+  return /^[a-z]{2}(?:-[a-z]{2})?$/i.test(value) && !isUrlLocale(value.toLowerCase()) && value.toLowerCase() !== "uk";
 }
 
 export function toLocale(value: UrlLocale): Locale {

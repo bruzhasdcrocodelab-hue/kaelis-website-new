@@ -23,13 +23,18 @@ test("locale detection follows the reference cookie, weighted header, then Engli
   assert.equal(routing.routeFromPath("/en/policy/terms-of-use-ru"), null);
 });
 
-test("only known canonical tarot paths resolve and known-locale paths redirect to lowercase", () => {
+test("only known canonical tarot paths resolve and locale paths redirect to canonical URL locales", () => {
   assert.equal(seo.resolveTarotSeo("ru", ["dreams"])?.path, "/tarot/dreams");
   assert.equal(seo.resolveTarotSeo("ru", ["dreams-xyz"]), undefined);
   assert.equal(seo.resolveTarotSeo("ru", ["personality", "state", "extra"]), undefined);
   assert.equal(seo.resolveTarotSeo("ru", ["DREAMS"]), undefined);
   assert.equal(routing.lowercaseKnownLocalePathname("/ru/tarot/DREAMS"), "/ru/tarot/dreams");
-  assert.equal(routing.lowercaseKnownLocalePathname("/RU/tarot/DREAMS"), "/RU/tarot/DREAMS");
+  assert.equal(routing.lowercaseKnownLocalePathname("/RU/tarot/DREAMS"), "/ru/tarot/dreams");
+  assert.equal(routing.lowercaseKnownLocalePathname("/UK/tarot/DREAMS"), "/ua/tarot/dreams");
+  assert.equal(routing.isUnsupportedLocalePrefix("es"), true);
+  assert.equal(routing.isUnsupportedLocalePrefix("pt-BR"), true);
+  assert.equal(routing.isUnsupportedLocalePrefix("tarot"), false);
+  assert.equal(routing.isUnsupportedLocalePrefix("uk"), false);
 });
 
 test("every spreadsheet row has exact English metadata and separate complete translations", async () => {
