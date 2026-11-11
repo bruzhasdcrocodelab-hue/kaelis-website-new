@@ -6,9 +6,9 @@
 - Единым источником допустимых SEO-маршрутов сделать `src/lib/seo/content.json`: сейчас в нём по 75 tarot-маршрутов для `en`, `ru`, `uk`. Страница, отсутствующая в этом справочнике, всегда возвращает 404.
 - Использовать существующий API только для публичного каталога/описаний и интерактива; не менять backend и его контракт.
 
-## Задачи 1–2: robots.txt и sitemap.xml
+## Задачи 1–2: robots.txt и sitemap.xml — выполнено
 
-- Создать `src/app/robots.ts` через `MetadataRoute.Robots`: `Allow: /`, запретить только служебные пути (`/api/admin/`, `/api/private/`, `/api/internal/`), явно разрешить используемые публичные API `/api/kaelis/user/anonymous`, `/api/kaelis/tarot/`, `/api/kaelis/configuration` и `/api/kaelis/broadcasting/auth`; добавить абсолютный URL sitemap из `NEXT_PUBLIC_SITE_URL`.
+- Создать `src/app/robots.ts` через `MetadataRoute.Robots`: `Allow: /`, закрыть `/api/` и служебные пути (`/api/admin/`, `/api/private/`, `/api/internal/`), но явно разрешить используемые публичные API `/api/kaelis/user/anonymous`, `/api/kaelis/tarot/`, `/api/kaelis/configuration` и `/api/kaelis/broadcasting/auth`; добавить абсолютный URL sitemap из `NEXT_PUBLIC_SITE_URL`.
 - Создать `src/app/sitemap.ts`: включить для каждого логического маршрута главную, `/tarot` и все разрешённые маршруты раскладов во всех трёх URL-локалях (`en`, `ru`, `ua`); у каждой записи задать `alternates.languages` для `en`, `ru`, `uk` и `x-default`.
 - Статические metadata routes имеют приоритет над `[locale]`; дополнительно сохранить в locale-layout строгую проверку `isUrlLocale`, чтобы файловые и неизвестные URL не становились страницами.
 - Риск: добавление нового расклада в API требует одновременного добавления его SEO-записи во все три локали, иначе он намеренно не будет индексироваться и вернёт 404.
