@@ -52,10 +52,30 @@ test("every spreadsheet row has exact English metadata and separate complete tra
       assert.ok(entry, `${locale}: ${path}`);
       assert.match(entry.description, /[а-яіїєґ]/i);
       assert.doesNotMatch(JSON.stringify(entry), /\?{2}|undefined|\uFFFD/);
-      if (path !== "/") {
+      if (path !== "/" && path !== "/tarot/dreams") {
         assert.ok(entry.h1);
         assert.equal(entry.title, `${entry.h1} | Kaelis`);
       } else assert.ok(entry.title.trim());
+    }
+  }
+});
+
+test("metadata uses localized SEO fields, a shared OG image, and safe limits", () => {
+  const metadata = seo.pageMetadata("ru", "/tarot/dreams");
+  assert.equal(metadata.title.absolute, "Сонник ИИ онлайн — толкование снов по картам Таро | Kaelis");
+  assert.equal(metadata.description, "Опишите сон — нейросеть Kaelis сделает расклад Таро и расшифрует его значение. Бесплатно, онлайн, без регистрации.");
+  assert.equal(metadata.openGraph.locale, "ru_RU");
+  assert.equal(metadata.openGraph.images[0].url, "/images/seo/og-placeholder-1200x630.png");
+  assert.equal(metadata.twitter.card, "summary_large_image");
+  assert.ok(metadata.title.absolute.length <= 60);
+  assert.ok(metadata.description.length <= 160);
+
+  for (const locale of ["en", "ru", "uk"]) {
+    for (const path of Object.keys(seoContent[locale])) {
+      const current = seo.pageMetadata(locale, path);
+      assert.ok(current.title.absolute.length <= 60, `${locale}: ${path}`);
+      assert.ok(current.description.length <= 160, `${locale}: ${path}`);
+      assert.doesNotMatch(current.description, /\p{Extended_Pictographic}/u, `${locale}: ${path}`);
     }
   }
 });

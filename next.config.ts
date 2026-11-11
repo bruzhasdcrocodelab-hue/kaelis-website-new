@@ -4,6 +4,7 @@ import { BACKEND_ORIGIN } from "./src/lib/config/env";
 
 const nextConfig: NextConfig = {
   experimental: {
+    globalNotFound: true,
     turbopackFileSystemCacheForDev: false,
   },
   images: {
