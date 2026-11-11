@@ -1,21 +1,9 @@
 .homeLinks {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 16px;
-  width: min(700px, calc(100% - 48px));
-  margin: 0 auto 40px;
-  color: var(--color-white-60);
-  font-size: var(--text-xs);
-}
-
-.homeLinks a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  display: none;
 }
 
 .catalogLinks {
-  display: grid;
+  display: none;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 24px;
   width: min(1120px, calc(100% - 48px));
@@ -57,6 +45,11 @@
   margin: 0 auto;
   color: var(--color-white-60);
   font-size: var(--text-xs);
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  gap: 8px;
 }
 
 @media (max-width: 768px) {

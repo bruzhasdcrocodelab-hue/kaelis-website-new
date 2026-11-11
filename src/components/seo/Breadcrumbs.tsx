@@ -3,12 +3,16 @@ import type { Locale } from "@/lang";
 import { localizedHref } from "@/lib/routing";
 import styles from "./TarotLinks.module.css";
 
-export default function Breadcrumbs({ locale, home, hub, current }: { locale: Locale; home: string; hub: string; current: string }) {
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+export default function Breadcrumbs({ locale, items }: { locale: Locale; items: BreadcrumbItem[] }) {
   return <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
-    <Link href={localizedHref(locale, "/")}>{home}</Link>
-    <span aria-hidden>→</span>
-    <Link href={localizedHref(locale, "/tarot")}>{hub}</Link>
-    <span aria-hidden>→</span>
-    <span aria-current="page">{current}</span>
+    {items.map((item, index) => <span key={`${item.href ?? "current"}-${item.label}`} className={styles.breadcrumbItem}>
+      {index > 0 && <span aria-hidden>→</span>}
+      {item.href ? <Link href={localizedHref(locale, item.href)}>{item.label}</Link> : <span aria-current="page">{item.label}</span>}
+    </span>)}
   </nav>;
 }

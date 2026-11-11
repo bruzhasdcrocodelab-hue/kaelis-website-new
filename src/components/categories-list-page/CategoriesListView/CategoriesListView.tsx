@@ -12,6 +12,7 @@ import geometryStyles from "@/components/categories/ConstellationGeometry.module
 import ConstellationPattern from "@/components/categories-list-page/ConstellationPattern";
 import StarField from "@/components/categories-list-page/StarField";
 import CategoriesListSection from "@/components/categories-list-page/CategoriesListSection";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import styles from "./CategoriesListView.module.css";
 
 export interface CategoriesListViewProps {
@@ -53,6 +54,10 @@ export default function CategoriesListView({
       <StarField />
       <div className={styles.content}>
         <Header dictionary={dictionary.header} locale={locale} />
+        <Breadcrumbs locale={locale} items={[
+          { label: dictionary.header.logo, href: "/" },
+          { label: dictionary.header.allTarotSpreads },
+        ]} />
         {state.status === "success" && <CategoriesListSection
           dictionary={dictionary.categoriesList}
           locale={locale}

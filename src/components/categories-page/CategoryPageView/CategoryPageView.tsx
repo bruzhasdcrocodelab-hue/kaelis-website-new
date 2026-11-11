@@ -93,9 +93,12 @@ function CategoryPageContent({
           <>
             <Breadcrumbs
               locale={locale}
-              home={dictionary.header.logo}
-              hub={dictionary.header.allTarotSpreads}
-              current={current.name}
+              items={[
+                { label: dictionary.header.logo, href: "/" },
+                { label: dictionary.header.allTarotSpreads, href: "/tarot" },
+                ...(path.length === 2 && resolved ? [{ label: resolved.category.name, href: `/tarot/${resolved.category.slug}` }] : []),
+                { label: current.name },
+              ]}
             />
             <CategoryHeroSection
               dictionary={dictionary.categoryPage}
