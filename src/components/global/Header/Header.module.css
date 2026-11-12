@@ -129,7 +129,7 @@
   }
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1400px) {
   .nav,
   .downloadApp {
     display: none;
@@ -138,9 +138,7 @@
   .menu {
     display: flex;
   }
-}
 
-@media (max-width: 768px) {
   .header {
     padding: 16px;
   }
@@ -166,5 +164,4 @@
     flex: 1 0 0;
     min-width: 0;
   }
-
 }
