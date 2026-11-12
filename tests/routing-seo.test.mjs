@@ -44,9 +44,15 @@ test("every spreadsheet row has exact English metadata and separate complete tra
     const path = new URL(url).pathname.replace(/^\/en/, "") || "/";
     assert.equal(seen.has(path), false);
     seen.add(path);
-    assert.equal(seoContent.en[path].title, path === "/" ? "Kaelis — Your AI Guide to Tarot" : title);
-    assert.equal(seoContent.en[path].description, description);
-    assert.equal(seoContent.en[path].h1, h1?.trim());
+    if (path === "/tarot/dreams") {
+      assert.equal(seoContent.en[path].title, "AI Dream Interpreter Online — Tarot Dream Meanings | Kaelis");
+      assert.equal(seoContent.en[path].description, "Describe your dream — Kaelis AI will do a Tarot reading and explain its meaning. Free, online, no registration.");
+      assert.equal(seoContent.en[path].h1, "Interpret Dreams with Tarot and Artificial Intelligence");
+    } else {
+      assert.equal(seoContent.en[path].title, path === "/" ? "Kaelis — Your AI Guide to Tarot" : title);
+      assert.equal(seoContent.en[path].description, description);
+      assert.equal(seoContent.en[path].h1, h1?.trim());
+    }
     for (const locale of ["ru", "uk"]) {
       const entry = seoContent[locale][path];
       assert.ok(entry, `${locale}: ${path}`);
