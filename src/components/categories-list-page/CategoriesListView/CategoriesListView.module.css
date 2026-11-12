@@ -27,7 +27,7 @@
 .patternLeft,
 .patternRight {
   position: absolute;
-  top: 155px;
+  top: 10.764vw;
   width: 23%;
   height: auto;
   /* max-width: 340px; */
@@ -80,12 +80,17 @@
 
 @media (min-width: 1441px) {
 
-    .patternLeft {
+  .patternLeft {
     left: 3.75%;
   }
 
   .patternRight {
     right: 3.75%;
+  }
+
+  .patternLeft,
+  .patternRight {
+    top: 155px;
   }
 
 }
