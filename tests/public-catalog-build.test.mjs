@@ -22,6 +22,9 @@ test("public catalog verifier checks every locale and category spread endpoint",
     },
   });
   assert.equal(calls.filter(({ target }) => target.pathname === "/api/user/anonymous").length, 1);
+  const authorization = calls.find(({ target }) => target.pathname === "/api/user/anonymous").options;
+  assert.equal(authorization.headers["Accept-Language"], "en");
+  assert.equal(authorization.headers["X-Platform"], "site");
   assert.equal(calls.filter(({ target }) => target.pathname === "/api/tarot/category").length, 3);
   assert.equal(calls.filter(({ target }) => target.searchParams.has("category_id")).length, 3);
   assert.ok(calls.filter(({ target }) => target.pathname === "/api/tarot").every(({ options }) => options.headers.Authorization === "Bearer token"));

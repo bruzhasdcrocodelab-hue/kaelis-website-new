@@ -1,4 +1,5 @@
 import "server-only";
+import { readFileSync } from "node:fs";
 import { request } from "node:https";
 import { unstable_cache } from "next/cache";
 import type { Locale } from "@/lang";
@@ -21,7 +22,14 @@ async function requestJson(url: URL, headers: Record<string, string>): Promise<A
 
 function requestTokenJson(): Promise<ApiResponse> {
   return new Promise((resolve, reject) => {
-    const operation = request(new URL("/api/user/anonymous", BACKEND_ORIGIN), { method: "POST", headers: { Accept: "application/json" } }, (response) => {
+    const operation = request(new URL("/api/user/anonymous", BACKEND_ORIGIN), {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-Language": "en",
+        "X-Platform": API_PLATFORM,
+      },
+    }, (response) => {
       let raw = "";
       response.setEncoding("utf8");
       response.on("data", (chunk: string) => { raw += chunk; });
@@ -50,6 +58,8 @@ function isItem(value: unknown): value is Omit<TarotCategory, "id"> & { id: stri
 }
 
 async function publicToken(): Promise<string> {
+  const buildToken = process.env.PUBLIC_CATALOG_TOKEN;
+  if (buildToken?.trim()) return buildToken;
   const response = await requestTokenJson();
   const body = response.body as { data?: { token_type?: unknown; access_token?: unknown } } | null;
   if (response.status < 200 || response.status >= 300 || body?.data?.token_type !== "Bearer" || typeof body?.data?.access_token !== "string" || !body.data.access_token.trim()) {
@@ -60,7 +70,31 @@ async function publicToken(): Promise<string> {
 
 const cachedPublicToken = unstable_cache(publicToken, ["public-catalog-token"], { revalidate: REVALIDATE_SECONDS });
 
+function buildCatalogItems<T>(locale: Locale, path: string, isValid: (item: unknown) => boolean): T[] | null {
+  const snapshotPath = process.env.PUBLIC_CATALOG_SNAPSHOT_PATH;
+  if (!snapshotPath) return null;
+  let catalog: unknown;
+  try {
+    catalog = JSON.parse(readFileSync(snapshotPath, "utf8"));
+  } catch {
+    throw new Error("Invalid public catalog build snapshot");
+  }
+  if (!catalog || typeof catalog !== "object") throw new Error("Invalid public catalog build snapshot");
+  const localeCatalog = (catalog as Record<string, unknown>)[locale];
+  if (!localeCatalog || typeof localeCatalog !== "object") throw new Error("Invalid public catalog build snapshot");
+  const categoryId = new URLSearchParams(path.slice(1)).get("category_id");
+  const items = path === "/category"
+    ? (localeCatalog as { categories?: unknown }).categories
+    : categoryId
+      ? (localeCatalog as { spreadsByCategory?: Record<string, unknown> }).spreadsByCategory?.[categoryId]
+      : (localeCatalog as { spreads?: unknown }).spreads;
+  if (!Array.isArray(items) || !items.every(isValid)) throw new Error("Invalid public catalog build snapshot");
+  return items.map((item) => ({ ...(item as { id: string | number }), id: String((item as { id: string | number }).id) }) as T);
+}
+
 async function loadPages<T>(locale: Locale, path: string, token: string, isValid: (item: unknown) => boolean): Promise<T[]> {
+  const buildItems = buildCatalogItems<T>(locale, path, isValid);
+  if (buildItems) return buildItems;
   const items: T[] = [];
   let lastPage = 1;
   for (let page = 1; page <= lastPage; page++) {

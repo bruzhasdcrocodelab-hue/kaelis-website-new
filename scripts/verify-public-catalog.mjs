@@ -38,7 +38,11 @@ async function requestJson(fetchImpl, url, options) {
 async function publicToken(fetchImpl, origin) {
   const response = await requestJson(fetchImpl, new URL("/api/user/anonymous", origin), {
     method: "POST",
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json",
+      "Accept-Language": "en",
+      "X-Platform": "site",
+    },
   });
   const token = response.body?.data;
   if (response.status < 200 || response.status >= 300 || token?.token_type !== "Bearer" || typeof token.access_token !== "string" || !token.access_token.trim()) {
@@ -78,13 +82,17 @@ async function loadPages(fetchImpl, origin, token, locale, path, isValid) {
 export async function verifyPublicCatalog({ fetchImpl = fetch, origin } = {}) {
   const resolvedOrigin = origin ?? await environmentOrigin();
   const token = await publicToken(fetchImpl, resolvedOrigin);
+  const catalog = {};
   for (const locale of LOCALES) {
     const categories = await loadPages(fetchImpl, resolvedOrigin, token, locale, "/category", isItem);
-    await loadPages(fetchImpl, resolvedOrigin, token, locale, "", isSpread);
+    const spreads = await loadPages(fetchImpl, resolvedOrigin, token, locale, "", isSpread);
+    const spreadsByCategory = {};
     for (const category of categories) {
-      await loadPages(fetchImpl, resolvedOrigin, token, locale, `?category_id=${encodeURIComponent(category.id)}`, isSpread);
+      spreadsByCategory[category.id] = await loadPages(fetchImpl, resolvedOrigin, token, locale, `?category_id=${encodeURIComponent(category.id)}`, isSpread);
     }
+    catalog[locale] = { categories, spreads, spreadsByCategory };
   }
+  return { token, catalog };
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
