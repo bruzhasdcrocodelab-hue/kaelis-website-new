@@ -17,6 +17,7 @@ export interface CategoryHeroSectionProps {
   path: string[];
   returnHref: string;
   returnLabel: string;
+  description?: string;
 }
 
 export default function CategoryHeroSection({
@@ -27,6 +28,7 @@ export default function CategoryHeroSection({
   path,
   returnHref,
   returnLabel,
+  description,
 }: CategoryHeroSectionProps) {
   const hasSubcategories = spreads.length > 1;
   const router = useRouter();
@@ -46,7 +48,7 @@ export default function CategoryHeroSection({
             <div className={styles.titleWrap}>
               <CategoryTitle title={getSeo(locale, `/tarot/${path.join("/")}`)?.h1 ?? current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
-                {current.site_description || ("description" in current ? current.description : "")}
+                {description ?? (current.site_description || ("description" in current ? current.description : ""))}
               </p>
             </div>
           </div>
