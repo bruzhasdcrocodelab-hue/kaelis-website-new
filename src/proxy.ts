@@ -10,6 +10,11 @@ export function proxy(request: NextRequest) {
     url.pathname = lowercasePathname;
     return NextResponse.redirect(url, 308);
   }
+  if (/^\/(?:en|ru|ua)\/tarot\/dreams\/dream$/.test(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.slice(0, -"/dream".length);
+    return NextResponse.redirect(url, 301);
+  }
   if (isUnsupportedLocalePrefix(prefix)) {
     const url = request.nextUrl.clone();
     url.pathname = localizedHref("en", pathname.slice(prefix.length + 1) || "/");
