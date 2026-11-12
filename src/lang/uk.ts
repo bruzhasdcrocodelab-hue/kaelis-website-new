@@ -6,6 +6,7 @@ const uk: Dictionary = {
     nav: {
       tarotSpreads: "Розклади Таро",
       ourApp: "Наш додаток",
+      faq: "Запитання та відповіді",
       termsOfUse: "Умови використання",
     },
     allTarotSpreads: "Всі розклади Таро",
@@ -23,9 +24,9 @@ const uk: Dictionary = {
     },
   },
   hero: {
-    titleLine1: "Ваш ШІ-провідник",
+    titleLine1: "Ваш провідник",
     titleToThe: "у світ",
-    titleHighlight: "Езотерики",
+    titleHighlight: "Таро",
     titleWorld: "",
     description: "ШІ-розклади Таро для ясності, орієнтирів і самопізнання.",
     cta: "Оберіть розклад, щоб почати ворожіння",

@@ -53,7 +53,7 @@
 
 .patternCenter {
   position: absolute;
-  top: 140px;
+  top: 9.722vw;
   left: 50%;
   transform: translateX(-50%);
   width: 68%;
@@ -66,7 +66,7 @@
 .patternLeft,
 .patternRight {
   position: absolute;
-  top: 155px;
+  top: 10.764vw;
   width: 23%;
   height: auto;
   max-width: 340px;
@@ -105,6 +105,15 @@
 
   .patternRight {
     right: 3.75%;
+  }
+
+  .patternCenter {
+    top: 140px;
+  }
+
+  .patternLeft,
+  .patternRight {
+    top: 155px;
   }
 }
 

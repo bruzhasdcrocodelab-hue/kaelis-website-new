@@ -6,19 +6,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: [
-        "/",
-        "/api/kaelis/user/anonymous",
-        "/api/kaelis/tarot/",
-        "/api/kaelis/configuration",
-        "/api/kaelis/broadcasting/auth",
-      ],
-      disallow: [
-        "/api/",
-        "/api/admin/",
-        "/api/private/",
-        "/api/internal/",
-      ],
+      allow: "/",
+      disallow: "/api/",
     },
     sitemap: new URL("/sitemap.xml", siteUrl).toString(),
   };

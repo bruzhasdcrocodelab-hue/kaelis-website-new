@@ -5,7 +5,7 @@ import { type UrlLocale, urlLocales } from "@/lib/routing";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kaelisai.com";
 
 const paths = Object.keys(content.en).filter(
-  path => path === "/" || path === "/tarot" || path.startsWith("/tarot/"),
+  path => path === "/" || path === "/faq" || path === "/tarot" || path.startsWith("/tarot/"),
 );
 
 function localizedUrl(locale: UrlLocale, path: string): string {

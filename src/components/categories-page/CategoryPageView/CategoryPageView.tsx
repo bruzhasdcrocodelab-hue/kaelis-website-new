@@ -15,12 +15,16 @@ import CategoryHeroSection from "@/components/categories-page/CategoryHeroSectio
 import CategoryTopBlock from "@/components/categories-page/CategoryTopBlock";
 import ConstellationPattern from "@/components/categories-page/ConstellationPattern";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import FaqSection from "@/components/faq/FaqSection";
+import type { FaqItem } from "@/lib/faq/content";
 import styles from "./CategoryPageView.module.css";
 
 export interface CategoryPageViewProps {
   dictionary: Dictionary;
   locale: Locale;
   path: string[];
+  faq?: FaqItem[];
+  faqHeading?: string;
 }
 
 // Keep the mounted reading while its translated catalog is loading (or retrying).
@@ -44,6 +48,8 @@ function CategoryPageContent({
   dictionary,
   locale,
   path,
+  faq = [],
+  faqHeading = "",
 }: CategoryPageViewProps) {
   const pathKey = path.join("/");
   const categoryRequest = useCategories();
@@ -129,6 +135,11 @@ function CategoryPageContent({
               />
             ) : <CatalogStatus locale={locale} status="error" retry={needsDefaultSpread ? allSpreads.retry : spreads.retry} />}
           </>
+        )}
+        {!status && current && faq.length > 0 && (
+          <div className={styles.faqWrap}>
+            <FaqSection heading={faqHeading} items={faq} />
+          </div>
         )}
         <Footer dictionary={dictionary.footer} locale={locale} />
       </div>

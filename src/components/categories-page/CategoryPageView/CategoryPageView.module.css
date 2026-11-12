@@ -51,9 +51,35 @@
   z-index: 1;
 }
 
+.faqWrap {
+  width: calc(100% - 120px);
+  padding: 48px 64px 64px;
+  border: 1px solid var(--color-white-40);
+  border-radius: var(--radius-panel);
+  margin: 5.556vw 0 24px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-light);
+}
+
+@media (min-width: 1441px) {
+  .faqWrap {
+    margin: 80px 0 24px;
+  }
+}
+
 @media (max-width: 768px) {
   .page {
     border: none;
     border-radius: 0;
+  }
+
+  .faqWrap {
+    width: 100%;
+    padding: 0 16px 48px;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    /* background: transparent; */
+    box-shadow: none;
   }
 }
