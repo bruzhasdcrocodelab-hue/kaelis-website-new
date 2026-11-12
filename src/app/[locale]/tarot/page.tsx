@@ -8,6 +8,8 @@ import { dictionaries } from "@/lang";
 import { loadPublicTarotCatalog } from "@/lib/categories/server";
 import { pageMetadata, pageTitle } from "@/lib/seo";
 
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isUrlLocale(locale)) notFound();
