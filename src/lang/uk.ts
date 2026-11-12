@@ -6,6 +6,7 @@ const uk: Dictionary = {
     nav: {
       tarotSpreads: "Розклади Таро",
       ourApp: "Наш додаток",
+      faq: "Запитання та відповіді",
       termsOfUse: "Умови використання",
     },
     allTarotSpreads: "Всі розклади Таро",

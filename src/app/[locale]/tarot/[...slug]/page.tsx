@@ -8,6 +8,7 @@ import { defaultSpreadSlug, resolveCatalogPath } from "@/lib/categories/catalog"
 import { loadPublicCategories, loadPublicSpreads, loadPublicTarotCatalog } from "@/lib/categories/server";
 import { pageMetadata, pageTitle, resolveTarotSeo, siteOrigin } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
+import { faqPageContent, tarotFaq } from "@/lib/faq/content";
 
 type Props = { params: Promise<{ locale: string; slug: string[] }> };
 
@@ -62,6 +63,7 @@ export default async function Category({ params }: Props) {
   const resolved = resolveCatalogPath(categories, spreads, slug, defaultSpread);
   if (!resolved) notFound();
   const current = resolved.spread ?? resolved.category;
+  const faq = seo.entry.faq?.length ? seo.entry.faq : tarotFaq(language, seo.entry.h1 ?? current.name);
   const breadcrumbs = [
     { name: dictionaries[language].header.logo, path: "/" },
     { name: dictionaries[language].header.allTarotSpreads, path: "/tarot" },
@@ -83,16 +85,22 @@ export default async function Category({ params }: Props) {
         item: new URL(localizedHref(language, item.path), siteOrigin).toString(),
       })),
     }} />
-    {seo.entry.faq?.length ? <JsonLd data={{
+    {faq.length ? <JsonLd data={{
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: seo.entry.faq.map((item) => ({
+      mainEntity: faq.map((item) => ({
         "@type": "Question",
         name: item.question,
         acceptedAnswer: { "@type": "Answer", text: item.answer },
       })),
     }} /> : null}
     <RouteAnalytics pathname={`/${locale}${seo.path}`} pageTitle={pageTitle(language, seo.path)} />
-    <CategoryPageView dictionary={dictionaries[language]} locale={language} path={slug} />
+    <CategoryPageView
+      dictionary={dictionaries[language]}
+      locale={language}
+      path={slug}
+      faq={faq}
+      faqHeading={faqPageContent[language].heading}
+    />
   </CatalogProvider>;
 }

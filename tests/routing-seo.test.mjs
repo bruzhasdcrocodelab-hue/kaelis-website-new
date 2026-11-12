@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { routing, seo, seoContent } from "./routing-fixture.mjs";
+import { faq, routing, seo, seoContent } from "./routing-fixture.mjs";
 
 test("localized links preserve logical pages, query, hash and backend language", () => {
   for (const [locale, prefix] of [["en", "en"], ["ru", "ru"], ["uk", "ua"]]) {
@@ -82,6 +82,17 @@ test("metadata uses localized SEO fields, a shared OG image, and safe limits", (
       assert.ok(current.title.absolute.length <= 60, `${locale}: ${path}`);
       assert.ok(current.description.length <= 160, `${locale}: ${path}`);
       assert.doesNotMatch(current.description, /\p{Extended_Pictographic}/u, `${locale}: ${path}`);
+    }
+  }
+});
+
+test("FAQ content is localized, visible-data ready, and has indexable metadata", () => {
+  for (const locale of ["en", "ru", "uk"]) {
+    assert.ok(seoContent[locale]["/faq"]);
+    assert.equal(seo.pageMetadata(locale, "/faq").alternates.canonical, `/${locale === "uk" ? "ua" : locale}/faq`);
+    assert.ok(faq.faqPageContent[locale].items.length >= 3);
+    for (const path of Object.keys(seoContent[locale]).filter((item) => item.startsWith("/tarot/"))) {
+      assert.equal(faq.tarotFaq(locale, seoContent[locale][path].h1).length, 3, `${locale}: ${path}`);
     }
   }
 });

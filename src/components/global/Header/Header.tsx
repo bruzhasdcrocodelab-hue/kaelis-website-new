@@ -38,6 +38,9 @@ export default function Header({ dictionary, locale }: HeaderProps) {
             {dictionary.nav.tarotSpreads}
           </TarotSpreadsLink>
           <OurAppLink className={styles.navLink}>{dictionary.nav.ourApp}</OurAppLink>
+          <Link href="/faq" className={styles.navLink} lang={locale}>
+            {dictionary.nav.faq}
+          </Link>
           <Link href={policyHref(locale, "terms-of-use")} className={styles.navLink} lang={locale}>
             {dictionary.nav.termsOfUse}
           </Link>

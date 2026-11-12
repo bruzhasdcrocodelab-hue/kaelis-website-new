@@ -4,6 +4,7 @@ const en = {
     nav: {
       tarotSpreads: "Tarot Spreads",
       ourApp: "Our App",
+      faq: "FAQ",
       termsOfUse: "Terms of Use",
     },
     allTarotSpreads: "All Tarot Spreads",

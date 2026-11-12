@@ -187,6 +187,15 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
             </OurAppLink>
             <div className={styles.divider} />
             <Link
+              href="/faq"
+              role="menuitem"
+              className={`font-instrument-sm-emphasized ${styles.item}`}
+              onClick={closeMenu}
+            >
+              {dictionary.nav.faq}
+            </Link>
+            <div className={styles.divider} />
+            <Link
               href={policyHref(locale, "terms-of-use")}
               role="menuitem"
               className={`font-instrument-sm-emphasized ${styles.item}`}

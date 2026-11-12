@@ -22,3 +22,8 @@ const seoUrl = `data:text/javascript;base64,${Buffer.from(seoOutput
   .replace('"@/lib/routing"', JSON.stringify(routingUrl))
   .replace('"./content.json"', JSON.stringify(contentUrl))).toString("base64")}`;
 export const seo = await import(seoUrl);
+const faqSource = await readFile(new URL("../src/lib/faq/content.ts", import.meta.url), "utf8");
+const faqOutput = ts.transpileModule(faqSource, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 },
+}).outputText;
+export const faq = await import(`data:text/javascript;base64,${Buffer.from(faqOutput).toString("base64")}`);

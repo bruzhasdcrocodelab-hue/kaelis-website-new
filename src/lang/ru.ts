@@ -6,6 +6,7 @@ const ru: Dictionary = {
     nav: {
       tarotSpreads: "Расклады Таро",
       ourApp: "Наше приложение",
+      faq: "Вопросы и ответы",
       termsOfUse: "Условия использования",
     },
     allTarotSpreads: "Все расклады Таро",
