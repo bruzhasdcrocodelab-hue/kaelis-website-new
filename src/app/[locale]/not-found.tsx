@@ -1,4 +1,5 @@
-import { getLocale } from "@/lib/locale";
+import { locale as rootLocale } from "next/root-params";
+import { isUrlLocale, toLocale } from "@/lib/routing";
 
 const messages = {
   en: { title: "Page not found", description: "The page you requested does not exist." },
@@ -7,7 +8,8 @@ const messages = {
 };
 
 export default async function LocaleNotFound() {
-  const locale = await getLocale();
+  const urlLocale = (await rootLocale()) ?? "";
+  const locale = isUrlLocale(urlLocale) ? toLocale(urlLocale) : "en";
   const message = messages[locale];
   return <main>
     <h1>{message.title}</h1>

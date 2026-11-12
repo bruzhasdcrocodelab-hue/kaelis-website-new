@@ -5,11 +5,36 @@ import CatalogProvider from "@/components/categories/CatalogProvider";
 import CategoryPageView from "@/components/categories-page/CategoryPageView";
 import { dictionaries } from "@/lang";
 import { defaultSpreadSlug, resolveCatalogPath } from "@/lib/categories/catalog";
-import { loadPublicCategories, loadPublicSpreads } from "@/lib/categories/server";
+import { loadPublicCategories, loadPublicSpreads, loadPublicTarotCatalog } from "@/lib/categories/server";
 import { pageMetadata, pageTitle, resolveTarotSeo, siteOrigin } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 
 type Props = { params: Promise<{ locale: string; slug: string[] }> };
+
+export const revalidate = 3600;
+
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  if (!isUrlLocale(params.locale)) return [];
+  const language = toLocale(params.locale);
+  const [catalog, allSpreads] = await Promise.all([
+    loadPublicTarotCatalog(language),
+    loadPublicSpreads(language, null),
+  ]);
+  const routes: Array<{ slug: string[] }> = [];
+  for (const category of catalog.categories) {
+    const categorySpreads = catalog.spreadsByCategory[category.id] ?? [];
+    const defaultSlug = defaultSpreadSlug(category.slug, categorySpreads);
+    const defaultSpread = allSpreads.find((spread) => spread.slug === defaultSlug);
+    if (resolveCatalogPath(catalog.categories, categorySpreads, [category.slug], defaultSpread) && resolveTarotSeo(language, [category.slug])) {
+      routes.push({ slug: [category.slug] });
+    }
+    for (const spread of categorySpreads) {
+      const slug = [category.slug, spread.slug];
+      if (resolveCatalogPath(catalog.categories, categorySpreads, slug) && resolveTarotSeo(language, slug)) routes.push({ slug });
+    }
+  }
+  return routes;
+}
 
 export async function generateMetadata({ params }: Props) {
   const { locale, slug } = await params;

@@ -1,6 +1,4 @@
 import "./globals.css";
-import { htmlLang } from "@/lang";
-import { getLocale } from "@/lib/locale";
 
 const messages = {
   en: { title: "Page not found", description: "The page you requested does not exist." },
@@ -8,10 +6,9 @@ const messages = {
   uk: { title: "Сторінку не знайдено", description: "Запитуваної сторінки не існує." },
 };
 
-export default async function GlobalNotFound() {
-  const locale = await getLocale();
-  const message = messages[locale];
-  return <html lang={htmlLang[locale]}>
+export default function GlobalNotFound() {
+  const message = messages.en;
+  return <html lang="en">
     <body>
       <main>
         <h1>{message.title}</h1>

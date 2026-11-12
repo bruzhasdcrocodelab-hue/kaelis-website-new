@@ -51,7 +51,7 @@
 - В locale root layout вывести JSON-LD `Organization` и `WebSite`; на страницах раскладов — `BreadcrumbList`; `FAQPage` — только когда у записи действительно есть FAQ. Сериализовать JSON-LD безопасно для `<script>`.
 - Добавить локализованный `not-found.tsx` под `[locale]`, чтобы 404 использовала текущий `lang` и не публиковала неверные canonical/hreflang.
 
-## Задача 10: ISR и CDN
+## Задача 10: ISR и CDN — выполнено
 
 - Для locale-layout и публичных страниц экспортировать `generateStaticParams` для `en`, `ru`, `ua`; для `/tarot` и `/tarot/[...slug]` сгенерировать полный разрешённый список маршрутов.
 - Установить `revalidate = 3600` для хаба и раскладов, а публичные server fetch выполнять с тем же временем revalidation. Не включать новый Cache Components режим: обычная ISR-схема достаточна и не затрагивает существующий client flow.
