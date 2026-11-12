@@ -114,6 +114,7 @@ function CategoryPageContent({
               path={path}
               returnHref={returnHref}
               returnLabel={returnLabel}
+              description={resolved?.spread?.description || current.site_description}
             />
           </>
         )}
