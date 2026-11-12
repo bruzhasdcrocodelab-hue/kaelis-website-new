@@ -14,14 +14,12 @@ import "../globals.css";
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant-garamond",
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "700"],
   style: ["normal", "italic"],
 });
 
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
   style: "normal",
 });
 
