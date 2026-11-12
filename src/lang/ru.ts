@@ -24,9 +24,9 @@ const ru: Dictionary = {
     },
   },
   hero: {
-    titleLine1: "Ваш ИИ-проводник",
+    titleLine1: "Ваш проводник",
     titleToThe: "в мир",
-    titleHighlight: "Эзотерики",
+    titleHighlight: "Таро",
     titleWorld: "",
     description: "ИИ-расклады Таро для ясности, направления и самопознания.",
     cta: "Выберите расклад, чтобы начать гадание",

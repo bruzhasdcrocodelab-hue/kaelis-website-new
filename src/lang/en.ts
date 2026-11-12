@@ -22,9 +22,9 @@ const en = {
     },
   },
   hero: {
-    titleLine1: "Your AI Guide",
+    titleLine1: "Your Guide",
     titleToThe: "to the",
-    titleHighlight: "Esoteric",
+    titleHighlight: "Tarot",
     titleWorld: "World",
     description: "AI-powered tarot readings crafted for clarity,\nguidance, and self-discovery.",
     cta: "Pick a Spread to Start Your Reading",
