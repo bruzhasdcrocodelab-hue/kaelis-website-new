@@ -261,6 +261,7 @@ interface FlippableCardProps {
   card: CardSpec;
   isHovered: boolean;
   isDealt: boolean;
+  suspended: boolean;
   zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
@@ -272,6 +273,7 @@ function FlippableCard({
   card,
   isHovered,
   isDealt,
+  suspended,
   zIndex,
   onHoverStart,
   onHoverEnd,
@@ -353,7 +355,7 @@ function FlippableCard({
             {!showFront && <CardTitle title={card.alt} cardKey={card.key} side="back" />}
             {frontAssets && (
               <>
-                <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+                <AnimatedCardFront visible={showFront} active={frontReady && isHovered && !suspended} warm={isHovered} suspended={suspended} assets={frontAssets} />
                 {showFront && <CardTitle title={card.alt} cardKey={card.key} side="front" />}
               </>
             )}
@@ -386,45 +388,49 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
       className={styles.cardsFan}
       style={isMobile ? undefined : { height: desktopCardsFanHeight(scale) }}
     >
-      <div
-        className={styles.inner}
-        style={{
-          width: DESKTOP_STAGE_W,
-          height: DESKTOP_INNER_H,
-          transform: `scale(${scale})`,
-        }}
-      >
-        {cards.map((card, index) => (
-          <FlippableCard
-            key={card.key}
-            card={card}
-            isHovered={selectedSlug === card.slug || pendingSlug === card.slug || hoveredIndex === index}
-            isSelected={selectedSlug === card.slug}
-            onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
-            isDealt={isDealt}
-            /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
-            zIndex={index}
-            onHoverStart={() => { if (!pendingSlug) onCardHoverChange(index); }}
-            onHoverEnd={() => onCardHoverChange(null)}
-          />
-        ))}
-      </div>
-      <MobileCardsFan
-        dictionary={dictionary}
-        hoveredIndex={hoveredIndex}
-        onCardHoverChange={onCardHoverChange}
-        selectedSlug={selectedSlug}
-        pendingSlug={pendingSlug}
-        onCardSelect={onCardSelect}
-      />
+      {!isMobile && (
+        <div
+          className={styles.inner}
+          style={{
+            width: DESKTOP_STAGE_W,
+            height: DESKTOP_INNER_H,
+            transform: `scale(${scale})`,
+          }}
+        >
+          {cards.map((card, index) => (
+            <FlippableCard
+              key={card.key}
+              card={card}
+              isHovered={selectedSlug === card.slug || pendingSlug === card.slug || hoveredIndex === index}
+              isSelected={selectedSlug === card.slug}
+              onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
+              isDealt={isDealt}
+            suspended={Boolean(pendingSlug)}
+              /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
+              zIndex={index}
+              onHoverStart={() => { if (!pendingSlug) onCardHoverChange(index); }}
+              onHoverEnd={() => onCardHoverChange(null)}
+            />
+          ))}
+        </div>
+      )}
+      {isMobile && (
+        <MobileCardsFan
+          dictionary={dictionary}
+          hoveredIndex={hoveredIndex}
+          onCardHoverChange={onCardHoverChange}
+          selectedSlug={selectedSlug}
+          pendingSlug={pendingSlug}
+          onCardSelect={onCardSelect}
+        />
+      )}
     </div>
   );
 }
 
 /* ---------------------------------------------------------------------------
  * Mobile: two synchronised fans (back row + front row) mirroring the desktop
- * deal + hover-flip animation. Rendered alongside the desktop fan and toggled
- * by CSS at the 768px breakpoint.
+ * deal + hover-flip animation.
  *
  * The fan is laid out in a fixed design coordinate space (MOBILE_STAGE_W wide)
  * and the whole stage is scaled by CSS to the viewport (see mobileFanScale), so
@@ -561,6 +567,7 @@ interface MobileFlippableCardProps {
   rowCenterCx: number;
   isHovered: boolean;
   isDealt: boolean;
+  suspended: boolean;
   zIndex: number;
   onHoverStart: () => void;
   onHoverEnd: () => void;
@@ -573,6 +580,7 @@ function MobileFlippableCard({
   rowCenterCx,
   isHovered,
   isDealt,
+  suspended,
   zIndex,
   onHoverStart,
   onHoverEnd,
@@ -639,7 +647,7 @@ function MobileFlippableCard({
           {!showFront && card.slug && <CardTitle title={card.alt} cardKey={card.key} side="back" />}
           {frontAssets && (
             <>
-              <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+              <AnimatedCardFront visible={showFront} active={frontReady && isHovered && !suspended} warm={isHovered} suspended={suspended} assets={frontAssets} />
               {showFront && <CardTitle title={card.alt} cardKey={card.key} side="front" />}
             </>
           )}
@@ -713,6 +721,7 @@ function MobileCardsFan({ dictionary, hoveredIndex, onCardHoverChange, selectedS
           isSelected={selectedSlug === card.slug}
           onSelect={() => { if (card.slug) { onCardHoverChange(null); onCardSelect(card.slug); } }}
           isDealt={isDealt}
+          suspended={Boolean(pendingSlug)}
           zIndex={rowBaseZ + i}
           onHoverStart={() => { if (!pendingSlug) onCardHoverChange(globalIndex); }}
           onHoverEnd={() => onCardHoverChange(null)}

@@ -551,6 +551,10 @@
   animation: answerGlow 2.5s ease-in-out infinite;
 }
 
+.mobileControls[data-answer-glow-paused] > .answerButton:not(:disabled)::before {
+  animation-play-state: paused;
+}
+
 @keyframes answerGlow {
   0%,
   100% {

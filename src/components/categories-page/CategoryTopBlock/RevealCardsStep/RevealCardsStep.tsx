@@ -88,7 +88,9 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   const [answerVisible, setAnswerVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [answerGlowPaused, setAnswerGlowPaused] = useState(false);
   const [sheet, setSheet] = useState<"card" | "answer" | null>(null);
+  const mobileControlsRef = useRef<HTMLDivElement>(null);
   const landed = useRef(new Set<string>());
   const flipped = useRef(new Set<string>());
   const pointerStart = useRef<Point | null>(null);
@@ -113,6 +115,17 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     media.addEventListener("change", resize);
     return () => { cancelAnimationFrame(frame); media.removeEventListener("change", resize); };
   }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const controls = mobileControlsRef.current;
+    if (!controls) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setAnswerGlowPaused(!entry.isIntersecting || entry.intersectionRect.width === 0 || entry.intersectionRect.height === 0);
+    }, { rootMargin: "120px" });
+    observer.observe(controls);
+    return () => observer.disconnect();
+  }, [isMobile]);
 
   // Focus only on the first real card; later selections leave the user's viewport intact.
   const firstPosition = cards[0]?.position;
@@ -200,7 +213,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
       {error && <div className={styles.readingError} role="alert">{error} <button type="button" onClick={onRetry}>{text.retry}</button></div>}
     </div>
     {isMobile && <p className={styles.mobileHint}>{labels.chooseCard}</p>}
-    {isMobile && <div className={styles.mobileControls} data-reveal-controls inert={!sessionActive} aria-hidden={!sessionActive}>
+    {isMobile && <div ref={mobileControlsRef} className={styles.mobileControls} data-reveal-controls data-answer-glow-paused={answerGlowPaused || undefined} inert={!sessionActive} aria-hidden={!sessionActive}>
       <MainButton variant="gradient" size="large" icon="/icons/sparkles.svg" className={styles.answerButton} disabled={phase !== "ready"}
         onClick={() => { setSelectedPosition(null); setSheet("answer"); }}>{labels.seeAnswer}</MainButton>
       <MainButton variant="default" size="large" icon="/icons/right-arrow.svg" muted onClick={onStartOver}>{labels.restart}</MainButton>

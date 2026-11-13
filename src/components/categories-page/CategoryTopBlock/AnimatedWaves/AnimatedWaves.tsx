@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useSyncExternalStore, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { animate, interpolate, motion, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 
 /**
@@ -183,13 +183,21 @@ const frames = (() => {
 
 const ribbonAt = interpolate(frames.map((_, index) => index / PHASE_FRAMES), frames);
 
-function AnimatedRibbonPath({ id }: { id: string }) {
+function AnimatedRibbonPath({ id, paused }: { id: string; paused: boolean }) {
   const progress = useMotionValue(0);
   const d = useTransform(progress, ribbonAt);
+  const controlsRef = useRef<ReturnType<typeof animate> | undefined>(undefined);
+  const initiallyPaused = useRef(paused);
   useEffect(() => {
     const animation = animate(progress, 1, { duration: LOOP_DURATION_SECONDS, ease: "linear", repeat: Infinity, repeatType: "loop" });
+    controlsRef.current = animation;
+    if (initiallyPaused.current) animation.pause();
     return () => animation.stop();
   }, [progress]);
+  useEffect(() => {
+    if (paused) controlsRef.current?.pause();
+    else controlsRef.current?.play();
+  }, [paused]);
   return <motion.path id={id} fill="#fff" d={d} />;
 }
 
@@ -230,6 +238,7 @@ function RibbonSide({ pathId, maskId, gradientId, mirror }: RibbonSideProps) {
 export interface AnimatedWavesProps {
   className?: string;
   style?: CSSProperties;
+  active?: boolean;
 }
 
 const desktopSnapshot = () => window.matchMedia("(min-width: 769px)").matches;
@@ -240,19 +249,32 @@ const subscribeViewport = (listener: () => void) => {
   return () => media.removeEventListener("change", listener);
 };
 
-export default function AnimatedWaves({ className, style }: AnimatedWavesProps) {
+export default function AnimatedWaves({ className, style, active = true }: AnimatedWavesProps) {
   const prefersReducedMotion = useReducedMotion();
   const desktop = useSyncExternalStore(subscribeViewport, desktopSnapshot, serverSnapshot);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [inView, setInView] = useState(true);
   const rawId = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const leftMaskId = `waves-mask-l-${rawId}`;
   const rightMaskId = `waves-mask-r-${rawId}`;
   const gradId = `waves-grad-${rawId}`;
   const pathId = `waves-path-${rawId}`;
 
-  const animated = desktop && !prefersReducedMotion;
+  const animated = active && desktop && !prefersReducedMotion;
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setInView(entry.isIntersecting && entry.intersectionRect.width > 0 && entry.intersectionRect.height > 0);
+    }, { rootMargin: "120px" });
+    observer.observe(svg);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <svg
+      ref={svgRef}
       width={VIEW_W}
       height={VIEW_H}
       viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
@@ -263,7 +285,7 @@ export default function AnimatedWaves({ className, style }: AnimatedWavesProps) 
       aria-hidden
     >
       <defs>
-        {animated ? <AnimatedRibbonPath id={pathId} /> : <path id={pathId} d={frames[0]} fill="#fff" />}
+        {animated ? <AnimatedRibbonPath id={pathId} paused={!inView} /> : <path id={pathId} d={frames[0]} fill="#fff" />}
         {/* Plain vertical pink-to-transparent wash from the mock token. Shared
             by both ribbons (a vertical gradient needs no mirroring). */}
         <linearGradient

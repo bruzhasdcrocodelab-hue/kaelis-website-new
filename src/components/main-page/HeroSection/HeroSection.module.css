@@ -209,7 +209,7 @@
 
   .titleHighlight {
     /* letter-spacing still scales via --tracking-hero-highlight-fluid */
-    padding: 0;
+    padding: 0 10px 0 0;
     margin: 0;
     font-size: clamp(40px, 12.55vw, 96.4px);
   }

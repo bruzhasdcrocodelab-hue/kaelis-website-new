@@ -56,6 +56,14 @@
   animation: constellationSpinReverse 55s linear infinite;
 }
 
+.pattern[data-paused] .spinClockwise,
+.pattern[data-paused] .spinCounterClockwise,
+.pattern[data-paused] .spinClockwiseRelativeToCounterRing,
+.pattern[data-paused] .orbitClockwise,
+.pattern[data-paused] .orbitCounterClockwise {
+  animation-play-state: paused;
+}
+
 @keyframes constellationSpin {
   from {
     transform: rotate(0deg);

@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import styles from "./ConstellationPattern.module.css";
 
 /**
@@ -133,10 +136,25 @@ const ELLIPSE_R = 20.2796;
 const ELLIPSE9_R = 14.2709;
 
 export default function ConstellationPattern() {
+  const ref = useRef<SVGSVGElement>(null);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    const pattern = ref.current;
+    if (!pattern) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setPaused(!entry.isIntersecting || entry.intersectionRect.width === 0 || entry.intersectionRect.height === 0);
+    }, { rootMargin: "160px" });
+    observer.observe(pattern);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <svg
+      ref={ref}
       data-subcategory-pattern
       className={styles.pattern}
+      data-paused={paused || undefined}
       width="1580"
       height="764"
       viewBox="0 0 1580 764"

@@ -29,6 +29,10 @@
   animation: starTwinkle 4s ease-in-out infinite;
 }
 
+.star[data-paused] {
+  animation-play-state: paused;
+}
+
 @keyframes starTwinkle {
   0%,
   100% {
