@@ -81,6 +81,11 @@
   white-space: nowrap;
 }
 
+:global(html[lang^="ru"]) .cardTitle,
+:global(html[lang^="uk"]) .cardTitle {
+  font-family: var(--font-cormorant-garamond);
+}
+
 .cardTitleBack {
   top: 7.195%;
   left: 50%;
