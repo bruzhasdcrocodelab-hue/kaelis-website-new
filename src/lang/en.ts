@@ -38,6 +38,12 @@ const en = {
     confirm: "Switch Reading",
     cancel: "Continue Reading",
   },
+  notFound: {
+    eyebrow: "Error 404",
+    title: "Page not found",
+    description: "The page you requested does not exist or has moved.",
+    action: "Return to Home",
+  },
   cards: {
     love: "Love",
     yesNo: "Yes/No",
