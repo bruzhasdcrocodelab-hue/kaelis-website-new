@@ -106,14 +106,6 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
         tabIndex={-1}
         onError={(event) => { event.currentTarget.style.visibility = "hidden"; }}
       />
-      <Image
-        className={styles.layer}
-        src={assets.title}
-        alt=""
-        fill
-        loading="eager"
-        unoptimized
-      />
     </div>
   );
 }
