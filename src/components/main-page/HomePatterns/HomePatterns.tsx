@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo } from "react";
+import { useEffect, useId, useMemo, useRef } from "react";
 import { motion, useAnimate, type AnimationSequence } from "motion/react";
 import PatternArtwork from "./PatternArtwork";
 import { desktopCenter, desktopSide, mobileCenter, mobileSide } from "./patternData";
@@ -15,6 +15,13 @@ const contentMaskRegion = {
   y: "-10%",
   width: "120%",
   height: "120%",
+};
+
+const patternMaskRegions: Record<string, { x: number; y: number; width: number; height: number }> = {
+  "2424:2818": { x: 297, y: 189, width: 251, height: 250 },
+  "2424:2876": { x: 280, y: -40, width: 232, height: 860 },
+  "2453:1487": { x: 136, y: 82, width: 151, height: 150 },
+  "2453:1514": { x: 116, y: -204, width: 164, height: 635 },
 };
 
 function Layer({ layer, prefix }: { layer: PatternLayer; prefix: string }) {
@@ -42,7 +49,7 @@ function Layers({ nodes, prefix, boundedMasks = false }: { nodes: PatternNode[];
       <g key={maskId} transform={node.translateY ? `translate(0 ${node.translateY})` : undefined}>
         {node.mask && (
           <defs>
-            <mask id={maskId} className={styles.mask} {...(boundedMasks ? contentMaskRegion : { maskUnits: "userSpaceOnUse", x: -1000, y: -1000, width: 3000, height: 3000 })}>
+            <mask id={maskId} className={styles.mask} {...(boundedMasks ? contentMaskRegion : { maskUnits: "userSpaceOnUse", ...patternMaskRegions[node.mask.id] })}>
               <Layer layer={node.mask} prefix={`${prefix}-mask`} />
             </mask>
           </defs>
@@ -90,11 +97,14 @@ export default function HomePatterns() {
 function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDefinition[]; gradient?: boolean }) {
   const prefix = useId().replace(/:/g, "");
   const [scope, animate] = useAnimate<HTMLDivElement>();
+  const visibilityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 768px)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let stop = () => {};
+    let playback: ReturnType<typeof animate> | undefined;
+    let patternsVisible = true;
 
     function start() {
       stop();
@@ -129,18 +139,26 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
 
       if (!sequence.length) return;
 
-      const playback = animate(sequence, { repeat: Infinity });
+      playback = animate(sequence, { repeat: Infinity });
+      if (!patternsVisible) playback.pause();
       stop = () => {
-        playback.stop();
+        playback?.stop();
         resets.forEach(reset => reset());
       };
     }
 
     start();
+    const observer = new IntersectionObserver(([entry]) => {
+      patternsVisible = entry.isIntersecting && entry.intersectionRect.width > 0 && entry.intersectionRect.height > 0;
+      if (patternsVisible) playback?.play();
+      else playback?.pause();
+    });
+    if (visibilityRef.current) observer.observe(visibilityRef.current);
     mobile.addEventListener("change", start);
     reduced.addEventListener("change", start);
     return () => {
       stop();
+      observer.disconnect();
       mobile.removeEventListener("change", start);
       reduced.removeEventListener("change", start);
     };
@@ -148,6 +166,7 @@ function AnimatedPatterns({ patterns, gradient = false }: { patterns: PatternDef
 
   return (
     <div ref={scope} className={styles.scope} aria-hidden="true">
+      <div ref={visibilityRef} className={styles.visibilityTarget} />
       {patterns.map(pattern => {
         const name = `${pattern.mobile ? "mobile" : "desktop"}-${pattern.name}`;
         const side = pattern.name !== "center";

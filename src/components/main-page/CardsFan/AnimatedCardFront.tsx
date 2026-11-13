@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { CardFrontAssets } from "./cardFrontAssets";
 import styles from "./AnimatedCardFront.module.css";
 
-export default function AnimatedCardFront({ active, visible, assets }: { active: boolean; visible: boolean; assets: CardFrontAssets }) {
+export default function AnimatedCardFront({ active, visible, warm, assets }: { active: boolean; visible: boolean; warm: boolean; assets: CardFrontAssets }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -33,8 +33,11 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
     };
 
     const update = () => {
-      if (inView && !reducedMotion.matches && !video.getAttribute("src")) {
+      const shouldLoad = warm && inView && !reducedMotion.matches;
+      if (shouldLoad && !video.getAttribute("src")) {
+        video.preload = "auto";
         video.src = assets.video;
+        video.load();
       }
       const shouldPlay = active && inView && !document.hidden && !reducedMotion.matches;
       if (!inView || document.hidden || reducedMotion.matches) video.style.visibility = "hidden";
@@ -80,7 +83,7 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
       document.removeEventListener("visibilitychange", update);
       reducedMotion.removeEventListener("change", update);
     };
-  }, [active, assets.video]);
+  }, [active, assets.video, warm]);
 
   return (
     <div ref={rootRef} className={styles.front} style={{ opacity: visible ? 1 : 0 }} aria-hidden="true">
@@ -99,7 +102,7 @@ export default function AnimatedCardFront({ active, visible, assets }: { active:
         poster={assets.poster}
         width={618}
         height={1098}
-        preload="auto"
+        preload="none"
         muted
         playsInline
         loop

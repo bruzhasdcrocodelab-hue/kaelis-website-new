@@ -353,7 +353,7 @@ function FlippableCard({
             {!showFront && <CardTitle title={card.alt} cardKey={card.key} side="back" />}
             {frontAssets && (
               <>
-                <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+                <AnimatedCardFront visible={showFront} active={frontReady && isHovered} warm={isHovered} assets={frontAssets} />
                 {showFront && <CardTitle title={card.alt} cardKey={card.key} side="front" />}
               </>
             )}
@@ -386,37 +386,41 @@ export default function CardsFan({ dictionary, hoveredIndex, onCardHoverChange, 
       className={styles.cardsFan}
       style={isMobile ? undefined : { height: desktopCardsFanHeight(scale) }}
     >
-      <div
-        className={styles.inner}
-        style={{
-          width: DESKTOP_STAGE_W,
-          height: DESKTOP_INNER_H,
-          transform: `scale(${scale})`,
-        }}
-      >
-        {cards.map((card, index) => (
-          <FlippableCard
-            key={card.key}
-            card={card}
-            isHovered={selectedSlug === card.slug || pendingSlug === card.slug || hoveredIndex === index}
-            isSelected={selectedSlug === card.slug}
-            onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
-            isDealt={isDealt}
-            /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
-            zIndex={index}
-            onHoverStart={() => { if (!pendingSlug) onCardHoverChange(index); }}
-            onHoverEnd={() => onCardHoverChange(null)}
-          />
-        ))}
-      </div>
-      <MobileCardsFan
-        dictionary={dictionary}
-        hoveredIndex={hoveredIndex}
-        onCardHoverChange={onCardHoverChange}
-        selectedSlug={selectedSlug}
-        pendingSlug={pendingSlug}
-        onCardSelect={onCardSelect}
-      />
+      {!isMobile && (
+        <div
+          className={styles.inner}
+          style={{
+            width: DESKTOP_STAGE_W,
+            height: DESKTOP_INNER_H,
+            transform: `scale(${scale})`,
+          }}
+        >
+          {cards.map((card, index) => (
+            <FlippableCard
+              key={card.key}
+              card={card}
+              isHovered={selectedSlug === card.slug || pendingSlug === card.slug || hoveredIndex === index}
+              isSelected={selectedSlug === card.slug}
+              onSelect={() => { onCardHoverChange(null); onCardSelect(card.slug); }}
+              isDealt={isDealt}
+              /* Overlap runs left → right: leftmost card sits lowest, rightmost highest. */
+              zIndex={index}
+              onHoverStart={() => { if (!pendingSlug) onCardHoverChange(index); }}
+              onHoverEnd={() => onCardHoverChange(null)}
+            />
+          ))}
+        </div>
+      )}
+      {isMobile && (
+        <MobileCardsFan
+          dictionary={dictionary}
+          hoveredIndex={hoveredIndex}
+          onCardHoverChange={onCardHoverChange}
+          selectedSlug={selectedSlug}
+          pendingSlug={pendingSlug}
+          onCardSelect={onCardSelect}
+        />
+      )}
     </div>
   );
 }
@@ -639,7 +643,7 @@ function MobileFlippableCard({
           {!showFront && card.slug && <CardTitle title={card.alt} cardKey={card.key} side="back" />}
           {frontAssets && (
             <>
-              <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+              <AnimatedCardFront visible={showFront} active={frontReady && isHovered} warm={isHovered} assets={frontAssets} />
               {showFront && <CardTitle title={card.alt} cardKey={card.key} side="front" />}
             </>
           )}
