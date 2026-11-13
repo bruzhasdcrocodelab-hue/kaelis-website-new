@@ -1,7 +1,6 @@
 import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import MainButton from "@/components/global/MainButton";
-import HomePatterns from "@/components/main-page/HomePatterns/HomePatterns";
 import type { Dictionary, Locale } from "@/lang";
 import styles from "./NotFoundPageView.module.css";
 
@@ -9,7 +8,6 @@ export default function NotFoundPageView({ dictionary, locale }: { dictionary: D
   const content = dictionary.notFound;
   return <div className={styles.page}>
     <div className={styles.background} aria-hidden="true" />
-    {/* <HomePatterns /> */}
     <div className={styles.content}>
       <Header dictionary={dictionary.header} locale={locale} />
       <main className={styles.main}>
