@@ -5,13 +5,13 @@ import Image from "next/image";
 import type { CardFrontAssets } from "./cardFrontAssets";
 import styles from "./AnimatedCardFront.module.css";
 
-export default function AnimatedCardFront({ active, visible, warm, assets }: { active: boolean; visible: boolean; warm: boolean; assets: CardFrontAssets }) {
+export default function AnimatedCardFront({ active, visible, warm, suspended, assets }: { active: boolean; visible: boolean; warm: boolean; suspended: boolean; assets: CardFrontAssets }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useLayoutEffect(() => {
-    if ((!visible || active) && videoRef.current) videoRef.current.style.visibility = "hidden";
-  }, [active, visible]);
+    if ((!visible || active || suspended) && videoRef.current) videoRef.current.style.visibility = "hidden";
+  }, [active, suspended, visible]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -39,8 +39,8 @@ export default function AnimatedCardFront({ active, visible, warm, assets }: { a
         video.src = assets.video;
         video.load();
       }
-      const shouldPlay = active && inView && !document.hidden && !reducedMotion.matches;
-      if (!inView || document.hidden || reducedMotion.matches) video.style.visibility = "hidden";
+      const shouldPlay = active && !suspended && inView && !document.hidden && !reducedMotion.matches;
+      if (suspended || !inView || document.hidden || reducedMotion.matches) video.style.visibility = "hidden";
       if (shouldPlay === requested) return;
       requested = shouldPlay;
       const attempt = ++generation;
@@ -83,7 +83,7 @@ export default function AnimatedCardFront({ active, visible, warm, assets }: { a
       document.removeEventListener("visibilitychange", update);
       reducedMotion.removeEventListener("change", update);
     };
-  }, [active, assets.video, warm]);
+  }, [active, assets.video, suspended, warm]);
 
   return (
     <div ref={rootRef} className={styles.front} style={{ opacity: visible ? 1 : 0 }} aria-hidden="true">

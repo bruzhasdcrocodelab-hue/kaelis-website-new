@@ -92,7 +92,7 @@ body {
   font-weight: 400;
   font-style: normal;
   font-size: 86px;
-  line-height: 1;
+  /* line-height: 1; */
   letter-spacing: var(--tracking-category-title);
 }
 

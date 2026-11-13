@@ -34,6 +34,7 @@ export interface CategoryTopBlockProps {
   sessionActive?: boolean;
   sessionKey?: number;
   embedded?: boolean;
+  effectsActive?: boolean;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
     retry: () => void;
@@ -45,11 +46,12 @@ type Step = "ask" | "choose" | "reveal";
 type Appearance = { step: Step; hasFan: boolean };
 
 export default function CategoryTopBlock(props: CategoryTopBlockProps) {
-  const { embedded = false, sessionKey = 0 } = props;
+  const { embedded = false, effectsActive = true, sessionKey = 0 } = props;
   const [firstSession] = useState(sessionKey);
   const [{ step, hasFan }, setAppearance] = useState<Appearance>({ step: "ask", hasFan: true });
   const panelRef = useRef<HTMLDivElement>(null);
   const isConfirmed = step === "reveal";
+  const showEffects = !embedded || effectsActive;
   return (
     <section className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
       <div
@@ -60,8 +62,8 @@ export default function CategoryTopBlock(props: CategoryTopBlockProps) {
         style={{
           // Inline so the build's CSS pipeline doesn't drop the unprefixed property:
           // it blurs whatever the page paints behind this panel, within its bounds.
-          backdropFilter: "blur(12.5px)",
-          WebkitBackdropFilter: "blur(12.5px)",
+          backdropFilter: showEffects ? "blur(12.5px)" : "none",
+          WebkitBackdropFilter: showEffects ? "blur(12.5px)" : "none",
         }}
       >
         <Image
@@ -72,9 +74,9 @@ export default function CategoryTopBlock(props: CategoryTopBlockProps) {
           className={`${styles.pattern} ${isConfirmed ? styles.patternBehind : ""}`}
           aria-hidden
         />
-        <AnimatedWaves className={styles.waves} style={{ zIndex: step === "choose" ? 7 : 3 }} />
+        <AnimatedWaves className={styles.waves} style={{ zIndex: step === "choose" ? 7 : 3 }} active={showEffects} />
         {hasFan || step === "choose"
-          ? <WavesLineFrame className={styles.wavesLine} style={{ zIndex: 2 }} />
+          ? <WavesLineFrame className={styles.wavesLine} style={{ filter: showEffects ? undefined : "none", zIndex: 2 }} />
           : <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />}
         <AnimatePresence mode="wait">
           <SessionContent key={sessionKey} {...props} panelRef={panelRef} onAppearance={setAppearance}

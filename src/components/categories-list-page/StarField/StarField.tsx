@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import styles from "./StarField.module.css";
 
 /**
@@ -50,11 +53,26 @@ function twinkleDelay(index: number): number {
 }
 
 export default function StarField() {
+  const starRefs = useRef<Array<HTMLSpanElement | null>>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        entry.target.toggleAttribute("data-paused", !entry.isIntersecting || entry.intersectionRect.width === 0 || entry.intersectionRect.height === 0);
+      }
+    }, { rootMargin: "120px" });
+    starRefs.current.forEach(star => {
+      if (star) observer.observe(star);
+    });
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className={styles.field} aria-hidden>
       {STARS.map((star, i) => (
         <span
           key={i}
+          ref={node => { starRefs.current[i] = node; }}
           className={styles.star}
           style={{
             left: `${star.x}%`,
