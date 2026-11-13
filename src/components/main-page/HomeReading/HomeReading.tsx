@@ -167,7 +167,7 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   }
   return (
     <>
-      <HeroCardsSection locale={locale} heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
+      <HeroCardsSection heroDictionary={dictionary.hero} cardsDictionary={dictionary.cards}
         selectedSlug={selection?.slug ?? null} pendingSlug={pendingSlug} onCardSelect={select} />
       <div className={styles.panels} data-home-panels>
         <AnimatePresence mode="wait" onExitComplete={() => setExiting(false)}>
