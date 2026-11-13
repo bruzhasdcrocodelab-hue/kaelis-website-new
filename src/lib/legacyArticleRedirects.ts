@@ -23,9 +23,9 @@ const locales = ["en", "ru", "ua"] as const;
 
 export const legacyArticleRedirects: Readonly<Record<string, string>> = Object.fromEntries(
   Object.entries(articleRedirects).flatMap(([slug, destination]) =>
-    locales.flatMap(locale => [
-      [`/articles/${slug}-${locale}`, `/${locale}${destination}`],
-      [`/${locale}/articles/${slug}-${locale}`, `/${locale}${destination}`],
+    locales.flatMap(articleLocale => [
+      [`/articles/${slug}-${articleLocale}`, `/${articleLocale}${destination}`],
+      ...locales.map(pathLocale => [`/${pathLocale}/articles/${slug}-${articleLocale}`, `/${pathLocale}${destination}`]),
     ]),
   ),
 );

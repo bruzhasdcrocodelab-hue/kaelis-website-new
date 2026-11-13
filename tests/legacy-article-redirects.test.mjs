@@ -12,7 +12,7 @@ const redirects = await import(`data:text/javascript;base64,${Buffer.from(output
 
 test("every legacy Sanity article URL redirects to a localized canonical tarot route", () => {
   const entries = Object.entries(redirects.legacyArticleRedirects);
-  assert.equal(entries.length, 108);
+  assert.equal(entries.length, 216);
   for (const [sourcePath, destination] of entries) {
     assert.match(sourcePath, /^\/(?:(?:en|ru|ua)\/)?articles\/.+-(en|ru|ua)$/);
     assert.match(destination, /^\/(en|ru|ua)\/tarot(?:\/[a-z0-9-]+){1,2}$/);
@@ -21,6 +21,8 @@ test("every legacy Sanity article URL redirects to a localized canonical tarot r
   }
   assert.equal(redirects.legacyArticleRedirects["/articles/top-5-tarot-spreads-for-love-readings-en"], "/en/tarot/love");
   assert.equal(redirects.legacyArticleRedirects["/en/articles/top-5-tarot-spreads-for-love-readings-en"], "/en/tarot/love");
+  assert.equal(redirects.legacyArticleRedirects["/en/articles/how-to-use-the-celtic-cross-spread-for-deep-insight-ua"], "/en/tarot/answer/celtic-cross");
+  assert.equal(redirects.legacyArticleRedirects["/ru/articles/how-to-use-the-celtic-cross-spread-for-deep-insight-en"], "/ru/tarot/answer/celtic-cross");
   assert.equal(redirects.legacyArticleRedirects["/articles/how-to-use-the-celtic-cross-spread-for-deep-insight-ru"], "/ru/tarot/answer/celtic-cross");
   assert.equal(redirects.legacyArticleRedirects["/articles/unlocking-your-life-path-the-power-of-numerology-ua"], "/ua/tarot/soul-path/whats-inside");
 });
