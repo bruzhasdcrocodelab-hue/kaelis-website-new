@@ -98,12 +98,25 @@ interface CardSpec {
   rotate: number;
 }
 
+type CardTitleSide = "back" | "front";
+
+function CardTitle({ title, cardKey, side }: { title: string; cardKey: string; side: CardTitleSide }) {
+  const multiline = cardKey === "oneCard" || cardKey === "threeCards" || cardKey === "OneCard" || cardKey === "ThreeCards";
+  const words = multiline ? title.split(" ") : [title];
+
+  return (
+    <span className={`${styles.cardTitle} ${styles[`cardTitle${side[0].toUpperCase()}${side.slice(1)}`]} ${multiline ? styles.cardTitleMultiline : ""}`} aria-hidden="true">
+      {words.map((word, index) => <span key={`${word}-${index}`}>{word}</span>)}
+    </span>
+  );
+}
+
 function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
   return [
     {
       key: "love",
       slug: "love",
-      srcBack: "/images/cards-turned/LoveTurned.png",
+      srcBack: "/images/cards-turned/default-turned.png",
       srcFront: "/images/cards/Love.png",
       alt: dictionary.love,
       left: 36,
@@ -115,7 +128,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "yesNo",
       slug: "yes-no",
-      srcBack: "/images/cards-turned/YesNoTurned.png",
+      srcBack: "/images/cards-turned/default-turned.png",
       srcFront: "/images/cards/YesNo.png",
       alt: dictionary.yesNo,
       left: 206.06,
@@ -127,7 +140,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "oneCard",
       slug: "one-card",
-      srcBack: "/images/cards-turned/OneCardTurned.png",
+      srcBack: "/images/cards-turned/default-turned.png",
       srcFront: "/images/cards/OneCard.png",
       alt: dictionary.oneCard,
       left: 383.12,
@@ -139,7 +152,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "threeCards",
       slug: "three-cards",
-      srcBack: "/images/cards-turned/ThreeCardsTurned.png",
+      srcBack: "/images/cards-turned/default-turned.png",
       srcFront: "/images/cards/ThreeCards.png",
       alt: dictionary.threeCards,
       left: 563.51,
@@ -151,7 +164,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "work",
       slug: "work",
-      srcBack: "/images/cards-turned/WorkTurned.png",
+      srcBack: "/images/cards-turned/default-turned.png",
       srcFront: "/images/cards/Work.png",
       alt: dictionary.work,
       left: 715.93,
@@ -163,7 +176,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "family",
       slug: "family",
-      srcBack: "/images/cards-turned/FamilyTurned.png",
+      srcBack: "/images/cards-turned/default-turned.png",
       srcFront: "/images/cards/Family.png",
       alt: dictionary.family,
       left: 866.09,
@@ -175,7 +188,7 @@ function buildCards(dictionary: Dictionary["cards"]): CardSpec[] {
     {
       key: "money",
       slug: "money",
-      srcBack: "/images/cards-turned/MoneyTurned.png",
+      srcBack: "/images/cards-turned/default-turned.png",
       srcFront: "/images/cards/Money.png",
       alt: dictionary.money,
       left: 1013.06,
@@ -337,8 +350,12 @@ function FlippableCard({
           <div className={styles.cardSideInner}>
             <Image src={showFront && !frontAssets ? card.srcFront : card.srcBack} alt={card.alt} fill sizes="165px"
               style={{ visibility: showFront && frontAssets ? "hidden" : "visible" }} />
+            {!showFront && <CardTitle title={card.alt} cardKey={card.key} side="back" />}
             {frontAssets && (
-              <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+              <>
+                <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+                {showFront && <CardTitle title={card.alt} cardKey={card.key} side="front" />}
+              </>
             )}
           </div>
         </motion.div>
@@ -491,7 +508,7 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   ): MobileCardSpec => ({
     key,
     slug,
-    srcBack: `/images/cards-turned/${key}Turned.png`,
+    srcBack: "/images/cards-turned/default-turned.png",
     srcFront: `/images/cards/${key}.png`,
     alt,
     cx: half + slot * backPitch,
@@ -518,7 +535,7 @@ function buildMobileRows(dictionary: Dictionary["cards"]): {
   ): MobileCardSpec => ({
     key,
     slug,
-    srcBack: slug ? `/images/cards-turned/${src}Turned.png` : "/images/cards/default-card.png",
+    srcBack: slug ? "/images/cards-turned/default-turned.png" : "/images/cards/default-card.png",
     srcFront: slug ? `/images/cards/${src}.png` : undefined,
     alt,
     cx: half + cxOffset,
@@ -619,8 +636,12 @@ function MobileFlippableCard({
             sizes="(max-width: 390px) 31.025641vw, (max-width: 768px) calc(104.657143px + 4.190476vw), 165px"
             style={{ visibility: showFront && frontAssets ? "hidden" : "visible" }}
           />
+          {!showFront && card.slug && <CardTitle title={card.alt} cardKey={card.key} side="back" />}
           {frontAssets && (
-            <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+            <>
+              <AnimatedCardFront visible={showFront} active={frontReady && isHovered} assets={frontAssets} />
+              {showFront && <CardTitle title={card.alt} cardKey={card.key} side="front" />}
+            </>
           )}
         </div>
       </motion.div>

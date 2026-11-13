@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import { isUrlLocale, localizedHref, toLocale } from "@/lib/routing";
 import GuestAuth from "@/components/GuestAuth";
 import SiteProviders from "@/components/SiteProviders";
@@ -22,6 +23,12 @@ const manrope = Manrope({
   style: "normal",
 });
 
+const baskervvilleSc = localFont({
+  variable: "--font-baskervville-sc",
+  weight: "400",
+  src: "../fonts/BaskervvilleSC-Regular.ttf",
+});
+
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "ru" }, { locale: "ua" }];
 }
@@ -34,7 +41,7 @@ export default async function LocaleLayout({ children, params }: {
   if (!isUrlLocale(locale)) notFound();
   const language = toLocale(locale);
   const url = new URL(localizedHref(language), siteOrigin).toString();
-  return <html lang={htmlLang[language]} className={`${cormorantGaramond.variable} ${manrope.variable} h-full antialiased`}>
+  return <html lang={htmlLang[language]} className={`${baskervvilleSc.variable} ${cormorantGaramond.variable} ${manrope.variable} h-full antialiased`}>
     <head>
       <meta name="google-site-verification" content="g-jH6mhfzaLWhtC-UJdgtCxQA1kFZ06dp-Vqyn5w5zQ" />
     </head>

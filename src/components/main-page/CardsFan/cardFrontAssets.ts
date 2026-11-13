@@ -1,7 +1,6 @@
 export interface CardFrontAssets {
   video: string;
   poster: string;
-  title: string;
 }
 
 const cardFrontAssets = new Map<string, CardFrontAssets>(
@@ -10,7 +9,6 @@ const cardFrontAssets = new Map<string, CardFrontAssets>(
     return [slug, {
       video: `${root}-motion.mp4`,
       poster: `${root}-poster.png`,
-      title: `${root}-title.svg`,
     }];
   }),
 );
