@@ -1,8 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { legacyArticleRedirects } from "@/lib/legacyArticleRedirects";
 import { isUnsupportedLocalePrefix, isUrlLocale, localizedHref, lowercaseKnownLocalePathname, LOCALE_COOKIE, negotiateLocale, toLocale } from "@/lib/routing";
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const legacyDestination = legacyArticleRedirects[pathname];
+  if (legacyDestination) {
+    const url = request.nextUrl.clone();
+    url.pathname = legacyDestination;
+    return NextResponse.redirect(url, 301);
+  }
   const prefix = pathname.split("/")[1];
   const lowercasePathname = lowercaseKnownLocalePathname(pathname);
   if (lowercasePathname !== pathname) {
