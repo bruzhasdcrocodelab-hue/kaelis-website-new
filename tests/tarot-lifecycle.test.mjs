@@ -12,7 +12,9 @@ const reading = { id: "10", chat_id: "20", question: "Old question", cards: [], 
 // Exercise the hook's request lifetime without adding a React test renderer dependency.
 function mount({ delayed = false } = {}) {
   const state = [], effects = [], pending = [], timers = new Set();
-  let index = 0, flow, signal, finishCreate, socketClosed = 0;
+  let index = 0, flow, signal, finishCreate, socketClosed = 0, saved;
+  const sessionListeners = new Set();
+  const publishSession = value => sessionListeners.forEach(listener => listener(value));
   const react = {
     useState(initial) {
       const slot = index++;
@@ -42,9 +44,13 @@ function mount({ delayed = false } = {}) {
     "@/components/TarotStyleProvider": { useTarotStyle: () => preference },
     "./styleStore": { resolveSpeakerId: (items, id) => items.some(item => item.id === id) ? id : "" },
     "./readingSession": {
-      clearReadingSession() {}, completeLocaleSwitch() {}, getReadingSession() { return undefined; },
+      clearReadingSession() { saved = undefined; publishSession(null); }, completeLocaleSwitch() {}, getReadingSession() { return saved; },
       isLocaleSwitchPending() { return false; }, isReadingOwnerHandedOff() { return false; }, registerReadingOwner() { return "test"; },
-      resetReadingSession() {}, setReadingSession() {}, subscribeReadingSession() { return () => {}; }, unregisterReadingOwner() {},
+      resetReadingSession(_, value) { saved = value; publishSession(value); },
+      setReadingSession(_, value) { saved = value; publishSession(value); },
+      subscribeReadingSession(_, listener) { sessionListeners.add(listener); return () => sessionListeners.delete(listener); },
+      unregisterReadingOwner() {},
+      updateReadingSession(_, update) { if (saved) { saved = update(saved); publishSession(saved); } },
     },
     "./messages": { readingMessages: { en: { error: "Error", waiting: "Waiting", unavailable: "Unavailable" } } },
     "./reading": {

@@ -2,7 +2,7 @@ import type { Reading } from "./reading";
 import type { HomeCardSlug } from "./homeCards";
 import type { Speaker } from "./reading";
 
-type ReadingSnapshot = {
+export type ReadingSnapshot = {
   question: string;
   reading: Reading | null;
   busy: boolean;
@@ -106,6 +106,12 @@ export function setReadingSession(key: string, state: ReadingSnapshot) {
   readings.set(key, state);
   write(READING_KEY + key, state);
   publish(key, state);
+}
+
+export function updateReadingSession(key: string, update: (state: ReadingSnapshot) => ReadingSnapshot) {
+  const state = getReadingSession(key);
+  if (!state) return;
+  setReadingSession(key, update(state));
 }
 
 export function clearReadingSession(key: string) {
