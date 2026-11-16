@@ -93,7 +93,11 @@ export function completeLocaleSwitch() {
 }
 
 export function getReadingSession(key: string) {
-  return readings.get(key);
+  const state = readings.get(key);
+  if (state || !isLocaleSwitchPending()) return state;
+  const restored = read<ReadingSnapshot>(READING_KEY + key);
+  if (restored) readings.set(key, restored);
+  return restored;
 }
 
 export function setReadingSession(key: string, state: ReadingSnapshot) {
@@ -106,12 +110,14 @@ export function setReadingSession(key: string, state: ReadingSnapshot) {
 
 export function clearReadingSession(key: string) {
   readings.delete(key);
-  owners.delete(key);
-  for (const owner of handedOffOwners) {
-    if (owner.startsWith(`${key}:`)) handedOffOwners.delete(owner);
-  }
   remove(READING_KEY + key);
   publish(key, null);
+}
+
+export function resetReadingSession(key: string, state: ReadingSnapshot) {
+  readings.set(key, state);
+  write(READING_KEY + key, state);
+  publish(key, state);
 }
 
 export function registerReadingOwner(key: string) {

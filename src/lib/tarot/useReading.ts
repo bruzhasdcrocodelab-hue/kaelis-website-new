@@ -7,7 +7,7 @@ import { connectReadingSocket, type AnswerEvent } from "./socket";
 import { readingMessages } from "./messages";
 import { useTarotStyle } from "@/components/TarotStyleProvider";
 import { resolveSpeakerId } from "./styleStore";
-import { clearReadingSession, completeLocaleSwitch, getReadingSession, isReadingOwnerHandedOff, isLocaleSwitchPending, registerReadingOwner, setReadingSession, subscribeReadingSession, unregisterReadingOwner } from "./readingSession";
+import { clearReadingSession, completeLocaleSwitch, getReadingSession, isReadingOwnerHandedOff, isLocaleSwitchPending, registerReadingOwner, resetReadingSession, setReadingSession, subscribeReadingSession, unregisterReadingOwner } from "./readingSession";
 
 const activeReadings = new Map<string, AbortController>();
 
@@ -114,9 +114,13 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
 
   const reset = useCallback(() => {
     activeReadings.get(key)?.abort(); activeReadings.delete(key); current.current = null;
-    snapshot.current = { question: "", reading: null, busy: false, error: "", speakerError: false, firstCycleComplete: false, speakers: [] };
-    clearReadingSession(key);
-    setReadingState(null); setErrorState(""); setBusyState(false);
+    snapshot.current = {
+      question: "", reading: null, busy: false, error: "", speakerError: false,
+      firstCycleComplete: false, speakers: snapshot.current.speakers,
+    };
+    resetReadingSession(key, snapshot.current);
+    setQuestionState(""); setReadingState(null); setErrorState(""); setBusyState(false);
+    setSpeakerErrorState(false); setFirstCycleCompleteState(false);
   }, [key]);
 
   async function submit() {

@@ -185,8 +185,6 @@ function SessionContent({
   };
   const changeQuestion = () => {
     flow.reset();
-    flow.setQuestion("");
-    flow.setFirstCycleComplete(false);
     setGuideSheetOpen(false);
   };
   useLayoutEffect(() => {

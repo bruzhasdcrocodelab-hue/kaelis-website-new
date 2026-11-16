@@ -44,7 +44,7 @@ function mount({ delayed = false } = {}) {
     "./readingSession": {
       clearReadingSession() {}, completeLocaleSwitch() {}, getReadingSession() { return undefined; },
       isLocaleSwitchPending() { return false; }, isReadingOwnerHandedOff() { return false; }, registerReadingOwner() { return "test"; },
-      setReadingSession() {}, subscribeReadingSession() { return () => {}; }, unregisterReadingOwner() {},
+      resetReadingSession() {}, setReadingSession() {}, subscribeReadingSession() { return () => {}; }, unregisterReadingOwner() {},
     },
     "./messages": { readingMessages: { en: { error: "Error", waiting: "Waiting", unavailable: "Unavailable" } } },
     "./reading": {
