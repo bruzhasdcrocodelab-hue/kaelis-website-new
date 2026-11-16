@@ -77,7 +77,8 @@ export default function RevealCardsStep(props: RevealCardsStepProps) {
 }
 
 function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOver, sessionActive = true, sessionKey }: RevealCardsStepProps) {
-  const restored = getReadingUi(sessionKey)?.reveal;
+  const savedReveal = getReadingUi(sessionKey)?.reveal;
+  const restored = savedReveal?.readingId === reading.id ? savedReveal : undefined;
   const cards = useMemo(() => presentCards(reading, locale), [reading, locale]);
   const text = readingMessages[locale];
   const labels = revealMessages[locale];
@@ -189,6 +190,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     setReadingUi(sessionKey, {
       ...getReadingUi(sessionKey),
       reveal: {
+        readingId: reading.id,
         phase,
         selectedPosition,
         answerVisible,
@@ -199,7 +201,7 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
         ...next,
       },
     });
-  }, [answerVisible, openSections, phase, scrollTops, selectedPosition, sessionKey, sheet]);
+  }, [answerVisible, openSections, phase, reading.id, scrollTops, selectedPosition, sessionKey, sheet]);
   const updateViewport = useCallback((view: NonNullable<ReadingUiState["reveal"]>["viewport"]) => {
     viewport.current = view;
     const current = getReadingUi(sessionKey);

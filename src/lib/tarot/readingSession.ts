@@ -16,6 +16,7 @@ export type ReadingSnapshot = {
 export type ReadingUiState = {
   choose?: { completedCycles: number };
   reveal?: {
+    readingId: string;
     phase: "preparing" | "dealing" | "flipping" | "focusing" | "ready";
     selectedPosition: string | null;
     answerVisible: boolean;
