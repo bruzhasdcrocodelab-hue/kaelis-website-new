@@ -44,9 +44,10 @@ async function mountParent() {
   const state = hooks();
   let session;
   const flow = {
-    reading: null, busy: false, error: "", speakers: [{ id: "1" }], speakerId: "1", question: "Question",
+    reading: null, busy: false, error: "", speakers: [{ id: "1" }], speakerId: "1", question: "Question", firstCycleComplete: false,
     submit() { this.busy = true; this.error = ""; },
-    reset() { this.reading = null; this.busy = false; this.error = ""; },
+    reset() { this.question = ""; this.reading = null; this.busy = false; this.error = ""; this.firstCycleComplete = false; },
+    setFirstCycleComplete(value) { this.firstCycleComplete = value; },
     retry() {}, setQuestion(value) { this.question = value; },
   };
   const marker = name => name.split("/").at(-1);
@@ -60,6 +61,8 @@ async function mountParent() {
       useReadingNavigation: () => ({ register(value) { session = value; } }),
     };
     if (name === "@/lib/tarot/messages") return { readingMessages: { en: {} } };
+    if (name === "@/lib/tarot/readingSession") return { getReadingSession() {}, getReadingUi() {}, setReadingUi() {} };
+    if (name === "@/lib/tarot/styleStore") return { speakerGuide() { return "analyst"; } };
     if (name.endsWith(".css")) return {};
     if (name.endsWith("TriggerButton")) return { default: marker(name), GUIDE_ICON: {} };
     return marker(name);
@@ -129,7 +132,7 @@ test("creation error restores the form; interpretation error uses the existing r
   assert.equal(loading.props.onRetry, app.flow.retry);
 });
 
-test("a new question requires its own full cycle, and an inactive session ignores completion", async () => {
+test("a new question requires its own full cycle, and completion survives an inactive handoff", async () => {
   const app = await mountParent();
   find(app.start(), "ChooseCardsStep").props.onFirstCycleComplete();
   app.flow.reading = ready; app.flow.busy = false;
@@ -143,7 +146,7 @@ test("a new question requires its own full cycle, and an inactive session ignore
   assert.equal(find(app.render(), "RevealCardsStep"), null);
   app.props.sessionActive = false;
   find(app.render(), "ChooseCardsStep").props.onFirstCycleComplete();
-  assert.equal(find(app.render(), "RevealCardsStep"), null);
+  assert.ok(find(app.render(), "RevealCardsStep"));
   app.props.sessionActive = true;
   loading.props.onFirstCycleComplete();
   assert.ok(find(app.render(), "RevealCardsStep"));
@@ -170,7 +173,7 @@ for (const mobile of [false, true]) for (const reduced of [false, true]) {
 
 async function mountLoading(mobile, reduced = false) {
   const state = hooks();
-  let frame, completed = 0, listener, downloads = [];
+  let frame, completed = 0, listener, downloads = [], visibleProgress, transformIndex = 0;
   const priorWindow = globalThis.window;
   const query = { matches: mobile, addEventListener(_, fn) { listener = fn; }, removeEventListener() {} };
   globalThis.window = {
@@ -185,7 +188,11 @@ async function mountLoading(mobile, reduced = false) {
     if (name === "motion/react") return {
       useMotionValue: value => state.react.useRef({ value, set(next) { this.value = next; } }).current,
       useReducedMotion: () => reduced,
-      useTransform: (value, fn) => ({ get: () => fn(value.value) }),
+      useTransform: (value, fn) => {
+        const transformed = { get: () => fn(value.value) };
+        if (transformIndex++ === 0) visibleProgress = transformed;
+        return transformed;
+      },
       useAnimationFrame: callback => { frame = callback; },
     };
     if (name === "./loadingMotion") return desktop;
@@ -194,14 +201,14 @@ async function mountLoading(mobile, reduced = false) {
     if (name.endsWith(".css")) return {};
     return "Image";
   });
-  const render = () => { state.begin(); return Loading({ dictionary: { loadingMessages: [] }, locale: "en", onFirstCycleComplete: () => completed++ }); };
-  let tree = render(); state.flush(); tree = render();
+  const render = () => { state.begin(); transformIndex = 0; return Loading({ dictionary: { loadingMessages: [] }, locale: "en", onFirstCycleComplete: () => completed++, onProgressChange() {} }); };
+  render(); state.flush(); render();
   return {
     frame: time => frame(time),
     completed: () => completed,
-    progress: () => tree.props.children[0].props.children.props.children.props.progress.get(),
-    resize(value) { query.matches = value; listener(); tree = render(); },
-    async finishDownloads() { downloads.forEach(finish => finish()); await new Promise(resolve => setImmediate(resolve)); },
+    progress: () => visibleProgress.get(),
+    resize(value) { query.matches = value; listener(); render(); },
+    async finishDownloads() { downloads.forEach(finish => finish()); await new Promise(resolve => setImmediate(resolve)); render(); },
     cleanup() { globalThis.window = priorWindow; },
   };
 }

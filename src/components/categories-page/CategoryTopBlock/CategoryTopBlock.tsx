@@ -20,6 +20,8 @@ import { useReadingNavigation } from "@/components/reading/ReadingNavigationProv
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
 import { trackEvent } from "@/lib/analytics";
+import { getReadingSession, getReadingUi, setReadingUi } from "@/lib/tarot/readingSession";
+import { speakerGuide } from "@/lib/tarot/styleStore";
 import styles from "./CategoryTopBlock.module.css";
 
 export interface CategoryTopBlockProps {
@@ -79,7 +81,7 @@ export default function CategoryTopBlock(props: CategoryTopBlockProps) {
           ? <WavesLineFrame className={styles.wavesLine} style={{ filter: showEffects ? undefined : "none", zIndex: 2 }} />
           : <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />}
         <AnimatePresence mode="wait">
-          <SessionContent key={sessionKey} {...props} panelRef={panelRef} onAppearance={setAppearance}
+          <SessionContent key={String(sessionKey)} {...props} panelRef={panelRef} onAppearance={setAppearance}
             initialVisible={sessionKey === firstSession} />
         </AnimatePresence>
       </div>
@@ -91,7 +93,7 @@ function SessionContent({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive: active = true, embedded = false, catalogStatus,
+  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus,
   panelRef, onAppearance, initialVisible,
 }: CategoryTopBlockProps & {
   panelRef: RefObject<HTMLDivElement | null>;
@@ -102,22 +104,17 @@ function SessionContent({
   const sessionActive = active && present;
   const reduced = useReducedMotion();
   const navigation = useReadingNavigation();
-  const currentFlow = useReading(locale, categoryId, spreadId, sessionActive);
+  const currentFlow = useReading(locale, categoryId, spreadId, sessionActive, sessionKey);
+  const readingKey = `reading:${sessionKey}`;
+  const restoredUi = getReadingUi(readingKey);
   const text = readingMessages[locale];
-  const [firstCycleComplete, setFirstCycleComplete] = useState(false);
-  const [lastPresentation, setLastPresentation] = useState({
-    reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete,
-  });
-  if (sessionActive && (lastPresentation.reading !== currentFlow.reading || lastPresentation.question !== currentFlow.question ||
-    lastPresentation.busy !== currentFlow.busy || lastPresentation.firstCycleComplete !== firstCycleComplete)) {
-    setLastPresentation({ reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete });
-  }
-  const flow = sessionActive ? currentFlow : { ...currentFlow, ...lastPresentation };
+  const preservedPresentation = getReadingSession(readingKey);
+  const flow = sessionActive || !preservedPresentation ? currentFlow : { ...currentFlow, ...preservedPresentation };
   const completeFirstCycle = useCallback(() => {
-    if (sessionActive) setFirstCycleComplete(true);
-  }, [sessionActive]);
+    currentFlow.setFirstCycleComplete(true);
+  }, [currentFlow]);
   // Receiving cards alone does not mean the AI interpretation is ready.
-  const step: Step = flow.reading?.reading && (sessionActive ? firstCycleComplete : lastPresentation.firstCycleComplete)
+  const step: Step = flow.reading?.reading && flow.firstCycleComplete
     ? "reveal"
     : flow.busy || flow.reading ? "choose" : "ask";
   const previousStep = useRef(step);
@@ -179,11 +176,15 @@ function SessionContent({
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);
-  const speakerIcon = (icon: string | null | undefined) => GUIDE_ICON[icon as keyof typeof GUIDE_ICON] ?? "/icons/analyst.svg";
+  const speakerIcon = (speaker: typeof selectedSpeaker) => {
+    const guide = speaker && speakerGuide(speaker);
+    return GUIDE_ICON[guide ?? "analyst"];
+  };
+  const speakerLabel = (speaker: typeof selectedSpeaker) => {
+    return speaker?.name ?? text.loading;
+  };
   const changeQuestion = () => {
     flow.reset();
-    flow.setQuestion("");
-    setFirstCycleComplete(false);
     setGuideSheetOpen(false);
   };
   useLayoutEffect(() => {
@@ -228,13 +229,13 @@ function SessionContent({
             <MainButton
               variant="default"
               size="medium"
-              icon={speakerIcon(selectedSpeaker?.icon)}
-              aria-label={selectedSpeaker?.name ?? text.loading}
+              icon={speakerIcon(selectedSpeaker)}
+              aria-label={speakerLabel(selectedSpeaker)}
               disabled={step !== "ask" || flow.busy || !flow.speakers.length}
               onClick={() => setGuideSheetOpen(true)}
               muted
             >
-              {selectedSpeaker?.name ?? text.loading}
+              {speakerLabel(selectedSpeaker)}
             </MainButton>
           </div>
         )}
@@ -246,7 +247,10 @@ function SessionContent({
         ) : <>
         {step === "choose" ? (
           <ChooseCardsStep dictionary={dictionary} locale={locale} categoryLabel={categoryLabel}
-            error={flow.error} onRetry={flow.retry} onFirstCycleComplete={completeFirstCycle} />
+            error={flow.error} onRetry={flow.retry} onFirstCycleComplete={completeFirstCycle}
+            completedCycles={restoredUi?.choose?.completedCycles} onProgressChange={completedCycles => setReadingUi(readingKey, {
+              ...getReadingUi(readingKey), choose: { completedCycles },
+            })} />
         ) : <div className={styles.row}>
           <div className={styles.side}>
             {/* {step === "reveal" && (
@@ -273,7 +277,7 @@ function SessionContent({
                 aria-hidden
               />}
               <p className={`font-instrument-xs ${styles.categoryTagLabel}`}>
-                {isConfirmed ? [categoryLabel, selectedSpeaker?.name].filter(Boolean).join(", ") : `${dictionary.categoryPrefix} ${categoryLabel}`}
+                {isConfirmed ? [categoryLabel, speakerLabel(selectedSpeaker)].filter(Boolean).join(", ") : `${dictionary.categoryPrefix} ${categoryLabel}`}
               </p>
             </div>
             <div className={styles.askBlock}>
@@ -290,7 +294,7 @@ function SessionContent({
             <div className={styles.sideEnd}>
               {step === "ask" && (
                 <div className={styles.triggerDesktop}>
-                  <TriggerButton dictionary={dictionary.guides} options={flow.speakers.map(s => ({ value: s.id, label: s.name, icon: speakerIcon(s.icon) }))} value={flow.speakerId} onChange={flow.setSpeakerId} disabled={flow.busy || !flow.speakers.length} />
+                  <TriggerButton dictionary={dictionary.guides} options={flow.speakers.map(s => ({ value: s.id, label: speakerLabel(s), icon: speakerIcon(s) }))} value={flow.speakerId} onChange={flow.setSpeakerId} disabled={flow.busy || !flow.speakers.length} />
                 </div>
               )}
             </div>
@@ -306,7 +310,7 @@ function SessionContent({
                 category_id: categoryId,
                 spread_id: spreadId,
               });
-              setFirstCycleComplete(false);
+              flow.setFirstCycleComplete(false);
               void flow.submit();
             }} />
         )}
@@ -318,6 +322,7 @@ function SessionContent({
             reading={flow.reading}
             error={flow.error} onRetry={flow.retry}
             onStartOver={changeQuestion}
+            sessionKey={readingKey}
           />
         )}
         {flow.speakerError && <div className={styles.flowError} role="alert">{text.error} <button type="button" onClick={flow.retrySpeakers}>{text.retry}</button></div>}
@@ -327,9 +332,9 @@ function SessionContent({
         onClose={() => setGuideSheetOpen(false)}
         options={flow.speakers.map(s => ({
           value: s.id,
-          label: s.name,
-          icon: speakerIcon(s.icon),
-          description: dictionary.guideDescriptions[s.icon as keyof typeof dictionary.guideDescriptions],
+          label: speakerLabel(s),
+          icon: speakerIcon(s),
+          description: dictionary.guideDescriptions[speakerGuide(s) ?? "analyst"],
         }))}
         selectedValue={flow.speakerId}
         onSelect={flow.setSpeakerId}

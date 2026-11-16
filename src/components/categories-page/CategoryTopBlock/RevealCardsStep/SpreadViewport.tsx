@@ -9,10 +9,12 @@ export interface SpreadViewportHandle {
   focus: (point: Point, duration: number, complete: () => void) => () => void;
 }
 
-export default function SpreadViewport({ width, height, locked, apiRef, onReady, children }: {
+export default function SpreadViewport({ width, height, locked, apiRef, onReady, initialView, onViewChange, children }: {
   width: number; height: number; locked: boolean;
   apiRef: RefObject<SpreadViewportHandle | null>;
   onReady: (origin: Point) => void;
+  initialView?: { x: number; y: number; scale: number };
+  onViewChange?: (view: { x: number; y: number; scale: number }) => void;
   children: ReactNode;
 }) {
   const viewport = useRef<HTMLDivElement>(null);
@@ -23,7 +25,7 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
   useLayoutEffect(() => {
     const el = viewport.current!, inner = content.current!;
     const metrics = readRevealMetrics();
-    let vw = 0, vh = 0, fit = 1, max = 1, scale = 1, x = 0, y = 0, moved = false;
+    let vw = 0, vh = 0, fit = 1, max = 1, scale = 1, x = 0, y = 0, moved = false, restored = false;
     let stopAnimation: (() => void) | undefined;
     const pointers = new Map<number, Point>();
     const paint = () => {
@@ -33,6 +35,7 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
       x = clampPan(x, width * scale, vw, zoomed ? vw / 2 : 0);
       y = clampPan(y, height * scale, vh, zoomed ? vh / 2 : 0);
       inner.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      onViewChange?.({ x, y, scale });
     };
     const change = (factor: number | null, cx = vw / 2, cy = vh / 2) => {
       const next = factor === null ? fit : Math.max(fit, Math.min(max, scale * factor));
@@ -51,9 +54,17 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
       const overviewWidth = mobile ? 79.9 : 85.662;
       const maxWidth = mobile ? 111.189 : 169.589;
       ({ fit, max } = zoomBounds(width, height, vw, vh, metrics, overviewWidth, maxWidth));
-      scale = lockedRef.current ? fit : atMax ? max : Math.min(max, fit * ratio);
+      if (initial && initialView && !lockedRef.current) {
+        restored = true;
+        scale = Math.max(fit, Math.min(max, initialView.scale));
+        x = initialView.x;
+        y = initialView.y;
+      } else {
+        scale = lockedRef.current ? fit : atMax ? max : Math.min(max, fit * ratio);
+      }
       const next = focusTransform(initial ? { x: width / 2, y: height / 2 } : center, scale, width, height, vw, vh, scale > fit);
-      x = next.x; y = next.y; paint();
+      if (!restored) { x = next.x; y = next.y; }
+      paint();
       if (initial) {
         const rect = el.getBoundingClientRect();
         const panel = el.closest('[data-reading-panel]')!.getBoundingClientRect();
@@ -120,7 +131,7 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
       el.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
       el.removeEventListener('click', click, true); el.removeEventListener('dblclick', reset);
     };
-  }, [width, height, apiRef, onReady]);
+  }, [width, height, apiRef, initialView, onReady, onViewChange]);
   return <div ref={viewport} className={styles.spreadViewport} data-spread-viewport>
     <div ref={content} className={styles.spreadContent} style={{ width, height }}>{children}</div>
   </div>;

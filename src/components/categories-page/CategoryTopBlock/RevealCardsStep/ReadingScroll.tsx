@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import styles from "./RevealCardsStep.module.css";
 
-export default function ReadingScroll({ children }: { children: ReactNode }) {
+export default function ReadingScroll({ children, scrollTop = 0, onScrollTopChange }: { children: ReactNode; scrollTop?: number; onScrollTopChange?: (value: number) => void }) {
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const element = ref.current!;
@@ -14,10 +14,12 @@ export default function ReadingScroll({ children }: { children: ReactNode }) {
     const observer = new ResizeObserver(update);
     observer.observe(element);
     observer.observe(element.firstElementChild!);
-    element.addEventListener("scroll", update, { passive: true });
+    element.scrollTop = scrollTop;
+    const scroll = () => { update(); onScrollTopChange?.(element.scrollTop); };
+    element.addEventListener("scroll", scroll, { passive: true });
     update();
-    return () => { observer.disconnect(); element.removeEventListener("scroll", update); };
-  }, []);
+    return () => { observer.disconnect(); element.removeEventListener("scroll", scroll); };
+  }, [onScrollTopChange, scrollTop]);
   return <div ref={ref} className={styles.detailText} tabIndex={0} data-reading-scroll>
     <div className={styles.readingFlow}>{children}</div>
   </div>;

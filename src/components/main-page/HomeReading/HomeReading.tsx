@@ -12,6 +12,7 @@ import { cardCount, type CatalogState } from "@/lib/categories/catalog";
 import { HOME_CARDS, type HomeCardSlug } from "@/lib/tarot/homeCards";
 import styles from "./HomeReading.module.css";
 import { scrollToCards } from "./scrollToCards";
+import { clearHomeSession, completeLocaleSwitch, getHomeSession, isLocaleSwitchPending, setHomeSession } from "@/lib/tarot/readingSession";
 
 const MOBILE_QUERY = "(max-width: 768px)";
 const subscribeViewport = (listener: () => void) => {
@@ -96,11 +97,16 @@ function ReadingPanel({ selection, dictionary, locale, mobile, effectsActive, on
 }
 
 export default function HomeReading({ dictionary, locale }: { dictionary: Dictionary; locale: Locale }) {
-  const [selection, setSelection] = useState<Selection | null>(null);
+  const restored = getHomeSession();
+  const [selection, setSelection] = useState<Selection | null>(restored ? {
+    slug: restored.slug,
+    session: restored.session,
+    opening: restored.opening,
+  } : null);
   const [pendingSlug, setPendingSlug] = useState<HomeCardSlug | null>(null);
-  const [entranceComplete, setEntranceComplete] = useState(false);
-  const session = useRef(0);
-  const opening = useRef(0);
+  const [entranceComplete, setEntranceComplete] = useState(restored?.entranceComplete ?? false);
+  const session = useRef(restored?.session ?? 0);
+  const opening = useRef(restored?.opening ?? 0);
   const [exiting, setExiting] = useState(false);
   const navigation = useReadingNavigation();
   const { state: categories } = useCategories();
@@ -110,6 +116,16 @@ export default function HomeReading({ dictionary, locale }: { dictionary: Dictio
   const reduced = useReducedMotion();
   const open = selection !== null || exiting;
   const activeScroll = useRef<ReturnType<typeof scrollToCards>>(undefined);
+  useEffect(() => {
+    setHomeSession(selection ? { ...selection, entranceComplete } : null);
+  }, [selection, entranceComplete]);
+  useEffect(() => () => {
+    if (isLocaleSwitchPending()) return;
+    clearHomeSession();
+  }, []);
+  useEffect(() => {
+    if (!restored) completeLocaleSwitch();
+  }, [restored]);
   useEffect(() => {
     if (window.location.hash !== "#top-block" || selection) {
       pendingCatalogAnchor.current = false;
