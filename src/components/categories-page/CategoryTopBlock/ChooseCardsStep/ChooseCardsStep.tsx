@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
-import { easingDefinitionToFunction, interpolate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue } from "motion/react";
+import { easingDefinitionToFunction, interpolate, motion, useAnimationFrame, useMotionValue, useReducedMotion, useTransform, type MotionValue } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
 import { readingMessages } from "@/lib/tarot/messages";
 import { CYCLE_MS, fanTracks, loadingCards, progressTracks, textTracks, type Tracks } from "./loadingMotion";
@@ -18,6 +18,8 @@ export interface ChooseCardsStepProps {
   error: string;
   onRetry: () => void;
   onFirstCycleComplete: () => void;
+  completedCycles?: number;
+  onProgressChange: (completedCycles: number) => void;
 }
 
 // One shared clock drives every exported track, including text and progress.
@@ -67,19 +69,26 @@ function StaticProgress({ time, tracks }: { time: number; tracks: Tracks }) {
   return <div className={styles.progress} aria-hidden><div className={styles.track} /><div className={styles.fill} style={{ width, opacity }} /></div>;
 }
 
-export default function ChooseCardsStep({ dictionary, locale, categoryLabel, error, onRetry, onFirstCycleComplete }: ChooseCardsStepProps) {
-  const progress = useMotionValue(0);
+export default function ChooseCardsStep({ dictionary, locale, categoryLabel, error, onRetry, onFirstCycleComplete, completedCycles: restoredCycles = 0, onProgressChange }: ChooseCardsStepProps) {
+  const progress = useMotionValue(restoredCycles % 1);
   const [isMobile, setIsMobile] = useState(false);
-  const [inView, setInView] = useState(true);
   const reducedMotion = useReducedMotion();
   const visibleProgress = useTransform(progress, time => reducedMotion ? (isMobile ? MOBILE_REST_PROGRESS : 0.2656) : time);
-  const rootRef = useRef<HTMLDivElement>(null);
   const lastFrame = useRef<number | null>(null);
-  const completedCycles = useRef(0);
+  const completedCycles = useRef(restoredCycles);
   const cycleDuration = useRef(CYCLE_MS);
   const [assetsReady, setAssetsReady] = useState(false);
-  const firstCycleComplete = useRef(false);
+  const firstCycleComplete = useRef(restoredCycles >= 1);
   const text = readingMessages[locale];
+
+  useEffect(() => {
+    if (completedCycles.current < restoredCycles) {
+      completedCycles.current = restoredCycles;
+      progress.set(restoredCycles % 1);
+    }
+    if (restoredCycles >= 1) firstCycleComplete.current = true;
+  }, [progress, restoredCycles]);
+  useEffect(() => () => onProgressChange(completedCycles.current), [onProgressChange]);
 
   useEffect(() => {
     const query = window.matchMedia("(max-width: 768px)");
@@ -105,39 +114,23 @@ export default function ChooseCardsStep({ dictionary, locale, categoryLabel, err
     return () => { cancelled = true; };
   }, []);
 
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      setInView(entry.isIntersecting && entry.intersectionRect.width > 0 && entry.intersectionRect.height > 0);
-    }, { rootMargin: "120px" });
-    observer.observe(root);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!assetsReady || reducedMotion || !inView) {
+  useAnimationFrame(time => {
+    if (!assetsReady) {
       lastFrame.current = null;
       return;
     }
-    let frame = 0;
-    const tick = (time: number) => {
-      lastFrame.current ??= time;
-      completedCycles.current += (time - lastFrame.current) / cycleDuration.current;
-      lastFrame.current = time;
-      progress.set(completedCycles.current % 1);
-      if (completedCycles.current >= 1 - 1e-9 && !firstCycleComplete.current) {
-        firstCycleComplete.current = true;
-        onFirstCycleComplete();
-      }
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [assetsReady, inView, onFirstCycleComplete, progress, reducedMotion]);
+    lastFrame.current ??= time;
+    completedCycles.current += (time - lastFrame.current) / cycleDuration.current;
+    lastFrame.current = time;
+    progress.set(completedCycles.current % 1);
+    if (completedCycles.current >= 1 - 1e-9 && !firstCycleComplete.current) {
+      firstCycleComplete.current = true;
+      onFirstCycleComplete();
+    }
+  });
 
   return (
-    <div ref={rootRef} className={styles.loading} data-reading-loading lang={locale} aria-busy={!error}>
+    <div className={styles.loading} data-reading-loading lang={locale} aria-busy={!error}>
       {!isMobile && <div className={styles.scene} data-loading-scene="desktop" aria-hidden>
         <div className={styles.fanPosition}>
           {reducedMotion

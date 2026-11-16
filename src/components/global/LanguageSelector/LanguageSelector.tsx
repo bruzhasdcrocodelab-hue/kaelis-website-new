@@ -133,7 +133,10 @@ export default function LanguageSelector({
         if (route?.kind === "category") {
           const currentStore = getStore(locale);
           const targetStore = getStore(next);
-          await Promise.all([currentStore.load(undefined, true), targetStore.load(undefined, true)]);
+          await Promise.all([
+            currentStore.load(undefined, currentStore.getSnapshot().status === "error"),
+            targetStore.load(undefined, targetStore.getSnapshot().status === "error"),
+          ]);
           const current = currentStore.getSnapshot();
           const translated = targetStore.getSnapshot();
           if (current.status !== "success" || translated.status !== "success") throw new Error("Catalog unavailable");
@@ -141,7 +144,10 @@ export default function LanguageSelector({
           const nextCategory = translated.data.find(item => item.id === category?.id);
           if (!category || !nextCategory) throw new Error("Category unavailable");
           const parts = [nextCategory.slug];
-          await Promise.all([currentStore.load(category.id, true), targetStore.load(nextCategory.id, true)]);
+          await Promise.all([
+            currentStore.load(category.id, currentStore.getSnapshot(category.id).status === "error"),
+            targetStore.load(nextCategory.id, targetStore.getSnapshot(nextCategory.id).status === "error"),
+          ]);
           const spreads = currentStore.getSnapshot(category.id);
           const nextSpreads = targetStore.getSnapshot(nextCategory.id);
           if (spreads.status !== "success" || nextSpreads.status !== "success") throw new Error("Spreads unavailable");

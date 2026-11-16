@@ -7,12 +7,14 @@ import { connectReadingSocket, type AnswerEvent } from "./socket";
 import { readingMessages } from "./messages";
 import { useTarotStyle } from "@/components/TarotStyleProvider";
 import { resolveSpeakerId } from "./styleStore";
-import { clearReadingSession, completeLocaleSwitch, getReadingSession, isLocaleSwitchPending, setReadingSession, subscribeReadingSession } from "./readingSession";
+import { clearReadingSession, completeLocaleSwitch, getReadingSession, isReadingOwnerHandedOff, isLocaleSwitchPending, registerReadingOwner, setReadingSession, subscribeReadingSession, unregisterReadingOwner } from "./readingSession";
+
+const activeReadings = new Map<string, AbortController>();
 
 export function useReading(locale: Locale, categoryId: string, spreadId: string, enabled = true, sessionKey = 0) {
-  const key = `${categoryId}:${spreadId}:${sessionKey}`;
+  const key = `reading:${sessionKey}`;
   const restored = getReadingSession(key);
-  const [speakers, setSpeakers] = useState<Speaker[]>([]);
+  const [speakers, setSpeakersState] = useState<Speaker[]>(restored?.speakers ?? []);
   const { speakerId: preferredSpeakerId, setSpeakerId, getSpeakerId } = useTarotStyle();
   const speakerId = resolveSpeakerId(speakers, preferredSpeakerId);
   const [question, setQuestionState] = useState(restored?.question ?? "");
@@ -22,17 +24,22 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
   const [speakerError, setSpeakerErrorState] = useState(restored?.speakerError ?? false);
   const [firstCycleComplete, setFirstCycleCompleteState] = useState(restored?.firstCycleComplete ?? false);
   const [speakerAttempt, setSpeakerAttempt] = useState(0);
-  const active = useRef<AbortController | null>(null);
+  const owner = useRef<string | null>(null);
   const current = useRef<Reading | null>(restored?.reading ?? null);
   const retryRef = useRef<() => Promise<void>>(async () => {});
   const text = readingMessages[locale];
-  const snapshot = useRef({ question, reading, busy, error, speakerError, firstCycleComplete });
+  const snapshot = useRef({ question, reading, busy, error, speakerError, firstCycleComplete, speakers });
   const save = () => setReadingSession(key, snapshot.current);
   const setQuestion = (value: string) => {
     snapshot.current.question = value;
     save();
     setQuestionState(value);
   };
+  const setSpeakers = useCallback((value: Speaker[]) => {
+    snapshot.current.speakers = value;
+    setReadingSession(key, snapshot.current);
+    setSpeakersState(value);
+  }, [key]);
   const setReading = (value: Reading | null) => {
     snapshot.current.reading = value;
     save();
@@ -68,11 +75,19 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
       setSpeakerError(false);
     }).catch(() => { if (!controller.signal.aborted) setSpeakerError(true); });
     return () => controller.abort();
-  }, [locale, speakerAttempt, setSpeakerId, getSpeakerId, setSpeakerError]);
-  useEffect(() => () => {
-    if (isLocaleSwitchPending()) return;
-    active.current?.abort();
-    clearReadingSession(key);
+  }, [locale, speakerAttempt, setSpeakerId, getSpeakerId, setSpeakerError, setSpeakers]);
+  useEffect(() => {
+    owner.current = registerReadingOwner(key);
+    return () => {
+      const keepActive = isReadingOwnerHandedOff(key, owner.current);
+      if (!keepActive && !isLocaleSwitchPending()) {
+        activeReadings.get(key)?.abort();
+        activeReadings.delete(key);
+        clearReadingSession(key);
+      }
+      unregisterReadingOwner(key, owner.current);
+      owner.current = null;
+    };
   }, [key]);
   useEffect(() => {
     if (categoryId && spreadId && isLocaleSwitchPending()) completeLocaleSwitch();
@@ -87,20 +102,26 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     setErrorState(state.error);
     setSpeakerErrorState(state.speakerError);
     setFirstCycleCompleteState(state.firstCycleComplete);
+    setSpeakersState(state.speakers ?? []);
   }), [key]);
   // Exit animations may keep the old panel mounted; stop its flow immediately.
-  useEffect(() => { if (!enabled) active.current?.abort(); }, [enabled]);
+  useEffect(() => {
+    if (!enabled && !isLocaleSwitchPending() && !isReadingOwnerHandedOff(key, owner.current)) {
+      activeReadings.get(key)?.abort();
+      activeReadings.delete(key);
+    }
+  }, [enabled, key]);
 
   const reset = useCallback(() => {
-    active.current?.abort(); active.current = null; current.current = null;
-    snapshot.current = { question: "", reading: null, busy: false, error: "", speakerError: false, firstCycleComplete: false };
+    activeReadings.get(key)?.abort(); activeReadings.delete(key); current.current = null;
+    snapshot.current = { question: "", reading: null, busy: false, error: "", speakerError: false, firstCycleComplete: false, speakers: [] };
     clearReadingSession(key);
     setReadingState(null); setErrorState(""); setBusyState(false);
   }, [key]);
 
   async function submit() {
-    if (!enabled || active.current || !question.trim() || !speakers.some(s => s.id === speakerId)) return;
-    const controller = new AbortController(); active.current = controller;
+    if (!enabled || activeReadings.has(key) || !question.trim() || !speakers.some(s => s.id === speakerId)) return;
+    const controller = new AbortController(); activeReadings.set(key, controller);
     const { signal } = controller;
     setBusy(true); setError("");
     let closeSocket: (() => void) | undefined;
@@ -177,7 +198,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
       }
     } catch (cause) {
       report(cause); clean();
-      if (!signal.aborted) { active.current = null; setBusy(false); controller.abort(); }
+      if (!signal.aborted) { activeReadings.delete(key); setBusy(false); controller.abort(); }
     } finally { if (!signal.aborted) setBusy(false); }
   }
   const errorKey = (["error", "waiting", "unavailable"] as const).find(key =>

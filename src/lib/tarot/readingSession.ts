@@ -1,5 +1,6 @@
 import type { Reading } from "./reading";
 import type { HomeCardSlug } from "./homeCards";
+import type { Speaker } from "./reading";
 
 type ReadingSnapshot = {
   question: string;
@@ -8,6 +9,21 @@ type ReadingSnapshot = {
   error: string;
   speakerError: boolean;
   firstCycleComplete: boolean;
+  speakers: Speaker[];
+  ui?: ReadingUiState;
+};
+
+export type ReadingUiState = {
+  choose?: { completedCycles: number };
+  reveal?: {
+    phase: "preparing" | "dealing" | "flipping" | "focusing" | "ready";
+    selectedPosition: string | null;
+    answerVisible: boolean;
+    sheet: "card" | "answer" | null;
+    openSections: string[];
+    scrollTops: Record<string, number>;
+    viewport?: { x: number; y: number; scale: number };
+  };
 };
 
 type HomeSnapshot = {
@@ -19,8 +35,12 @@ type HomeSnapshot = {
 
 const readings = new Map<string, ReadingSnapshot>();
 const listeners = new Map<string, Set<(state: ReadingSnapshot | null) => void>>();
+const owners = new Map<string, Set<string>>();
+const handedOffOwners = new Set<string>();
 let home: HomeSnapshot | null = null;
 let localeSwitchPending = false;
+let ownerSequence = 0;
+let localeSwitchTimer: ReturnType<typeof setTimeout> | undefined;
 const HANDOFF_KEY = "kaelis.tarot.locale-switch";
 const READING_KEY = "kaelis.tarot.reading.";
 const HOME_KEY = "kaelis.tarot.home-reading";
@@ -51,7 +71,12 @@ function publish(key: string, state: ReadingSnapshot | null) {
 }
 
 export function prepareLocaleSwitch() {
+  clearTimeout(localeSwitchTimer);
   localeSwitchPending = true;
+  readings.forEach((state, key) => write(READING_KEY + key, state));
+  owners.forEach((keyOwners, key) => {
+    keyOwners.forEach(owner => handedOffOwners.add(`${key}:${owner}`));
+  });
   write(HANDOFF_KEY, true);
 }
 
@@ -60,16 +85,20 @@ export function isLocaleSwitchPending() {
 }
 
 export function completeLocaleSwitch() {
-  localeSwitchPending = false;
-  remove(HANDOFF_KEY);
+  clearTimeout(localeSwitchTimer);
+  localeSwitchTimer = setTimeout(() => {
+    localeSwitchPending = false;
+    remove(HANDOFF_KEY);
+  }, 500);
 }
 
 export function getReadingSession(key: string) {
-  if (!isLocaleSwitchPending()) return undefined;
-  return readings.get(key) ?? read<ReadingSnapshot>(READING_KEY + key) ?? undefined;
+  return readings.get(key);
 }
 
 export function setReadingSession(key: string, state: ReadingSnapshot) {
+  const existing = readings.get(key);
+  if (existing?.ui && !state.ui) state.ui = existing.ui;
   readings.set(key, state);
   write(READING_KEY + key, state);
   publish(key, state);
@@ -77,8 +106,34 @@ export function setReadingSession(key: string, state: ReadingSnapshot) {
 
 export function clearReadingSession(key: string) {
   readings.delete(key);
+  owners.delete(key);
+  for (const owner of handedOffOwners) {
+    if (owner.startsWith(`${key}:`)) handedOffOwners.delete(owner);
+  }
   remove(READING_KEY + key);
   publish(key, null);
+}
+
+export function registerReadingOwner(key: string) {
+  const owner = String(++ownerSequence);
+  let keyOwners = owners.get(key);
+  if (!keyOwners) {
+    keyOwners = new Set();
+    owners.set(key, keyOwners);
+  }
+  keyOwners.add(owner);
+  return owner;
+}
+
+export function isReadingOwnerHandedOff(key: string, owner: string | null) {
+  return owner !== null && handedOffOwners.has(`${key}:${owner}`);
+}
+
+export function unregisterReadingOwner(key: string, owner: string | null) {
+  if (owner === null) return;
+  owners.get(key)?.delete(owner);
+  if (!owners.get(key)?.size) owners.delete(key);
+  queueMicrotask(() => handedOffOwners.delete(`${key}:${owner}`));
 }
 
 export function subscribeReadingSession(key: string, listener: (state: ReadingSnapshot | null) => void) {
@@ -92,6 +147,18 @@ export function subscribeReadingSession(key: string, listener: (state: ReadingSn
     subscribers?.delete(listener);
     if (!subscribers?.size) listeners.delete(key);
   };
+}
+
+export function getReadingUi(key: string) {
+  return readings.get(key)?.ui ?? read<ReadingSnapshot>(READING_KEY + key)?.ui;
+}
+
+export function setReadingUi(key: string, ui: ReadingUiState) {
+  const state = readings.get(key) ?? read<ReadingSnapshot>(READING_KEY + key);
+  if (!state) return;
+  state.ui = ui;
+  readings.set(key, state);
+  if (isLocaleSwitchPending()) write(READING_KEY + key, state);
 }
 
 export function getHomeSession() {

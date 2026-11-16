@@ -43,7 +43,8 @@ function mount({ delayed = false } = {}) {
     "./styleStore": { resolveSpeakerId: (items, id) => items.some(item => item.id === id) ? id : "" },
     "./readingSession": {
       clearReadingSession() {}, completeLocaleSwitch() {}, getReadingSession() { return undefined; },
-      isLocaleSwitchPending() { return false; }, setReadingSession() {}, subscribeReadingSession() { return () => {}; },
+      isLocaleSwitchPending() { return false; }, isReadingOwnerHandedOff() { return false; }, registerReadingOwner() { return "test"; },
+      setReadingSession() {}, subscribeReadingSession() { return () => {}; }, unregisterReadingOwner() {},
     },
     "./messages": { readingMessages: { en: { error: "Error", waiting: "Waiting", unavailable: "Unavailable" } } },
     "./reading": {

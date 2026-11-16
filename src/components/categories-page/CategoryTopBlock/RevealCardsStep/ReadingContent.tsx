@@ -14,15 +14,19 @@ function SectionBody({ section }: { section: ReadingSection }) {
   </> : <p>{section.text}</p>;
 }
 
-function Section({ section, locale }: { section: ReadingSection; locale: Locale }) {
-  const [open, setOpen] = useState(false);
+function Section({ section, locale, sectionId, openSections, onOpenChange }: { section: ReadingSection; locale: Locale; sectionId: string; openSections?: string[]; onOpenChange?: (id: string, open: boolean) => void }) {
+  const [open, setOpen] = useState(openSections?.includes(sectionId) ?? false);
   const id = useId();
   const title = section.key ? revealMessages[locale][section.key] : section.title;
   const expandable = section.key === "why" || section.key === "risks";
   const inset = expandable || ["impact", "recognition", "focus"].includes(section.key ?? "");
   return <section className={`${styles.answerSection} ${inset ? styles.insetSection : ""}`} data-section={section.key ?? "text"}>
     {expandable ? <>
-      <button type="button" className={styles.sectionToggle} aria-expanded={open} aria-controls={id} onClick={() => setOpen(value => !value)}>
+      <button type="button" className={styles.sectionToggle} aria-expanded={open} aria-controls={id} onClick={() => {
+        const next = !open;
+        setOpen(next);
+        onOpenChange?.(sectionId, next);
+      }}>
         <span>{title}</span><span className={styles.sectionToggleIcon}><span className={styles.chevronIcon} aria-hidden="true" /></span>
       </button>
       <div id={id} aria-hidden={!open} inert={!open} data-open={open} className={styles.sectionCollapse}>
@@ -32,7 +36,7 @@ function Section({ section, locale }: { section: ReadingSection; locale: Locale 
   </section>;
 }
 
-function AnswerSections({ sections, locale }: { sections: ReadingSection[]; locale: Locale }) {
+function AnswerSections({ sections, locale, openSections, onOpenChange }: { sections: ReadingSection[]; locale: Locale; openSections?: string[]; onOpenChange?: (id: string, open: boolean) => void }) {
   const expandable = (section: ReadingSection) => section.key === "why" || section.key === "risks";
   const groups: ReadingSection[][] = [];
   for (const section of sections) {
@@ -41,12 +45,12 @@ function AnswerSections({ sections, locale }: { sections: ReadingSection[]; loca
     else groups.push([section]);
   }
   return groups.map((group, index) => expandable(group[0])
-    ? <div key={index} className={styles.interpretationSections}>{group.map((section, item) => <Section key={item} section={section} locale={locale} />)}</div>
-    : <Section key={index} section={group[0]} locale={locale} />);
+    ? <div key={index} className={styles.interpretationSections}>{group.map((section, item) => <Section key={item} section={section} locale={locale} sectionId={`answer:${section.key ?? item}`} openSections={openSections} onOpenChange={onOpenChange} />)}</div>
+    : <Section key={index} section={group[0]} locale={locale} sectionId={`answer:${group[0].key ?? index}`} openSections={openSections} onOpenChange={onOpenChange} />);
 }
 
-export default function ReadingContent({ sections, locale, card, artwork }: {
-  sections: ReadingSection[]; locale: Locale; card?: string; artwork?: ReactNode;
+export default function ReadingContent({ sections, locale, card, artwork, openSections, onOpenChange }: {
+  sections: ReadingSection[]; locale: Locale; card?: string; artwork?: ReactNode; openSections?: string[]; onOpenChange?: (id: string, open: boolean) => void;
 }) {
   const detailKeys = ["fullDescription", "impact", "recognition", "focus"];
   const details = card ? sections.filter(section => detailKeys.includes(section.key ?? "")) : [];
@@ -58,12 +62,12 @@ export default function ReadingContent({ sections, locale, card, artwork }: {
   return <>
     {card ? <div className={styles.cardSummary}>
       {preview}
-      {rest.map((section, index) => <Section key={`${section.key}-${index}`} section={section} locale={locale} />)}
-    </div> : <AnswerSections sections={rest} locale={locale} />}
+      {rest.map((section, index) => <Section key={`${section.key}-${index}`} section={section} locale={locale} sectionId={`card:${section.key ?? index}`} openSections={openSections} onOpenChange={onOpenChange} />)}
+    </div> : <AnswerSections sections={rest} locale={locale} openSections={openSections} onOpenChange={onOpenChange} />}
     {details.length > 0 && <div className={styles.fullDescription}>
       <h3 className={styles.answerTitle}>{revealMessages[locale].fullDescription}</h3>
       <div className={styles.descriptionSections}>
-        {details.map((section, index) => <Section key={`${section.key}-${index}`} section={section.key === "fullDescription" ? { ...section, key: null, title: "" } : section} locale={locale} />)}
+        {details.map((section, index) => <Section key={`${section.key}-${index}`} section={section.key === "fullDescription" ? { ...section, key: null, title: "" } : section} locale={locale} sectionId={`card:${section.key ?? index}`} openSections={openSections} onOpenChange={onOpenChange} />)}
       </div>
     </div>}
   </>;

@@ -1,5 +1,14 @@
 export const STYLE_STORAGE_KEY = "kaelis.tarot.speaker";
 
+export type SpeakerGuide = "analyst" | "psychologist" | "friend" | "witch";
+
+const speakerGuides: Record<string, SpeakerGuide> = {
+  "1": "analyst",
+  "2": "psychologist",
+  "3": "friend",
+  "4": "witch",
+};
+
 /** Shared client preference; translated speaker records remain in the API catalog. */
 export function createStyleStore() {
   let value = "";
@@ -39,8 +48,12 @@ export function createStyleStore() {
   };
 }
 
+export function speakerGuide(speaker: { id: string; name?: string | null }) {
+  return speakerGuides[speaker.id];
+}
+
 export function resolveSpeakerId(speakers: { id: string; icon: string | null }[], preferred: string) {
   return speakers.find(speaker => speaker.id === preferred)?.id
-    ?? speakers.find(speaker => speaker.icon === "analyst")?.id
+    ?? speakers.find(speaker => speakerGuide(speaker) === "analyst")?.id
     ?? speakers[0]?.id ?? "";
 }

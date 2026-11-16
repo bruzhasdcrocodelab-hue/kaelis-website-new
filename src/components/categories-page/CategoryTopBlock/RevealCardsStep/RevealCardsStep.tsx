@@ -15,6 +15,7 @@ import RevealSheet from "./RevealSheet";
 import { revealMessages } from "./revealMessages";
 import SpreadViewport, { type SpreadViewportHandle } from "./SpreadViewport";
 import { readRevealMetrics, spreadGeometry, type Point, type RevealMetrics } from "./revealGeometry";
+import { getReadingUi, setReadingUi, type ReadingUiState } from "@/lib/tarot/readingSession";
 import styles from "./RevealCardsStep.module.css";
 
 export interface RevealCardsStepProps {
@@ -25,6 +26,7 @@ export interface RevealCardsStepProps {
   onRetry: () => void;
   onStartOver: () => void;
   sessionActive?: boolean;
+  sessionKey: string;
 }
 
 type Phase = "preparing" | "dealing" | "flipping" | "focusing" | "ready";
@@ -74,7 +76,8 @@ export default function RevealCardsStep(props: RevealCardsStepProps) {
   return <RevealSession key={props.reading.id} {...props} />;
 }
 
-function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOver, sessionActive = true }: RevealCardsStepProps) {
+function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOver, sessionActive = true, sessionKey }: RevealCardsStepProps) {
+  const restored = getReadingUi(sessionKey)?.reveal;
   const cards = useMemo(() => presentCards(reading, locale), [reading, locale]);
   const text = readingMessages[locale];
   const labels = revealMessages[locale];
@@ -83,13 +86,16 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   const detailRef = useRef<HTMLDivElement>(null);
   const viewportApi = useRef<SpreadViewportHandle | null>(null);
   const [metrics, setMetrics] = useState<RevealMetrics | null>(null);
-  const [origin, setOrigin] = useState<Point | null>(null);
-  const [phase, setPhase] = useState<Phase>("preparing");
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
-  const [answerVisible, setAnswerVisible] = useState(false);
+  const [origin, setOrigin] = useState<Point | null>(restored ? { x: 0, y: 0 } : null);
+  const [phase, setPhase] = useState<Phase>(restored?.phase === "ready" ? "ready" : restored ? "ready" : "preparing");
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(restored?.selectedPosition ?? null);
+  const [answerVisible, setAnswerVisible] = useState(restored?.answerVisible ?? false);
   const [isMobile, setIsMobile] = useState(false);
   const [answerGlowPaused, setAnswerGlowPaused] = useState(false);
-  const [sheet, setSheet] = useState<"card" | "answer" | null>(null);
+  const [sheet, setSheet] = useState<"card" | "answer" | null>(restored?.sheet ?? null);
+  const [openSections, setOpenSections] = useState(restored?.openSections ?? []);
+  const [scrollTops, setScrollTops] = useState(restored?.scrollTops ?? {});
+  const viewport = useRef(restored?.viewport);
   const mobileControlsRef = useRef<HTMLDivElement>(null);
   const landed = useRef(new Set<string>());
   const flipped = useRef(new Set<string>());
@@ -178,22 +184,58 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     return () => document.removeEventListener("keydown", keydown);
   }, []);
 
+  const transition = useMemo(() => ({ duration: reduced ? 0 : metrics?.detail ?? 0, ease: metrics?.ease }), [reduced, metrics]);
+  const saveReveal = useCallback((next: Partial<NonNullable<ReadingUiState["reveal"]>> = {}) => {
+    setReadingUi(sessionKey, {
+      ...getReadingUi(sessionKey),
+      reveal: {
+        phase,
+        selectedPosition,
+        answerVisible,
+        sheet,
+        openSections,
+        scrollTops,
+        viewport: viewport.current,
+        ...next,
+      },
+    });
+  }, [answerVisible, openSections, phase, scrollTops, selectedPosition, sessionKey, sheet]);
+  const updateViewport = useCallback((view: NonNullable<ReadingUiState["reveal"]>["viewport"]) => {
+    viewport.current = view;
+    const current = getReadingUi(sessionKey);
+    if (!current?.reveal) return;
+    setReadingUi(sessionKey, {
+      ...current,
+      reveal: { ...current.reveal, viewport: view },
+    });
+  }, [sessionKey]);
+  useEffect(() => { saveReveal(); }, [saveReveal]);
+  useEffect(() => () => saveReveal(), [saveReveal]);
   const select = (position: string) => {
     if (phase !== "ready") return;
-    setSelectedPosition(previous => isMobile ? position : previous === position ? null : position);
+    const nextPosition = isMobile ? position : selectedPosition === position ? null : position;
+    const nextSheet = isMobile ? "card" : sheet;
+    setSelectedPosition(nextPosition);
     if (isMobile) setSheet("card");
+    saveReveal({ selectedPosition: nextPosition, sheet: nextSheet });
   };
-  const transition = useMemo(() => ({ duration: reduced ? 0 : metrics?.detail ?? 0, ease: metrics?.ease }), [reduced, metrics]);
+  const updateSection = useCallback((id: string, open: boolean) => {
+    setOpenSections(previous => open ? [...new Set([...previous, id])] : previous.filter(item => item !== id));
+  }, []);
+  const updateScroll = useCallback((id: string, value: number) => {
+    setScrollTops(previous => ({ ...previous, [id]: value }));
+  }, []);
 
   return <>
     <div ref={areaRef} className={styles.revealArea} data-reveal-phase={phase} aria-busy={phase !== "ready"}>
       {metrics && geometry ? <SpreadViewport width={geometry.width} height={geometry.height}
-        locked={phase !== "ready"} apiRef={viewportApi} onReady={onReady}>
+        locked={phase !== "ready"} apiRef={viewportApi} onReady={onReady} initialView={restored?.viewport}
+        onViewChange={updateViewport}>
         {origin && cards.map((card, index) => {
           const point = geometry.positions[index];
           return <motion.div key={card.position} className={styles.positionedCard} data-card-position={card.position}
             style={{ left: point.x, top: point.y }}
-            initial={{ x: origin.x - point.x - metrics.cardWidth / 2, y: origin.y - point.y }}
+            initial={restored ? false : { x: origin.x - point.x - metrics.cardWidth / 2, y: origin.y - point.y }}
             animate={{ x: 0, y: 0 }}
             transition={{ duration: reduced ? 0 : metrics.deal, delay: reduced ? 0 : index * metrics.stagger, ease: metrics.ease }}
             onAnimationComplete={() => {
@@ -237,8 +279,8 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
               pointerStart.current = null;
             }}>
             <h2 className={styles.detailHeader}>{labels.cardDescription}</h2>
-            <ReadingScroll key={selectedPosition}>
-              <ReadingContent sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} />} />
+            <ReadingScroll key={selectedPosition} scrollTop={scrollTops.card ?? 0} onScrollTopChange={value => updateScroll("card", value)}>
+              <ReadingContent sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} />} openSections={openSections} onOpenChange={updateSection} />
             </ReadingScroll>
           </motion.section>}
         </AnimatePresence>
@@ -247,8 +289,8 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
         {answerVisible && <motion.section className={styles.cardDetail} data-ai-detail aria-label={dictionary.readingAnswer}
           initial={{ opacity: 0, y: "110%" }} animate={{ opacity: 1, y: 0 }} transition={transition}>
           <h2 className={styles.detailHeader}>{labels.interpretation}</h2>
-          <ReadingScroll>
-            <ReadingContent sections={answerSections} locale={locale} />
+          <ReadingScroll scrollTop={scrollTops.answer ?? 0} onScrollTopChange={value => updateScroll("answer", value)}>
+            <ReadingContent sections={answerSections} locale={locale} openSections={openSections} onOpenChange={updateSection} />
           </ReadingScroll>
         </motion.section>}
       </div>
@@ -259,8 +301,8 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     <RevealSheet open={sessionActive && isMobile && sheet !== null} onClose={closeSheet} locale={locale} transition={transition} card={sheet === "card"}
       title={sheet === "card" ? labels.cardDescription : labels.interpretation}>
       {sheet === "card" && selectedCard
-        ? <ReadingContent key={selectedPosition} sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} sizes="calc(100vw - 56px)" />} />
-        : <ReadingContent sections={answerSections} locale={locale} />}
+        ? <ReadingContent key={selectedPosition} sections={cardSections} locale={locale} card={selectedCard.name[locale]} artwork={<CardArt card={selectedCard} locale={locale} sizes="calc(100vw - 56px)" />} openSections={openSections} onOpenChange={updateSection} />
+        : <ReadingContent sections={answerSections} locale={locale} openSections={openSections} onOpenChange={updateSection} />}
     </RevealSheet>
   </>;
 }
