@@ -79,7 +79,7 @@ export default function CategoryTopBlock(props: CategoryTopBlockProps) {
           ? <WavesLineFrame className={styles.wavesLine} style={{ filter: showEffects ? undefined : "none", zIndex: 2 }} />
           : <GradientWavesLineFrame className={styles.wavesLine} style={{ zIndex: -2 }} />}
         <AnimatePresence mode="wait">
-          <SessionContent key={sessionKey} {...props} panelRef={panelRef} onAppearance={setAppearance}
+          <SessionContent key={`${sessionKey}:${props.categoryId}:${props.spreadId}`} {...props} panelRef={panelRef} onAppearance={setAppearance}
             initialVisible={sessionKey === firstSession} />
         </AnimatePresence>
       </div>
@@ -91,7 +91,7 @@ function SessionContent({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive: active = true, embedded = false, catalogStatus,
+  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus,
   panelRef, onAppearance, initialVisible,
 }: CategoryTopBlockProps & {
   panelRef: RefObject<HTMLDivElement | null>;
@@ -102,22 +102,21 @@ function SessionContent({
   const sessionActive = active && present;
   const reduced = useReducedMotion();
   const navigation = useReadingNavigation();
-  const currentFlow = useReading(locale, categoryId, spreadId, sessionActive);
+  const currentFlow = useReading(locale, categoryId, spreadId, sessionActive, sessionKey);
   const text = readingMessages[locale];
-  const [firstCycleComplete, setFirstCycleComplete] = useState(false);
   const [lastPresentation, setLastPresentation] = useState({
-    reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete,
+    reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete: currentFlow.firstCycleComplete,
   });
   if (sessionActive && (lastPresentation.reading !== currentFlow.reading || lastPresentation.question !== currentFlow.question ||
-    lastPresentation.busy !== currentFlow.busy || lastPresentation.firstCycleComplete !== firstCycleComplete)) {
-    setLastPresentation({ reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete });
+    lastPresentation.busy !== currentFlow.busy || lastPresentation.firstCycleComplete !== currentFlow.firstCycleComplete)) {
+    setLastPresentation({ reading: currentFlow.reading, question: currentFlow.question, busy: currentFlow.busy, firstCycleComplete: currentFlow.firstCycleComplete });
   }
   const flow = sessionActive ? currentFlow : { ...currentFlow, ...lastPresentation };
   const completeFirstCycle = useCallback(() => {
-    if (sessionActive) setFirstCycleComplete(true);
-  }, [sessionActive]);
+    if (sessionActive) currentFlow.setFirstCycleComplete(true);
+  }, [currentFlow, sessionActive]);
   // Receiving cards alone does not mean the AI interpretation is ready.
-  const step: Step = flow.reading?.reading && (sessionActive ? firstCycleComplete : lastPresentation.firstCycleComplete)
+  const step: Step = flow.reading?.reading && (sessionActive ? flow.firstCycleComplete : lastPresentation.firstCycleComplete)
     ? "reveal"
     : flow.busy || flow.reading ? "choose" : "ask";
   const previousStep = useRef(step);
@@ -183,7 +182,7 @@ function SessionContent({
   const changeQuestion = () => {
     flow.reset();
     flow.setQuestion("");
-    setFirstCycleComplete(false);
+    flow.setFirstCycleComplete(false);
     setGuideSheetOpen(false);
   };
   useLayoutEffect(() => {
@@ -306,7 +305,7 @@ function SessionContent({
                 category_id: categoryId,
                 spread_id: spreadId,
               });
-              setFirstCycleComplete(false);
+              flow.setFirstCycleComplete(false);
               void flow.submit();
             }} />
         )}

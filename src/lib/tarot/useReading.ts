@@ -7,21 +7,57 @@ import { connectReadingSocket, type AnswerEvent } from "./socket";
 import { readingMessages } from "./messages";
 import { useTarotStyle } from "@/components/TarotStyleProvider";
 import { resolveSpeakerId } from "./styleStore";
+import { clearReadingSession, completeLocaleSwitch, getReadingSession, isLocaleSwitchPending, setReadingSession, subscribeReadingSession } from "./readingSession";
 
-export function useReading(locale: Locale, categoryId: string, spreadId: string, enabled = true) {
+export function useReading(locale: Locale, categoryId: string, spreadId: string, enabled = true, sessionKey = 0) {
+  const key = `${categoryId}:${spreadId}:${sessionKey}`;
+  const restored = getReadingSession(key);
   const [speakers, setSpeakers] = useState<Speaker[]>([]);
   const { speakerId: preferredSpeakerId, setSpeakerId, getSpeakerId } = useTarotStyle();
   const speakerId = resolveSpeakerId(speakers, preferredSpeakerId);
-  const [question, setQuestion] = useState("");
-  const [reading, setReading] = useState<Reading | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [speakerError, setSpeakerError] = useState(false);
+  const [question, setQuestionState] = useState(restored?.question ?? "");
+  const [reading, setReadingState] = useState<Reading | null>(restored?.reading ?? null);
+  const [busy, setBusyState] = useState(restored?.busy ?? false);
+  const [error, setErrorState] = useState(restored?.error ?? "");
+  const [speakerError, setSpeakerErrorState] = useState(restored?.speakerError ?? false);
+  const [firstCycleComplete, setFirstCycleCompleteState] = useState(restored?.firstCycleComplete ?? false);
   const [speakerAttempt, setSpeakerAttempt] = useState(0);
   const active = useRef<AbortController | null>(null);
-  const current = useRef<Reading | null>(null);
+  const current = useRef<Reading | null>(restored?.reading ?? null);
   const retryRef = useRef<() => Promise<void>>(async () => {});
   const text = readingMessages[locale];
+  const snapshot = useRef({ question, reading, busy, error, speakerError, firstCycleComplete });
+  const save = () => setReadingSession(key, snapshot.current);
+  const setQuestion = (value: string) => {
+    snapshot.current.question = value;
+    save();
+    setQuestionState(value);
+  };
+  const setReading = (value: Reading | null) => {
+    snapshot.current.reading = value;
+    save();
+    setReadingState(value);
+  };
+  const setBusy = (value: boolean) => {
+    snapshot.current.busy = value;
+    save();
+    setBusyState(value);
+  };
+  const setError = (value: string) => {
+    snapshot.current.error = value;
+    save();
+    setErrorState(value);
+  };
+  const setSpeakerError = useCallback((value: boolean) => {
+    snapshot.current.speakerError = value;
+    setReadingSession(key, snapshot.current);
+    setSpeakerErrorState(value);
+  }, [key]);
+  const setFirstCycleComplete = (value: boolean) => {
+    snapshot.current.firstCycleComplete = value;
+    save();
+    setFirstCycleCompleteState(value);
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -32,15 +68,35 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
       setSpeakerError(false);
     }).catch(() => { if (!controller.signal.aborted) setSpeakerError(true); });
     return () => controller.abort();
-  }, [locale, speakerAttempt, setSpeakerId, getSpeakerId]);
-  useEffect(() => () => active.current?.abort(), []);
+  }, [locale, speakerAttempt, setSpeakerId, getSpeakerId, setSpeakerError]);
+  useEffect(() => () => {
+    if (isLocaleSwitchPending()) return;
+    active.current?.abort();
+    clearReadingSession(key);
+  }, [key]);
+  useEffect(() => {
+    if (categoryId && spreadId && isLocaleSwitchPending()) completeLocaleSwitch();
+  }, [categoryId, spreadId]);
+  useEffect(() => subscribeReadingSession(key, state => {
+    if (!state) return;
+    snapshot.current = state;
+    current.current = state.reading;
+    setQuestionState(state.question);
+    setReadingState(state.reading);
+    setBusyState(state.busy);
+    setErrorState(state.error);
+    setSpeakerErrorState(state.speakerError);
+    setFirstCycleCompleteState(state.firstCycleComplete);
+  }), [key]);
   // Exit animations may keep the old panel mounted; stop its flow immediately.
   useEffect(() => { if (!enabled) active.current?.abort(); }, [enabled]);
 
   const reset = useCallback(() => {
     active.current?.abort(); active.current = null; current.current = null;
-    setReading(null); setError(""); setBusy(false);
-  }, []);
+    snapshot.current = { question: "", reading: null, busy: false, error: "", speakerError: false, firstCycleComplete: false };
+    clearReadingSession(key);
+    setReadingState(null); setErrorState(""); setBusyState(false);
+  }, [key]);
 
   async function submit() {
     if (!enabled || active.current || !question.trim() || !speakers.some(s => s.id === speakerId)) return;
@@ -126,7 +182,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
   }
   const errorKey = (["error", "waiting", "unavailable"] as const).find(key =>
     Object.values(readingMessages).some(messages => messages[key] === error));
-  return { speakers, speakerId, setSpeakerId, question,
+  return { speakers, speakerId, setSpeakerId, question, firstCycleComplete, setFirstCycleComplete,
     setQuestion: (value: string) => { setQuestion(value); setError(""); }, reading, busy, error: errorKey ? text[errorKey] : error,
     speakerError, retrySpeakers: () => { setSpeakerError(false); setSpeakerAttempt(v => v + 1); },
     submit, reset, retry: () => { void retryRef.current(); } };

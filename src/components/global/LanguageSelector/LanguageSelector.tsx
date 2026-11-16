@@ -17,6 +17,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCatalogStores } from "@/components/categories/CatalogProvider";
 import { localizedHref, routeFromPath } from "@/lib/routing";
 import { catalogMessages } from "@/lib/categories/messages";
+import { prepareLocaleSwitch } from "@/lib/tarot/readingSession";
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
 import styles from "./LanguageSelector.module.css";
 
@@ -153,6 +154,7 @@ export default function LanguageSelector({
           target = localizedHref(next, "/tarot/" + parts.map(encodeURIComponent).join("/"));
         }
         if (window.location.pathname !== pathname) return;
+        prepareLocaleSwitch();
         router.push(target + window.location.search + window.location.hash, { scroll: false });
       } catch {
         setSwitchError(true);

@@ -41,6 +41,10 @@ function mount({ delayed = false } = {}) {
     react,
     "@/components/TarotStyleProvider": { useTarotStyle: () => preference },
     "./styleStore": { resolveSpeakerId: (items, id) => items.some(item => item.id === id) ? id : "" },
+    "./readingSession": {
+      clearReadingSession() {}, completeLocaleSwitch() {}, getReadingSession() { return undefined; },
+      isLocaleSwitchPending() { return false; }, setReadingSession() {}, subscribeReadingSession() { return () => {}; },
+    },
     "./messages": { readingMessages: { en: { error: "Error", waiting: "Waiting", unavailable: "Unavailable" } } },
     "./reading": {
       loadSpeakers: async () => speakers,
