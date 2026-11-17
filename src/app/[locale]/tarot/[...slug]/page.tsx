@@ -39,9 +39,9 @@ export async function generateStaticParams({ params }: { params: { locale: strin
 
 export async function generateMetadata({ params }: Props) {
   const { locale, slug } = await params;
-  if (!isUrlLocale(locale)) return { robots: { index: false, follow: false } };
+  if (!isUrlLocale(locale)) return {};
   const seo = resolveTarotSeo(toLocale(locale), slug);
-  if (!seo) return { robots: { index: false, follow: false } };
+  if (!seo) return {};
   return pageMetadata(toLocale(locale), seo.path);
 }
 

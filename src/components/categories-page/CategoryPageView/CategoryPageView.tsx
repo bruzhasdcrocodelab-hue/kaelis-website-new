@@ -88,7 +88,6 @@ function CategoryPageContent({
         )}
         {status && (
           <>
-            {status === "notFound" && <meta name="robots" content="noindex" />}
             <div className={styles.pending}>
               <CatalogStatus locale={locale} status={status} retry={retry} />
               {status !== "loading" && <Link href="/categories">{dictionary.header.allTarotSpreads}</Link>}
