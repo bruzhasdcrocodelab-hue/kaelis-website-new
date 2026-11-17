@@ -32,6 +32,22 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Sanity Studio
+
+The content studio is an isolated npm project in `studio/`; it does not run in the
+Next.js application or change its routes. Copy `studio/.env.example` to
+`studio/.env` and set `SANITY_STUDIO_PROJECT_ID` and `SANITY_STUDIO_DATASET`.
+
+```bash
+npm --prefix studio ci
+npm run sanity:dev
+```
+
+Use `npm run sanity:build` to make a production build, `npm run sanity:deploy` to
+deploy the Studio, and `npm run sanity:deploy-graphql` to deploy the GraphQL API.
+The root `.env.example` also reserves the GraphQL URL, endpoint, and token for a
+future server-side content integration; they are not consumed by the website yet.
+
 ## Kaelis guest authorization
 
 `GuestAuth` initializes the browser session on mount. `src/lib/api.ts` shares one

@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "node scripts/build.mjs",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sanity:dev": "npm --prefix studio run dev",
+    "sanity:build": "npm --prefix studio run build",
+    "sanity:deploy": "npm --prefix studio run deploy",
+    "sanity:deploy-graphql": "npm --prefix studio run deploy-graphql"
   },
   "dependencies": {
     "laravel-echo": "^2.5.0",
