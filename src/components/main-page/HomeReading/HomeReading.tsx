@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
 import type { Dictionary, Locale } from "@/lang";
-import { useCategories, useSpreads } from "@/components/categories/CatalogProvider";
+import { useAllSpreads, useCategories, useSpreads } from "@/components/categories/CatalogProvider";
 import CategoryTopBlock, { type CategoryTopBlockProps } from "@/components/categories-page/CategoryTopBlock";
 import { useReadingNavigation } from "@/components/reading/ReadingNavigationProvider";
 import HeroCardsSection from "@/components/main-page/HeroCardsSection";
@@ -40,15 +40,20 @@ function ReadingSession({ slug, dictionary, locale, present, sessionKey, effects
   const category = categories.status === "success" ? categories.data.find(item => item.slug === mapping.category) : undefined;
   const spreadRequest = useSpreads(category?.id);
   const spreads = useLastSuccess(spreadRequest.state, category?.id);
-  const spread = spreads.status === "success" ? spreads.data.find(item => item.slug === mapping.spread) : undefined;
+  const categorySpread = spreads.status === "success" ? spreads.data.find(item => item.slug === mapping.spread) : undefined;
+  const allSpreadsRequest = useAllSpreads(Boolean(category && spreads.status === "success" && !categorySpread));
+  const allSpreads = useLastSuccess(allSpreadsRequest.state, category?.id);
+  const spread = categorySpread ?? (allSpreads.status === "success" ? allSpreads.data.find(item => item.slug === mapping.spread) : undefined);
   const count = spread ? cardCount(spread) : null;
   const status: "loading" | "error" | "notFound" = categoryRequest.state.status !== "success" ? categoryRequest.state.status
     : !category ? "notFound" : spreadRequest.state.status !== "success" ? spreadRequest.state.status
+    : !categorySpread && allSpreadsRequest.state.status !== "success" ? allSpreadsRequest.state.status
     : !spread ? "notFound" : "error";
-  const retry = categoryRequest.state.status === "error" ? categoryRequest.retry : spreadRequest.retry;
+  const retry = categoryRequest.state.status === "error" ? categoryRequest.retry
+    : spreadRequest.state.status === "error" ? spreadRequest.retry : allSpreadsRequest.retry;
   const ready = category && spread && count !== null;
   const catalogStatus: CategoryTopBlockProps["catalogStatus"] = ready
-    ? categoryRequest.state.status === "error" || spreadRequest.state.status === "error" ? { status: "error" as const, retry } : undefined
+    ? categoryRequest.state.status === "error" || spreadRequest.state.status === "error" || allSpreadsRequest.state.status === "error" ? { status: "error" as const, retry } : undefined
     : { status, retry };
   return (
     <CategoryTopBlock sessionKey={sessionKey} dictionary={dictionary.categoryPage.topBlock} locale={locale}
