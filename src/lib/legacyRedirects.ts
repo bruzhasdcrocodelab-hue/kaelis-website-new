@@ -5,11 +5,11 @@ import { isUrlLocale, type UrlLocale } from "./routing";
 
 type Redirect = { destination: string; status: 301 | 308 };
 
-const articleSlugs = Object.entries(legacyArticleRedirects).reduce((entries, [source, destination]) => {
+const articleSlugs = Object.keys(legacyArticleRedirects).reduce((entries, source) => {
   const match = source.match(/^\/articles\/(.+)-(en|ru|ua)$/);
-  if (match) entries.set(match[1], destination.replace(/^\/(en|ru|ua)/, ""));
+  if (match) entries.add(match[1]);
   return entries;
-}, new Map<string, string>());
+}, new Set<string>());
 
 const tarotPaths = Object.keys(content.en).filter(path => path.startsWith("/tarot/"));
 const categorySlugs = [...new Set(tarotPaths.map(path => path.split("/")[2]))];
@@ -37,13 +37,15 @@ function splitArticlePath(pathname: string) {
 function articleRedirect(pathname: string): Redirect | undefined {
   const parsed = splitArticlePath(pathname);
   if (!parsed) return undefined;
-  for (const [slug, destination] of articleSlugs) {
+  for (const slug of articleSlugs) {
     if (parsed.slug === slug || parsed.slug.match(new RegExp(`^${slug}-[a-z]{2}$`))) {
-      return { destination: `/${articleLocale(parsed.pathLocale, parsed.suffix)}${destination}`, status: 301 };
+      const locale = articleLocale(parsed.pathLocale, parsed.suffix);
+      const destination = `/${locale}/articles/${slug}-${locale}`;
+      return destination === pathname ? undefined : { destination, status: 301 };
     }
   }
   if (!parsed.hasArticles) return undefined;
-  return { destination: `/${articleLocale(parsed.pathLocale, parsed.suffix)}/tarot`, status: 301 };
+  return { destination: `/${articleLocale(parsed.pathLocale, parsed.suffix)}/articles`, status: 301 };
 }
 
 function policyRedirect(pathname: string): Redirect | undefined {

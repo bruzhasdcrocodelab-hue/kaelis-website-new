@@ -3,6 +3,7 @@ const en = {
     logo: "Kaelis AI",
     nav: {
       tarotSpreads: "Tarot Spreads",
+      articles: "Articles",
       ourApp: "Our App",
       faq: "FAQ",
       termsOfUse: "Terms of Use",
@@ -137,6 +138,15 @@ const en = {
   },
   termsOfUse: {
     eyebrow: "Legal Agreement",
+  },
+  articles: {
+    title: "Articles",
+    description: "Explore mystical practices and expand your knowledge with our expert materials",
+    searchPlaceholder: "Search articles...",
+    clearSearch: "Clear search",
+    empty: "No articles found",
+    allCategories: "All categories",
+    published: "Published",
   },
 };
 

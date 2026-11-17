@@ -5,6 +5,7 @@ const ru: Dictionary = {
     logo: "Kaelis AI",
     nav: {
       tarotSpreads: "Расклады Таро",
+      articles: "Статьи",
       ourApp: "Наше приложение",
       faq: "Вопросы и ответы",
       termsOfUse: "Условия использования",
@@ -139,6 +140,15 @@ const ru: Dictionary = {
   },
   termsOfUse: {
     eyebrow: "Юридическое соглашение",
+  },
+  articles: {
+    title: "Статьи",
+    description: "Изучайте мистические практики и расширяйте свои знания с нашими экспертными материалами",
+    searchPlaceholder: "Поиск статей...",
+    clearSearch: "Очистить поиск",
+    empty: "Статьи не найдены",
+    allCategories: "Все категории",
+    published: "Опубликовано",
   },
 };
 

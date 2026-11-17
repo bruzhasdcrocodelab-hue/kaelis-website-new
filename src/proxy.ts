@@ -6,7 +6,7 @@ import { isUnsupportedLocalePrefix, isUrlLocale, localizedHref, lowercaseKnownLo
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const legacyDestination = legacyArticleRedirects[pathname];
-  if (legacyDestination) {
+  if (legacyDestination && legacyDestination !== pathname) {
     const url = request.nextUrl.clone();
     url.pathname = legacyDestination;
     return NextResponse.redirect(url, 301);

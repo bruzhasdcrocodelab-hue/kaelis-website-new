@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "@/components/reading/ReadingLink";
 import type { Dictionary, Locale } from "@/lang";
-import { policyHref } from "@/lib/policies/catalog";
 import { useCategories } from "@/components/categories/CatalogProvider";
 import CatalogStatus from "@/components/categories/CatalogStatus";
 import { categoryHref } from "@/lib/categories/catalog";
@@ -178,6 +177,15 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
               </div>
             </div>
             <div className={styles.divider} />
+            <Link
+              href="/articles"
+              role="menuitem"
+              className={`font-instrument-sm-emphasized ${styles.item}`}
+              onClick={closeMenu}
+            >
+              {dictionary.nav.articles}
+            </Link>
+            <div className={styles.divider} />
             <OurAppLink
               role="menuitem"
               className={`font-instrument-sm-emphasized ${styles.item}`}
@@ -193,15 +201,6 @@ export default function MobileMenu({ dictionary, locale }: MobileMenuProps) {
               onClick={closeMenu}
             >
               {dictionary.nav.faq}
-            </Link>
-            <div className={styles.divider} />
-            <Link
-              href={policyHref(locale, "terms-of-use")}
-              role="menuitem"
-              className={`font-instrument-sm-emphasized ${styles.item}`}
-              onClick={closeMenu}
-            >
-              {dictionary.nav.termsOfUse}
             </Link>
           </div>,
           document.body
