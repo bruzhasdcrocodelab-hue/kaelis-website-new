@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { legacyArticleRedirects } from "@/lib/legacyArticleRedirects";
+import { legacyRedirect } from "@/lib/legacyRedirects";
 import { isUnsupportedLocalePrefix, isUrlLocale, localizedHref, lowercaseKnownLocalePathname, LOCALE_COOKIE, negotiateLocale, toLocale } from "@/lib/routing";
 
 export function proxy(request: NextRequest) {
@@ -16,6 +17,12 @@ export function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = lowercasePathname;
     return NextResponse.redirect(url, 308);
+  }
+  const redirect = legacyRedirect(pathname);
+  if (redirect) {
+    const url = request.nextUrl.clone();
+    url.pathname = redirect.destination;
+    return NextResponse.redirect(url, redirect.status);
   }
   if (/^\/(?:en|ru|ua)\/tarot\/dreams\/dream$/.test(pathname)) {
     const url = request.nextUrl.clone();
