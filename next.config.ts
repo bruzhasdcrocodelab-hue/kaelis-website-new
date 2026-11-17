@@ -7,6 +7,13 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev: false,
   },
   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        pathname: "/images/jcsmje02/production/**",
+      },
+    ],
     localPatterns: [
       { pathname: "/**", search: "" },
       { pathname: "/images/cards/deck/**", search: "?v=complete" },

@@ -13,6 +13,8 @@
     "sanity:deploy-graphql": "npm --prefix studio run deploy-graphql"
   },
   "dependencies": {
+    "@portabletext/react": "^5.0.0",
+    "@sanity/client": "^7.13.1",
     "laravel-echo": "^2.5.0",
     "motion": "^13.1.0",
     "next": "16.4.6",

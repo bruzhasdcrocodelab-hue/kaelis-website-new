@@ -5,6 +5,7 @@ const uk: Dictionary = {
     logo: "Kaelis AI",
     nav: {
       tarotSpreads: "Розклади Таро",
+      articles: "Статті",
       ourApp: "Наш додаток",
       faq: "Запитання та відповіді",
       termsOfUse: "Умови використання",
@@ -139,6 +140,15 @@ const uk: Dictionary = {
   },
   termsOfUse: {
     eyebrow: "Юридична угода",
+  },
+  articles: {
+    title: "Статті",
+    description: "Досліджуйте містичні практики та розширюйте свої знання з нашими експертними матеріалами",
+    searchPlaceholder: "Пошук статей...",
+    clearSearch: "Очистити пошук",
+    empty: "Статті не знайдено",
+    allCategories: "Усі категорії",
+    published: "Опубліковано",
   },
 };
 

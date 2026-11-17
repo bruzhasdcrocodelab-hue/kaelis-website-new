@@ -12,7 +12,7 @@ export interface FooterProps {
 }
 
 export default function Footer({ dictionary, locale, variant = "default" }: FooterProps) {
-  const policies: PolicyKey[] = ["children-s-privacy-policy", "refund-and-subscription-policy", "privacy-policy", "content-policy", "end-user-license-agreement-eula"];
+  const policies: PolicyKey[] = ["terms-of-use", "children-s-privacy-policy", "refund-and-subscription-policy", "privacy-policy", "content-policy", "end-user-license-agreement-eula"];
   return (
     <footer className={`${styles.footer} ${variant === "on-dark" ? styles.onDark : ""}`}>
       <div className={styles.social}>
