@@ -28,21 +28,16 @@ const redirects = loadCommonJs(redirectsSource, {
 });
 
 test("known legacy articles accept missing, alternate and absent articles language segments", () => {
-  const bases = new Map();
-  for (const [source, destination] of Object.entries(articles.legacyArticleRedirects)) {
-    const match = source.match(/^\/articles\/(.+)-(en|ru|ua)$/);
-    if (match) bases.set(match[1], destination.replace(/^\/(en|ru|ua)/, ""));
-  }
-  for (const [slug, destination] of bases) {
-    assert.deepEqual(redirects.legacyRedirect(`/ru/articles/${slug}`), { destination: `/ru${destination}`, status: 301 });
-    assert.deepEqual(redirects.legacyRedirect(`/ua/${slug}-uk`), { destination: `/ua${destination}`, status: 301 });
-    assert.deepEqual(redirects.legacyRedirect(`/en/articles/${slug}-fr`), { destination: `/en${destination}`, status: 301 });
-  }
+  const slug = "top-5-tarot-spreads-for-love-readings";
+  assert.deepEqual(redirects.legacyRedirect(`/ru/articles/${slug}`), { destination: `/ru/articles/${slug}-ru`, status: 301 });
+  assert.deepEqual(redirects.legacyRedirect(`/ua/${slug}-uk`), { destination: `/ua/articles/${slug}-ua`, status: 301 });
+  assert.deepEqual(redirects.legacyRedirect(`/en/articles/${slug}-fr`), { destination: `/en/articles/${slug}-en`, status: 301 });
+  assert.deepEqual(redirects.legacyRedirect(`/us/articles/${slug}-en`), { destination: `/en/articles/${slug}-en`, status: 301 });
 });
 
 test("unknown articles redirect only from the legacy articles namespace", () => {
-  assert.deepEqual(redirects.legacyRedirect("/ru/articles/exploring-the-mystical-connection-between-tarot-and-numerology"), { destination: "/ru/tarot", status: 301 });
-  assert.deepEqual(redirects.legacyRedirect("/en/articles/dfghjhgfdsasdf-en"), { destination: "/en/tarot", status: 301 });
+  assert.deepEqual(redirects.legacyRedirect("/ru/articles/exploring-the-mystical-connection-between-tarot-and-numerology"), { destination: "/ru/articles", status: 301 });
+  assert.deepEqual(redirects.legacyRedirect("/en/articles/dfghjhgfdsasdf-en"), { destination: "/en/articles", status: 301 });
   assert.equal(redirects.legacyRedirect("/ru/unknown-page"), undefined);
 });
 

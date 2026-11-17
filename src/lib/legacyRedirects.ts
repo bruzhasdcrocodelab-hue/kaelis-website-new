@@ -45,7 +45,6 @@ function articleRedirect(pathname: string): Redirect | undefined {
     }
   }
   if (!parsed.hasArticles) return undefined;
-  if (parsed.pathLocale) return undefined;
   return { destination: `/${articleLocale(parsed.pathLocale, parsed.suffix)}/articles`, status: 301 };
 }
 
