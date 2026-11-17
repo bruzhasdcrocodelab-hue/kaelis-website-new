@@ -120,7 +120,7 @@ const DEFAULT_SPREADS: Readonly<Record<string, string>> = {
   hidden: "secret",
   forecast: "prediction",
   "soul-path": "whats-inside",
-  love: "celtic-cross",
+  love: "love",
   work: "my-job",
   family: "celtic-cross",
   money: "celtic-cross",
