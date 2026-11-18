@@ -13,19 +13,9 @@ const articleSlugs = Object.keys(legacyArticleRedirects).reduce((entries, source
 
 const tarotPaths = Object.keys(content.en).filter(path => path.startsWith("/tarot/"));
 const categorySlugs = [...new Set(tarotPaths.map(path => path.split("/")[2]))];
-const exactRedirects: Readonly<Record<string, Redirect>> = {
-  "/articles/exploring-the-mystical-connection-between-tarot-and-numerology": {
-    destination: "/en/articles/numerology-s-role-in-enhancing-your-tarot-readings-en",
-    status: 301,
-  },
-  "/ru/articles/exploring-the-mystical-connection-between-tarot-and-numerology": {
-    destination: "/ru/articles/numerology-s-role-in-enhancing-your-tarot-readings-ru",
-    status: 301,
-  },
-  "/policy/privacy-policy-en": {
-    destination: "/en/policy/privacy-policy-en",
-    status: 308,
-  },
+const legacyArticleAliases: Readonly<Record<string, string>> = {
+  "exploring-the-mystical-connection-between-tarot-and-numerology":
+    "numerology-s-role-in-enhancing-your-tarot-readings",
 };
 
 function canonicalLocale(value: string | undefined): UrlLocale | undefined {
@@ -51,6 +41,13 @@ function splitArticlePath(pathname: string) {
 function articleRedirect(pathname: string): Redirect | undefined {
   const parsed = splitArticlePath(pathname);
   if (!parsed) return undefined;
+  for (const [source, target] of Object.entries(legacyArticleAliases)) {
+    if (parsed.slug === source || parsed.slug.match(new RegExp(`^${source}-[a-z]{2}$`))) {
+      const locale = articleLocale(parsed.pathLocale, parsed.suffix);
+      const destination = `/${locale}/articles/${target}-${locale}`;
+      return destination === pathname ? undefined : { destination, status: 301 };
+    }
+  }
   for (const slug of articleSlugs) {
     if (parsed.slug === slug || parsed.slug.match(new RegExp(`^${slug}-[a-z]{2}$`))) {
       const locale = articleLocale(parsed.pathLocale, parsed.suffix);
@@ -63,6 +60,14 @@ function articleRedirect(pathname: string): Redirect | undefined {
 }
 
 function policyRedirect(pathname: string): Redirect | undefined {
+  const rootMatch = pathname.match(/^\/policy\/(.+)-(en|ru|ua|uk)$/);
+  if (rootMatch) {
+    const locale = canonicalLocale(rootMatch[2]);
+    const key = policyKeys.find(candidate => candidate === rootMatch[1]);
+    if (locale && key) {
+      return { destination: `/${locale}/policy/${key}-${locale}`, status: 308 };
+    }
+  }
   const match = pathname.match(/^\/(en|ru|ua)\/(?:policy\/)?(.+)$/);
   if (!match) return undefined;
   const key = policyKeys.find(candidate => match[2] === candidate ||
@@ -95,5 +100,5 @@ function tarotRedirect(pathname: string): Redirect | undefined {
 }
 
 export function legacyRedirect(pathname: string): Redirect | undefined {
-  return exactRedirects[pathname] ?? articleRedirect(pathname) ?? policyRedirect(pathname) ?? tarotRedirect(pathname);
+  return articleRedirect(pathname) ?? policyRedirect(pathname) ?? tarotRedirect(pathname);
 }
