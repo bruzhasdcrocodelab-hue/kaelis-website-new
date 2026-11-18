@@ -32,6 +32,7 @@ export default function CategoryHeroSection({
 }: CategoryHeroSectionProps) {
   const hasSubcategories = spreads.length > 1;
   const router = useRouter();
+  const seo = getSeo(locale, `/tarot/${path.join("/")}`);
 
   return (
     <section className={styles.section}>
@@ -46,9 +47,9 @@ export default function CategoryHeroSection({
               {dictionary.categoryLabel}
             </p>
             <div className={styles.titleWrap}>
-              <CategoryTitle title={getSeo(locale, `/tarot/${path.join("/")}`)?.h1 ?? current.name} locale={locale} />
+              <CategoryTitle title={seo?.h1 ?? current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
-                {description ?? (current.site_description || ("description" in current ? current.description : ""))}
+                {seo?.intro ?? description ?? (current.site_description || ("description" in current ? current.description : ""))}
               </p>
             </div>
           </div>

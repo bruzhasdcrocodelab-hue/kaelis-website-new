@@ -65,6 +65,9 @@ export function negotiateLocale(cookie: string | undefined, acceptLanguage: stri
     const quality = parameters.find(parameter => parameter.trim().startsWith("q="));
     return { tag: tag.toLowerCase().split("-")[0], quality: quality ? Number(quality.trim().slice(2)) : 1, index };
   }).filter(item => item.quality > 0 && item.quality <= 1).sort((a, b) => b.quality - a.quality || a.index - b.index);
-  for (const { tag } of preferences) if (isUrlLocale(tag)) return tag;
+  for (const { tag } of preferences) {
+    if (tag === "uk") return "ua";
+    if (isUrlLocale(tag)) return tag;
+  }
   return "en";
 }

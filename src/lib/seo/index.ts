@@ -7,7 +7,7 @@ export interface SeoContent {
   title: string;
   description: string;
   h1?: string;
-  faq?: Array<{ question: string; answer: string }>;
+  intro?: string;
 }
 
 const entries: Record<Locale, Record<string, SeoContent>> = content;

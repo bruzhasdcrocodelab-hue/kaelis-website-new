@@ -106,10 +106,16 @@ function SessionContent({
   const navigation = useReadingNavigation();
   const currentFlow = useReading(locale, categoryId, spreadId, sessionActive, sessionKey);
   const readingKey = `reading:${sessionKey}`;
-  const restoredUi = getReadingUi(readingKey);
+  const [restoredUi, setRestoredUi] = useState<ReturnType<typeof getReadingUi>>();
+  const [preservedPresentation, setPreservedPresentation] = useState<ReturnType<typeof getReadingSession>>();
   const text = readingMessages[locale];
-  const preservedPresentation = getReadingSession(readingKey);
   const flow = sessionActive || !preservedPresentation ? currentFlow : { ...currentFlow, ...preservedPresentation };
+  useEffect(() => {
+    queueMicrotask(() => {
+      setRestoredUi(getReadingUi(readingKey));
+      setPreservedPresentation(getReadingSession(readingKey));
+    });
+  }, [readingKey]);
   const completeFirstCycle = useCallback(() => {
     currentFlow.setFirstCycleComplete(true);
   }, [currentFlow]);

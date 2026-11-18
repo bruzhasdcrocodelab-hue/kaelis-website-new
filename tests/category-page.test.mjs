@@ -62,6 +62,7 @@ async function renderPage({ slug = "other", spreads = familySpreads, all = succe
     "@/components/categories-page/CategoryTopBlock": props => { reading = props; return createElement("div", { "data-component": "reading" }); },
     "@/components/categories-page/ConstellationPattern": () => null,
     "@/components/seo/Breadcrumbs": () => null,
+    "@/components/faq/FaqSection": marker("faq"),
     "./CategoryPageView.module.css": {},
   })).default;
   const html = renderToStaticMarkup(createElement(Page, { dictionary, locale: "en", path: nested ? [slug, nested] : [slug] }));

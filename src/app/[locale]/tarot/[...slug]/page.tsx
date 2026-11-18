@@ -63,7 +63,7 @@ export default async function Category({ params }: Props) {
   const resolved = resolveCatalogPath(categories, spreads, slug, defaultSpread);
   if (!resolved) notFound();
   const current = resolved.spread ?? resolved.category;
-  const faq = seo.entry.faq?.length ? seo.entry.faq : tarotFaq(language, seo.entry.h1 ?? current.name);
+  const faq = tarotFaq(language, seo.entry.h1 ?? current.name, seo.path);
   const breadcrumbs = [
     { name: dictionaries[language].header.logo, path: "/" },
     { name: dictionaries[language].header.allTarotSpreads, path: "/tarot" },

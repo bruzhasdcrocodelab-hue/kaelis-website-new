@@ -19,16 +19,15 @@ const activeReadings = new Map<string, ActiveReading>();
 
 export function useReading(locale: Locale, categoryId: string, spreadId: string, enabled = true, sessionKey = 0) {
   const key = `reading:${sessionKey}`;
-  const restored = getReadingSession(key);
-  const [speakers, setSpeakersState] = useState<Speaker[]>(restored?.speakers ?? []);
+  const [speakers, setSpeakersState] = useState<Speaker[]>([]);
   const { speakerId: preferredSpeakerId, setSpeakerId, getSpeakerId } = useTarotStyle();
   const speakerId = resolveSpeakerId(speakers, preferredSpeakerId);
-  const [question, setQuestionState] = useState(restored?.question ?? "");
-  const [reading, setReadingState] = useState<Reading | null>(restored?.reading ?? null);
-  const [busy, setBusyState] = useState(restored?.busy ?? false);
-  const [error, setErrorState] = useState(restored?.error ?? "");
-  const [speakerError, setSpeakerErrorState] = useState(restored?.speakerError ?? false);
-  const [firstCycleComplete, setFirstCycleCompleteState] = useState(restored?.firstCycleComplete ?? false);
+  const [question, setQuestionState] = useState("");
+  const [reading, setReadingState] = useState<Reading | null>(null);
+  const [busy, setBusyState] = useState(false);
+  const [error, setErrorState] = useState("");
+  const [speakerError, setSpeakerErrorState] = useState(false);
+  const [firstCycleComplete, setFirstCycleCompleteState] = useState(false);
   const [speakerAttempt, setSpeakerAttempt] = useState(0);
   const owner = useRef<string | null>(null);
   const text = readingMessages[locale];
@@ -59,6 +58,24 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     save();
     setFirstCycleCompleteState(value);
   };
+
+  useEffect(() => {
+    const restored = getReadingSession(key);
+    if (!restored) return;
+    let active = true;
+    queueMicrotask(() => {
+      if (!active) return;
+      snapshot.current = restored;
+      setQuestionState(restored.question);
+      setReadingState(restored.reading);
+      setBusyState(restored.busy);
+      setErrorState(restored.error);
+      setSpeakerErrorState(restored.speakerError);
+      setFirstCycleCompleteState(restored.firstCycleComplete);
+      setSpeakersState(restored.speakers ?? []);
+    });
+    return () => { active = false; };
+  }, [key]);
 
   useEffect(() => {
     const controller = new AbortController();

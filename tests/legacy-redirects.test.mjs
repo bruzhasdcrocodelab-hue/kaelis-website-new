@@ -35,8 +35,35 @@ test("known legacy articles accept missing, alternate and absent articles langua
   assert.deepEqual(redirects.legacyRedirect(`/us/articles/${slug}-en`), { destination: `/en/articles/${slug}-en`, status: 301 });
 });
 
-test("unknown articles redirect only from the legacy articles namespace", () => {
-  assert.deepEqual(redirects.legacyRedirect("/ru/articles/exploring-the-mystical-connection-between-tarot-and-numerology"), { destination: "/ru/articles", status: 301 });
+test("legacy article aliases normalize locale variants before the generic fallback", () => {
+  assert.deepEqual(redirects.legacyRedirect("/ru/articles/exploring-the-mystical-connection-between-tarot-and-numerology"), {
+    destination: "/ru/articles/numerology-s-role-in-enhancing-your-tarot-readings-ru",
+    status: 301,
+  });
+  assert.deepEqual(redirects.legacyRedirect("/articles/exploring-the-mystical-connection-between-tarot-and-numerology"), {
+    destination: "/en/articles/numerology-s-role-in-enhancing-your-tarot-readings-en",
+    status: 301,
+  });
+  assert.deepEqual(redirects.legacyRedirect("/ua/articles/exploring-the-mystical-connection-between-tarot-and-numerology-uk"), {
+    destination: "/ua/articles/numerology-s-role-in-enhancing-your-tarot-readings-ua",
+    status: 301,
+  });
+  assert.deepEqual(redirects.legacyRedirect("/en/articles/exploring-the-mystical-connection-between-tarot-and-numerology-fr"), {
+    destination: "/en/articles/numerology-s-role-in-enhancing-your-tarot-readings-en",
+    status: 301,
+  });
+  assert.deepEqual(redirects.legacyRedirect("/us/articles/exploring-the-mystical-connection-between-tarot-and-numerology-en"), {
+    destination: "/en/articles/numerology-s-role-in-enhancing-your-tarot-readings-en",
+    status: 301,
+  });
+  assert.deepEqual(redirects.legacyRedirect("/policy/privacy-policy-ru"), {
+    destination: "/ru/policy/privacy-policy-ru",
+    status: 308,
+  });
+  assert.deepEqual(redirects.legacyRedirect("/policy/privacy-policy-en"), {
+    destination: "/en/policy/privacy-policy-en",
+    status: 308,
+  });
   assert.deepEqual(redirects.legacyRedirect("/en/articles/dfghjhgfdsasdf-en"), { destination: "/en/articles", status: 301 });
   assert.equal(redirects.legacyRedirect("/ru/unknown-page"), undefined);
 });
