@@ -28,7 +28,7 @@ function browser(initial = null, blocked = false) {
 test("home cards preserve every API mapping and use dictionary keys for labels", async () => {
   const { HOME_CARDS } = await load("../src/lib/tarot/homeCards.ts");
   assert.deepEqual(Object.values(HOME_CARDS).map(card => [card.label, card.category, card.spread]), [
-    ["love", "answer", "celtic-cross"], ["yesNo", "decision", "yesno"],
+    ["love", "love", "love"], ["yesNo", "decision", "yesno"],
     ["oneCard", "answer", "triplet"], ["threeCards", "answer", "triplet"],
     ["work", "work", "my-job"], ["family", "answer", "celtic-cross"], ["money", "answer", "celtic-cross"],
   ]);

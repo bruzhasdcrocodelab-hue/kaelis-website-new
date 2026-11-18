@@ -156,7 +156,7 @@ test("every known category selects its assigned spread regardless of order, coun
   const defaults = {
     dreams: "dream", personality: "celtic-cross", education: "opportunities",
     trips: "trip", health: "health", decision: "decision", hidden: "secret",
-    forecast: "prediction", "soul-path": "whats-inside", love: "celtic-cross",
+    forecast: "prediction", "soul-path": "whats-inside", love: "love",
     work: "my-job", family: "celtic-cross", money: "celtic-cross", answer: "triplet",
   };
   for (const [slug, target] of Object.entries(defaults)) {
