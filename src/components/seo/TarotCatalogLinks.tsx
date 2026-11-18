@@ -13,7 +13,7 @@ export default function TarotCatalogLinks({ locale, categories, spreadsByCategor
       <h2 className={styles.groupTitle}><Link href={categoryHref(category.slug, locale)}>{category.name}</Link></h2>
       <ul className={styles.list}>
         {(spreadsByCategory[category.id] ?? []).map((spread) => <li key={spread.id}>
-          <Link href={spreadHref(category.slug, spread.slug, locale)}>{spread.name}</Link>
+          <Link href={category.slug === "dreams" && spread.slug === "dream" ? categoryHref(category.slug, locale) : spreadHref(category.slug, spread.slug, locale)}>{spread.name}</Link>
         </li>)}
       </ul>
     </section>)}

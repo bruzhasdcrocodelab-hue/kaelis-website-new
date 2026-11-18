@@ -13,6 +13,20 @@ const articleSlugs = Object.keys(legacyArticleRedirects).reduce((entries, source
 
 const tarotPaths = Object.keys(content.en).filter(path => path.startsWith("/tarot/"));
 const categorySlugs = [...new Set(tarotPaths.map(path => path.split("/")[2]))];
+const exactRedirects: Readonly<Record<string, Redirect>> = {
+  "/articles/exploring-the-mystical-connection-between-tarot-and-numerology": {
+    destination: "/en/articles/numerology-s-role-in-enhancing-your-tarot-readings-en",
+    status: 301,
+  },
+  "/ru/articles/exploring-the-mystical-connection-between-tarot-and-numerology": {
+    destination: "/ru/articles/numerology-s-role-in-enhancing-your-tarot-readings-ru",
+    status: 301,
+  },
+  "/policy/privacy-policy-en": {
+    destination: "/en/policy/privacy-policy-en",
+    status: 308,
+  },
+};
 
 function canonicalLocale(value: string | undefined): UrlLocale | undefined {
   if (value === "uk") return "ua";
@@ -81,5 +95,5 @@ function tarotRedirect(pathname: string): Redirect | undefined {
 }
 
 export function legacyRedirect(pathname: string): Redirect | undefined {
-  return articleRedirect(pathname) ?? policyRedirect(pathname) ?? tarotRedirect(pathname);
+  return exactRedirects[pathname] ?? articleRedirect(pathname) ?? policyRedirect(pathname) ?? tarotRedirect(pathname);
 }

@@ -17,6 +17,8 @@ test("localized links preserve logical pages, query, hash and backend language",
 test("locale detection follows the reference cookie, weighted header, then English default", () => {
   assert.equal(routing.negotiateLocale("ua", "ru,en;q=0.8"), "ua");
   assert.equal(routing.negotiateLocale(undefined, "fr;q=1,ru-RU;q=0.9,en;q=0.8"), "ru");
+  assert.equal(routing.negotiateLocale(undefined, "uk-UA,ru;q=0.8"), "ua");
+  assert.equal(routing.negotiateLocale(undefined, "ru;q=0.9,uk;q=0.8"), "ru");
   assert.equal(routing.negotiateLocale("invalid", "ru;q=0,en;q=0.4"), "en");
   assert.equal(routing.negotiateLocale(undefined, "invalid;q=oops"), "en");
   assert.equal(routing.routeFromPath("/en/tarot/a/b/c"), null);
@@ -39,18 +41,31 @@ test("only known canonical tarot paths resolve and locale paths redirect to cano
 
 test("every spreadsheet row has exact English metadata and separate complete translations", async () => {
   const source = JSON.parse(await readFile(new URL("../src/lib/seo/source.json", import.meta.url), "utf8"));
+  const customTitles = {
+    en: { "/tarot/love/reciprocity": "How Do They Feel About Me? Tarot Reading | Kaelis" },
+    ru: { "/tarot/love/reciprocity": "Таро на взаимность и чувства | Kaelis" },
+    uk: { "/tarot/love/reciprocity": "Таро на взаємність і почуття | Kaelis" },
+  };
+  const customDescriptions = {
+    en: { "/tarot/work": "Ask about work, a role change, or relationships with colleagues. A Tarot reading can help you reflect on the situation and a possible next step." },
+    ru: { "/tarot/work": "Задайте вопрос о работе, смене должности или отношениях с коллегами. Расклад Таро поможет обдумать ситуацию и возможный следующий шаг." },
+    uk: { "/tarot/work": "Поставте запитання про роботу, зміну посади чи стосунки з колегами. Розклад Таро допоможе осмислити ситуацію та можливий наступний крок." },
+  };
   const seen = new Set();
   for (const [url, title = "", description = "", h1] of source.slice(2)) {
     const path = new URL(url).pathname.replace(/^\/en/, "") || "/";
     assert.equal(seen.has(path), false);
     seen.add(path);
-    if (path === "/tarot/dreams") {
+    if (customTitles.en?.[path]) {
+      assert.equal(seoContent.en[path].title, customTitles.en[path]);
+      assert.equal(seoContent.en[path].h1, h1?.trim());
+    } else if (path === "/tarot/dreams") {
       assert.equal(seoContent.en[path].title, "AI Dream Interpreter Online — Tarot Dream Meanings | Kaelis");
       assert.equal(seoContent.en[path].description, "Describe your dream — Kaelis AI will do a Tarot reading and explain its meaning. Free, online, no registration.");
       assert.equal(seoContent.en[path].h1, "Interpret Dreams with Tarot and Artificial Intelligence");
     } else {
       assert.equal(seoContent.en[path].title, path === "/" ? "Kaelis — Your AI Guide to Tarot" : title);
-      assert.equal(seoContent.en[path].description, description);
+      assert.equal(seoContent.en[path].description, customDescriptions.en?.[path] ?? description);
       assert.equal(seoContent.en[path].h1, h1?.trim());
     }
     for (const locale of ["ru", "uk"]) {
@@ -58,7 +73,10 @@ test("every spreadsheet row has exact English metadata and separate complete tra
       assert.ok(entry, `${locale}: ${path}`);
       assert.match(entry.description, /[а-яіїєґ]/i);
       assert.doesNotMatch(JSON.stringify(entry), /\?{2}|undefined|\uFFFD/);
-      if (path !== "/" && path !== "/tarot/dreams") {
+      if (customDescriptions[locale]?.[path]) assert.equal(entry.description, customDescriptions[locale][path]);
+      if (customTitles[locale]?.[path]) {
+        assert.equal(entry.title, customTitles[locale][path]);
+      } else if (path !== "/" && path !== "/tarot/dreams") {
         assert.ok(entry.h1);
         assert.equal(entry.title, `${entry.h1} | Kaelis`);
       } else assert.ok(entry.title.trim());
@@ -95,4 +113,26 @@ test("FAQ content is localized, visible-data ready, and has indexable metadata",
       assert.equal(faq.tarotFaq(locale, seoContent[locale][path].h1).length, 3, `${locale}: ${path}`);
     }
   }
+});
+
+test("targeted SEO content is localized and usable without metadata fallback", () => {
+  assert.equal(seoContent.ru["/tarot/work"].description, "Задайте вопрос о работе, смене должности или отношениях с коллегами. Расклад Таро поможет обдумать ситуацию и возможный следующий шаг.");
+  for (const locale of ["en", "ru", "uk"]) {
+    assert.ok(seoContent[locale]["/tarot/work"].intro);
+    assert.ok(seoContent[locale]["/tarot/love"].intro);
+    assert.ok(seoContent[locale]["/tarot/love/reciprocity"].intro);
+    const specificFaq = faq.tarotFaq(locale, seoContent[locale]["/tarot/decision/yesno"].h1, "/tarot/decision/yesno");
+    assert.equal(specificFaq.length, 1);
+    assert.match(specificFaq[0].answer, /yes or no|«да» или «нет»|«так» або «ні»/i);
+  }
+  assert.equal(seo.pageMetadata("ru", "/tarot/work").description, seoContent.ru["/tarot/work"].description);
+});
+
+test("home omits stale card links and the catalog avoids the Dreams redirect", async () => {
+  const [home, catalog] = await Promise.all([
+    readFile(new URL("../src/components/main-page/HomePageView.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/seo/TarotCatalogLinks.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.doesNotMatch(home, /HomeTarotLinks/);
+  assert.match(catalog, /category\.slug === "dreams" && spread\.slug === "dream"/);
 });

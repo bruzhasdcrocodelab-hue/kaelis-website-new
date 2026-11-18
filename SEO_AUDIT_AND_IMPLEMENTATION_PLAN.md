@@ -36,7 +36,7 @@ Live DOM `/ru/tarot` содержит прямую ссылку `/ru/tarot/dream
 
 **Статус: частично подтверждено.** Показатели GSC (65 показов для Work, 12 для Yes/No и позиции) недоступны для независимой проверки. Но смысловое несоответствие FAQ подтверждено: live `/ru/tarot/decision/yesno` и его `FAQPage` JSON-LD советуют сформулировать «открытый и конкретный вопрос», хотя страница позиционируется как «Да/Нет».
 
-В `content.json` у Work и Yes/No отсутствуют тематические FAQ/лиды, а фактическое meta description на Yes/No — общий fallback. Причина видна в `src/lib/seo/index.ts`: SEO-описания с emoji отклоняются проверкой и заменяются generic fallback. Поэтому обновление только видимого текста без обновления допустимых metadata не достигнет цели.
+Тематический лид Work и metadata хранятся в `content.json`; общий FAQ раскладов живёт в `src/lib/faq/content.ts`. Фактическое meta description Yes/No — общий fallback, поскольку SEO-описания с emoji отклоняются проверкой в `src/lib/seo/index.ts`. Поэтому обновление только видимого текста без обновления допустимых metadata не достигнет цели.
 
 **Оценка решения:** FAQ с закрытым примером для Yes/No корректен и должен одновременно меняться в видимом блоке и JSON-LD. Лид Work и тематическое description полезны, но являются редакционными утверждениями; публиковать следует только одобренный текст из таблицы. Для рендеринга лида потребуется расширить локальную SEO-модель опциональным полем `intro` и вывести его серверно рядом с интерактивной формой.
 
@@ -113,6 +113,12 @@ Live DOM `/ru/tarot` содержит прямую ссылку `/ru/tarot/dream
 
 ## 3. План реализации
 
+### Статус выполнения после реализации 18.11.2026
+
+- **Выполнено в проекте:** удалён источник `/tarot/love/love`; каталог ведёт на `/tarot/dreams` напрямую; `uk`/`uk-UA` выбирает `/ua`; добавлены точные legacy redirects; обновлены лид каталога, FAQ Yes/No, Work/Love/Reciprocity SEO-тексты и title во всех трёх локалях; добавлены тесты.
+- **Подтверждено локальным production build:** `/sitemap.xml` — `200 application/xml`, 291 URL с hreflang; sitemap статически генерируется с revalidate 1 hour. Это закрывает кодовую часть проверки, но production latency после деплоя всё ещё нужно наблюдать отдельно.
+- **Не выполнено в проекте и не должно им выполняться:** Vercel www → apex, публикация шести ссылок в Sanity, настройка/проверка GA4, GSC, Ahrefs и внешние размещения. Эти пункты требуют доступа и ручного подтверждения.
+
 ### Этап 0 — проверка production sitemap
 
 | Поле | Значение |
@@ -128,20 +134,20 @@ Live DOM `/ru/tarot` содержит прямую ссылку `/ru/tarot/dream
 
 | Задача | Способ | Места реализации | Технический способ | Приоритет и зависимости | Критерий завершения |
 | --- | --- | --- | --- | --- | --- |
-| Валидные ссылки главной | Проект | `HomeTarotLinks`, `HomePageView`, каталогные helpers | Удалить дублирующий блок либо строить его только из валидной карты маршрутов; не формировать вложенный `love/love`. | P1 | Во всех локалях SSR HTML не содержит битых href; ссылки отвечают 200. |
-| Прямой Dreams URL | Проект | Каталог/данные, используемые `TarotCatalogLinks` | Исправить источник href на `/tarot/dreams`; сохранить 301 в proxy для старых входящих URL. | P1 | Внутренняя ссылка не создаёт redirect, старый URL всё ещё 301. |
-| Выбор UA языка | Проект | `src/lib/routing.ts`, routing tests | Сопоставить язык заголовка `uk` с URL-локалью `ua`, сохранив q-values и приоритет валидной cookie. | P1 | `uk`/`uk-UA` → `/ua`; EN/RU и явные locale URL не регрессируют. |
-| Точные legacy redirects | Проект | `legacyArticleRedirects.ts`, `legacyRedirects.ts`, proxy tests | Добавить две точные article-карты и независимый от negotiation permanent redirect для privacy policy. | P1 | По одному 301/308 на заданную конечную страницу для любого Accept-Language. |
-| www host | Вручную в Vercel | Vercel Project Settings → Domains | Сделать apex primary и включить permanent redirect `www.kaelisai.com` → `kaelisai.com` с путём и query. | P1, доступ к Vercel | `www` deep URL одним 308 приходит на apex с теми же path/query. |
+| Валидные ссылки главной | Проект — **выполнено** | `HomeTarotLinks`, `HomePageView`, каталогные helpers | Удалён дублирующий блок, формировавший вложенный `love/love`. | P1 | Локальный production HTML не содержит битый href. |
+| Прямой Dreams URL | Проект — **выполнено** | Каталог/данные, используемые `TarotCatalogLinks` | Каталожный `dreams/dream` заменён на `/tarot/dreams`; 301 в proxy сохранён для старых входящих URL. | P1 | Внутренняя ссылка прямая, старый URL возвращает 301. |
+| Выбор UA языка | Проект — **выполнено** | `src/lib/routing.ts`, routing tests | `uk` сопоставляется с URL-локалью `ua`, с сохранением q-values и приоритета cookie. | P1 | `uk-UA` → `/ua`; EN/RU и явные locale URL проверены тестами. |
+| Точные legacy redirects | Проект — **выполнено** | `legacyArticleRedirects.ts`, `legacyRedirects.ts`, proxy tests | Добавлены две article-карты и независимый от negotiation redirect privacy policy. | P1 | Локально подтверждены 301/308 на заданные конечные URL. |
+| www host | Вручную в Vercel — **не выполнено** | Vercel Project Settings → Domains | Сделать apex primary и включить permanent redirect `www.kaelisai.com` → `kaelisai.com` с путём и query. | P1, доступ к Vercel | `www` deep URL одним 308 приходит на apex с теми же path/query. |
 
 ### Этап 2 — целевой поисковый контент
 
 | Задача | Способ | Места реализации | Технический способ | Приоритет | Критерий завершения |
 | --- | --- | --- | --- | --- | --- |
-| Нейтральный лид каталога | Проект | `src/lang/en.ts`, `ru.ts`, `uk.ts` | Заменить `categoriesList.description` утверждёнными локализованными строками из таблицы. | P1 | Первый экран и SSR HTML объясняют выбор тем, не только семью. |
-| FAQ Yes/No | Проект | `src/lib/seo/content.json` | Добавить локализованный FAQ с закрытым примером; использовать один источник для видимого FAQ и JSON-LD. | P1 | Текст и JSON-LD совпадают во всех трёх локалях. |
-| Work/Love/Reciprocity лиды и metadata | Проект после редакционного утверждения | `SeoContent`, `content.json`, server page/hero rendering | Добавить опциональный `intro`, рендерить его серверно рядом с формой; применить только утверждённые title/description без emoji и с действующими лимитами. | P2 | Контент видим без JS; metadata не использует generic fallback. |
-| Контекстные ссылки статей | Ручная редакционная задача Sanity | Шесть статей из таблицы | Добавить только указанные EN/RU анкорные ссылки через Studio и опубликовать. | P2 | В опубликованном HTML есть работающий href на расклад той же локали. |
+| Нейтральный лид каталога | Проект — **выполнено** | `src/lang/en.ts`, `ru.ts`, `uk.ts` | `categoriesList.description` заменён утверждёнными локализованными строками. | P1 | Первый экран и SSR HTML объясняют выбор тем, не только семью. |
+| FAQ Yes/No | Проект — **выполнено** | `src/lib/faq/content.ts` | Добавлен локализованный FAQ с закрытым примером; он является источником видимого FAQ и JSON-LD. | P1 | Текст и JSON-LD совпадают в трёх локалях. |
+| Work/Love/Reciprocity лиды и metadata | Проект — **выполнено** | `SeoContent`, `content.json`, server page/hero rendering | Добавлено `intro`, серверно пререндеренное в hero; применены утверждённые Work description и Reciprocity title. | P2 | Контент виден без JS; Work metadata не использует generic fallback. |
+| Контекстные ссылки статей | Ручная редакционная задача Sanity — **не выполнено** | Шесть статей из таблицы | Добавить только указанные EN/RU анкорные ссылки через Studio и опубликовать. | P2 | В опубликованном HTML есть работающий href на расклад той же локали. |
 
 ### Этап 3 — внешнее SEO и измерение
 
@@ -155,6 +161,43 @@ Live DOM `/ru/tarot` содержит прямую ссылку `/ru/tarot/dream
 3. После аналитического согласия выполнить один тестовый сценарий: отправить вопрос и дождаться готовой интерпретации. В **Reports → Engagement → Events** проверить, что submit и complete учтены один раз.
 4. В **Explore** построить воронку `tarot_question_submit` → `tarot_reading_complete`, добавить dimensions landing page, locale, category_id, spread_id и фильтр `Session default channel group = Organic Search`.
 5. Зафиксировать дату релиза, сравнивать только полные 28-дневные интервалы и явно писать «данных нет», если данных недостаточно.
+
+### 3.3. Ручные задачи во внешних сервисах
+
+#### Vercel: permanent redirect `www` → apex
+
+1. Открыть Vercel → нужный проект → **Settings → Domains**.
+2. Убедиться, что `kaelisai.com` назначен primary domain, а `www.kaelisai.com` добавлен в тот же проект.
+3. Включить перенаправление `www.kaelisai.com` на `kaelisai.com` как permanent redirect; не добавлять его в `src/proxy.ts`.
+4. Проверить `https://www.kaelisai.com/ru/tarot/decision/yesno?urlcheck=1`: должен быть один 308 на `https://kaelisai.com/ru/tarot/decision/yesno?urlcheck=1`, затем 200.
+
+#### Sanity: шесть контекстных ссылок в опубликованных статьях
+
+Эта задача меняет только Portable Text опубликованных статей; schema и frontend не меняются. Я могу выполнить её через Sanity MCP после явного разрешения на публикацию content-изменений. Вручную: открыть Studio проекта **Kaelis**, dataset **production**, найти документ по slug, вставить ссылку в естественную тематическую фразу, сохранить draft и опубликовать.
+
+| Article slug | Анкор | Target |
+| --- | --- | --- |
+| `top-5-tarot-spreads-for-love-readings-en` | `tarot reading for mutual feelings` | `/en/tarot/love/reciprocity` |
+| `top-5-tarot-spreads-for-love-readings-ru` | `расклад Таро на взаимность` | `/ru/tarot/love/reciprocity` |
+| `how-to-use-the-celtic-cross-spread-for-deep-insight-en` | `try the Celtic Cross spread` | `/en/tarot/answer/celtic-cross` |
+| `how-to-use-the-celtic-cross-spread-for-deep-insight-ru` | `попробовать расклад «Кельтский крест»` | `/ru/tarot/answer/celtic-cross` |
+| `how-to-use-tarot-spreads-for-daily-guidance-en` | `try a three-card tarot spread` | `/en/tarot/answer/triplet` |
+| `how-to-use-tarot-spreads-for-daily-guidance-ru` | `попробовать расклад на три карты` | `/ru/tarot/answer/triplet` |
+
+После публикации открыть каждый URL статьи без авторизации, проверить видимый анкор, href целевой локали и HTTP 200 цели. Не добавлять ссылки массово в остальные статьи.
+
+#### Google Search Console: проверка после деплоя
+
+1. Открыть ресурс `https://kaelisai.com/` → **URL inspection**.
+2. По очереди проверить `/en/tarot`, `/ru/tarot`, `/en/tarot/love`, `/ru/tarot/work`, `/ru/tarot/decision/yesno`, `/en/tarot/work/job-change` и `/ua/tarot/education`.
+3. Для каждого записать indexing status, last crawl, user-declared canonical и Google-selected canonical; запрашивать переобход только изменённых URL.
+4. В **Sitemaps** убедиться, что `https://kaelisai.com/sitemap.xml` прочитан успешно. В **Pages** отследить, исчезают ли прежние soft 404/redirect exclusions после нового обхода.
+
+#### Ahrefs и внешние размещения: наблюдение, не обязательная кодовая задача
+
+1. После публикации материала проверять URL страницы, destination, `rel` и индексируемость до внесения ссылки в реестр.
+2. В Ahrefs фиксировать новые referring domains и backlinks отдельно от корневых ссылок; не считать UGC/nofollow размещения выполнением цели контекстных редакционных ссылок.
+3. Сравнивать видимость и AI impressions только внутри сопоставимых периодов GSC; не делать выводов из единичных показов.
 
 ## 4. План проверки после реализации
 

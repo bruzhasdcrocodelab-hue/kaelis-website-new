@@ -176,8 +176,9 @@
     },
     "/tarot/work": {
       "title": "Гадание Таро на работу | Kaelis",
-      "description": "Гадание Таро на работу — Ежедневные точные онлайн-расклады карт от 🌑 Kaelis 🌑 Ваш ИИ-проводник в мир Таро",
-      "h1": "Гадание Таро на работу"
+      "description": "Задайте вопрос о работе, смене должности или отношениях с коллегами. Расклад Таро поможет обдумать ситуацию и возможный следующий шаг.",
+      "h1": "Гадание Таро на работу",
+      "intro": "Вам предложили новую роль, но условия ещё неясны? Или пора поговорить с руководителем о нагрузке? Опишите, что произошло, и задайте один вопрос о работе."
     },
     "/tarot/work/my-job": {
       "title": "Расклад Таро на работу | Kaelis",
@@ -252,7 +253,8 @@
     "/tarot/love": {
       "title": "Бесплатное любовное гадание Таро | Kaelis",
       "description": "Бесплатное любовное гадание Таро — Ежедневные точные онлайн-расклады карт от 🌑 Kaelis 🌑 Ваш ИИ-проводник в мир Таро",
-      "h1": "Бесплатное любовное гадание Таро"
+      "h1": "Бесплатное любовное гадание Таро",
+      "intro": "Если после свидания остались вопросы или в отношениях назрел разговор, опишите ситуацию своими словами. Можно начать со своего вопроса или выбрать отдельный расклад."
     },
     "/tarot/love/between-us": {
       "title": "Гадание Таро «Между нами» | Kaelis",
@@ -290,9 +292,10 @@
       "h1": "Гадание Таро на ссору"
     },
     "/tarot/love/reciprocity": {
-      "title": "Гадание Таро на взаимность | Kaelis",
+      "title": "Таро на взаимность и чувства | Kaelis",
       "description": "Гадание Таро на взаимность — Ежедневные точные онлайн-расклады карт от 🌑 Kaelis 🌑 Ваш ИИ-проводник в мир Таро",
-      "h1": "Гадание Таро на взаимность"
+      "h1": "Гадание Таро на взаимность",
+      "intro": "Вчера вы переписывались до ночи, а сегодня человек отвечает одним словом. Если сомневаетесь, взаимна ли симпатия, начните с того, что заметили. Например, «Что в нашем общении говорит о взаимной симпатии?»"
     },
     "/tarot/love/cheating": {
       "title": "Гадание Таро на измену | Kaelis",
@@ -571,8 +574,9 @@
     },
     "/tarot/work": {
       "title": "Ворожіння Таро на роботу | Kaelis",
-      "description": "Ворожіння Таро на роботу — Щоденні точні онлайн-розклади карт від 🌑 Kaelis 🌑 Ваш ШІ-провідник у світ Таро",
-      "h1": "Ворожіння Таро на роботу"
+      "description": "Поставте запитання про роботу, зміну посади чи стосунки з колегами. Розклад Таро допоможе осмислити ситуацію та можливий наступний крок.",
+      "h1": "Ворожіння Таро на роботу",
+      "intro": "Вам запропонували нову роль, але умови ще неясні? Або настав час поговорити з керівником про навантаження? Опишіть, що сталося, і поставте одне запитання про роботу."
     },
     "/tarot/work/my-job": {
       "title": "Розклад Таро на роботу | Kaelis",
@@ -647,7 +651,8 @@
     "/tarot/love": {
       "title": "Безкоштовне любовне ворожіння Таро | Kaelis",
       "description": "Безкоштовне любовне ворожіння Таро — Щоденні точні онлайн-розклади карт від 🌑 Kaelis 🌑 Ваш ШІ-провідник у світ Таро",
-      "h1": "Безкоштовне любовне ворожіння Таро"
+      "h1": "Безкоштовне любовне ворожіння Таро",
+      "intro": "Якщо після побачення залишилися запитання або у стосунках назріла розмова, опишіть ситуацію своїми словами. Можна почати зі свого запитання або обрати окремий розклад."
     },
     "/tarot/love/between-us": {
       "title": "Ворожіння Таро «Між нами» | Kaelis",
@@ -685,9 +690,10 @@
       "h1": "Ворожіння Таро на сварку"
     },
     "/tarot/love/reciprocity": {
-      "title": "Ворожіння Таро на взаємність | Kaelis",
+      "title": "Таро на взаємність і почуття | Kaelis",
       "description": "Ворожіння Таро на взаємність — Щоденні точні онлайн-розклади карт від 🌑 Kaelis 🌑 Ваш ШІ-провідник у світ Таро",
-      "h1": "Ворожіння Таро на взаємність"
+      "h1": "Ворожіння Таро на взаємність",
+      "intro": "Учора ви листувалися до ночі, а сьогодні людина відповідає одним словом. Якщо сумніваєтеся, чи взаємна симпатія, почніть із того, що помітили. Наприклад, «Що в нашому спілкуванні говорить про взаємну симпатію?»"
     },
     "/tarot/love/cheating": {
       "title": "Ворожіння Таро на зраду | Kaelis",
@@ -966,8 +972,9 @@
     },
     "/tarot/work": {
       "title": "Work Tarot Reading | Kaelis",
-      "description": "Work Tarot Reading  — Daily Online Accurate Card Spreads by 🌑 Kaelis 🌑 Your AI Guide to the World of Tarot",
-      "h1": "Work Tarot Reading"
+      "description": "Ask about work, a role change, or relationships with colleagues. A Tarot reading can help you reflect on the situation and a possible next step.",
+      "h1": "Work Tarot Reading",
+      "intro": "Have you been offered a new role, but the terms are still unclear? Or is it time to talk with your manager about your workload? Describe what happened and ask one question about work."
     },
     "/tarot/work/my-job": {
       "title": "Job Tarot Spread | Kaelis",
@@ -1042,7 +1049,8 @@
     "/tarot/love": {
       "title": "Free Love Tarot Reading | Kaelis",
       "description": "Free Love Tarot Reading — Daily Online Accurate Card Spreads by 🌑 Kaelis 🌑 Your AI Guide to the World of Tarot",
-      "h1": "Free Love Tarot Reading"
+      "h1": "Free Love Tarot Reading",
+      "intro": "You can bring any question about dating, love or a relationship. Describe what's been happening, or pick a spread for a situation such as mixed signals or a difficult conversation."
     },
     "/tarot/love/between-us": {
       "title": "Between Us Tarot Reading | Kaelis",
@@ -1080,9 +1088,10 @@
       "h1": "Quarrel Tarot Reading"
     },
     "/tarot/love/reciprocity": {
-      "title": "Reciprocity Tarot Reading | Kaelis",
+      "title": "How Do They Feel About Me? Tarot Reading | Kaelis",
       "description": "Reciprocity Tarot Reading — Daily Online Accurate Card Spreads by 🌑 Kaelis 🌑 Your AI Guide to the World of Tarot",
-      "h1": "Reciprocity Tarot Reading"
+      "h1": "Reciprocity Tarot Reading",
+      "intro": "They used to make plans. Now their replies are short. If you’re wondering whether the interest is mutual, start with what’s changed. Try asking, “What should I pay attention to in the way we talk and make plans?”"
     },
     "/tarot/love/cheating": {
       "title": "Cheating Tarot Reading | Kaelis",

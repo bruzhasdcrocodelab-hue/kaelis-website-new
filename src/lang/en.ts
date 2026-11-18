@@ -70,7 +70,7 @@ const en = {
   categoriesList: {
     eyebrow: "Explore",
     title: "Categories",
-    description: "Strengthen emotional bonds, find harmony, and protect your loved ones",
+    description: "Choose a topic such as love, work or a decision. On the topic page, you can ask a question in your own words or open a spread for a specific situation.",
   },
   categoryPage: {
     categoryLabel: "Category",

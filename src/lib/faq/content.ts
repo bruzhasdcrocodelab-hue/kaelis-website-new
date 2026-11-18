@@ -48,7 +48,27 @@ export const faqPageContent: Record<Locale, FaqPageContent> = {
   },
 };
 
-export function tarotFaq(locale: Locale, topic: string): FaqItem[] {
+const tarotFaqOverrides: Record<Locale, Record<string, FaqItem[]>> = {
+  en: {
+    "/tarot/decision/yesno": [
+      { question: "What kind of question works for this reading?", answer: "Ask one question you could answer with yes or no. For example, “Should I bring up the change in my schedule this week?”" },
+    ],
+  },
+  ru: {
+    "/tarot/decision/yesno": [
+      { question: "Как задать вопрос для расклада «Да или нет»?", answer: "Сформулируйте один вопрос, на который можно ответить «да» или «нет». Например, «Стоит ли обсудить изменение графика на этой неделе?»" },
+    ],
+  },
+  uk: {
+    "/tarot/decision/yesno": [
+      { question: "Як поставити запитання для розкладу «Так чи ні»?", answer: "Сформулюйте одне запитання, на яке можна відповісти «так» або «ні». Наприклад, «Чи варто обговорити зміни графіка цього тижня?»" },
+    ],
+  },
+};
+
+export function tarotFaq(locale: Locale, topic: string, path?: string): FaqItem[] {
+  const specific = path ? tarotFaqOverrides[locale][path] : undefined;
+  if (specific) return specific;
   if (locale === "ru") return [
     { question: `Что можно узнать из расклада «${topic}»?`, answer: "Этот расклад помогает посмотреть на вопрос с разных сторон и заметить детали, которые могут быть важны для вашего следующего шага." },
     { question: "Как сформулировать вопрос для расклада?", answer: "Сформулируйте открытый и конкретный вопрос о ситуации, чувствах или возможных действиях. Так интерпретация будет полезнее для размышлений." },
