@@ -117,7 +117,7 @@ Live DOM `/ru/tarot` содержит прямую ссылку `/ru/tarot/dream
 - **Выполнено в проекте:** удалён источник `/tarot/love/love`; каталог ведёт на `/tarot/dreams` напрямую; `uk`/`uk-UA` выбирает `/ua`; legacy article alias и policy redirect нормализуют известные варианты locale/suffix; обновлены лид каталога, FAQ Yes/No, Work/Love/Reciprocity SEO-тексты и title во всех трёх локалях; добавлены тесты.
 - **Подтверждено локальным production build:** `/sitemap.xml` — `200 application/xml`, 291 URL с hreflang; sitemap статически генерируется с revalidate 1 hour. Это закрывает кодовую часть проверки, но production latency после деплоя всё ещё нужно наблюдать отдельно.
 - **Внешние сервисы:** в Sanity опубликованы 9 согласованных EN/RU/UA ссылок. Vercel www → apex, настройка/проверка GA4, GSC, Ahrefs и внешние размещения не выполнялись: для них нужен соответствующий доступ и ручное подтверждение.
-- **Итоговая проверка 18.11.2026:** локальный production-сервер подтвердил маршруты, metadata, SSR-контент, 404 и отсутствие hydration error в сценарии восстановления сессии. Публичный `kaelisai.com` ещё не содержит часть этого релиза: на `/ru/tarot` остаётся `dreams/dream`, на `/ru/tarot/work` нет нового лида и description, а опубликованная в Sanity UA-ссылка не видна на статье. До деплоя проекта и истечения/инвалидации ISR эти задачи нельзя считать завершёнными на production.
+- **Итоговая проверка production после merge 18.11.2026:** Playwright подтвердил на `kaelisai.com` маршруты, metadata, SSR-контент, 404, прямой Dreams URL, отсутствие `love/love`, `uk` → `ua`, legacy redirects, Work/Yes-No/Love/Reciprocity контент и отсутствие hydration error в сценарии восстановления сессии. Все девять опубликованных Sanity-ссылок видны в соответствующих EN/RU/UA статьях. `robots.txt` корректен; Playwright не завершил навигацию по большому `/sitemap.xml` за 30 секунд, поэтому его HTTP-статус и XML на production остаются отдельной ручной проверкой.
 - **Состояние полного набора тестов:** после синхронизации тестовых fixtures с текущим контрактом `FaqSection` и валидным Love → `love/love`, `node --test --test-concurrency=1 tests/*.test.mjs` завершился успешно: 111 из 111.
 
 ### Этап 0 — проверка production sitemap
@@ -135,20 +135,20 @@ Live DOM `/ru/tarot` содержит прямую ссылку `/ru/tarot/dream
 
 | Задача | Способ | Места реализации | Технический способ | Приоритет и зависимости | Критерий завершения |
 | --- | --- | --- | --- | --- | --- |
-| Валидные ссылки главной | Проект — **выполнено локально; ожидает деплой** | `HomeTarotLinks`, `HomePageView`, каталогные helpers | Удалён дублирующий блок, формировавший вложенный `love/love`. | P1 | Локальный production HTML не содержит битый href; после деплоя повторить на apex. |
-| Прямой Dreams URL | Проект — **выполнено локально; ожидает деплой** | Каталог/данные, используемые `TarotCatalogLinks` | Каталожный `dreams/dream` заменён на `/tarot/dreams`; 301 в proxy сохранён для старых входящих URL. | P1 | Локальная внутренняя ссылка прямая, старый URL возвращает 301; production всё ещё содержит старый href. |
-| Выбор UA языка | Проект — **выполнено локально; ожидает деплой** | `src/lib/routing.ts`, routing tests | `uk` сопоставляется с URL-локалью `ua`, с сохранением q-values и приоритета cookie. | P1 | Локально `uk` → `/ua`; после деплоя проверить apex. |
-| Legacy redirects | Проект — **выполнено локально; ожидает деплой** | `legacyRedirects.ts`, proxy tests | Alias discontinued article нормализуется для допустимых locale/suffix вариантов в актуальную numerology-статью; root policy URL с `en`/`ru`/`ua`/`uk` suffix нормализуются без negotiation. | P1 | Локально подтверждены 301/308 на заданные и языковые варианты конечных URL; после деплоя проверить apex. |
+| Валидные ссылки главной | Проект — **выполнено на production** | `HomeTarotLinks`, `HomePageView`, каталогные helpers | Удалён дублирующий блок, формировавший вложенный `love/love`. | P1 | Production HTML не содержит битый href. |
+| Прямой Dreams URL | Проект — **выполнено на production** | Каталог/данные, используемые `TarotCatalogLinks` | Каталожный `dreams/dream` заменён на `/tarot/dreams`; 301 в proxy сохранён для старых входящих URL. | P1 | Production внутренняя ссылка прямая, старый URL приводит к каноническому. |
+| Выбор UA языка | Проект — **выполнено на production** | `src/lib/routing.ts`, routing tests | `uk` сопоставляется с URL-локалью `ua`, с сохранением q-values и приоритета cookie. | P1 | Production `uk` → `/ua`; query сохраняется. |
+| Legacy redirects | Проект — **выполнено на production** | `legacyRedirects.ts`, proxy tests | Alias discontinued article нормализуется для допустимых locale/suffix вариантов в актуальную numerology-статью; root policy URL с `en`/`ru`/`ua`/`uk` suffix нормализуются без negotiation. | P1 | Production приводит заданные и языковые варианты к целевым каноническим URL. |
 | www host | Вручную в Vercel — **не выполнено** | Vercel Project Settings → Domains | Сделать apex primary и включить permanent redirect `www.kaelisai.com` → `kaelisai.com` с путём и query. | P1, доступ к Vercel | `www` deep URL одним 308 приходит на apex с теми же path/query. |
 
 ### Этап 2 — целевой поисковый контент
 
 | Задача | Способ | Места реализации | Технический способ | Приоритет | Критерий завершения |
 | --- | --- | --- | --- | --- | --- |
-| Нейтральный лид каталога | Проект — **выполнено локально; ожидает деплой** | `src/lang/en.ts`, `ru.ts`, `uk.ts` | `categoriesList.description` заменён утверждёнными локализованными строками. | P1 | Локальный SSR HTML объясняет выбор тем, не только семью; после деплоя проверить apex. |
-| FAQ Yes/No | Проект — **выполнено локально; ожидает деплой** | `src/lib/faq/content.ts` | Добавлен локализованный FAQ с закрытым примером; он является источником видимого FAQ и JSON-LD. | P1 | Локально текст и JSON-LD совпадают в трёх локалях; после деплоя проверить apex. |
-| Work/Love/Reciprocity лиды и metadata | Проект — **выполнено локально; ожидает деплой** | `SeoContent`, `content.json`, server page/hero rendering | Добавлено `intro`, серверно пререндеренное в hero; применены утверждённые Work description и Reciprocity title. | P2 | Локально контент виден без JS и Work metadata не использует generic fallback; production пока старый. |
-| Контекстные ссылки статей | Sanity — **опубликовано; ожидает обновление production ISR** | Девять EN/RU/UA статей | Опубликованы в Sanity. | P2 | Sanity возвращает все 9 target; на production UA-ссылка пока не отображается. |
+| Нейтральный лид каталога | Проект — **выполнено на production** | `src/lang/en.ts`, `ru.ts`, `uk.ts` | `categoriesList.description` заменён утверждёнными локализованными строками. | P1 | Production SSR HTML объясняет выбор тем, не только семью. |
+| FAQ Yes/No | Проект — **выполнено на production** | `src/lib/faq/content.ts` | Добавлен локализованный FAQ с закрытым примером; он является источником видимого FAQ и JSON-LD. | P1 | На production видны текст и соответствующий FAQPage JSON-LD. |
+| Work/Love/Reciprocity лиды и metadata | Проект — **выполнено на production** | `SeoContent`, `content.json`, server page/hero rendering | Добавлено `intro`, серверно пререндеренное в hero; применены утверждённые Work description и Reciprocity title. | P2 | Контент и Work metadata видны на production без generic fallback. |
+| Контекстные ссылки статей | Sanity — **выполнено на production** | Девять EN/RU/UA статей | Опубликованы в Sanity. | P2 | Sanity возвращает все 9 target; все 9 anchors проверены на production. |
 
 ### Этап 3 — внешнее SEO и измерение
 
