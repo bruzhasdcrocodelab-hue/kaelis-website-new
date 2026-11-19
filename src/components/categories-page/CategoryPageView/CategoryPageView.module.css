@@ -79,20 +79,25 @@
 
 .breadcrumbs {
   justify-content: flex-start;
-  width: min(1176px, calc(100% - 64px));
-  margin: 66px auto 0;
-  transform: translateY(-26px);
+  width: 100%;
+  margin: 0;
+}
+
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  min-width: 0;
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: minmax(0, 500px) 590px;
-  gap: clamp(48px, 7vw, 120px);
-  align-items: center;
+  grid-template-columns: minmax(0, 510px) minmax(0, 590px);
+  gap: 76px;
+  align-items: start;
   width: min(1176px, calc(100% - 64px));
-  margin: 0 auto;
-  margin-top: -110px;
-  padding: 68px 0 66px;
+  margin: -18px auto 0;
+  padding: 62px 0 66px;
 }
 
 .heroGrid :global(section) {
@@ -103,6 +108,28 @@
   width: min(1176px, calc(100% - 64px));
   margin: 0 auto 50px;
   animation: reading-enter .42s ease-out both;
+}
+
+@media (min-width: 1101px) and (max-width: 1280px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(490px, 1fr);
+    gap: clamp(48px, 6vw, 76px);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 590px);
+    justify-content: center;
+    width: min(590px, calc(100% - 64px));
+    margin-top: 7px;
+    gap: 32px;
+    padding: 24px 0 40px;
+  }
+
+  .heroCopy {
+    gap: 32px;
+  }
 }
 
 @keyframes reading-enter {
@@ -159,15 +186,18 @@
   }
 
   .breadcrumbs {
-    width: calc(100% - 40px);
-    margin-top: 26px;
-    transform: none;
+    width: 100%;
+    margin: 0;
+  }
+
+  .heroCopy {
+    gap: 32px;
   }
 
   .heroGrid {
     grid-template-columns: 1fr;
     width: calc(100% - 40px);
-    margin-top: 0;
+    margin-top: 7px;
     gap: 32px;
     padding: 24px 0 40px;
   }

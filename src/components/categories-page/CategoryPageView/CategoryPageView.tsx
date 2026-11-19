@@ -105,28 +105,30 @@ function CategoryPageContent({
               <div className={styles.stars}><StarField /></div>
               <div className={styles.constellation}><ConstellationPattern /></div>
               <Header dictionary={dictionary.header} locale={locale} />
-              <Breadcrumbs
-                className={styles.breadcrumbs}
-                locale={locale}
-                items={[
-                  { label: dictionary.header.logo, href: "/" },
-                  { label: dictionary.header.allTarotSpreads, href: "/tarot" },
-                  ...(path.length === 2 && resolved ? [{ label: resolved.category.name, href: `/tarot/${resolved.category.slug}` }] : []),
-                  { label: current.name },
-                ]}
-              />
               <div className={styles.heroGrid}>
-                <CategoryHeroSection
-                  dictionary={dictionary.categoryPage}
-                  locale={locale}
-                  current={current}
-                  spreads={!resolved?.spread && path.length === 1 && spreads.state.status === "success" ? spreads.state.data : []}
-                  path={path}
-                  returnHref={returnHref}
-                  returnLabel={returnLabel}
-                  description={resolved?.category.site_description || resolved?.spread?.description || current.site_description}
-                  exploreLabel={resolved ? locale === "en" ? `Explore ${resolved.category.name} Tarot Spreads` : locale === "ru" ? `Изучить расклады Таро: ${resolved.category.name}` : `Переглянути розклади Таро: ${resolved.category.name}` : undefined}
-                />
+                <div className={styles.heroCopy}>
+                  <Breadcrumbs
+                    className={styles.breadcrumbs}
+                    locale={locale}
+                    items={[
+                      { label: dictionary.header.logo, href: "/" },
+                      { label: dictionary.header.allTarotSpreads, href: "/tarot" },
+                      ...(path.length === 2 && resolved ? [{ label: resolved.category.name, href: `/tarot/${resolved.category.slug}` }] : []),
+                      { label: current.name },
+                    ]}
+                  />
+                  <CategoryHeroSection
+                    dictionary={dictionary.categoryPage}
+                    locale={locale}
+                    current={current}
+                    spreads={!resolved?.spread && path.length === 1 && spreads.state.status === "success" ? spreads.state.data : []}
+                    path={path}
+                    returnHref={returnHref}
+                    returnLabel={returnLabel}
+                    description={resolved?.category.site_description || resolved?.spread?.description || current.site_description}
+                    exploreLabel={resolved ? locale === "en" ? `Explore ${resolved.category.name} Tarot Spreads` : locale === "ru" ? `Изучить расклады Таро: ${resolved.category.name}` : `Переглянути розклади Таро: ${resolved.category.name}` : undefined}
+                  />
+                </div>
                 {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onPresetQuestions={setPresetQuestions} />}
               </div>
               {readingActive && resolved?.spread && count !== null && <div className={styles.readingWrap}>
