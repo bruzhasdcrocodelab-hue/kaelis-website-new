@@ -31,21 +31,22 @@ export default function CategoryHeroSection({
   description,
 }: CategoryHeroSectionProps) {
   const hasSubcategories = spreads.length > 1;
+  const isSpreadPage = spreads.length === 0;
   const router = useRouter();
   const seo = getSeo(locale, `/tarot/${path.join("/")}`);
 
   return (
     <section className={styles.section}>
-      <div className={`${styles.container} ${hasSubcategories ? styles.containerWithRows : ""}`}>
-        <MainButton variant="stroke" size="medium" href={returnHref} className={styles.returnButton}>
+      <div className={`${styles.container} ${isSpreadPage ? styles.spreadPage : ""} ${hasSubcategories ? styles.containerWithRows : ""}`}>
+        {!isSpreadPage && <MainButton variant="stroke" size="medium" href={returnHref} className={styles.returnButton}>
           {returnLabel}
-        </MainButton>
+        </MainButton>}
 
         <div className={styles.content}>
           <div className={styles.titleBlock}>
-            <p className={`font-instrument-base-emphasized ${styles.eyebrow}`}>
+            {!isSpreadPage && <p className={`font-instrument-base-emphasized ${styles.eyebrow}`}>
               {dictionary.categoryLabel}
-            </p>
+            </p>}
             <div className={styles.titleWrap}>
               <CategoryTitle title={seo?.h1 ?? current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
@@ -55,15 +56,15 @@ export default function CategoryHeroSection({
           </div>
 
           <MainButton
-            variant="gradient-black"
+            variant={isSpreadPage ? "stroke" : "gradient-black"}
             size="large"
-            icon="/icons/right-arrow.svg"
+            icon={isSpreadPage ? "/icons/chevron-down.svg" : "/icons/right-arrow.svg"}
             onClick={() => {
               document.getElementById("category-top-block")?.scrollIntoView({ behavior: "smooth" });
               router.replace(`${window.location.pathname}${window.location.search}#category-top-block`, { scroll: false });
             }}
             className={`shadow-default ${styles.readingsButton}`}
-            muted
+            muted={!isSpreadPage}
           >
             {dictionary.getYourReadings}
           </MainButton>

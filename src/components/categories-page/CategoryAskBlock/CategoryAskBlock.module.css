@@ -1,9 +1,9 @@
 .section {
   position: relative;
-  width: min(430px, 100%);
-  min-height: 470px;
+  width: min(590px, 100%);
+  min-height: 644px;
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: 30px;
   background: var(--color-white);
   box-shadow: var(--shadow-default);
 }
@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 30px;
+  padding: 40px;
 }
 
 .headingRow {
@@ -34,26 +34,26 @@
 .title {
   margin: 0;
   color: var(--color-black);
-  font-size: 36px;
-  line-height: 1;
+  font-size: 40px;
+  line-height: 1.12;
 }
 
 .description {
-  max-width: 275px;
-  margin: 10px 0 20px;
+  max-width: 390px;
+  margin: 14px 0 28px;
   color: var(--color-black-60);
   line-height: 1.45;
 }
 
 .label {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: var(--color-black-75);
 }
 
 .input {
   width: 100%;
-  min-height: 88px;
-  padding: 14px;
+  min-height: 120px;
+  padding: 16px;
   border: 0;
   border-radius: 12px;
   background: var(--color-greyish-blue);
@@ -64,11 +64,11 @@
 .submitWrap {
   display: flex;
   justify-content: flex-end;
-  margin-top: -14px;
+  margin-top: -16px;
 }
 
 .tryTitle {
-  margin: 20px 0 10px;
+  margin: 28px 0 12px;
   color: var(--color-black-60);
 }
 
@@ -82,7 +82,8 @@
   gap: 8px;
   align-items: flex-start;
   width: 100%;
-  padding: 10px;
+  min-height: 48px;
+  padding: 12px;
   border: 1px solid var(--color-white-40);
   border-radius: 8px;
   background: color-mix(in srgb, var(--color-white) 70%, transparent);
@@ -112,15 +113,16 @@
   .section {
     width: 100%;
     min-height: 0;
-    border-radius: 18px;
+    min-height: 655px;
+    border-radius: 20px;
   }
 
   .content {
-    padding: 24px;
+    padding: 26px;
   }
 
   .title {
-    font-size: 32px;
+    font-size: 40px;
   }
 
   .triggerDesktop {

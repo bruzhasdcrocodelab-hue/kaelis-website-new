@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import Image from "next/image";
 import MainButton from "@/components/global/MainButton";
 import TriggerButton, { GUIDE_ICON } from "@/components/categories-page/TriggerButton";
+import BottomSheetSelect from "@/components/global/BottomSheetSelect";
 import { useReadingNavigation } from "@/components/reading/ReadingNavigationProvider";
 import type { Dictionary, Locale } from "@/lang";
 import { loadPresetQuestions, type PresetQuestion } from "@/lib/tarot/questions";
@@ -19,14 +20,16 @@ export interface CategoryAskBlockProps {
   spreadId: string;
   categoryLabel: string;
   onReadingStarted: (active: boolean) => void;
+  onPresetQuestions?: (questions: string[]) => void;
 }
 
-export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, categoryLabel, onReadingStarted }: CategoryAskBlockProps) {
+export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, categoryLabel, onReadingStarted, onPresetQuestions }: CategoryAskBlockProps) {
   const flow = useReading(locale, categoryId, spreadId);
   const navigation = useReadingNavigation();
   const [question, setQuestion] = useState("");
   const [presets, setPresets] = useState<PresetQuestion[]>([]);
   const [presetError, setPresetError] = useState(false);
+  const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const text = readingMessages[locale];
   const selected = flow.speakers.find((speaker) => speaker.id === flow.speakerId);
   const speakerLabel = selected?.name ?? text.loading;
@@ -39,12 +42,14 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
     const controller = new AbortController();
     loadPresetQuestions(locale, controller.signal).then((items) => {
       if (!controller.signal.aborted) {
-        setPresets(items.filter((item) => item.tarotId === spreadId).slice(0, 3));
+        const nextPresets = items.filter((item) => item.tarotId === spreadId).slice(0, 3);
+        setPresets(nextPresets);
+        onPresetQuestions?.(nextPresets.map((item) => item.text));
         setPresetError(false);
       }
     }).catch(() => { if (!controller.signal.aborted) setPresetError(true); });
     return () => controller.abort();
-  }, [locale, spreadId]);
+  }, [locale, onPresetQuestions, spreadId]);
 
   const start = (value: string, clearField: boolean) => {
     const submit = () => {
@@ -66,7 +71,7 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
         <div className={styles.triggerDesktop}>
           <TriggerButton dictionary={dictionary.categoryPage.topBlock.guides} options={flow.speakers.map((speaker) => ({ value: speaker.id, label: speaker.name, icon: GUIDE_ICON[speakerGuide(speaker) ?? "analyst"] }))} value={flow.speakerId} onChange={flow.setSpeakerId} disabled={flow.busy || !flow.speakers.length} />
         </div>
-        <MainButton variant="default" size="small" className={styles.triggerMobile} icon={speakerIcon} aria-label={speakerLabel} onClick={() => undefined} muted>{speakerLabel}</MainButton>
+        <MainButton variant="default" size="small" className={styles.triggerMobile} icon={speakerIcon} aria-label={speakerLabel} onClick={() => setGuideSheetOpen(true)} disabled={flow.busy || !flow.speakers.length} muted>{speakerLabel}</MainButton>
       </div>
       <label className={`font-instrument-sm ${styles.label}`} htmlFor="category-question">{locale === "en" ? "Your question:" : locale === "ru" ? "Ваш вопрос:" : "Ваше питання:"}</label>
       <textarea id="category-question" className={`font-instrument-sm ${styles.input}`} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder={dictionary.categoryPage.topBlock.placeholder} disabled={flow.busy} aria-invalid={!!flow.error} />
@@ -77,6 +82,13 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
       <div className={styles.presets}>{presets.map((preset) => <button className={`font-instrument-xs ${styles.preset}`} key={preset.id} type="button" onClick={() => start(preset.text, false)} disabled={flow.busy}><Image src="/icons/chevron-down.svg" alt="" width={16} height={16} />{preset.text}</button>)}</div>
       {(flow.error || presetError) && <p className={`font-instrument-xs ${styles.error}`} role="alert">{flow.error || text.error}</p>}
       <span className={styles.category} aria-hidden>{categoryLabel}</span>
+      <BottomSheetSelect
+        open={guideSheetOpen}
+        onClose={() => setGuideSheetOpen(false)}
+        options={flow.speakers.map((speaker) => ({ value: speaker.id, label: speaker.name, icon: GUIDE_ICON[speakerGuide(speaker) ?? "analyst"], description: dictionary.categoryPage.topBlock.guideDescriptions[speakerGuide(speaker) ?? "analyst"] }))}
+        selectedValue={flow.speakerId}
+        onSelect={flow.setSpeakerId}
+      />
     </div>
   </section>;
 }

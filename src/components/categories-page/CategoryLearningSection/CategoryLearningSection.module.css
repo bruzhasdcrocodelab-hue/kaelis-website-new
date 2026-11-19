@@ -1,16 +1,22 @@
 .section {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: clamp(36px, 8vw, 120px);
+  grid-template-columns: minmax(0, 590px) 290px;
+  gap: clamp(48px, 12vw, 196px);
   align-items: center;
-  width: min(1080px, calc(100% - 32px));
-  padding: 64px 0 80px;
+  width: min(1176px, calc(100% - 64px));
+  padding: 54px 0 80px;
 }
 
 .article h2,
 .example h3 {
   margin: 0 0 20px;
   color: var(--color-black);
+}
+
+.article h2 {
+  font-size: 48px;
+  line-height: 1.08;
+  letter-spacing: -3px;
 }
 
 .article p {
@@ -26,7 +32,7 @@
 }
 
 .links a {
-  color: var(--color-purple-light);
+  color: #c277cf;
 }
 
 .example {
@@ -34,7 +40,7 @@
   flex-direction: column;
   gap: 14px;
   padding: 20px;
-  border: 1px solid var(--color-purple-light);
+  border: 1px solid #ead0ef;
   border-radius: 20px;
   background: color-mix(in srgb, var(--color-white) 55%, transparent);
 }
@@ -45,9 +51,20 @@
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 12px;
   border-radius: 14px;
   background: var(--color-white);
+}
+
+.detail {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--color-greyish-blue);
+  color: var(--color-black-60);
+  font: var(--text-xxs)/1.4 var(--font-manrope);
 }
 
 .card img {
@@ -61,7 +78,21 @@
 @media (max-width: 768px) {
   .section {
     grid-template-columns: 1fr;
-    padding: 32px 0 48px;
+    width: calc(100% - 40px);
+    gap: 36px;
+    padding: 38px 0 48px;
+  }
+
+  .article {
+    text-align: center;
+  }
+
+  .article h2 {
+    font-size: 32px;
+  }
+
+  .links {
+    justify-content: center;
   }
 
   .example {

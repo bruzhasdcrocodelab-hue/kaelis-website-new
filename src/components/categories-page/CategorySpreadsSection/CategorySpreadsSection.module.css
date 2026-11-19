@@ -1,22 +1,24 @@
 .section {
-  width: min(1080px, calc(100% - 32px));
-  padding: 80px 0;
+  width: min(1176px, calc(100% - 64px));
+  padding: 70px 0 80px;
 }
 
 .head h2 {
   margin: 0;
   color: var(--color-black);
+  font-size: 40px;
+  letter-spacing: -3px;
 }
 
 .head p {
-  margin: 10px 0 28px;
+  margin: 10px 0 32px;
   color: var(--color-black-60);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .card {
@@ -24,23 +26,23 @@
   grid-template-columns: 36px minmax(0, 1fr) 16px;
   gap: 11px;
   align-items: start;
-  min-height: 88px;
+  min-height: 120px;
   padding: 16px;
   border: 1px solid var(--color-black-7);
-  border-radius: 17px;
-  background: color-mix(in srgb, var(--color-white) 60%, transparent);
+  border-radius: 16px;
+  background: var(--color-white-40);
   color: var(--color-black);
   text-decoration: none;
   transition: border-color .2s ease, transform .2s ease;
 }
 
 .card:hover {
-  border-color: var(--color-purple-light);
+  border-color: var(--color-gold);
   transform: translateY(-2px);
 }
 
 .selected {
-  border-color: var(--color-purple-light);
+  border-color: var(--color-gold);
   background: var(--gradient-pink-to-transparent);
 }
 
@@ -55,9 +57,9 @@
 }
 
 .outline {
-  border: 1px solid var(--color-purple-light);
+  border: 1px solid var(--color-gold);
   background: var(--color-greyish-blue);
-  color: var(--color-purple-light);
+  color: var(--color-gold);
 }
 
 .icon img {
@@ -89,10 +91,30 @@
 
 @media (max-width: 768px) {
   .section {
-    padding: 48px 0;
+    width: calc(100% - 40px);
+    padding: 44px 0 42px;
+  }
+
+  .head {
+    text-align: center;
+  }
+
+  .head h2 {
+    font-size: 32px;
+    line-height: 1.12;
+  }
+
+  .head p {
+    max-width: 280px;
+    margin: 12px auto 28px;
   }
 
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 133px;
+    padding: 16px;
   }
 }

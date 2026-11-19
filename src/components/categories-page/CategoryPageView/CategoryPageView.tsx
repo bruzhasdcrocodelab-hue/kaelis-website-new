@@ -81,12 +81,13 @@ function CategoryPageContent({
     : !resolved ? "notFound" : null;
   const retry = categories.state.status === "error" ? categories.retry : spreads.retry;
   const [readingActive, setReadingActive] = useState(false);
+  const [presetQuestions, setPresetQuestions] = useState<string[]>([]);
   return (
     <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <div className={styles.background} aria-hidden="true" />
       <ConstellationPattern />
       <div className={styles.content}>
-        <Header dictionary={dictionary.header} locale={locale} />
+        {status && <Header dictionary={dictionary.header} locale={locale} />}
         {!status && (categoryRequest.state.status === "error" || spreadRequest.state.status === "error") && (
           <CatalogStatus locale={locale} status="error" retry={categoryRequest.state.status === "error" ? categoryRequest.retry : spreadRequest.retry} />
         )}
@@ -101,6 +102,7 @@ function CategoryPageContent({
         {!status && current && (
           <>
             <section className={styles.hero}>
+              <Header dictionary={dictionary.header} locale={locale} />
               <Breadcrumbs
                 locale={locale}
                 items={[
@@ -121,7 +123,7 @@ function CategoryPageContent({
                   returnLabel={returnLabel}
                   description={resolved?.spread?.description || current.site_description}
                 />
-                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} />}
+                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onPresetQuestions={setPresetQuestions} />}
               </div>
               {readingActive && resolved?.spread && count !== null && <div className={styles.readingWrap}>
                 <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading />
@@ -135,7 +137,7 @@ function CategoryPageContent({
         {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
         {!status && resolved?.spread && spreads.state.status === "success" && <>
           <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={resolved.spread.slug} />
-          <CategoryLearningSection locale={locale} category={resolved.category} spreads={spreads.state.data} />
+          <CategoryLearningSection locale={locale} category={resolved.category} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} />
         </>}
         {!status && current && faq.length > 0 && (
           <div className={styles.faqWrap}>

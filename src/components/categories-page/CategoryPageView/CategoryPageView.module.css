@@ -25,21 +25,13 @@
   height: 100%;
   container-type: size;
   overflow: hidden;
-  background: var(--gradient-category-page-bg);
+  background: var(--color-greyish-blue);
   pointer-events: none;
   z-index: 0;
 }
 
 .background::before {
-  content: "";
-  position: absolute;
-  top: 49.007765%;
-  left: 0;
-  width: 100%;
-  height: 36.410699%;
-  border-radius: 50%;
-  background: var(--gradient-category-page-glow);
-  filter: blur(13.770833cqw);
+  display: none;
 }
 
 .content {
@@ -56,17 +48,18 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 660px;
+  overflow: hidden;
+  background: linear-gradient(163deg, #17112c 10%, #2e1e53 46%, #663d9d 100%);
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(380px, 430px);
-  gap: clamp(32px, 8vw, 120px);
+  grid-template-columns: minmax(0, 500px) 590px;
+  gap: clamp(48px, 7vw, 120px);
   align-items: center;
-  width: min(1080px, calc(100% - 64px));
+  width: min(1176px, calc(100% - 64px));
   margin: 0 auto;
-  padding: 22px 0 48px;
+  padding: 68px 0 66px;
 }
 
 .heroGrid :global(section) {
@@ -74,7 +67,7 @@
 }
 
 .readingWrap {
-  width: min(1080px, calc(100% - 64px));
+  width: min(1176px, calc(100% - 64px));
   margin: 0 auto 50px;
   animation: reading-enter .42s ease-out both;
 }
@@ -92,11 +85,11 @@
 }
 
 .faqWrap {
-  width: calc(100% - 120px);
-  padding: 48px 64px 64px;
+  width: min(1176px, calc(100% - 64px));
+  padding: 32px;
   border: 1px solid var(--color-white-40);
   border-radius: var(--radius-panel);
-  margin: 5.556vw 0 24px;
+  margin: 0 0 80px;
   background: var(--color-white);
   box-shadow: var(--shadow-light);
 }
@@ -114,28 +107,28 @@
   }
 
   .faqWrap {
-    width: 100%;
-    padding: 0 16px 48px;
-    border: none;
-    border-radius: 0;
-    margin: 0;
-    /* background: transparent; */
+    width: calc(100% - 40px);
+    padding: 20px;
+    border: 1px solid var(--color-black-7);
+    border-radius: 20px;
+    margin: 0 0 48px;
+    background: var(--color-white);
     box-shadow: none;
   }
 
   .hero {
-    min-height: 0;
+    background: linear-gradient(180deg, #17112c 0%, #2e1e53 60%, #663d9d 100%);
   }
 
   .heroGrid {
     grid-template-columns: 1fr;
-    width: calc(100% - 32px);
-    gap: 24px;
-    padding-bottom: 36px;
+    width: calc(100% - 40px);
+    gap: 32px;
+    padding: 38px 0 40px;
   }
 
   .readingWrap {
-    width: 100%;
+    width: calc(100% - 40px);
     margin-bottom: 28px;
   }
 }

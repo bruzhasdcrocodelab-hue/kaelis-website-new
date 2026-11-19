@@ -62,7 +62,13 @@ Instrument Sans → Manrope
 
 Весь данный функционал нужно добавить после реализации вёрстки страницы.   
 
-(Следующие шаги (ChooseCardsStep, RevealCardsStep) пока для новой вёрстки CategoryPageView не реализуй - это будет отдельная задача позже.) 
+**Шаги ChooseCardsStep и RevealCardsStep:**
+После отправки вопроса из блока "Ask a Question" (расклад начат) в hero анимированно появляется блок CategoryTopBlock сразу на втором шаге (ChooseCardsStep) согласно скринам:
+- десктоп: "D:\Downloads\Карты\desktop-hero-spread-reading.png" (макет hero: @https://www.figma.com/design/yMPSAyzimIzcX1GDt9IKQF/KAELIS--Copy-?node-id=2670-13672&m=dev)
+- мобилка: "D:\Downloads\Карты\mobile-spread-reading.png" (макет hero: @https://www.figma.com/design/yMPSAyzimIzcX1GDt9IKQF/KAELIS--Copy-?node-id=2670-11414&m=dev)
+
+После завершения шага ChooseCardsStep переходим на шаг RevealCardsStep в этом же CategoryTopBlock, как это уже есть сейчас. 
+Их текущая логика, вёрстка и функционал по сути не меняется, они встраиваются в страницу (под остальным контентом hero - как на скринах / макетах), как есть.
 
 - Для "pattern-categories-top-block-2.svg" используй "public\images\backgrounds\pattern-categories-top-block-2.svg".
 
