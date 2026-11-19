@@ -12,8 +12,8 @@
 
 @media (max-width: 768px) {
   .pattern {
-    width: 390px;
-    height: 981px;
+    width: max(390px, 100%);
+    height: auto;
   }
 }
 

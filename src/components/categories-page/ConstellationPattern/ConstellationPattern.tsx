@@ -152,7 +152,6 @@ export default function ConstellationPattern() {
       height: 981,
       viewBox: "0 0 390 981",
       transform: "translate(93.467 687.295) scale(0.6 -0.6)",
-      fade: { x1: 61.8293, y1: 553.795, x2: 583.488, y2: -73.5222 },
       outerRings: [
         { x: 215.863, y: -117.305, size: 703.8, radius: 351.9, gradient: "mobileInnerRing" },
         { x: -178.337, y: -511.507, size: 1492.2, radius: 746.1, gradient: "mobileOuterRing" },
@@ -163,7 +162,6 @@ export default function ConstellationPattern() {
       height: 1342,
       viewBox: "0 0 1739 1342",
       transform: "translate(-295.898 1317.824) scale(1 -1)",
-      fade: { x1: 59.6504, y1: 1095.32, x2: 929.081, y2: 49.7957 },
       outerRings: [
         { x: -91.8984, y: -23.1738, size: 1173, radius: 586.5, gradient: "desktopInnerRing" },
         { x: -748.898, y: -680.174, size: 2487, radius: 1243.5, gradient: "desktopOuterRing" },
@@ -185,12 +183,12 @@ export default function ConstellationPattern() {
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="constellationCoreFade" x1={geometry.fade.x1} y1={geometry.fade.y1} x2={geometry.fade.x2} y2={geometry.fade.y2} gradientUnits="userSpaceOnUse">
+        <linearGradient id="constellationCoreFade" x1="354.5" y1="222.5" x2="1224.98" y2="1268.03" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
           <stop offset="0.75" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
-        <mask id="constellationCoreFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width={geometry.width} height={geometry.height}>
-          <rect width={geometry.width} height={geometry.height} fill="url(#constellationCoreFade)" />
+        <mask id="constellationCoreFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1342">
+          <rect width="1580" height="1342" fill="url(#constellationCoreFade)" />
         </mask>
         <linearGradient id="desktopInnerRing" x1="494.602" y1="-23.6738" x2="494.602" y2="1150.33" gradientUnits="userSpaceOnUse">
           <stop stopColor="var(--color-gold-light)" stopOpacity="0" />
