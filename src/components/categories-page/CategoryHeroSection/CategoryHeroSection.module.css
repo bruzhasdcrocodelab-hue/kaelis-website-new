@@ -84,15 +84,34 @@
 
 .spreadPage .content {
   gap: 48px;
-  transform: translateY(-96px);
+  transform: translateY(-52px);
+}
+
+.spreadPage .title {
+  padding-inline: 0;
+  font-size: 64px;
+  text-transform: uppercase;
+  transform: translateY(-24px);
 }
 
 .spreadPage .readingsButton {
   min-width: 278px;
+  border-color: rgb(245 249 250 / .4) !important;
 }
 
-.spreadPage .readingsButton :global(img) {
-  transform: rotate(90deg);
+.spreadPage .readingsButton::before {
+  display: none;
+}
+
+.spreadPage .readingsButton :global(span:first-child) {
+  background: none;
+  font-weight: 400;
+  -webkit-text-fill-color: var(--color-white);
+  color: var(--color-white);
+}
+
+.spreadPage .readingsButton :global(span:last-child) {
+  background-color: var(--color-white) !important;
 }
 
 @media (max-width: 768px) {
@@ -106,7 +125,7 @@
   }
 
   .content {
-    gap: 28px;
+    gap: 8px;
     width: 100%;
     max-width: 358px;
     padding: 0;
@@ -119,6 +138,7 @@
 
   .description {
     width: 100%;
+    line-height: 1.15;
     font-size: var(--text-base);
   }
 
@@ -127,14 +147,25 @@
   }
 
   .title {
-    font-size: 56px;
+    margin-bottom: 2px;
+    padding-inline: 0;
+    font-size: 46px;
     letter-spacing: -3px;
   }
 
+  .spreadPage .title {
+    font-size: 46px;
+    transform: none;
+  }
+
   .readingsButton {
-    height: 44px;
+    height: 52px;
     gap: 6px;
     padding: 6px 8px 6px 24px;
+  }
+
+  .spreadPage .readingsButton {
+    width: 100%;
   }
 
   .spreadPage {
@@ -142,12 +173,12 @@
   }
 
   .spreadPage .content {
+    gap: 26px;
     transform: none;
   }
 
   .readingsButton :global(span:first-child) {
     font-size: var(--text-sm);
-    color: var(--color-black) !important;
   }
 
 }

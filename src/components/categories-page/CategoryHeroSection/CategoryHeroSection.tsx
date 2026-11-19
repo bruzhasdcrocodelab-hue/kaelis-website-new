@@ -18,6 +18,7 @@ export interface CategoryHeroSectionProps {
   returnHref: string;
   returnLabel: string;
   description?: string;
+  exploreLabel?: string;
 }
 
 export default function CategoryHeroSection({
@@ -29,9 +30,15 @@ export default function CategoryHeroSection({
   returnHref,
   returnLabel,
   description,
+  exploreLabel,
 }: CategoryHeroSectionProps) {
   const hasSubcategories = spreads.length > 1;
   const isSpreadPage = spreads.length === 0;
+  const fallbackDescription = locale === "en"
+    ? "Ask your own question about dating or relationships, or choose a spread for the situation you’re in."
+    : locale === "ru"
+      ? "Задайте свой вопрос об отношениях или выберите расклад для вашей ситуации."
+      : "Поставте своє питання про стосунки або виберіть розклад для своєї ситуації.";
   const router = useRouter();
   const seo = getSeo(locale, `/tarot/${path.join("/")}`);
 
@@ -50,7 +57,7 @@ export default function CategoryHeroSection({
             <div className={styles.titleWrap}>
               <CategoryTitle title={seo?.h1 ?? current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
-                {seo?.intro ?? description ?? (current.site_description || ("description" in current ? current.description : ""))}
+                {isSpreadPage ? fallbackDescription : description?.trim() || seo?.intro || (current.site_description || ("description" in current ? current.description : "")) || fallbackDescription}
               </p>
             </div>
           </div>
@@ -60,13 +67,13 @@ export default function CategoryHeroSection({
             size="large"
             icon={isSpreadPage ? "/icons/chevron-down.svg" : "/icons/right-arrow.svg"}
             onClick={() => {
-              document.getElementById("category-top-block")?.scrollIntoView({ behavior: "smooth" });
-              router.replace(`${window.location.pathname}${window.location.search}#category-top-block`, { scroll: false });
+              document.getElementById("category-spreads")?.scrollIntoView({ behavior: "smooth" });
+              router.replace(`${window.location.pathname}${window.location.search}#category-spreads`, { scroll: false });
             }}
             className={`shadow-default ${styles.readingsButton}`}
             muted={!isSpreadPage}
           >
-            {dictionary.getYourReadings}
+            {exploreLabel ?? dictionary.getYourReadings}
           </MainButton>
         </div>
 

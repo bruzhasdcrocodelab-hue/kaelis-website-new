@@ -17,6 +17,7 @@ import CategoryAskBlock from "@/components/categories-page/CategoryAskBlock";
 import CategorySpreadsSection from "@/components/categories-page/CategorySpreadsSection";
 import CategoryLearningSection from "@/components/categories-page/CategoryLearningSection";
 import ConstellationPattern from "@/components/categories-page/ConstellationPattern";
+import StarField from "@/components/categories-list-page/StarField";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import FaqSection from "@/components/faq/FaqSection";
 import type { FaqItem } from "@/lib/faq/content";
@@ -85,7 +86,6 @@ function CategoryPageContent({
   return (
     <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <div className={styles.background} aria-hidden="true" />
-      <ConstellationPattern />
       <div className={styles.content}>
         {status && <Header dictionary={dictionary.header} locale={locale} />}
         {!status && (categoryRequest.state.status === "error" || spreadRequest.state.status === "error") && (
@@ -102,8 +102,11 @@ function CategoryPageContent({
         {!status && current && (
           <>
             <section className={styles.hero}>
+              <div className={styles.stars}><StarField /></div>
+              <div className={styles.constellation}><ConstellationPattern /></div>
               <Header dictionary={dictionary.header} locale={locale} />
               <Breadcrumbs
+                className={styles.breadcrumbs}
                 locale={locale}
                 items={[
                   { label: dictionary.header.logo, href: "/" },
@@ -121,7 +124,8 @@ function CategoryPageContent({
                   path={path}
                   returnHref={returnHref}
                   returnLabel={returnLabel}
-                  description={resolved?.spread?.description || current.site_description}
+                  description={resolved?.category.site_description || resolved?.spread?.description || current.site_description}
+                  exploreLabel={resolved ? locale === "en" ? `Explore ${resolved.category.name} Tarot Spreads` : locale === "ru" ? `Изучить расклады Таро: ${resolved.category.name}` : `Переглянути розклади Таро: ${resolved.category.name}` : undefined}
                 />
                 {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onPresetQuestions={setPresetQuestions} />}
               </div>

@@ -49,7 +49,39 @@
   flex-direction: column;
   width: 100%;
   overflow: hidden;
-  background: linear-gradient(163deg, #17112c 10%, #2e1e53 46%, #663d9d 100%);
+  isolation: isolate;
+  background: radial-gradient(ellipse 16% 18% at 59% 125%, #a05bb5 0%, rgb(160 91 181 / 0%) 59%), linear-gradient(162.53deg, #17112c 10%, #2e1e53 46%, #663d9d 100%);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: .7;
+  background: radial-gradient(ellipse 11% 26% at 5% 40%, rgb(245 211 171 / .45) 0%, transparent 72%), radial-gradient(ellipse 11% 26% at 29% 24%, rgb(236 200 238 / .32) 0%, transparent 72%), radial-gradient(ellipse 10% 24% at 44% 67%, rgb(238 213 248 / .26) 0%, transparent 72%), radial-gradient(ellipse 11% 26% at 76% 16%, rgb(247 216 199 / .25) 0%, transparent 72%);
+  pointer-events: none;
+}
+
+.stars,
+.constellation {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero > :not(.stars):not(.constellation) {
+  position: relative;
+  z-index: 2;
+}
+
+.breadcrumbs {
+  justify-content: flex-start;
+  width: min(1176px, calc(100% - 64px));
+  margin: 66px auto 0;
+  transform: translateY(-26px);
 }
 
 .heroGrid {
@@ -59,6 +91,7 @@
   align-items: center;
   width: min(1176px, calc(100% - 64px));
   margin: 0 auto;
+  margin-top: -110px;
   padding: 68px 0 66px;
 }
 
@@ -117,14 +150,26 @@
   }
 
   .hero {
-    background: linear-gradient(180deg, #17112c 0%, #2e1e53 60%, #663d9d 100%);
+    background: radial-gradient(ellipse 42% 18% at 53% 105%, #a05bb5 0%, rgb(160 91 181 / 0%) 68%), linear-gradient(180deg, #17112c 0%, #2e1e53 60%, #663d9d 100%);
+  }
+
+  .hero::before {
+    opacity: .3;
+    background: radial-gradient(ellipse 22% 25% at 90% 35%, rgb(236 200 238 / .3) 0%, transparent 72%);
+  }
+
+  .breadcrumbs {
+    width: calc(100% - 40px);
+    margin-top: 26px;
+    transform: none;
   }
 
   .heroGrid {
     grid-template-columns: 1fr;
     width: calc(100% - 40px);
+    margin-top: 0;
     gap: 32px;
-    padding: 38px 0 40px;
+    padding: 24px 0 40px;
   }
 
   .readingWrap {

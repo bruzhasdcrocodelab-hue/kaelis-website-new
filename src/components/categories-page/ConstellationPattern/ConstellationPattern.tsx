@@ -156,8 +156,8 @@ export default function ConstellationPattern() {
       className={styles.pattern}
       data-paused={paused || undefined}
       width="1580"
-      height="764"
-      viewBox="0 0 1580 764"
+      height="1342"
+      viewBox="0 0 1580 1342"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -190,12 +190,12 @@ export default function ConstellationPattern() {
           Vertical alpha ramp: fully opaque through the upper band, easing to
           transparent over the last stretch before y=764.
         */}
-        <linearGradient id="constellationBottomFade" x1="0" y1="0" x2="0" y2="764" gradientUnits="userSpaceOnUse">
+        <linearGradient id="constellationBottomFade" x1="0" y1="0" x2="0" y2="1342" gradientUnits="userSpaceOnUse">
           <stop offset="0.55" stopColor="#ffffff" />
           <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
-        <mask id="constellationBottomFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="764">
-          <rect x="0" y="0" width="1580" height="764" fill="url(#constellationBottomFade)" />
+        <mask id="constellationBottomFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1342">
+          <rect x="0" y="0" width="1580" height="1342" fill="url(#constellationBottomFade)" />
         </mask>
 
         {/*
@@ -210,8 +210,8 @@ export default function ConstellationPattern() {
           <stop offset="0.25" stopColor="#000000" />
           <stop offset="1" stopColor="#ffffff" />
         </radialGradient>
-        <mask id="titleCutout" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="764">
-          <rect x="0" y="0" width="1580" height="764" fill="url(#titleCutoutMask)" />
+        <mask id="titleCutout" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1342">
+          <rect x="0" y="0" width="1580" height="1342" fill="url(#titleCutoutMask)" />
         </mask>
 
         {/*
