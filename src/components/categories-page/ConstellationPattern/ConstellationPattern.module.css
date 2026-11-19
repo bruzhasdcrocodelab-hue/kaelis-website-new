@@ -1,38 +1,19 @@
 .pattern {
   position: absolute;
-  top: 90px;
-  left: 50px;
+  top: 0;
+  left: 0;
   display: block;
-  width: 900px;
-  height: 900px;
+  width: 1739px;
+  height: 1342px;
   max-width: none;
-  transform: none;
   pointer-events: none;
   z-index: 0;
-  overflow: hidden;
-}
-
-.ellipse7OuterFade {
-  mask: url(#ellipse7TopFadeMask);
-}
-
-@media (max-width: 1280px) {
-  .pattern {
-    opacity: 0.7;
-  }
 }
 
 @media (max-width: 768px) {
   .pattern {
-    top: 80px;
-    left: calc(100% - 385px);
-    width: 650px;
-    height: 650px;
-    transform: rotate(-20deg);
-  }
-
-  .ellipse7OuterFade {
-    mask: none;
+    width: 390px;
+    height: 981px;
   }
 }
 
