@@ -40,6 +40,7 @@ const dictionary = { header: {}, footer: {}, categoryPage: { topBlock: {}, categ
 async function renderPage({ slug = "other", spreads = familySpreads, all = success([triplet]), nested } = {}) {
   let enabled;
   let reading;
+  let ask;
   let retry;
   const retryAll = () => {};
   const Page = (await loadComponent("../src/components/categories-page/CategoryPageView/CategoryPageView.tsx", {
@@ -60,23 +61,25 @@ async function renderPage({ slug = "other", spreads = familySpreads, all = succe
     "@/components/categories/ConstellationGeometry.module.css": {},
     "@/components/categories-page/CategoryHeroSection": hero,
     "@/components/categories-page/CategoryTopBlock": props => { reading = props; return createElement("div", { "data-component": "reading" }); },
+    "@/components/categories-page/CategoryAskBlock": props => { ask = props; return createElement("div", { "data-component": "ask" }); },
+    "@/components/categories-page/CategorySpreadsSection": marker("spreads"),
+    "@/components/categories-page/CategoryLearningSection": marker("learning"),
     "@/components/categories-page/ConstellationPattern": () => null,
     "@/components/seo/Breadcrumbs": () => null,
     "@/components/faq/FaqSection": marker("faq"),
     "./CategoryPageView.module.css": {},
   })).default;
   const html = renderToStaticMarkup(createElement(Page, { dictionary, locale: "en", path: nested ? [slug, nested] : [slug] }));
-  return { html, enabled, reading, retry, retryAll };
+  return { html, enabled, reading, ask, retry, retryAll };
 }
 
-test("multi-spread category renders its ring and reads the global triplet with the current category", async () => {
+test("multi-spread category reads the global triplet and renders the standalone category UI", async () => {
   const result = await renderPage();
   assert.equal(result.enabled, true);
-  assert.match(result.html, /data-component="ring"/);
-  assert.match(result.html, /with-rows/);
-  assert.equal(result.reading.spreadId, "62");
-  assert.equal(result.reading.categoryId, "4");
-  assert.equal(result.reading.maxSelectableCards, 4);
+  assert.doesNotMatch(result.html, /data-component="ring"|with-rows/);
+  assert.equal(result.ask.spreadId, "62");
+  assert.equal(result.ask.categoryId, "4");
+  assert.equal(result.reading, undefined);
 });
 
 test("dreams and other single-spread categories omit the ring and its spacing without loading all spreads", async () => {
@@ -84,8 +87,8 @@ test("dreams and other single-spread categories omit the ring and its spacing wi
     const result = await renderPage({ slug, spreads: [spread("1", "dream", 8)], all: { status: "loading" } });
     assert.equal(result.enabled, false);
     assert.doesNotMatch(result.html, /data-component="ring"|with-rows/);
-    assert.equal(result.reading.spreadId, "1");
-    assert.equal(result.reading.maxSelectableCards, 8);
+    assert.equal(result.ask.spreadId, "1");
+    assert.equal(result.reading, undefined);
   }
 });
 
@@ -102,7 +105,7 @@ test("loading, failed or missing triplet leaves manual selection available witho
 test("explicit spread URL works while the global catalog is unavailable", async () => {
   const result = await renderPage({ nested: "children", all: { status: "error" } });
   assert.equal(result.enabled, false);
-  assert.equal(result.reading.spreadId, "12");
+  assert.equal(result.ask.spreadId, "12");
   assert.doesNotMatch(result.html, /data-component="ring"|data-status="error"/);
 });
 

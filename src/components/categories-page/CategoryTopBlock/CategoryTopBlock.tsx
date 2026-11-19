@@ -37,6 +37,7 @@ export interface CategoryTopBlockProps {
   sessionKey?: number;
   embedded?: boolean;
   effectsActive?: boolean;
+  resumeReading?: boolean;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
     retry: () => void;
@@ -93,7 +94,7 @@ function SessionContent({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus,
+  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus, resumeReading = false,
   panelRef, onAppearance, initialVisible,
 }: CategoryTopBlockProps & {
   panelRef: RefObject<HTMLDivElement | null>;
@@ -122,7 +123,7 @@ function SessionContent({
   // Receiving cards alone does not mean the AI interpretation is ready.
   const step: Step = flow.reading?.reading && flow.firstCycleComplete
     ? "reveal"
-    : flow.busy || flow.reading ? "choose" : "ask";
+    : resumeReading || flow.busy || flow.reading ? "choose" : "ask";
   const previousStep = useRef(step);
   useEffect(() => {
     if (!sessionActive) { previousStep.current = step; return; }

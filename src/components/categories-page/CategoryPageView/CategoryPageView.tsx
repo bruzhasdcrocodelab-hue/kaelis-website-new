@@ -13,6 +13,9 @@ import geometryStyles from "@/components/categories/ConstellationGeometry.module
 import ReadingNavigationProvider from "@/components/reading/ReadingNavigationProvider";
 import CategoryHeroSection from "@/components/categories-page/CategoryHeroSection";
 import CategoryTopBlock from "@/components/categories-page/CategoryTopBlock";
+import CategoryAskBlock from "@/components/categories-page/CategoryAskBlock";
+import CategorySpreadsSection from "@/components/categories-page/CategorySpreadsSection";
+import CategoryLearningSection from "@/components/categories-page/CategoryLearningSection";
 import ConstellationPattern from "@/components/categories-page/ConstellationPattern";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import FaqSection from "@/components/faq/FaqSection";
@@ -77,6 +80,7 @@ function CategoryPageContent({
     : spreads.state.status !== "success" ? spreads.state.status
     : !resolved ? "notFound" : null;
   const retry = categories.state.status === "error" ? categories.retry : spreads.retry;
+  const [readingActive, setReadingActive] = useState(false);
   return (
     <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <div className={styles.background} aria-hidden="true" />
@@ -96,46 +100,43 @@ function CategoryPageContent({
         )}
         {!status && current && (
           <>
-            <Breadcrumbs
-              locale={locale}
-              items={[
-                { label: dictionary.header.logo, href: "/" },
-                { label: dictionary.header.allTarotSpreads, href: "/tarot" },
-                ...(path.length === 2 && resolved ? [{ label: resolved.category.name, href: `/tarot/${resolved.category.slug}` }] : []),
-                { label: current.name },
-              ]}
-            />
-            <CategoryHeroSection
-              dictionary={dictionary.categoryPage}
-              locale={locale}
-              current={current}
-              spreads={path.length === 1 && spreads.state.status === "success" ? spreads.state.data : []}
-              path={path}
-              returnHref={returnHref}
-              returnLabel={returnLabel}
-              description={resolved?.spread?.description || current.site_description}
-            />
+            <section className={styles.hero}>
+              <Breadcrumbs
+                locale={locale}
+                items={[
+                  { label: dictionary.header.logo, href: "/" },
+                  { label: dictionary.header.allTarotSpreads, href: "/tarot" },
+                  ...(path.length === 2 && resolved ? [{ label: resolved.category.name, href: `/tarot/${resolved.category.slug}` }] : []),
+                  { label: current.name },
+                ]}
+              />
+              <div className={styles.heroGrid}>
+                <CategoryHeroSection
+                  dictionary={dictionary.categoryPage}
+                  locale={locale}
+                  current={current}
+                  spreads={!resolved?.spread && path.length === 1 && spreads.state.status === "success" ? spreads.state.data : []}
+                  path={path}
+                  returnHref={returnHref}
+                  returnLabel={returnLabel}
+                  description={resolved?.spread?.description || current.site_description}
+                />
+                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} />}
+              </div>
+              {readingActive && resolved?.spread && count !== null && <div className={styles.readingWrap}>
+                <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading />
+              </div>}
+            </section>
           </>
         )}
         {!status && needsDefaultSpread && (allSpreadsRequest.state.status === "error" || !resolved?.spread) && (
           <CatalogStatus locale={locale} status={allSpreads.state.status === "loading" ? "loading" : "error"} retry={allSpreads.retry} />
         )}
         {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
-        {!status && resolved?.spread && (
-          <>
-            {count !== null ? (
-              <CategoryTopBlock
-                key={`${category?.id}:${resolved.spread.id}`}
-                dictionary={dictionary.categoryPage.topBlock}
-                locale={locale}
-                categoryLabel={resolved.category.name}
-                categoryId={resolved.category.id}
-                spreadId={resolved.spread.id}
-                maxSelectableCards={count}
-              />
-            ) : <CatalogStatus locale={locale} status="error" retry={needsDefaultSpread ? allSpreads.retry : spreads.retry} />}
-          </>
-        )}
+        {!status && resolved?.spread && spreads.state.status === "success" && <>
+          <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={resolved.spread.slug} />
+          <CategoryLearningSection locale={locale} category={resolved.category} spreads={spreads.state.data} />
+        </>}
         {!status && current && faq.length > 0 && (
           <div className={styles.faqWrap}>
             <FaqSection heading={faqHeading} items={faq} />

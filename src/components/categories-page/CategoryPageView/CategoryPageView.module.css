@@ -51,6 +51,46 @@
   z-index: 1;
 }
 
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 660px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 430px);
+  gap: clamp(32px, 8vw, 120px);
+  align-items: center;
+  width: min(1080px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 22px 0 48px;
+}
+
+.heroGrid :global(section) {
+  min-width: 0;
+}
+
+.readingWrap {
+  width: min(1080px, calc(100% - 64px));
+  margin: 0 auto 50px;
+  animation: reading-enter .42s ease-out both;
+}
+
+@keyframes reading-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .faqWrap {
   width: calc(100% - 120px);
   padding: 48px 64px 64px;
@@ -81,5 +121,27 @@
     margin: 0;
     /* background: transparent; */
     box-shadow: none;
+  }
+
+  .hero {
+    min-height: 0;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+    width: calc(100% - 32px);
+    gap: 24px;
+    padding-bottom: 36px;
+  }
+
+  .readingWrap {
+    width: 100%;
+    margin-bottom: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .readingWrap {
+    animation: none;
   }
 }

@@ -133,8 +133,10 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     setSpeakerErrorState(false); setFirstCycleCompleteState(false);
   }, [key]);
 
-  async function submit() {
-    if (!enabled || activeReadings.has(key) || !question.trim() || !speakers.some(s => s.id === speakerId)) return;
+  async function submit(value = question) {
+    const submittedQuestion = value.trim();
+    if (!enabled || activeReadings.has(key) || !submittedQuestion || !speakers.some(s => s.id === speakerId)) return;
+    if (submittedQuestion !== question) setQuestion(submittedQuestion);
     const controller = new AbortController();
     const task: ActiveReading = { controller, current: null, retry: async () => {} };
     activeReadings.set(key, task);
@@ -203,7 +205,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     try {
       try { closeSocket = await connectReadingSocket(locale, signal, event => { void answer(event); }, () => { void check(); }, startFallback); }
       catch { signal.throwIfAborted(); fallback = true; }
-      const next = await createReading(readingPayload(question, categoryId, spreadId, speakerId), locale, signal);
+      const next = await createReading(readingPayload(submittedQuestion, categoryId, spreadId, speakerId), locale, signal);
       if (signal.aborted) return;
       task.current = next;
       updateReadingSession(key, state => ({ ...state, reading: next }));

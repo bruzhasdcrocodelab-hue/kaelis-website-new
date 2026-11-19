@@ -1,0 +1,82 @@
+"use client";
+
+import { useEffect, useLayoutEffect, useState } from "react";
+import Image from "next/image";
+import MainButton from "@/components/global/MainButton";
+import TriggerButton, { GUIDE_ICON } from "@/components/categories-page/TriggerButton";
+import { useReadingNavigation } from "@/components/reading/ReadingNavigationProvider";
+import type { Dictionary, Locale } from "@/lang";
+import { loadPresetQuestions, type PresetQuestion } from "@/lib/tarot/questions";
+import { useReading } from "@/lib/tarot/useReading";
+import { readingMessages } from "@/lib/tarot/messages";
+import { speakerGuide } from "@/lib/tarot/styleStore";
+import styles from "./CategoryAskBlock.module.css";
+
+export interface CategoryAskBlockProps {
+  dictionary: Dictionary;
+  locale: Locale;
+  categoryId: string;
+  spreadId: string;
+  categoryLabel: string;
+  onReadingStarted: (active: boolean) => void;
+}
+
+export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, categoryLabel, onReadingStarted }: CategoryAskBlockProps) {
+  const flow = useReading(locale, categoryId, spreadId);
+  const navigation = useReadingNavigation();
+  const [question, setQuestion] = useState("");
+  const [presets, setPresets] = useState<PresetQuestion[]>([]);
+  const [presetError, setPresetError] = useState(false);
+  const text = readingMessages[locale];
+  const selected = flow.speakers.find((speaker) => speaker.id === flow.speakerId);
+  const speakerLabel = selected?.name ?? text.loading;
+  const speakerIcon = GUIDE_ICON[selected ? speakerGuide(selected) ?? "analyst" : "analyst"];
+  const started = !!flow.reading || flow.busy;
+
+  useEffect(() => { onReadingStarted(started); }, [onReadingStarted, started]);
+  useLayoutEffect(() => navigation?.register({ started, reset: flow.reset }), [navigation, started, flow.reset]);
+  useEffect(() => {
+    const controller = new AbortController();
+    loadPresetQuestions(locale, controller.signal).then((items) => {
+      if (!controller.signal.aborted) {
+        setPresets(items.filter((item) => item.tarotId === spreadId).slice(0, 3));
+        setPresetError(false);
+      }
+    }).catch(() => { if (!controller.signal.aborted) setPresetError(true); });
+    return () => controller.abort();
+  }, [locale, spreadId]);
+
+  const start = (value: string, clearField: boolean) => {
+    const submit = () => {
+      if (clearField) setQuestion("");
+      void flow.submit(value);
+    };
+    if (started) navigation?.request(submit, "switch");
+    else submit();
+  };
+
+  return <section id="category-top-block" className={styles.section} aria-label={dictionary.categoryPage.topBlock.askTitle}>
+    <Image src="/images/backgrounds/pattern-categories-top-block-2.svg" alt="" width={1627} height={731} className={styles.pattern} aria-hidden />
+    <div className={styles.content}>
+      <div className={styles.headingRow}>
+        <div>
+          <h2 className={`font-bona-topblock-title ${styles.title}`}>{dictionary.categoryPage.topBlock.askTitle}</h2>
+          <p className={`font-instrument-xs ${styles.description}`}>{dictionary.categoryPage.topBlock.askDescription}</p>
+        </div>
+        <div className={styles.triggerDesktop}>
+          <TriggerButton dictionary={dictionary.categoryPage.topBlock.guides} options={flow.speakers.map((speaker) => ({ value: speaker.id, label: speaker.name, icon: GUIDE_ICON[speakerGuide(speaker) ?? "analyst"] }))} value={flow.speakerId} onChange={flow.setSpeakerId} disabled={flow.busy || !flow.speakers.length} />
+        </div>
+        <MainButton variant="default" size="small" className={styles.triggerMobile} icon={speakerIcon} aria-label={speakerLabel} onClick={() => undefined} muted>{speakerLabel}</MainButton>
+      </div>
+      <label className={`font-instrument-sm ${styles.label}`} htmlFor="category-question">{locale === "en" ? "Your question:" : locale === "ru" ? "Ваш вопрос:" : "Ваше питання:"}</label>
+      <textarea id="category-question" className={`font-instrument-sm ${styles.input}`} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder={dictionary.categoryPage.topBlock.placeholder} disabled={flow.busy} aria-invalid={!!flow.error} />
+      <div className={styles.submitWrap}>
+        <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={() => start(question, true)} disabled={!question.trim() || flow.busy || !flow.speakerId} aria-busy={flow.busy}>{flow.busy ? text.loading : "Get My Reading"}</MainButton>
+      </div>
+      <p className={`font-instrument-xs ${styles.tryTitle}`}>{locale === "en" ? "Try a question" : locale === "ru" ? "Попробуйте вопрос" : "Спробуйте питання"}</p>
+      <div className={styles.presets}>{presets.map((preset) => <button className={`font-instrument-xs ${styles.preset}`} key={preset.id} type="button" onClick={() => start(preset.text, false)} disabled={flow.busy}><Image src="/icons/chevron-down.svg" alt="" width={16} height={16} />{preset.text}</button>)}</div>
+      {(flow.error || presetError) && <p className={`font-instrument-xs ${styles.error}`} role="alert">{flow.error || text.error}</p>}
+      <span className={styles.category} aria-hidden>{categoryLabel}</span>
+    </div>
+  </section>;
+}
