@@ -31,7 +31,7 @@ export type LearningContent = {
 };
 
 const themes: Record<string, CategoryTheme> = {
-  love: { focus: { en: "your relationships", ru: "отношения", uk: "стосунки" }, prompt: { en: "getting in touch with an ex", ru: "общении с бывшим партнёром", uk: "спілкуванні з колишнім партнером" } },
+  love: { focus: { en: "your relationships", ru: "отношения", uk: "стосунки" }, prompt: { en: "getting in touch with an ex", ru: "вашем общении с бывшим партнёром", uk: "спілкування з колишнім партнером" } },
   dreams: { focus: { en: "a dream that stays with you", ru: "сне, который не отпускает", uk: "сні, який не відпускає" }, prompt: { en: "a recurring dream", ru: "повторяющемся сне", uk: "повторюваному сні" } },
   personality: { focus: { en: "your strengths and patterns", ru: "сильных сторонах и привычных паттернах", uk: "сильних сторонах і звичних патернах" }, prompt: { en: "a quality you want to understand better", ru: "качестве, которое хотите лучше понять", uk: "рисі, яку хочете краще зрозуміти" } },
   education: { focus: { en: "your learning path", ru: "обучении", uk: "навчанні" }, prompt: { en: "the next step in your studies", ru: "следующем шаге в учёбе", uk: "наступному кроці в навчанні" } },
@@ -72,6 +72,10 @@ export function categoryPageContent(locale: Locale, category: TarotCategory, spr
   const title = locale === "en" ? `How a ${category.name} Tarot Reading Works` : locale === "ru" ? `Как работает расклад Таро «${category.name}»` : `Як працює розклад Таро «${category.name}»`;
   const focus = theme.focus[locale];
   const prompt = theme.prompt[locale];
+  const preferredLinks = category.slug === "love" ? ["between-us", "fate", "breakup"] : [];
+  const links = preferredLinks.length
+    ? preferredLinks.map((slug) => spreads.find((spread) => spread.slug === slug)).filter((spread): spread is TarotSpread => Boolean(spread))
+    : spreads.slice(0, 3);
   const second = locale === "en"
     ? { lead: `If you want to choose a spread for ${focus}, try `, between: " for a focused perspective, or ", end: " if you’re unsure which one fits. You can also start with your own question in the form above." }
     : locale === "ru"
@@ -85,5 +89,5 @@ export function categoryPageContent(locale: Locale, category: TarotCategory, spr
       ? `Дайте раскладу конкретную тему для работы. Если думаете о ${prompt}, попробуйте спросить: «Что мне стоит учесть, прежде чем действовать?» Читайте интерпретацию с учётом этого решения — она может помочь понять следующий шаг.`
       : `Дайте розкладу конкретну тему для роботи. Якщо думаєте про ${prompt}, спробуйте запитати: «Що мені варто врахувати, перш ніж діяти?» Читайте інтерпретацію з огляду на це рішення — вона може допомогти зрозуміти наступний крок.`;
 
-  return { ...fixed[locale], learningTitle: title, secondLead: second.lead, secondBetween: second.between, secondEnd: second.end, third, links: spreads.slice(0, 3) };
+  return { ...fixed[locale], learningTitle: title, secondLead: second.lead, secondBetween: second.between, secondEnd: second.end, third, links };
 }

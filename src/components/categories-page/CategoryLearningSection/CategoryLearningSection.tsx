@@ -8,6 +8,45 @@ import { categoryPageContent } from "@/lib/categories/pageContent";
 import { spreadHref, type TarotCategory, type TarotSpread } from "@/lib/categories/catalog";
 import styles from "./CategoryLearningSection.module.css";
 
+const loveLinkCopy: Record<Locale, [string, string, string, string]> = {
+  en: [
+    "If you want to choose a spread, try ",
+    " for a question about your current relationship, ",
+    " if you’re single and thinking about finding a partner, or ",
+    " if you’re deciding whether to stay or leave. If you’re unsure which one fits, start with your own question in the form above.",
+  ],
+  ru: [
+    "Если хотите выбрать расклад, попробуйте ",
+    " для вопроса о текущих отношениях, ",
+    " если вы одиноки и думаете о поиске партнёра, или ",
+    " если решаете, остаться или уйти. Если не уверены, какой вариант подходит, начните с собственного вопроса в форме выше.",
+  ],
+  uk: [
+    "Якщо хочете обрати розклад, спробуйте ",
+    " для питання про ваші поточні стосунки, ",
+    " якщо ви самотні й думаєте про пошук партнера, або ",
+    " якщо вирішуєте, залишитися чи піти. Якщо не впевнені, який варіант підходить, почніть із власного питання у формі вище.",
+  ],
+};
+
+const genericLinkCopy: Record<Locale, { between: string; last: string; end: string }> = {
+  en: {
+    between: ", ",
+    last: ", or ",
+    end: " to explore it. If you’re unsure which one fits, start with your own question in the form above.",
+  },
+  ru: {
+    between: ", ",
+    last: " или ",
+    end: ", чтобы рассмотреть ситуацию точнее. Если не уверены, какой вариант подходит, начните с собственного вопроса в форме выше.",
+  },
+  uk: {
+    between: ", ",
+    last: " або ",
+    end: ", щоб точніше розглянути ситуацію. Якщо не впевнені, який варіант підходить, почніть із власного питання у формі вище.",
+  },
+};
+
 function scrollToQuestion() {
   document.getElementById("category-ask-question")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -18,9 +57,14 @@ export default function CategoryLearningSection({ locale, category, spreads, exa
     ...spread,
     href: spreads.length === 1 ? "#category-ask-question" : spreadHref(category.slug, spread.slug, locale),
   }));
+  const loveCopy = category.slug === "love" && links.length === 3 ? loveLinkCopy[locale] : undefined;
+  const genericCopy = genericLinkCopy[locale];
 
   return <section id="category-learning" className={styles.section}>
-    <div className={styles.decorativeCard} aria-hidden>
+    <div className={styles.decorativeCardBack} aria-hidden>
+      <Image src="/images/cards/deck/knight-of-wands.png" alt="" fill sizes="228px" />
+    </div>
+    <div className={styles.decorativeCardFront} aria-hidden>
       <Image src="/images/cards/deck/knight-of-wands.png" alt="" fill sizes="228px" />
     </div>
     <article className={styles.article}>
@@ -28,10 +72,16 @@ export default function CategoryLearningSection({ locale, category, spreads, exa
       <div className={`font-instrument-base ${styles.copy}`}>
         <p>{content.intro}</p>
         <p>
-          {content.secondLead}
+          {loveCopy?.[0] ?? content.secondLead}
           {links.map((spread, index) => <span key={spread.id}>
-            <Link className={styles.textLink} href={spread.href}>{spread.name}</Link>
-            {index < links.length - 1 ? content.secondBetween : content.secondEnd}
+            <Link className={styles.textLink} href={spread.href}>{locale === "en" && spread.slug === "between-us" ? "Between Us" : spread.name}</Link>
+            {loveCopy
+              ? loveCopy[index + 1]
+              : index === links.length - 1
+                ? genericCopy.end
+                : index === links.length - 2
+                  ? genericCopy.last
+                  : genericCopy.between}
           </span>)}
           {!links.length && content.secondEnd}
         </p>
