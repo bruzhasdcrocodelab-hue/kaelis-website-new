@@ -14,7 +14,7 @@ export default function FaqSection({ heading, items, className }: FaqSectionProp
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const idPrefix = useId();
   return <section className={`${styles.section} ${className ?? ""}`}>
-    <h2 className={`font-bona-3xl ${styles.heading}`}>{heading}</h2>
+    <h2 className={`font-bona-4xl ${styles.heading}`}>{heading}</h2>
     <div className={styles.items}>
       {items.map((item, index) => {
         const open = openIndex === index;
@@ -22,13 +22,13 @@ export default function FaqSection({ heading, items, className }: FaqSectionProp
         return <div key={item.question} className={styles.item} data-open={open || undefined}>
         <button
           type="button"
-          className={`font-instrument-base-emphasized ${styles.question}`}
+          className={`font-instrument-base ${styles.question}`}
           aria-expanded={open}
           aria-controls={answerId}
           onClick={() => setOpenIndex(open ? null : index)}
         >
           <span>{item.question}</span>
-          <span className={styles.icon} aria-hidden />
+          <span className={styles.icon} aria-hidden>+</span>
         </button>
         <div id={answerId} className={styles.answerWrap}>
           <p className={`font-instrument-base ${styles.answer}`}>{item.answer}</p>

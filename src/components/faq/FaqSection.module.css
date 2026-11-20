@@ -1,25 +1,35 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: 24px;
   width: 100%;
+  padding: 32px;
+  border: 1px solid var(--color-black-7);
+  border-radius: var(--radius-panel-mobile);
+  background: var(--color-white);
 }
 
 .heading {
+  padding-bottom: 20px;
   margin: 0;
   color: var(--color-black);
+  font-size: var(--text-4xl);
+  line-height: 1.12;
+  letter-spacing: var(--tracking-bona-4xl);
 }
 
 .items {
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-top: 1px solid var(--color-black-15);
 }
 
 .item {
   width: 100%;
-  border-bottom: 1px solid var(--color-black-15);
+  border-top: 0.8px solid var(--color-black-15);
+}
+
+.item:last-child {
+  border-bottom: 0.8px solid var(--color-black-15);
 }
 
 .question {
@@ -28,13 +38,19 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 20px 0;
+  min-height: 64px;
+  padding: 13px 7px 13px 0;
   border: none;
   background: transparent;
   color: var(--color-black);
   cursor: pointer;
   font: inherit;
   text-align: left;
+}
+
+.question > span:first-child {
+  flex: 1 0 0;
+  min-width: 0;
 }
 
 .answerWrap {
@@ -49,31 +65,19 @@
 }
 
 .icon {
-  position: relative;
-  flex: 0 0 20px;
-  width: 20px;
-  height: 20px;
-}
-
-.icon::before,
-.icon::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 1px;
-  background-color: var(--color-black-60);
-  transform: translate(-50%, -50%);
-}
-
-.icon::after {
-  transform: translate(-50%, -50%) rotate(90deg);
+  flex: 0 0 11px;
+  width: 11px;
+  color: var(--color-black-75);
+  font-family: var(--font-manrope);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
   transition: transform 0.2s ease;
 }
 
-.item[data-open] .icon::after {
-  transform: translate(-50%, -50%);
+.item[data-open] .icon {
+  transform: rotate(45deg);
 }
 
 .answer {
@@ -92,12 +96,14 @@
 
 @media (max-width: 768px) {
   .section {
-    gap: 16px;
+    padding: 20px;
+  }
+
+  .heading {
+    font-size: var(--text-3xl);
   }
 
   .question {
-    gap: 12px;
-    padding: 16px 0;
     font-size: var(--text-sm);
   }
 
@@ -112,7 +118,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .icon::after,
+  .icon,
   .answerWrap,
   .answer {
     transition: none;

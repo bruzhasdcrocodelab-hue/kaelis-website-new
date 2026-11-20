@@ -16,7 +16,7 @@ export const faqPageContent: Record<Locale, FaqPageContent> = {
   en: {
     eyebrow: "Kaelis Help",
     intro: "Answers to common questions about Kaelis and AI-powered Tarot readings.",
-    heading: "Frequently asked questions",
+    heading: "Frequently Asked Questions",
     items: [
       { question: "What is Kaelis?", answer: "Kaelis is an AI-powered space for Tarot readings, reflection, and exploring the questions that matter to you." },
       { question: "How does a Tarot reading work?", answer: "Choose a spread, focus on your question, select the cards, and receive an interpretation that helps you reflect on the symbols and your situation." },
