@@ -53,16 +53,6 @@
   background: radial-gradient(ellipse 16% 18% at 59% 125%, #a05bb5 0%, rgb(160 91 181 / 0%) 59%), linear-gradient(162.53deg, #17112c 10%, #2e1e53 46%, #663d9d 100%);
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: .7;
-  background: radial-gradient(ellipse 11% 26% at 5% 40%, rgb(245 211 171 / .45) 0%, transparent 72%), radial-gradient(ellipse 11% 26% at 29% 24%, rgb(236 200 238 / .32) 0%, transparent 72%), radial-gradient(ellipse 10% 24% at 44% 67%, rgb(238 213 248 / .26) 0%, transparent 72%), radial-gradient(ellipse 11% 26% at 76% 16%, rgb(247 216 199 / .25) 0%, transparent 72%);
-  pointer-events: none;
-}
-
 .stars,
 .constellation {
   position: absolute;

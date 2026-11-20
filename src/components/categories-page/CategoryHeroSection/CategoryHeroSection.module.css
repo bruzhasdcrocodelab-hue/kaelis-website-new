@@ -101,8 +101,9 @@
   height: 48px;
   margin-top: 6px;
   min-width: 278px;
-  border-color: rgb(245 249 250 / .4) !important;
+  border-color: var(--color-white-40) !important;
 }
+  
 
 .spreadPage .readingsButton::before {
   display: none;

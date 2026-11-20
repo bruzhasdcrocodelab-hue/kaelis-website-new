@@ -63,9 +63,9 @@ export default function CategoryHeroSection({
           </div>
 
           <MainButton
-            variant={isSpreadPage ? "stroke" : "gradient-black"}
+            variant={"stroke"}
             size="large"
-            icon={isSpreadPage ? "/icons/chevron-down.svg" : "/icons/right-arrow.svg"}
+            icon={"/icons/right-arrow.svg"}
             onClick={() => {
               document.getElementById("category-spreads")?.scrollIntoView({ behavior: "smooth" });
               router.replace(`${window.location.pathname}${window.location.search}#category-spreads`, { scroll: false });
