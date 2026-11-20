@@ -80,6 +80,42 @@
   font-size: var(--text-lg);
 }
 
+.readingsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 50px;
+  padding: 12px 24px;
+  border: 1px solid var(--color-white-40);
+  border-radius: 25px;
+  background: transparent;
+  color: var(--color-greyish-blue);
+  cursor: pointer;
+  font-family: var(--font-manrope);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.readingsButtonLabel {
+  min-width: 200px;
+}
+
+.readingsButtonIcon {
+  color: #fce5f4;
+  line-height: 1.5;
+}
+
+.readingsButton:hover {
+  background: var(--color-white-7);
+}
+
+.readingsButton:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 3px;
+}
+
 @media (max-width: 768px) {
   .titleWrap {
     gap: 8px;
@@ -126,12 +162,12 @@
     width: 100%;
     gap: 16px;
     margin-top: 0;
-    padding: 6px 0px;
     justify-content: center;
+    padding: 12px 24px;
   }
 
-  .readingsButton :global(span:first-child) {
-    font-size: var(--text-sm);
+  .readingsButtonLabel {
+    min-width: 0;
   }
 
 }

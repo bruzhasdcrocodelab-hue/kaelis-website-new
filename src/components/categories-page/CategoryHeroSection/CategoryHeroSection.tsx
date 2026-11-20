@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import type { Dictionary, Locale } from "@/lang";
 import type { TarotCategory, TarotSpread } from "@/lib/categories/catalog";
-import MainButton from "@/components/global/MainButton";
 import SubcategoryRing from "@/components/categories-page/SubcategoryRing";
 import CategoryTitle from "./CategoryTitle";
 import { getSeo } from "@/lib/seo";
@@ -55,18 +54,17 @@ export default function CategoryHeroSection({
             </div>
           </div>
 
-          <MainButton
-            variant={"stroke"}
-            size="large"
-            icon={"/icons/right-arrow.svg"}
+          <button
+            type="button"
             onClick={() => {
               document.getElementById("category-spreads")?.scrollIntoView({ behavior: "smooth" });
               router.replace(`${window.location.pathname}${window.location.search}#category-spreads`, { scroll: false });
             }}
-            className={`shadow-default ${styles.readingsButton}`}
+            className={styles.readingsButton}
           >
-            {exploreLabel ?? dictionary.getYourReadings}
-          </MainButton>
+            <span className={styles.readingsButtonLabel}>{exploreLabel ?? dictionary.getYourReadings}</span>
+            <span className={styles.readingsButtonIcon} aria-hidden>↓</span>
+          </button>
         </div>
 
         {hasSubcategories && <SubcategoryRing subcategories={spreads} basePath={path} locale={locale} />}

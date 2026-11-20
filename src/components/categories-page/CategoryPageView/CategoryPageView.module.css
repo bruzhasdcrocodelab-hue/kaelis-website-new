@@ -50,7 +50,7 @@
   width: 100%;
   overflow: hidden;
   isolation: isolate;
-  background: radial-gradient(ellipse 16% 18% at 59% 125%, #a05bb5 0%, rgb(160 91 181 / 0%) 59%), linear-gradient(162.53deg, #17112c 10%, #2e1e53 46%, #663d9d 100%);
+  background: radial-gradient(ellipse 90% 200% at 59% 125%, #a05bb5 0%, rgb(160 91 181 / 0%) 59%), linear-gradient(162.53deg, #17112c 10%, #2e1e53 46%, #663d9d 100%);
 }
 
 .stars,
@@ -167,7 +167,7 @@
   }
 
   .hero {
-    background: radial-gradient(ellipse 42% 18% at 53% 105%, #a05bb5 0%, rgb(160 91 181 / 0%) 68%), linear-gradient(180deg, #17112c 0%, #2e1e53 60%, #663d9d 100%);
+    background: radial-gradient(ellipse 110% 95% at 53% 115%, #a05bb5 0%, rgb(160 91 181 / 0%) 68%), linear-gradient(180deg, #17112c 0%, #2e1e53 60%, #663d9d 100%);
   }
 
   .hero::before {
