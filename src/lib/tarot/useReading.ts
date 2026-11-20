@@ -7,7 +7,7 @@ import { connectReadingSocket, type AnswerEvent } from "./socket";
 import { readingMessages } from "./messages";
 import { useTarotStyle } from "@/components/TarotStyleProvider";
 import { resolveSpeakerId } from "./styleStore";
-import { clearReadingSession, completeLocaleSwitch, getReadingSession, isReadingOwnerHandedOff, isLocaleSwitchPending, registerReadingOwner, resetReadingSession, setReadingSession, subscribeReadingSession, unregisterReadingOwner, updateReadingSession } from "./readingSession";
+import { clearReadingSession, completeLocaleSwitch, getReadingSession, hasReadingOwners, isReadingOwnerHandedOff, isLocaleSwitchPending, registerReadingOwner, resetReadingSession, setReadingSession, subscribeReadingSession, unregisterReadingOwner, updateReadingSession } from "./readingSession";
 
 type ActiveReading = {
   controller: AbortController;
@@ -23,6 +23,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
   const { speakerId: preferredSpeakerId, setSpeakerId, getSpeakerId } = useTarotStyle();
   const speakerId = resolveSpeakerId(speakers, preferredSpeakerId);
   const [question, setQuestionState] = useState("");
+  const [draftQuestion, setDraftQuestionState] = useState("");
   const [reading, setReadingState] = useState<Reading | null>(null);
   const [busy, setBusyState] = useState(false);
   const [error, setErrorState] = useState("");
@@ -31,15 +32,20 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
   const [speakerAttempt, setSpeakerAttempt] = useState(0);
   const owner = useRef<string | null>(null);
   const text = readingMessages[locale];
-  const snapshot = useRef({ question, reading, busy, error, speakerError, firstCycleComplete, speakers });
+  const snapshot = useRef({ question, draftQuestion, reading, busy, error, speakerError, firstCycleComplete, speakers });
   const save = () => setReadingSession(key, snapshot.current);
   const setQuestion = (value: string) => {
     snapshot.current.question = value;
     save();
     setQuestionState(value);
   };
+  const setDraftQuestion = (value: string) => {
+    snapshot.current.draftQuestion = value;
+    save();
+    setDraftQuestionState(value);
+  };
   const setSpeakers = useCallback((value: Speaker[]) => {
-    snapshot.current.speakers = value;
+    snapshot.current = { ...(getReadingSession(key) ?? snapshot.current), speakers: value };
     setReadingSession(key, snapshot.current);
     setSpeakersState(value);
   }, [key]);
@@ -67,6 +73,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
       if (!active) return;
       snapshot.current = restored;
       setQuestionState(restored.question);
+      setDraftQuestionState(restored.draftQuestion ?? "");
       setReadingState(restored.reading);
       setBusyState(restored.busy);
       setErrorState(restored.error);
@@ -91,12 +98,12 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     owner.current = registerReadingOwner(key);
     return () => {
       const keepActive = isReadingOwnerHandedOff(key, owner.current);
-      if (!keepActive && !isLocaleSwitchPending()) {
+      unregisterReadingOwner(key, owner.current);
+      if (!keepActive && !isLocaleSwitchPending() && !hasReadingOwners(key)) {
         activeReadings.get(key)?.controller.abort();
         activeReadings.delete(key);
         clearReadingSession(key);
       }
-      unregisterReadingOwner(key, owner.current);
       owner.current = null;
     };
   }, [key]);
@@ -107,6 +114,7 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
     if (!state) return;
     snapshot.current = state;
     setQuestionState(state.question);
+    setDraftQuestionState(state.draftQuestion ?? "");
     setReadingState(state.reading);
     setBusyState(state.busy);
     setErrorState(state.error);
@@ -125,11 +133,11 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
   const reset = useCallback(() => {
     activeReadings.get(key)?.controller.abort(); activeReadings.delete(key);
     snapshot.current = {
-      question: "", reading: null, busy: false, error: "", speakerError: false,
+      question: "", draftQuestion: "", reading: null, busy: false, error: "", speakerError: false,
       firstCycleComplete: false, speakers: snapshot.current.speakers,
     };
     resetReadingSession(key, snapshot.current);
-    setQuestionState(""); setReadingState(null); setErrorState(""); setBusyState(false);
+    setQuestionState(""); setDraftQuestionState(""); setReadingState(null); setErrorState(""); setBusyState(false);
     setSpeakerErrorState(false); setFirstCycleCompleteState(false);
   }, [key]);
 
@@ -223,8 +231,9 @@ export function useReading(locale: Locale, categoryId: string, spreadId: string,
   }
   const errorKey = (["error", "waiting", "unavailable"] as const).find(key =>
     Object.values(readingMessages).some(messages => messages[key] === error));
-  return { speakers, speakerId, setSpeakerId, question, firstCycleComplete, setFirstCycleComplete,
+  return { speakers, speakerId, setSpeakerId, question, draftQuestion, firstCycleComplete, setFirstCycleComplete,
     setQuestion: (value: string) => { setQuestion(value); setError(""); }, reading, busy, error: errorKey ? text[errorKey] : error,
+    setDraftQuestion: (value: string) => { setDraftQuestion(value); setError(""); },
     speakerError, retrySpeakers: () => { setSpeakerError(false); setSpeakerAttempt(v => v + 1); },
     submit, reset, retry: () => { void activeReadings.get(key)?.retry(); } };
 }

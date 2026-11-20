@@ -25,8 +25,9 @@ export interface CategoryAskBlockProps {
 
 export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, categoryLabel, onReadingStarted, onPresetQuestions }: CategoryAskBlockProps) {
   const flow = useReading(locale, categoryId, spreadId);
+  const question = flow.draftQuestion;
+  const setQuestion = flow.setDraftQuestion;
   const navigation = useReadingNavigation();
-  const [question, setQuestion] = useState("");
   const [presets, setPresets] = useState<PresetQuestion[]>([]);
   const [presetsLoading, setPresetsLoading] = useState(true);
   const [presetError, setPresetError] = useState(false);
@@ -35,10 +36,12 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
   const selected = flow.speakers.find((speaker) => speaker.id === flow.speakerId);
   const speakerLabel = selected?.name ?? text.loading;
   const speakerIcon = GUIDE_ICON[selected ? speakerGuide(selected) ?? "analyst" : "analyst"];
-  const started = !!flow.reading || flow.busy;
+  const readingStarted = !!flow.reading || flow.busy;
+  const started = readingStarted || !!flow.question.trim();
+  const hasProgress = started || !!flow.draftQuestion.trim();
 
-  useEffect(() => { onReadingStarted(started); }, [onReadingStarted, started]);
-  useLayoutEffect(() => navigation?.register({ started, reset: flow.reset }), [navigation, started, flow.reset]);
+  useEffect(() => { onReadingStarted(readingStarted); }, [onReadingStarted, readingStarted]);
+  useLayoutEffect(() => navigation?.register({ started: hasProgress, reset: flow.reset }), [navigation, hasProgress, flow.reset]);
   useEffect(() => {
     const controller = new AbortController();
     queueMicrotask(() => {
@@ -62,8 +65,9 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
   }, [locale, onPresetQuestions, spreadId]);
 
   const start = (value: string, clearField: boolean) => {
+    const draft = flow.draftQuestion;
     const submit = () => {
-      if (clearField) setQuestion("");
+      flow.setDraftQuestion(clearField ? "" : draft);
       void flow.submit(value);
     };
     if (started) navigation?.request(submit, "switch");
@@ -92,7 +96,7 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
       <div className={styles.presets} aria-busy={presetsLoading} aria-label={presetsLoading ? text.loading : undefined}>
         {presetsLoading
           ? [0, 1, 2].map((index) => <div className={styles.presetPlaceholder} key={index} aria-hidden />)
-          : presets.map((preset) => <button className={`font-instrument-xs ${styles.preset}`} key={preset.id} type="button" onClick={() => start(preset.text, false)} disabled={flow.busy}><span className={styles.presetIcon} aria-hidden />{preset.text}</button>)}
+          : presets.map((preset) => <button className={`font-instrument-xs ${styles.preset}`} key={preset.id} type="button" onClick={() => start(preset.text, false)} disabled={flow.busy || !flow.speakerId}><span className={styles.presetIcon} aria-hidden />{preset.text}</button>)}
       </div>
       {(flow.error || presetError) && <p className={`font-instrument-xs ${styles.error}`} role="alert">{flow.error || text.error}</p>}
       <span className={styles.category} aria-hidden>{categoryLabel}</span>

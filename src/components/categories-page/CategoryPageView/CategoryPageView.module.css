@@ -96,7 +96,7 @@
 
 .readingWrap {
   width: min(1176px, calc(100% - 64px));
-  margin: 0 auto 50px;
+  margin: 0 auto 38px;
   animation: reading-enter .42s ease-out both;
 }
 
@@ -193,8 +193,8 @@
   }
 
   .readingWrap {
-    width: calc(100% - 40px);
-    margin-bottom: 28px;
+    width: 100%;
+    margin-bottom: 0px;
   }
 }
 

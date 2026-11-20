@@ -65,6 +65,7 @@ async function renderPage({ slug = "other", spreads = familySpreads, all = succe
     "@/components/categories-page/CategorySpreadsSection": marker("spreads"),
     "@/components/categories-page/CategoryLearningSection": marker("learning"),
     "@/components/categories-page/ConstellationPattern": () => null,
+    "@/components/categories-list-page/StarField": () => null,
     "@/components/seo/Breadcrumbs": () => null,
     "@/components/faq/FaqSection": marker("faq"),
     "./CategoryPageView.module.css": {},

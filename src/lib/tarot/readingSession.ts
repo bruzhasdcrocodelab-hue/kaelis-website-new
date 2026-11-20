@@ -4,6 +4,7 @@ import type { Speaker } from "./reading";
 
 export type ReadingSnapshot = {
   question: string;
+  draftQuestion: string;
   reading: Reading | null;
   busy: boolean;
   error: string;
@@ -147,6 +148,10 @@ export function unregisterReadingOwner(key: string, owner: string | null) {
   owners.get(key)?.delete(owner);
   if (!owners.get(key)?.size) owners.delete(key);
   queueMicrotask(() => handedOffOwners.delete(`${key}:${owner}`));
+}
+
+export function hasReadingOwners(key: string) {
+  return !!owners.get(key)?.size;
 }
 
 export function subscribeReadingSession(key: string, listener: (state: ReadingSnapshot | null) => void) {

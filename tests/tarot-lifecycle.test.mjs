@@ -45,6 +45,7 @@ function mount({ delayed = false } = {}) {
     "./styleStore": { resolveSpeakerId: (items, id) => items.some(item => item.id === id) ? id : "" },
     "./readingSession": {
       clearReadingSession() { saved = undefined; publishSession(null); }, completeLocaleSwitch() {}, getReadingSession() { return saved; },
+      hasReadingOwners() { return false; },
       isLocaleSwitchPending() { return false; }, isReadingOwnerHandedOff() { return false; }, registerReadingOwner() { return "test"; },
       resetReadingSession(_, value) { saved = value; publishSession(value); },
       setReadingSession(_, value) { saved = value; publishSession(value); },
