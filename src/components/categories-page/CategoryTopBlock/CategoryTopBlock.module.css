@@ -63,6 +63,13 @@
   padding: 0;
 }
 
+.section.categoryPage {
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+
 .loading {
   position: relative;
   z-index: 5;
@@ -275,6 +282,10 @@
 }
 
 @media (max-width: 768px) {
+  .categoryPage .panel {
+    margin-top: 0;
+  }
+
   .panelLoading {
     background: transparent;
   }
@@ -282,7 +293,7 @@
   .panelLoading::before {
     background: var(--gradient-topblock-mobile);
   }
-
+  
   .embedded .panel {
     margin-top: 0;
   }

@@ -38,6 +38,7 @@ export interface CategoryTopBlockProps {
   embedded?: boolean;
   effectsActive?: boolean;
   resumeReading?: boolean;
+  categoryPage?: boolean;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
     retry: () => void;
@@ -49,14 +50,14 @@ type Step = "ask" | "choose" | "reveal";
 type Appearance = { step: Step; hasFan: boolean };
 
 export default function CategoryTopBlock(props: CategoryTopBlockProps) {
-  const { embedded = false, effectsActive = true, sessionKey = 0 } = props;
+  const { embedded = false, effectsActive = true, sessionKey = 0, categoryPage = false } = props;
   const [firstSession] = useState(sessionKey);
   const [{ step, hasFan }, setAppearance] = useState<Appearance>({ step: "ask", hasFan: true });
   const panelRef = useRef<HTMLDivElement>(null);
   const isConfirmed = step === "reveal";
   const showEffects = !embedded || effectsActive;
   return (
-    <section className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
+    <section className={`${styles.section} ${embedded ? styles.embedded : ""} ${categoryPage ? styles.categoryPage : ""}`}>
       <div
         ref={panelRef}
         id="category-top-block"
