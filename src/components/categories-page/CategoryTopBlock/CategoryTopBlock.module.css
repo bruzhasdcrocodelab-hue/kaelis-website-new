@@ -384,6 +384,15 @@
     background: var(--gradient-topblock-mobile);
   }
 
+  .categoryPage .panel::before,
+  .categoryPage .panelConfirmed::before {
+    background: var(--color-greyish-blue);
+  }
+
+  .categoryPage .panelLoading::before {
+    background: var(--color-greyish-blue);
+  }
+
   .panelConfirmed {
     background: transparent;
   }
