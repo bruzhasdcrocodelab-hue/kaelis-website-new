@@ -33,7 +33,6 @@ export default function CategoryHeroSection({
   exploreLabel,
 }: CategoryHeroSectionProps) {
   const hasSubcategories = spreads.length > 1;
-  const isSpreadPage = spreads.length === 0;
   const fallbackDescription = locale === "en"
     ? "Ask your own question about dating or relationships, or choose a spread for the situation you’re in."
     : locale === "ru"
@@ -44,20 +43,14 @@ export default function CategoryHeroSection({
 
   return (
     <section className={styles.section}>
-      <div className={`${styles.container} ${isSpreadPage ? styles.spreadPage : ""} ${hasSubcategories ? styles.containerWithRows : ""}`}>
-        {!isSpreadPage && <MainButton variant="stroke" size="medium" href={returnHref} className={styles.returnButton}>
-          {returnLabel}
-        </MainButton>}
+      <div className={`${styles.container} ${hasSubcategories ? styles.containerWithRows : ""}`}>
 
         <div className={styles.content}>
           <div className={styles.titleBlock}>
-            {!isSpreadPage && <p className={`font-instrument-base-emphasized ${styles.eyebrow}`}>
-              {dictionary.categoryLabel}
-            </p>}
             <div className={styles.titleWrap}>
               <CategoryTitle title={seo?.h1 ?? current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
-                {isSpreadPage ? fallbackDescription : description?.trim() || seo?.intro || (current.site_description || ("description" in current ? current.description : "")) || fallbackDescription}
+                {description?.trim() || seo?.intro || (current.site_description || ("description" in current ? current.description : "")) || fallbackDescription}
               </p>
             </div>
           </div>
@@ -71,7 +64,6 @@ export default function CategoryHeroSection({
               router.replace(`${window.location.pathname}${window.location.search}#category-spreads`, { scroll: false });
             }}
             className={`shadow-default ${styles.readingsButton}`}
-            muted={!isSpreadPage}
           >
             {exploreLabel ?? dictionary.getYourReadings}
           </MainButton>

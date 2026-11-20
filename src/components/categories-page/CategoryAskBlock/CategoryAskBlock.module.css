@@ -37,7 +37,6 @@
   color: var(--color-black);
   font-size: 40px;
   line-height: 1.12;
-  text-transform: uppercase;
 }
 
 .description {
