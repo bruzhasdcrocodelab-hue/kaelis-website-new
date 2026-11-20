@@ -1,6 +1,6 @@
 .section {
   width: min(1176px, calc(100% - 64px));
-  padding: 70px 0 80px;
+  padding: 54px 0;
 }
 
 .head h2 {
