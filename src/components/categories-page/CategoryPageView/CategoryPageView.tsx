@@ -154,8 +154,8 @@ function CategoryPageContent({
           <CatalogStatus locale={locale} status={allSpreads.state.status === "loading" ? "loading" : "error"} retry={allSpreads.retry} />
         )}
         {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
-        {!status && resolved?.spread && spreads.state.status === "success" && <>
-          <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={resolved.spread.slug} />
+        {!status && resolved && spreads.state.status === "success" && <>
+          <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={path.length === 2 ? resolved.spread?.slug : undefined} />
           <CategoryLearningSection locale={locale} category={resolved.category} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} />
         </>}
         {!status && current && faq.length > 0 && (

@@ -12,10 +12,13 @@
 :root {
   /* ---- Colors: Neutral ---- */
   --color-neutral-900: #171717;
+  --color-heading: #252039;
+  --color-muted: #5e566e;
   /* ---- Colors: White / Grey ---- */
   --color-grey: #ECECEC;
   --color-greyish-blue: #f3f4f9;
   --color-white: #f5f9fa;
+  --color-white-80: rgba(245, 249, 250, 0.80);
   --color-white-75: rgba(245, 249, 250, 0.75);
   --color-white-60: rgba(245, 249, 250, 0.6);
   --color-white-50: rgba(245, 249, 250, 0.5);
@@ -225,6 +228,8 @@
 
 @theme inline {
   --color-neutral-900: var(--color-neutral-900);
+  --color-heading: var(--color-heading);
+  --color-muted: var(--color-muted);
   --color-grey: var(--color-grey);
   --color-greyish-blue: var(--color-greyish-blue);
   --color-white: var(--color-white);

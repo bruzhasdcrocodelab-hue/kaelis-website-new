@@ -49,7 +49,7 @@ export default function CategoryHeroSection({
             <div className={styles.titleWrap}>
               <CategoryTitle title={seo?.h1 ?? current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
-                {description?.trim() || seo?.intro || (current.site_description || ("description" in current ? current.description : "")) || fallbackDescription}
+                {seo?.intro || description?.trim() || (current.site_description || ("description" in current ? current.description : "")) || fallbackDescription}
               </p>
             </div>
           </div>
