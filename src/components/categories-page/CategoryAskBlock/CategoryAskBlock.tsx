@@ -42,7 +42,7 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
     const controller = new AbortController();
     loadPresetQuestions(locale, controller.signal).then((items) => {
       if (!controller.signal.aborted) {
-        const nextPresets = items.filter((item) => item.tarotId === spreadId).slice(0, 3);
+        const nextPresets = items.slice(0, 3);
         setPresets(nextPresets);
         onPresetQuestions?.(nextPresets.map((item) => item.text));
         setPresetError(false);
@@ -76,10 +76,10 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
       <label className={`font-instrument-sm ${styles.label}`} htmlFor="category-question">{locale === "en" ? "Your question:" : locale === "ru" ? "Ваш вопрос:" : "Ваше питання:"}</label>
       <textarea id="category-question" className={`font-instrument-sm ${styles.input}`} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder={dictionary.categoryPage.topBlock.placeholder} disabled={flow.busy} aria-invalid={!!flow.error} />
       <div className={styles.submitWrap}>
-        <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={() => start(question, true)} disabled={!question.trim() || flow.busy || !flow.speakerId} aria-busy={flow.busy}>{flow.busy ? text.loading : "Get My Reading"}</MainButton>
+        <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={() => start(question, true)} disabled={!question.trim() || flow.busy || !flow.speakerId} aria-busy={flow.busy}>{flow.busy ? text.loading : locale === "en" ? "Get My Reading" : locale === "ru" ? "Получить расклад" : "Отримати розклад"}</MainButton>
       </div>
       <p className={`font-instrument-xs ${styles.tryTitle}`}>{locale === "en" ? "Try a question" : locale === "ru" ? "Попробуйте вопрос" : "Спробуйте питання"}</p>
-      <div className={styles.presets}>{presets.map((preset) => <button className={`font-instrument-xs ${styles.preset}`} key={preset.id} type="button" onClick={() => start(preset.text, false)} disabled={flow.busy}><Image src="/icons/chevron-down.svg" alt="" width={16} height={16} />{preset.text}</button>)}</div>
+      <div className={styles.presets}>{presets.map((preset) => <button className={`font-instrument-xs ${styles.preset}`} key={preset.id} type="button" onClick={() => start(preset.text, false)} disabled={flow.busy}><Image src="/icons/chevron-down.svg" alt="" width={12} height={12} />{preset.text}</button>)}</div>
       {(flow.error || presetError) && <p className={`font-instrument-xs ${styles.error}`} role="alert">{flow.error || text.error}</p>}
       <span className={styles.category} aria-hidden>{categoryLabel}</span>
       <BottomSheetSelect

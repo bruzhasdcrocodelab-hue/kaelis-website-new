@@ -81,7 +81,7 @@ const en = {
       changeQuestion: "Change Question",
       categoryPrefix: "Category:",
       askTitle: "Ask a Question",
-      askDescription: "The cards hold the answers you seek. Let the wisdom of Tarot guide your path",
+      askDescription: "Focus on one situation. You can leave out names and other identifying details.Focus on one situation. You can leave out names and other identifying details.",
       placeholder: "Describe your question…",
       continue: "Continue",
       chooseTitle: "Choose {count} {cards}",
