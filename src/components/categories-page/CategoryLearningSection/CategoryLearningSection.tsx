@@ -10,7 +10,7 @@ import styles from "./CategoryLearningSection.module.css";
 
 export default function CategoryLearningSection({ locale, category, spreads, exampleQuestion }: { locale: Locale; category: TarotCategory; spreads: TarotSpread[]; exampleQuestion?: string }) {
   const content = categoryPageContent(locale, category, spreads);
-  return <section className={styles.section}>
+  return <section id="category-learning" className={styles.section}>
     <article className={styles.article}>
       <h2 className="font-bona-3xl">{content.learningTitle}</h2>
       <p className="font-instrument-sm">{content.intro}</p>

@@ -71,6 +71,7 @@ function CategoryPageContent({
   const defaultSpread = allSpreads.state.status === "success" ? allSpreads.state.data.find((item) => item.slug === defaultSlug) : undefined;
   const resolved = categories.state.status === "success" && spreads.state.status === "success"
     ? resolveCatalogPath(categories.state.data, spreads.state.data, path, defaultSpread) : null;
+  const hasMultipleSpreads = spreads.state.status === "success" && spreads.state.data.length > 1;
   const current = path.length === 2 ? resolved?.spread : category;
   const count = resolved?.spread ? cardCount(resolved.spread) : null;
   const returnHref = path.length === 2 ? categoryHref(path[0], locale) : localizedHref(locale, "/tarot");
@@ -136,6 +137,7 @@ function CategoryPageContent({
                     returnLabel={returnLabel}
                     description={resolved?.category.site_description || resolved?.spread?.description || current.site_description}
                     exploreLabel={resolved ? locale === "en" ? `Explore ${resolved.category.name} Tarot Spreads` : locale === "ru" ? `Изучить расклады Таро: ${resolved.category.name}` : `Переглянути розклади Таро: ${resolved.category.name}` : undefined}
+                    scrollTargetId={hasMultipleSpreads ? "category-spreads" : "category-learning"}
                   />
                 </div>
                 {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onReadingStart={() => setScrollToReading(true)} onPresetQuestions={setPresetQuestions} />}
@@ -155,7 +157,7 @@ function CategoryPageContent({
         )}
         {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
         {!status && resolved && spreads.state.status === "success" && <>
-          <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={path.length === 2 ? resolved.spread?.slug : undefined} />
+          {hasMultipleSpreads && <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={path.length === 2 ? resolved.spread?.slug : undefined} />}
           <CategoryLearningSection locale={locale} category={resolved.category} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} />
         </>}
         {!status && current && faq.length > 0 && (

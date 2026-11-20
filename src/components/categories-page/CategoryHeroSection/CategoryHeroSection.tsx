@@ -18,6 +18,7 @@ export interface CategoryHeroSectionProps {
   returnLabel: string;
   description?: string;
   exploreLabel?: string;
+  scrollTargetId: string;
 }
 
 export default function CategoryHeroSection({
@@ -30,6 +31,7 @@ export default function CategoryHeroSection({
   returnLabel,
   description,
   exploreLabel,
+  scrollTargetId,
 }: CategoryHeroSectionProps) {
   const hasSubcategories = spreads.length > 1;
   const fallbackDescription = locale === "en"
@@ -57,8 +59,8 @@ export default function CategoryHeroSection({
           <button
             type="button"
             onClick={() => {
-              document.getElementById("category-spreads")?.scrollIntoView({ behavior: "smooth" });
-              router.replace(`${window.location.pathname}${window.location.search}#category-spreads`, { scroll: false });
+              document.getElementById(scrollTargetId)?.scrollIntoView({ behavior: "smooth" });
+              router.replace(`${window.location.pathname}${window.location.search}#${scrollTargetId}`, { scroll: false });
             }}
             className={styles.readingsButton}
           >
