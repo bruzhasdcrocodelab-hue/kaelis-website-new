@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "@/components/reading/ReadingLink";
 import type { Dictionary, Locale } from "@/lang";
 import { localizedHref } from "@/lib/routing";
@@ -82,7 +82,16 @@ function CategoryPageContent({
     : !resolved ? "notFound" : null;
   const retry = categories.state.status === "error" ? categories.retry : spreads.retry;
   const [readingActive, setReadingActive] = useState(false);
+  const [scrollToReading, setScrollToReading] = useState(false);
   const [presetQuestions, setPresetQuestions] = useState<string[]>([]);
+  useEffect(() => {
+    if (!scrollToReading || !readingActive) return;
+    const frame = requestAnimationFrame(() => {
+      document.getElementById("category-reading")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setScrollToReading(false);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [readingActive, scrollToReading]);
   return (
     <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <div className={styles.background} aria-hidden="true" />
@@ -129,10 +138,14 @@ function CategoryPageContent({
                     exploreLabel={resolved ? locale === "en" ? `Explore ${resolved.category.name} Tarot Spreads` : locale === "ru" ? `Изучить расклады Таро: ${resolved.category.name}` : `Переглянути розклади Таро: ${resolved.category.name}` : undefined}
                   />
                 </div>
-                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onPresetQuestions={setPresetQuestions} />}
+                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onReadingStart={() => setScrollToReading(true)} onPresetQuestions={setPresetQuestions} />}
               </div>
-              {readingActive && resolved?.spread && count !== null && <div className={styles.readingWrap}>
-                <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading categoryPage />
+              {readingActive && resolved?.spread && count !== null && <div id="category-reading" className={styles.readingWrap}>
+                <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading categoryPage onRestart={() => {
+                  requestAnimationFrame(() => {
+                    document.getElementById("category-ask-question")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  });
+                }} />
               </div>}
             </section>
           </>

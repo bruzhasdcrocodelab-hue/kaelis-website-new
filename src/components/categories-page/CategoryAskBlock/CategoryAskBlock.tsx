@@ -20,10 +20,11 @@ export interface CategoryAskBlockProps {
   spreadId: string;
   categoryLabel: string;
   onReadingStarted: (active: boolean) => void;
+  onReadingStart?: () => void;
   onPresetQuestions?: (questions: string[]) => void;
 }
 
-export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, categoryLabel, onReadingStarted, onPresetQuestions }: CategoryAskBlockProps) {
+export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, categoryLabel, onReadingStarted, onReadingStart, onPresetQuestions }: CategoryAskBlockProps) {
   const flow = useReading(locale, categoryId, spreadId);
   const question = flow.draftQuestion;
   const setQuestion = flow.setDraftQuestion;
@@ -68,13 +69,14 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
     const draft = flow.draftQuestion;
     const submit = () => {
       flow.setDraftQuestion(clearField ? "" : draft);
+      onReadingStart?.();
       void flow.submit(value);
     };
     if (started) navigation?.request(submit, "switch");
     else submit();
   };
 
-  return <section id="category-top-block" className={styles.section} aria-label={dictionary.categoryPage.topBlock.askTitle}>
+  return <section id="category-ask-question" className={styles.section} aria-label={dictionary.categoryPage.topBlock.askTitle}>
     <Image src="/images/backgrounds/pattern-categories-top-block-2.svg" alt="" width={1627} height={731} className={styles.pattern} aria-hidden />
     <div className={styles.content}>
       <div className={styles.headingRow}>

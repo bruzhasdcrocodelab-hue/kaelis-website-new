@@ -29,7 +29,7 @@ export default function CategoryLearningSection({ locale, category, spreads, exa
         <p className="font-instrument-xxs">Full Description</p>
         <div className={styles.detail}>Impact<br />This project is likely to affect you by increasing confidence, visibility, and a sense of professional achievement.</div>
       </div>
-      <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={() => document.getElementById("category-top-block")?.scrollIntoView({ behavior: "smooth" })}>{content.ask}</MainButton>
+      <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={() => document.getElementById("category-ask-question")?.scrollIntoView({ behavior: "smooth" })}>{content.ask}</MainButton>
     </div>
   </section>;
 }

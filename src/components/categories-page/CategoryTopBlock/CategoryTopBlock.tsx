@@ -39,6 +39,7 @@ export interface CategoryTopBlockProps {
   effectsActive?: boolean;
   resumeReading?: boolean;
   categoryPage?: boolean;
+  onRestart?: () => void;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
     retry: () => void;
@@ -95,7 +96,7 @@ function SessionContent({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus, resumeReading = false,
+  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus, resumeReading = false, onRestart,
   panelRef, onAppearance, initialVisible,
 }: CategoryTopBlockProps & {
   panelRef: RefObject<HTMLDivElement | null>;
@@ -194,6 +195,10 @@ function SessionContent({
   const changeQuestion = () => {
     flow.reset();
     setGuideSheetOpen(false);
+  };
+  const restart = () => {
+    changeQuestion();
+    onRestart?.();
   };
   useLayoutEffect(() => {
     if (sessionActive) return navigation?.register({ started: hasProgress, reset: changeQuestion });
@@ -329,7 +334,7 @@ function SessionContent({
             locale={locale}
             reading={flow.reading}
             error={flow.error} onRetry={flow.retry}
-            onStartOver={changeQuestion}
+            onStartOver={restart}
             sessionKey={readingKey}
           />
         )}
