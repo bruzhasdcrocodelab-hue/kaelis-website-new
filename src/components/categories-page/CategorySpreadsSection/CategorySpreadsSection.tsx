@@ -13,7 +13,7 @@ export default function CategorySpreadsSection({ locale, categorySlug, categoryN
         <p>{locale === "en" ? "Find a spread for the question you want to explore." : locale === "ru" ? "Найдите расклад для вопроса, который хотите исследовать." : "Знайдіть розклад для питання, яке хочете дослідити."}</p>
       </div>
       <div className={styles.grid}>
-        {spreads.map((spread, index) => {
+        {spreads.map((spread) => {
           const selected = spread.slug === currentSlug;
           const description = getSeo(locale, `/tarot/${categorySlug}/${spread.slug}`)?.intro || spread.description;
           return (
@@ -24,12 +24,14 @@ export default function CategorySpreadsSection({ locale, categorySlug, categoryN
               aria-current={selected ? "page" : undefined}
             >
               <span className={styles.cardHeading}>
-                <span className={`${styles.icon} ${index % 2 ? styles.outline : ""}`} aria-hidden>
+                <span className={styles.icon} aria-hidden>
                   <span className={styles.iconGlyph} />
                 </span>
                 <span className={styles.name}>
                   <span>{spread.name}</span>
-                  <span className={styles.arrow} aria-hidden>↗</span>
+                  <span className={styles.arrow} aria-hidden>
+                    <span className={styles.arrowGlyph} />
+                  </span>
                 </span>
               </span>
               <span className={styles.description}>{description}</span>

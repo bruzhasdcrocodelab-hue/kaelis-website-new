@@ -79,19 +79,6 @@
   box-shadow: var(--shadow-default);
 }
 
-.outline {
-  padding: 1px;
-  background: var(--gradient-pink);
-}
-
-.outline::before {
-  position: absolute;
-  inset: 1px;
-  border-radius: 10px;
-  background: var(--color-greyish-blue);
-  content: "";
-}
-
 .iconGlyph {
   position: relative;
   width: 18px;
@@ -101,7 +88,19 @@
   -webkit-mask: url("/icons/conversation.svg") center / 18px 18px no-repeat;
 }
 
-.outline .iconGlyph {
+.card:nth-child(8n + 2) .icon,
+.card:nth-child(8n + 4) .icon,
+.card:nth-child(8n + 5) .icon,
+.card:nth-child(8n + 7) .icon {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--color-greyish-blue), var(--color-greyish-blue)) padding-box, var(--gradient-pink) border-box;
+  box-shadow: none;
+}
+
+.card:nth-child(8n + 2) .iconGlyph,
+.card:nth-child(8n + 4) .iconGlyph,
+.card:nth-child(8n + 5) .iconGlyph,
+.card:nth-child(8n + 7) .iconGlyph {
   background: var(--gradient-pink);
 }
 
@@ -128,15 +127,25 @@
 }
 
 .arrow {
-  padding-right: 10px;
-  color: var(--color-black-30);
-  font-family: var(--font-manrope);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.5;
+  display: flex;
+  width: 19px;
+  height: 21px;
+  flex: 0 0 19px;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.selected .arrow {
+.arrowGlyph {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: var(--color-black-30);
+  mask: url("/icons/right-arrow.svg") center / 20px 20px no-repeat;
+  -webkit-mask: url("/icons/right-arrow.svg") center / 20px 20px no-repeat;
+  transform: rotate(-45deg);
+}
+
+.selected .arrowGlyph {
   background: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
@@ -151,6 +160,28 @@
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid .card .icon {
+    border: 0;
+    background: var(--gradient-pink);
+    box-shadow: var(--shadow-default);
+  }
+
+  .grid .card .iconGlyph {
+    background: var(--color-white);
+  }
+
+  .card:nth-child(4n + 2) .icon,
+  .card:nth-child(4n + 3) .icon {
+    border: 1px solid transparent;
+    background: linear-gradient(var(--color-greyish-blue), var(--color-greyish-blue)) padding-box, var(--gradient-pink) border-box;
+    box-shadow: none;
+  }
+
+  .card:nth-child(4n + 2) .iconGlyph,
+  .card:nth-child(4n + 3) .iconGlyph {
+    background: var(--gradient-pink);
   }
 }
 
@@ -192,6 +223,26 @@
 
   .cardHeading {
     gap: 16px;
+  }
+
+  .grid .card .icon {
+    border: 0;
+    background: var(--gradient-pink);
+    box-shadow: var(--shadow-default);
+  }
+
+  .grid .card .iconGlyph {
+    background: var(--color-white);
+  }
+
+  .card:nth-child(2n) .icon {
+    border: 1px solid transparent;
+    background: linear-gradient(var(--color-greyish-blue), var(--color-greyish-blue)) padding-box, var(--gradient-pink) border-box;
+    box-shadow: none;
+  }
+
+  .card:nth-child(2n) .iconGlyph {
+    background: var(--gradient-pink);
   }
 
   .description {
