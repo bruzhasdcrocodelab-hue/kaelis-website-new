@@ -81,7 +81,7 @@ const en = {
       changeQuestion: "Change Question",
       categoryPrefix: "Category:",
       askTitle: "Ask a Question",
-      askDescription: "Focus on one situation. You can leave out names and other identifying details.Focus on one situation. You can leave out names and other identifying details.",
+      askDescription: "Focus on one situation. You can leave out names and other identifying details.",
       placeholder: "Describe your question…",
       continue: "Continue",
       chooseTitle: "Choose {count} {cards}",
