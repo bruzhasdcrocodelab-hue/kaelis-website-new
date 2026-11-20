@@ -85,6 +85,7 @@ function CategoryPageContent({
   const [readingActive, setReadingActive] = useState(false);
   const [scrollToReading, setScrollToReading] = useState(false);
   const [presetQuestions, setPresetQuestions] = useState<string[]>([]);
+  const [showDesktopStars, setShowDesktopStars] = useState(false);
   useEffect(() => {
     if (!scrollToReading || !readingActive) return;
     const frame = requestAnimationFrame(() => {
@@ -93,6 +94,13 @@ function CategoryPageContent({
     });
     return () => cancelAnimationFrame(frame);
   }, [readingActive, scrollToReading]);
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 769px)");
+    const update = () => setShowDesktopStars(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
   return (
     <div className={`${geometryStyles.geometry} ${styles.page}`}>
       <div className={styles.background} aria-hidden="true" />
@@ -112,7 +120,7 @@ function CategoryPageContent({
         {!status && current && (
           <>
             <section className={styles.hero}>
-              <div className={styles.stars}><StarField /></div>
+              {showDesktopStars && <div className={styles.stars}><StarField /></div>}
               <div className={styles.constellation}><ConstellationPattern /></div>
               <Header dictionary={dictionary.header} locale={locale} />
               <div className={styles.heroGrid}>
