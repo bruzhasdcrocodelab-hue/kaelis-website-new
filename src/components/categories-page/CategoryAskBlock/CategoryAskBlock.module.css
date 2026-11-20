@@ -234,4 +234,28 @@
   }
 }
 
+@media (max-width: 410px) {
+  .headingRow {
+    display: block;
+  }
+
+  .headingRow > div:first-child {
+    display: block;
+    min-width: 0;
+  }
+
+  .title {
+    width: min(100%, 108px);
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .triggerMobile {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
 
