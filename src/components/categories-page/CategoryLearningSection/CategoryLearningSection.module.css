@@ -8,6 +8,10 @@
   padding: 0;
 }
 
+.withoutSpreads {
+  padding-top: 64px;
+}
+
 .decorativeCardBack,
 .decorativeCardFront {
   position: absolute;
@@ -254,6 +258,10 @@
     gap: 40px;
     width: calc(100% - 40px);
     padding: 40px 0 0;
+  }
+
+  .withoutSpreads {
+    padding-top: 40px;
   }
 
   .decorativeCardBack,

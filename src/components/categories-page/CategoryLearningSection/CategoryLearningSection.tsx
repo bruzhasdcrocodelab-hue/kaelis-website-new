@@ -60,7 +60,7 @@ export default function CategoryLearningSection({ locale, category, spreads, exa
   const loveCopy = category.slug === "love" && links.length === 3 ? loveLinkCopy[locale] : undefined;
   const genericCopy = genericLinkCopy[locale];
 
-  return <section id="category-learning" className={styles.section}>
+  return <section id="category-learning" className={`${styles.section} ${spreads.length <= 1 ? styles.withoutSpreads : ""}`}>
     <div className={styles.decorativeCardBack} aria-hidden>
       <Image src="/images/cards/deck/knight-of-wands.png" alt="" fill sizes="228px" />
     </div>
