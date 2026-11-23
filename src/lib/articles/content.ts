@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import type { Locale } from "@/lang";
 import { sanityClient } from "./client";
 import type { ArticleCategory, ArticleDocument, ArticleImage, ArticlePreview, ArticleSlug } from "./types";
@@ -103,13 +102,11 @@ async function fetchCategories(locale: Locale) {
   );
 }
 
-const cachedCategories = unstable_cache(fetchCategories, ["article-categories"], { revalidate: 3600 });
-
 async function fetchArticles(locale: Locale) {
   const sanityLocale = locale === "uk" ? "ua" : locale;
   const [articles, categories] = await Promise.all([
     sanityClient.fetch<RawArticle[]>(`*[_type == "articlesItem" && language == $locale] | order(date desc){ ${articleProjection} }`, { locale: sanityLocale }),
-    cachedCategories(locale),
+    fetchCategories(locale),
   ]);
   return {
     articles: articles.map(article => mapPreview(article, categories)).filter((article): article is ArticlePreview => article !== null),
@@ -117,7 +114,7 @@ async function fetchArticles(locale: Locale) {
   };
 }
 
-export const getArticles = unstable_cache(fetchArticles, ["articles"], { revalidate: 3600 });
+export const getArticles = fetchArticles;
 
 async function fetchArticle(locale: Locale, slug: string): Promise<ArticleDocument | null> {
   const sanityLocale = locale === "uk" ? "ua" : locale;
@@ -145,7 +142,7 @@ async function fetchArticle(locale: Locale, slug: string): Promise<ArticleDocume
       }`,
       { locale: sanityLocale, slug: `/${slug}` },
     ),
-    cachedCategories(locale),
+    fetchCategories(locale),
   ]);
   if (!article) return null;
   const preview = mapPreview(article, categories);
@@ -166,7 +163,7 @@ async function fetchArticle(locale: Locale, slug: string): Promise<ArticleDocume
   };
 }
 
-export const getArticle = unstable_cache(fetchArticle, ["article"], { revalidate: 3600 });
+export const getArticle = fetchArticle;
 
 async function fetchArticleSlugs(): Promise<ArticleSlug[]> {
   const rows = await sanityClient.fetch<Array<{ language: "en" | "ru" | "ua"; slug?: string; _updatedAt: string }>>(
@@ -179,4 +176,4 @@ async function fetchArticleSlugs(): Promise<ArticleSlug[]> {
   }] : []);
 }
 
-export const getArticleSlugs = unstable_cache(fetchArticleSlugs, ["article-slugs"], { revalidate: 3600 });
+export const getArticleSlugs = fetchArticleSlugs;
