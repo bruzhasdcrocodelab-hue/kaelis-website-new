@@ -8,8 +8,6 @@ import { ogImagePath, siteOrigin } from "@/lib/seo";
 
 type Props = { params: Promise<{ locale: string }> };
 
-export const revalidate = 3600;
-
 const blogSeo = {
   en: {
     title: "Articles on Tarot, Astrology, Numerology — Kaelis",

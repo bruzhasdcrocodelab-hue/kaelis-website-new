@@ -1,48 +1,35 @@
 .section {
-  /* ---- Typography: category page title (one-off, node-id=1464-1491) ---- */
-  /*
-   * ---- Typography: category page fluid sizes ----
-   * Same construction as the main-page hero fluid tokens, but the line runs
-   * through the mobile ceiling value (at the 769px breakpoint) and the desktop
-   * value (at 1440px):
-   *   vw-coeff = 100 * (sizeMax - sizeMin) / (1440 - 769)
-   *   offset   = sizeMin - (vw-coeff / 100) * 769
-   * Below 768px each component's own media query takes over with the fixed
-   * mobile token, keeping the 390px layout pixel-identical.
-   */
-}
-
-.section {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  padding: 60px 60px 30px;
-  min-height: var(--arc-min-height, 0px);
+  padding: 0;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: 32px;
+  gap: 48px;
+  width: 100%;
 }
 
 .titleBlock {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .eyebrow {
@@ -56,29 +43,28 @@
 .titleWrap {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: min(500px, calc(100vw - 64px));
+  align-items: flex-start;
+  gap: 6px;
+  width: min(520px, 100%);
 }
 
 .title {
-  margin-bottom: -6px;
-  margin-top: 10px;
+  margin: 0;
   width: 100%;
   min-width: 0;
   background-image: var(--gradient-pink);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  text-align: center;
-  text-wrap: balance;
+  text-align: left;
   line-height: var(--leading-heading);
   /* Keep serifs and glyph overhangs inside the gradient's paint area. */
-  padding-inline: .15em;
+  padding-inline: 0;
   hyphens: none;
   overflow-wrap: normal;
   word-break: normal;
-  font-size: clamp(56px, 4.471vw + 21.62px, 86px);
-  letter-spacing: clamp(-3px, 0.447vw - 6.44px, 0px);
+  font-size: clamp(56px, 3.75vw, 72px);
+  letter-spacing: -3px;
 }
 
 .titleWord {
@@ -86,29 +72,68 @@
 }
 
 .description {
-  width: min(300px, 100%);
+  width: min(390px, 100%);
+  margin: 0;
   color: var(--color-white-60);
-  text-align: center;
-  line-height: normal;
-  font-size: clamp(var(--text-xs), 0.149vw + 11.85px, var(--text-sm));
+  text-align: left;
+  line-height: 1.5;
+  font-size: var(--text-lg);
+}
+
+.readingsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 50px;
+  padding: 12px 24px;
+  border: 1px solid var(--color-white-40);
+  border-radius: 25px;
+  background: transparent;
+  color: var(--color-greyish-blue);
+  cursor: pointer;
+  font-family: var(--font-manrope);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.readingsButtonLabel {
+  min-width: 200px;
+}
+
+.readingsButtonIcon {
+  color: #fce5f4;
+  line-height: 1.5;
+}
+
+.readingsButton:hover {
+  background: var(--color-white-7);
+}
+
+.readingsButton:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 3px;
 }
 
 @media (max-width: 768px) {
+  .titleWrap {
+    gap: 8px;
+  }
+
   .section {
-    padding: 6px 0 12px;
-    min-height: 0;
+    width: 100%;
   }
 
   .container {
-    gap: 12.308vw;
     width: 100%;
   }
 
   .content {
-    gap: 24px;
-    width: 358px;
-    max-width: 100%;
-    padding: 0 64px;
+    gap: 32px;
+    width: 100%;
+    max-width: 390px;
+    padding: 0;
   }
 
   .eyebrow {
@@ -117,8 +142,9 @@
   }
 
   .description {
-    width: min(300px, 100%);
-    font-size: var(--text-xs);
+    padding-inline: 4px;
+    line-height: 1.15;
+    font-size: var(--text-sm);
   }
 
   .returnButton {
@@ -126,19 +152,22 @@
   }
 
   .title {
-    font-size: 56px;
+    margin-bottom: 0;
+    font-size: 48px;
     letter-spacing: -3px;
   }
 
   .readingsButton {
-    height: 44px;
-    gap: 6px;
-    padding: 6px 8px 6px 24px;
+    height: 50px;
+    width: 100%;
+    gap: 16px;
+    margin-top: 0;
+    justify-content: center;
+    padding: 12px 24px;
   }
 
-  .readingsButton :global(span:first-child) {
-    font-size: var(--text-sm);
-    color: var(--color-black) !important;
+  .readingsButtonLabel {
+    min-width: 0;
   }
 
 }

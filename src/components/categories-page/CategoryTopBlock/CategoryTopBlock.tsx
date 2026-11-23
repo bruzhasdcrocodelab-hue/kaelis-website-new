@@ -37,6 +37,9 @@ export interface CategoryTopBlockProps {
   sessionKey?: number;
   embedded?: boolean;
   effectsActive?: boolean;
+  resumeReading?: boolean;
+  categoryPage?: boolean;
+  onRestart?: () => void;
   catalogStatus?: {
     status: "loading" | "error" | "notFound";
     retry: () => void;
@@ -48,14 +51,14 @@ type Step = "ask" | "choose" | "reveal";
 type Appearance = { step: Step; hasFan: boolean };
 
 export default function CategoryTopBlock(props: CategoryTopBlockProps) {
-  const { embedded = false, effectsActive = true, sessionKey = 0 } = props;
+  const { embedded = false, effectsActive = true, sessionKey = 0, categoryPage = false } = props;
   const [firstSession] = useState(sessionKey);
   const [{ step, hasFan }, setAppearance] = useState<Appearance>({ step: "ask", hasFan: true });
   const panelRef = useRef<HTMLDivElement>(null);
   const isConfirmed = step === "reveal";
   const showEffects = !embedded || effectsActive;
   return (
-    <section className={`${styles.section} ${embedded ? styles.embedded : ""}`}>
+    <section className={`${styles.section} ${embedded ? styles.embedded : ""} ${categoryPage ? styles.categoryPage : ""}`}>
       <div
         ref={panelRef}
         id="category-top-block"
@@ -93,7 +96,7 @@ function SessionContent({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus,
+  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus, resumeReading = false, onRestart,
   panelRef, onAppearance, initialVisible,
 }: CategoryTopBlockProps & {
   panelRef: RefObject<HTMLDivElement | null>;
@@ -122,7 +125,7 @@ function SessionContent({
   // Receiving cards alone does not mean the AI interpretation is ready.
   const step: Step = flow.reading?.reading && flow.firstCycleComplete
     ? "reveal"
-    : flow.busy || flow.reading ? "choose" : "ask";
+    : resumeReading || flow.busy || flow.reading ? "choose" : "ask";
   const previousStep = useRef(step);
   useEffect(() => {
     if (!sessionActive) { previousStep.current = step; return; }
@@ -192,6 +195,10 @@ function SessionContent({
   const changeQuestion = () => {
     flow.reset();
     setGuideSheetOpen(false);
+  };
+  const restart = () => {
+    changeQuestion();
+    onRestart?.();
   };
   useLayoutEffect(() => {
     if (sessionActive) return navigation?.register({ started: hasProgress, reset: changeQuestion });
@@ -327,7 +334,7 @@ function SessionContent({
             locale={locale}
             reading={flow.reading}
             error={flow.error} onRetry={flow.retry}
-            onStartOver={changeQuestion}
+            onStartOver={restart}
             sessionKey={readingKey}
           />
         )}

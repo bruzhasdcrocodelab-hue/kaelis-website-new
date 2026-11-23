@@ -12,18 +12,9 @@ import styles from "./ConstellationPattern.module.css";
  */
 const CENTER_X = 790.5;
 const CENTER_Y = 744.5;
-
-/**
- * Soft elliptical hole cut behind the title/description text (.titleWrap in
- * CategoryHeroSection), so the animated rings/moons don't clash with the copy.
- * Position/size are derived from .titleWrap's on-screen box relative to this
- * SVG's origin (measured at the default viewport; the mask is defined in the
- * SVG's own coordinate space so it scales together with the pattern).
- */
-const TITLE_CUTOUT_X = 786;
-const TITLE_CUTOUT_Y = 210;
-const TITLE_CUTOUT_RX = 960;
-const TITLE_CUTOUT_RY = 310;
+const PATTERN_MASK_X = 267.97;
+const PATTERN_MASK_Y = 221.73;
+const PATTERN_MASK_SIZE = 1045.06;
 
 const CONSTELLATION_PATH =
   "M796.508 323.135L845.33 398.996M845.33 398.996L793.504 428.288L842.325 441.057L845.33 398.996ZM957.995 421.529L976.772 447.817M976.772 447.817L1011.32 429.04M976.772 447.817L980.528 487.625M980.528 487.625L1011.32 481.616L1049.63 489.879M980.528 487.625L976.772 519.922V552.971M1202.1 607.05L1192.34 592.779L1161.54 607.05L1153.28 623.574M1153.28 623.574L1166.05 643.854L1161.54 673.898L1072.91 633.338L1018.08 623.574L1079.67 607.05L1153.28 623.574ZM1102.96 758.021L1133 795.575M1133 795.575L1063.15 817.357M1133 795.575L1154.03 809.095L1204.35 823.366M1006.06 990.861L1048.13 963.821L1067.65 944.293M1067.65 944.293L1105.21 936.031L1123.24 924.764M1067.65 944.293L1033.86 931.524L991.043 970.581M906.92 1029.92L903.916 1098.56L906.92 1107.71M906.92 1107.71L926.448 1092.61L960.999 1029.92M906.92 1107.71L898.658 1128.31L918.937 1156.68L898.658 1168.12M700.368 1141.08L724.403 1127.56L782.238 1064.47M637.276 1003.63L566.672 1060.71L562.917 1097.52L553.904 1101.27L550.899 1127.56L525.362 1066.72L532.873 1029.92L493.065 1024.66L496.069 1003.63M378.147 969.83L469.781 938.284L475.039 918.756M475.039 918.756H487.807L480.296 875.192M475.039 918.756L441.239 907.489L390.916 892.467M480.296 875.192L452.506 862.423L445.746 824.117L457.763 818.108L499.825 862.423L480.296 875.192ZM402.182 565.739L427.719 562.735L455.51 585.268M455.51 585.268H495.318M455.51 585.268L444.243 607.05M495.318 585.268L492.314 552.22L508.087 534.193M495.318 585.268L517.851 619.067M508.087 534.193H548.646V549.215L508.087 534.193ZM508.087 534.193L495.318 514.665M621.163 411.764L640.28 425.274L653.049 434.297L625.258 483.119M621.163 411.764L596.716 394.489L616.996 358.436L650.044 365.947L621.163 411.764ZM640.28 425.274L673.328 417.022M375.894 641.6V727.226L422.462 755.016L496.82 739.994L395.422 675.4L375.894 641.6Z";
@@ -75,8 +66,8 @@ const STATIC_GLYPHS: Glyph[] = [
 function renderGlyphHoleMask(id: string, glyphs: Glyph[], spinClassName?: string) {
   const holes = glyphs.map((glyph, i) => <circle key={i} cx={glyph.cx} cy={glyph.cy} r={glyph.r + 1.5} fill="#000000" />);
   return (
-    <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1580">
-      <rect x="0" y="0" width="1580" height="1580" fill="#ffffff" />
+    <mask id={id} maskUnits="userSpaceOnUse" x={PATTERN_MASK_X} y={PATTERN_MASK_Y} width={PATTERN_MASK_SIZE} height={PATTERN_MASK_SIZE}>
+      <rect x={PATTERN_MASK_X} y={PATTERN_MASK_Y} width={PATTERN_MASK_SIZE} height={PATTERN_MASK_SIZE} fill="#ffffff" />
       {spinClassName ? (
         <g className={spinClassName} style={{ transformOrigin: `${CENTER_X}px ${CENTER_Y}px` }}>
           {holes}
@@ -138,6 +129,7 @@ const ELLIPSE9_R = 14.2709;
 export default function ConstellationPattern() {
   const ref = useRef<SVGSVGElement>(null);
   const [paused, setPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const pattern = ref.current;
@@ -149,70 +141,74 @@ export default function ConstellationPattern() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  const geometry = isMobile
+    ? {
+      width: 390,
+      height: 981,
+      viewBox: "0 0 390 981",
+      transform: "translate(93.467 687.295) scale(0.6 -0.6)",
+      outerRings: [
+        { x: 215.863, y: -117.305, size: 703.8, radius: 351.9, gradient: "mobileInnerRing" },
+        { x: -178.337, y: -511.507, size: 1492.2, radius: 746.1, gradient: "mobileOuterRing" },
+      ],
+    }
+    : {
+      width: 1739,
+      height: 1342,
+      viewBox: "0 0 1739 1342",
+      transform: "translate(-295.898 1317.824) scale(1 -1)",
+      outerRings: [
+        { x: -91.8984, y: -23.1738, size: 1173, radius: 586.5, gradient: "desktopInnerRing" },
+        { x: -748.898, y: -680.174, size: 2487, radius: 1243.5, gradient: "desktopOuterRing" },
+      ],
+    };
+
   return (
     <svg
       ref={ref}
       data-subcategory-pattern
       className={styles.pattern}
       data-paused={paused || undefined}
-      width="1580"
-      height="764"
-      viewBox="0 0 1580 764"
+      data-variant={isMobile ? "mobile" : "desktop"}
+      width={geometry.width}
+      height={geometry.height}
+      viewBox={geometry.viewBox}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="constellationFadeOuter" x1={CENTER_X} y1="221.5" x2={CENTER_X} y2="1313.5" gradientUnits="userSpaceOnUse">
-          <stop stopColor="var(--color-gold)" />
-          <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
+        <linearGradient id="constellationCoreFade" x1="354.5" y1="222.5" x2="1224.98" y2="1268.03" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffffff" />
+          <stop offset="0.75" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
-        <linearGradient id="constellationFadeMid" x1={CENTER_X} y1="243.5" x2={CENTER_X} y2="1291.5" gradientUnits="userSpaceOnUse">
-          <stop stopColor="var(--color-gold)" />
-          <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="constellationFadeWide" x1={CENTER_X} y1="0.5" x2={CENTER_X} y2="1534.5" gradientUnits="userSpaceOnUse">
-          <stop stopColor="var(--color-gold)" />
-          <stop offset="0.5" stopColor="var(--color-gold)" stopOpacity="0" />
-        </linearGradient>
-
-        <linearGradient id="ellipse7TopFade" x1={CENTER_X} y1="0.5" x2={CENTER_X} y2="1534.5" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#000000" />
-          <stop offset="0.1" stopColor="#ffffff" />
-        </linearGradient>
-        <mask id="ellipse7TopFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="1580">
-          <rect x="0" y="0" width="1580" height="1580" fill="url(#ellipse7TopFade)" />
+        <mask id="constellationCoreFadeMask" maskUnits="userSpaceOnUse" x={PATTERN_MASK_X} y={PATTERN_MASK_Y} width={PATTERN_MASK_SIZE} height={PATTERN_MASK_SIZE}>
+          <rect x={PATTERN_MASK_X} y={PATTERN_MASK_Y} width={PATTERN_MASK_SIZE} height={PATTERN_MASK_SIZE} fill="url(#constellationCoreFade)" />
         </mask>
-
-        {/*
-          Fades the pattern out toward the bottom edge of the viewBox instead of
-          hard-clipping it there, matching pattern-categories.svg's soft cut-off.
-          Vertical alpha ramp: fully opaque through the upper band, easing to
-          transparent over the last stretch before y=764.
-        */}
-        <linearGradient id="constellationBottomFade" x1="0" y1="0" x2="0" y2="764" gradientUnits="userSpaceOnUse">
-          <stop offset="0.55" stopColor="#ffffff" />
-          <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+        <linearGradient id="desktopInnerRing" x1="494.602" y1="-23.6738" x2="494.602" y2="1150.33" gradientUnits="userSpaceOnUse">
+          <stop stopColor="var(--color-gold-light)" stopOpacity="0" />
+          <stop offset="1" stopColor="var(--color-gold-light)" />
         </linearGradient>
-        <mask id="constellationBottomFadeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="764">
-          <rect x="0" y="0" width="1580" height="764" fill="url(#constellationBottomFade)" />
-        </mask>
-
-        {/*
-          Cuts a soft hole behind the title/description block so the animated rings and
-          moons don't visually clash with the text. Sized/positioned in the SVG's own
-          coordinate space to line up with .titleWrap, which sits near CENTER_X at the
-          top of the pattern. Applied as a mask on the whole pattern (not on the animated
-          groups) so the hole itself stays fixed while spinning elements fade underneath it.
-        */}
-        <radialGradient id="titleCutoutMask" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform={`translate(${TITLE_CUTOUT_X} ${TITLE_CUTOUT_Y}) scale(${TITLE_CUTOUT_RX} ${TITLE_CUTOUT_RY})`}>
-          <stop offset="0" stopColor="#000000" />
-          <stop offset="0.25" stopColor="#000000" />
-          <stop offset="1" stopColor="#ffffff" />
-        </radialGradient>
-        <mask id="titleCutout" maskUnits="userSpaceOnUse" x="0" y="0" width="1580" height="764">
-          <rect x="0" y="0" width="1580" height="764" fill="url(#titleCutoutMask)" />
-        </mask>
+        <linearGradient id="desktopOuterRing" x1="494.602" y1="-680.674" x2="494.602" y2="1807.33" gradientUnits="userSpaceOnUse">
+          <stop stopColor="var(--color-gold-light)" stopOpacity="0" />
+          <stop offset="1" stopColor="var(--color-gold-light)" />
+        </linearGradient>
+        <linearGradient id="mobileInnerRing" x1="567.763" y1="-117.605" x2="567.763" y2="586.794" gradientUnits="userSpaceOnUse">
+          <stop stopColor="var(--color-gold-light)" stopOpacity="0" />
+          <stop offset="1" stopColor="var(--color-gold-light)" />
+        </linearGradient>
+        <linearGradient id="mobileOuterRing" x1="567.763" y1="-511.807" x2="567.763" y2="980.993" gradientUnits="userSpaceOnUse">
+          <stop stopColor="var(--color-gold-light)" stopOpacity="0" />
+          <stop offset="1" stopColor="var(--color-gold-light)" />
+        </linearGradient>
 
         {/*
           Punch a hole in the ring/spoke strokes wherever a glyph rides on them, so the
@@ -235,31 +231,21 @@ export default function ConstellationPattern() {
         {renderGlyphHoleMask("spinningGlyphsDashedRingHoleMask", SPINNING_GLYPHS, styles.spinClockwiseRelativeToCounterRing)}
       </defs>
 
-      <g mask="url(#constellationBottomFadeMask)">
-
-      {/* Ellipse 4, Ellipse 6, Ellipse 7 (outer) — fixed, never animate */}
-      <g className={styles.static} opacity="1">
-        <path
-          d="M481 279.953C328.28 380.661 227.5 553.762 227.5 750.404C227.5 1061.39 479.564 1313.5 790.5 1313.5C1101.44 1313.5 1353.5 1061.39 1353.5 750.404C1353.5 553.762 1252.72 380.661 1100 279.953"
-          stroke="url(#constellationFadeOuter)"
-          strokeWidth="2"
-          strokeLinecap="round"
+      {geometry.outerRings.map((ring) => (
+        <rect
+          key={ring.gradient}
+          x={ring.x}
+          y={ring.y}
+          width={ring.size}
+          height={ring.size}
+          rx={ring.radius}
+          opacity="0.5"
+          stroke={`url(#${ring.gradient})`}
+          strokeWidth={isMobile ? "0.6" : undefined}
         />
-        <path
-          d="M478.5 309.963C340.538 407.865 250.5 568.956 250.5 751.093C250.5 1049.55 492.266 1291.5 790.5 1291.5C1088.73 1291.5 1330.5 1049.55 1330.5 751.093C1330.5 568.956 1240.46 407.865 1102.5 309.963"
-          stroke="url(#constellationFadeMid)"
-          strokeLinecap="round"
-        />
-        <g className={styles.ellipse7OuterFade} mask="url(#ellipse7TopFadeMask)">
-          <path
-            d="M518.785 0.5C216.337 111.424 0.5 402.216 0.5 743.485C0.5 1180.35 354.195 1534.5 790.5 1534.5C1226.81 1534.5 1580.5 1180.35 1580.5 743.485C1580.5 402.216 1364.66 111.424 1062.21 0.5"
-            stroke="url(#constellationFadeWide)"
-            strokeLinecap="round"
-          />
-        </g>
-      </g>
+      ))}
 
-      <g mask="url(#titleCutout)">
+      <g mask="url(#constellationCoreFadeMask)" transform={geometry.transform}>
       
 
       <g clipPath="url(#constellationClip)">
@@ -372,7 +358,6 @@ export default function ConstellationPattern() {
           transform={`rotate(${ellipse9Orbit.startAngle} ${CENTER_X} ${CENTER_Y})`}
           strokeWidth={1.5}
         />
-      </g>
       </g>
       </g>
     </svg>

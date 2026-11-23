@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 40px 60px;
+  padding: 40px 30px;
   position: relative;
   z-index: 10;
 }
@@ -15,7 +15,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 1360px;
+  max-width: none;
   height: 82px;
   padding: 20px;
   border-radius: 60px;

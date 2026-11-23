@@ -83,7 +83,7 @@ const ru: Dictionary = {
       changeQuestion: "Изменить вопрос",
       categoryPrefix: "Категория:",
       askTitle: "Задайте вопрос",
-      askDescription: "Карты хранят ответы, которые вы ищете. Пусть мудрость Таро направит ваш путь",
+      askDescription: "Сосредоточьтесь на одной ситуации. Можно не указывать имена и другие личные детали.",
       placeholder: "Опишите свой вопрос…",
       continue: "Продолжить",
       chooseTitle: "Выберите {count} {cards}",

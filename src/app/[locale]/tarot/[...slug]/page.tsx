@@ -12,8 +12,6 @@ import { faqPageContent, tarotFaq } from "@/lib/faq/content";
 
 type Props = { params: Promise<{ locale: string; slug: string[] }> };
 
-export const revalidate = 3600;
-
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   if (!isUrlLocale(params.locale)) return [];
   const language = toLocale(params.locale);

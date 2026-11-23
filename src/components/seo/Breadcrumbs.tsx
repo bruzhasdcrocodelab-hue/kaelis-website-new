@@ -8,10 +8,10 @@ export interface BreadcrumbItem {
   href?: string;
 }
 
-export default function Breadcrumbs({ locale, items }: { locale: Locale; items: BreadcrumbItem[] }) {
-  return <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
+export default function Breadcrumbs({ locale, items, className }: { locale: Locale; items: BreadcrumbItem[]; className?: string }) {
+  return <nav className={`${styles.breadcrumbs} ${className ?? ""}`} aria-label="Breadcrumb">
     {items.map((item, index) => <span key={`${item.href ?? "current"}-${item.label}`} className={styles.breadcrumbItem}>
-      {index > 0 && <span aria-hidden>→</span>}
+      {index > 0 && <span className={styles.separator} aria-hidden />}
       {item.href ? <Link href={localizedHref(locale, item.href)}>{item.label}</Link> : <span aria-current="page">{item.label}</span>}
     </span>)}
   </nav>;

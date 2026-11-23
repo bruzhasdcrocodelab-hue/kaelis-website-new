@@ -39,17 +39,44 @@
 .breadcrumbs {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 9px;
   width: min(640px, calc(100% - 48px));
   margin: 0 auto;
-  color: var(--color-white-60);
-  font-size: var(--text-xs);
+  color: #e3cfea;
+  font-family: var(--font-manrope);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .breadcrumbItem {
   display: inline-flex;
-  gap: 8px;
+  align-items: center;
+  gap: 9px;
+}
+
+.breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.separator {
+  display: block;
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  background-color: #d7afd3;
+  mask-image: url("/icons/chevron-down.svg");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 8px 8px;
+  transform: rotate(-90deg);
+  -webkit-mask-image: url("/icons/chevron-down.svg");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 8px 8px;
 }
 
 @media (max-width: 768px) {
