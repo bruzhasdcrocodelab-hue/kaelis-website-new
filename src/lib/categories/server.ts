@@ -1,20 +1,17 @@
 import "server-only";
 import { readFileSync } from "node:fs";
 import { request } from "node:https";
-import { unstable_cache } from "next/cache";
 import type { Locale } from "@/lang";
 import { BACKEND_ORIGIN } from "@/lib/config/env";
 import { API_PLATFORM, REQUEST_TIMEOUT_MS } from "@/lib/config/constants";
 import type { TarotCategory, TarotSpread } from "./catalog";
 
 type ApiResponse = { status: number; body: unknown };
-const REVALIDATE_SECONDS = 3600;
 
 async function requestJson(url: URL, headers: Record<string, string>): Promise<ApiResponse> {
   const response = await fetch(url, {
     headers,
-    cache: "force-cache",
-    next: { revalidate: REVALIDATE_SECONDS },
+    cache: "no-store",
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
   return { status: response.status, body: await response.json().catch(() => null) };
@@ -68,8 +65,6 @@ async function publicToken(): Promise<string> {
   return body.data.access_token;
 }
 
-const cachedPublicToken = unstable_cache(publicToken, ["public-catalog-token"], { revalidate: REVALIDATE_SECONDS });
-
 function buildCatalogItems<T>(locale: Locale, path: string, isValid: (item: unknown) => boolean): T[] | null {
   const snapshotPath = process.env.PUBLIC_CATALOG_SNAPSHOT_PATH;
   if (!snapshotPath) return null;
@@ -119,32 +114,29 @@ function isSpread(value: unknown): value is TarotSpread {
     !!(value as TarotSpread).matrix && typeof (value as TarotSpread).matrix === "object" && !Array.isArray((value as TarotSpread).matrix);
 }
 
-const cachedPublicCategories = unstable_cache(async (locale: Locale): Promise<TarotCategory[]> => {
-  return loadPages<TarotCategory>(locale, "/category", await cachedPublicToken(), isItem);
-}, ["public-categories"], { revalidate: REVALIDATE_SECONDS });
+async function fetchPublicCategories(locale: Locale, token: string): Promise<TarotCategory[]> {
+  return loadPages<TarotCategory>(locale, "/category", token, isItem);
+}
 
-const cachedPublicSpreads = unstable_cache(async (locale: Locale, categoryId?: string | null): Promise<TarotSpread[]> => {
+async function fetchPublicSpreads(locale: Locale, token: string, categoryId?: string | null): Promise<TarotSpread[]> {
   const query = categoryId === undefined ? "" : categoryId === null ? "" : `&category_id=${encodeURIComponent(categoryId)}`;
-  return loadPages<TarotSpread>(locale, `?${query.slice(1)}`, await cachedPublicToken(), isSpread);
-}, ["public-spreads"], { revalidate: REVALIDATE_SECONDS });
+  return loadPages<TarotSpread>(locale, `?${query.slice(1)}`, token, isSpread);
+}
 
 export async function loadPublicCategories(locale: Locale): Promise<TarotCategory[]> {
-  return cachedPublicCategories(locale);
+  return fetchPublicCategories(locale, await publicToken());
 }
 
 export async function loadPublicSpreads(locale: Locale, categoryId?: string | null): Promise<TarotSpread[]> {
-  return cachedPublicSpreads(locale, categoryId);
+  return fetchPublicSpreads(locale, await publicToken(), categoryId);
 }
 
-const cachedPublicTarotCatalog = unstable_cache(async (locale: Locale): Promise<{ categories: TarotCategory[]; spreadsByCategory: Record<string, TarotSpread[]> }> => {
-  const categories = await cachedPublicCategories(locale);
+export async function loadPublicTarotCatalog(locale: Locale): Promise<{ categories: TarotCategory[]; spreadsByCategory: Record<string, TarotSpread[]> }> {
+  const token = await publicToken();
+  const categories = await fetchPublicCategories(locale, token);
   const spreadsByCategory: Record<string, TarotSpread[]> = {};
   for (const category of categories) {
-    spreadsByCategory[category.id] = await cachedPublicSpreads(locale, category.id);
+    spreadsByCategory[category.id] = await fetchPublicSpreads(locale, token, category.id);
   }
   return { categories, spreadsByCategory };
-}, ["public-tarot-catalog"], { revalidate: REVALIDATE_SECONDS });
-
-export async function loadPublicTarotCatalog(locale: Locale): Promise<{ categories: TarotCategory[]; spreadsByCategory: Record<string, TarotSpread[]> }> {
-  return cachedPublicTarotCatalog(locale);
 }

@@ -44,6 +44,7 @@ export default async function LocaleLayout({ children, params }: {
   return <html lang={htmlLang[language]} className={`${baskervvilleSc.variable} ${cormorantGaramond.variable} ${manrope.variable} h-full antialiased`}>
     <head>
       <meta name="google-site-verification" content="g-jH6mhfzaLWhtC-UJdgtCxQA1kFZ06dp-Vqyn5w5zQ" />
+      <meta name="p:domain_verify" content="b5232c348e81fab7431587158e2e07e5" />
     </head>
     <body className="min-h-full flex flex-col">
       <JsonLd data={{
