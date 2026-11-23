@@ -12,6 +12,14 @@
   padding-top: 64px;
 }
 
+.withoutSpreads .decorativeCardBack {
+  top: 175px;
+}
+
+.withoutSpreads .decorativeCardFront {
+  top: 117px;
+}
+
 .decorativeCardBack,
 .decorativeCardFront {
   position: absolute;
