@@ -10,8 +10,6 @@ import { ogImagePath, siteOrigin } from "@/lib/seo";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
-export const revalidate = 3600;
-
 function validSlug(value: string) {
   return /^[a-z0-9][a-z0-9-]*-(en|ru|ua)$/.test(value);
 }
