@@ -34,16 +34,17 @@ type Phase = "preparing" | "dealing" | "flipping" | "focusing" | "ready";
 function CardArt({ card, locale, sizes = "(max-width: 768px) 45vw, 226px" }: { card: TarotCard; locale: Locale; sizes?: string }) {
   return <>
     <div className={styles.cardArtWindow} style={{ transform: card.reversed ? "rotate(180deg)" : undefined }}>
-      <Image src={card.missingArt ? card.image : `${card.image}?v=complete`} alt="" fill loading="eager" sizes={sizes}
+      <Image src={card.missingArt ? card.image : `${card.image}?v=complete`} alt="" fill loading="eager" sizes={sizes} unoptimized
         className={styles.cardArtImage} />
     </div>
     {card.missingArt && <span className={styles.missingArt}>{readingMessages[locale].noArt}</span>}
   </>;
 }
 
-function RevealCard({ card, locale, isRevealed, isSelected, interactive, moreInfoLabel, metrics, reduced, onCardClick, onFlipComplete }: {
+function RevealCard({ card, locale, isRevealed, isSelected, interactive, moreInfoLabel, metrics, reduced, animateSelectionOnMount = false, onCardClick, onFlipComplete }: {
   card: TarotCard; locale: Locale; isRevealed: boolean; isSelected: boolean; interactive: boolean;
   moreInfoLabel: string; metrics: RevealMetrics; reduced: boolean;
+  animateSelectionOnMount?: boolean;
   onCardClick: () => void; onFlipComplete: () => void;
 }) {
   const angle = Math.abs(metrics.rotation) * Math.PI / 180;
@@ -55,9 +56,10 @@ function RevealCard({ card, locale, isRevealed, isSelected, interactive, moreInf
       transition={selectionTransition}>{card.name[locale]}</motion.p>
     <motion.button type="button" className={styles.revealCard} aria-label={card.name[locale]}
       aria-pressed={isSelected} disabled={!interactive}
+      initial={animateSelectionOnMount ? { rotate: 0 } : false}
       animate={{ rotate: isSelected ? metrics.rotation : 0 }} transition={selectionTransition}
       onClick={event => { event.stopPropagation(); onCardClick(); }}>
-      <motion.div className={styles.revealCardFace} initial={{ rotateY: 0 }}
+      <motion.div className={styles.revealCardFace} initial={{ rotateY: isRevealed ? 180 : 0 }}
         animate={{ rotateY: isRevealed ? 180 : 0 }}
         transition={{ duration: reduced ? 0 : metrics.flip, ease: metrics.ease }}
         onAnimationComplete={() => { if (isRevealed) onFlipComplete(); }}>
@@ -110,6 +112,18 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
   const closeSheet = useCallback(() => { setSheet(null); setSelectedPosition(null); }, []);
   const geometry = useMemo(() => metrics ? spreadGeometry(cards, metrics) : null, [cards, metrics]);
   const isRevealed = phase === "flipping" || phase === "focusing" || phase === "ready";
+  const selectedCardIndex = selectedCard ? cards.findIndex(card => card.position === selectedCard.position) : -1;
+  const selectedOverlay = !isMobile && selectedCard && metrics && geometry && selectedCardIndex >= 0
+    ? {
+      point: geometry.positions[selectedCardIndex],
+      width: metrics.cardWidth,
+      height: metrics.cardHeight,
+      content: <RevealCard key={selectedCard.position} card={selectedCard} locale={locale} metrics={metrics} reduced={reduced}
+        isRevealed={isRevealed} isSelected interactive={false} moreInfoLabel={dictionary.moreInfo}
+        animateSelectionOnMount
+        onCardClick={() => {}} onFlipComplete={() => {}} />,
+    }
+    : null;
   const onReady = useCallback((point: Point) => {
     setOrigin(previous => previous ?? point);
     setPhase(previous => previous === "preparing" ? "dealing" : previous);
@@ -232,10 +246,11 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     <div ref={areaRef} className={styles.revealArea} data-reveal-phase={phase} aria-busy={phase !== "ready"}>
       {metrics && geometry ? <SpreadViewport width={geometry.width} height={geometry.height}
         locked={phase !== "ready"} apiRef={viewportApi} onReady={onReady} initialView={restored?.viewport}
-        onViewChange={updateViewport}>
+        onViewChange={updateViewport} overlay={selectedOverlay}>
         {origin && cards.map((card, index) => {
           const point = geometry.positions[index];
           return <motion.div key={card.position} className={styles.positionedCard} data-card-position={card.position}
+            data-overlay-card={selectedOverlay && selectedPosition === card.position ? "true" : undefined}
             style={{ left: point.x, top: point.y }}
             initial={restored ? false : { x: origin.x - point.x - metrics.cardWidth / 2, y: origin.y - point.y }}
             animate={{ x: 0, y: 0 }}

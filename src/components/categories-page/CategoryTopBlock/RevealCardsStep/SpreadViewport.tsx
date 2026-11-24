@@ -9,18 +9,33 @@ export interface SpreadViewportHandle {
   focus: (point: Point, duration: number, complete: () => void) => () => void;
 }
 
-export default function SpreadViewport({ width, height, locked, apiRef, onReady, initialView, onViewChange, children }: {
+type SpreadOverlay = {
+  point: Point;
+  width: number;
+  height: number;
+  content: ReactNode;
+};
+
+export default function SpreadViewport({ width, height, locked, apiRef, onReady, initialView, onViewChange, overlay, children }: {
   width: number; height: number; locked: boolean;
   apiRef: RefObject<SpreadViewportHandle | null>;
   onReady: (origin: Point) => void;
   initialView?: { x: number; y: number; scale: number };
   onViewChange?: (view: { x: number; y: number; scale: number }) => void;
+  overlay?: SpreadOverlay | null;
   children: ReactNode;
 }) {
   const viewport = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
+  const overlayElement = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<SpreadOverlay | null | undefined>(overlay);
+  const applyOverlayRef = useRef<(() => void) | null>(null);
   const lockedRef = useRef(locked);
   useLayoutEffect(() => { lockedRef.current = locked; }, [locked]);
+  useLayoutEffect(() => {
+    overlayRef.current = overlay;
+    applyOverlayRef.current?.();
+  }, [overlay]);
 
   useLayoutEffect(() => {
     const el = viewport.current!, inner = content.current!;
@@ -28,6 +43,15 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
     let vw = 0, vh = 0, fit = 1, max = 1, scale = 1, x = 0, y = 0, moved = false, restored = false;
     let stopAnimation: (() => void) | undefined;
     const pointers = new Map<number, Point>();
+    const applyOverlay = () => {
+      const current = overlayRef.current, element = overlayElement.current;
+      if (!current || !element) return;
+      element.style.width = `${current.width * scale}px`;
+      element.style.height = `${current.height * scale}px`;
+      element.style.setProperty("--selected-card-radius", `${8 * scale}px`);
+      element.style.transform = `translate3d(${x + current.point.x * scale}px, ${y + current.point.y * scale}px, 0)`;
+    };
+    applyOverlayRef.current = applyOverlay;
     const paint = () => {
       // Zoomed spreads need a bounded gutter to center even their outermost cards.
       const zoomed = scale > fit;
@@ -35,6 +59,7 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
       x = clampPan(x, width * scale, vw, zoomed ? vw / 2 : 0);
       y = clampPan(y, height * scale, vh, zoomed ? vh / 2 : 0);
       inner.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+      applyOverlay();
       onViewChange?.({ x, y, scale });
     };
     const change = (factor: number | null, cx = vw / 2, cy = vh / 2) => {
@@ -126,7 +151,7 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
     el.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
     el.addEventListener('click', click, true); el.addEventListener('dblclick', reset);
     return () => {
-      stopAnimation?.(); apiRef.current = null;
+      stopAnimation?.(); apiRef.current = null; applyOverlayRef.current = null;
       observer.disconnect(); el.removeEventListener('wheel', wheel); el.removeEventListener('pointerdown', down);
       el.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
       el.removeEventListener('click', click, true); el.removeEventListener('dblclick', reset);
@@ -134,5 +159,6 @@ export default function SpreadViewport({ width, height, locked, apiRef, onReady,
   }, [width, height, apiRef, initialView, onReady, onViewChange]);
   return <div ref={viewport} className={styles.spreadViewport} data-spread-viewport>
     <div ref={content} className={styles.spreadContent} style={{ width, height }}>{children}</div>
+    {overlay && <div ref={overlayElement} className={styles.selectedCardOverlay} aria-hidden>{overlay.content}</div>}
   </div>;
 }
