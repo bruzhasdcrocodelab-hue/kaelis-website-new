@@ -29,7 +29,7 @@ export default function FaqPageView({ dictionary, locale, content }: FaqPageView
       </div>
     </div>
     <main className={styles.main}>
-      <div className={styles.card}>
+      <div className={`shadow-medium ${styles.card}`}>
         <FaqSection heading={content.heading} items={content.items} />
       </div>
     </main>

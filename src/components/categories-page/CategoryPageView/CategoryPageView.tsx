@@ -168,7 +168,7 @@ function CategoryPageContent({
         {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
         {!status && resolved && spreads.state.status === "success" && <>
           {hasMultipleSpreads && <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={path.length === 2 ? resolved.spread?.slug : undefined} section={content.spreadsSection} cards={spreadCards} />}
-          <CategoryLearningSection locale={locale} currentName={resolved.spread?.name ?? resolved.category.name} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} learning={content.learning} example={content.example} />
+          <CategoryLearningSection locale={locale} currentName={path.length === 2 ? resolved.spread?.name ?? resolved.category.name : resolved.category.name} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} learning={content.learning} example={content.example} />
         </>}
         {!status && current && content.faq.length > 0 && (
           <div className={styles.faqWrap}>
