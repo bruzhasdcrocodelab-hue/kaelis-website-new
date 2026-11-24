@@ -2,11 +2,12 @@ import type { MetadataRoute } from "next";
 import content from "@/lib/seo/content.json";
 import { type UrlLocale, urlLocales } from "@/lib/routing";
 import { getArticleSlugs } from "@/lib/articles/content";
+import { getTarotPageRoutes } from "@/lib/categories/tarotPageContent";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kaelisai.com";
 
 const paths = Object.keys(content.en).filter(
-  path => path === "/" || path === "/faq" || path === "/tarot" || path.startsWith("/tarot/"),
+  path => path === "/" || path === "/faq" || path === "/tarot",
 );
 
 function localizedUrl(locale: UrlLocale, path: string): string {
@@ -14,7 +15,7 @@ function localizedUrl(locale: UrlLocale, path: string): string {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const articles = await getArticleSlugs();
+  const [articles, tarotPages] = await Promise.all([getArticleSlugs(), getTarotPageRoutes()]);
   const staticEntries = urlLocales.flatMap(locale =>
     paths.map(path => ({
       url: localizedUrl(locale, path),
@@ -58,5 +59,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
   }));
-  return [...staticEntries, ...hubs, ...articleEntries];
+  const tarotEntries = tarotPages.map(page => {
+    const locale = page.locale === "uk" ? "ua" : page.locale;
+    return {
+      url: localizedUrl(locale, page.path),
+      lastModified: new Date(page.updatedAt),
+      alternates: {
+        languages: {
+          en: localizedUrl("en", page.path),
+          ru: localizedUrl("ru", page.path),
+          uk: localizedUrl("ua", page.path),
+          "x-default": localizedUrl("en", page.path),
+        },
+      },
+    };
+  });
+  return [...staticEntries, ...hubs, ...articleEntries, ...tarotEntries];
 }

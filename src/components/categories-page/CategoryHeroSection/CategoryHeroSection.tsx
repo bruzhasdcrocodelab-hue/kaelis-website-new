@@ -5,7 +5,7 @@ import type { Dictionary, Locale } from "@/lang";
 import type { TarotCategory, TarotSpread } from "@/lib/categories/catalog";
 import SubcategoryRing from "@/components/categories-page/SubcategoryRing";
 import CategoryTitle from "./CategoryTitle";
-import { getSeo } from "@/lib/seo";
+import type { TarotPageHero } from "@/lib/categories/tarotPage";
 import styles from "./CategoryHeroSection.module.css";
 
 export interface CategoryHeroSectionProps {
@@ -16,7 +16,7 @@ export interface CategoryHeroSectionProps {
   path: string[];
   returnHref: string;
   returnLabel: string;
-  description?: string;
+  hero?: TarotPageHero;
   exploreLabel?: string;
   scrollTargetId: string;
 }
@@ -29,7 +29,7 @@ export default function CategoryHeroSection({
   path,
   returnHref,
   returnLabel,
-  description,
+  hero,
   exploreLabel,
   scrollTargetId,
 }: CategoryHeroSectionProps) {
@@ -40,7 +40,6 @@ export default function CategoryHeroSection({
       ? "Задайте свой вопрос об отношениях или выберите расклад для вашей ситуации."
       : "Поставте своє питання про стосунки або виберіть розклад для своєї ситуації.";
   const router = useRouter();
-  const seo = getSeo(locale, `/tarot/${path.join("/")}`);
 
   return (
     <section className={styles.section}>
@@ -49,9 +48,9 @@ export default function CategoryHeroSection({
         <div className={styles.content}>
           <div className={styles.titleBlock}>
             <div className={styles.titleWrap}>
-              <CategoryTitle title={seo?.h1 ?? current.name} locale={locale} />
+              <CategoryTitle title={hero?.h1 || current.name} locale={locale} />
               <p className={`font-instrument-sm ${styles.description}`}>
-                {seo?.intro || description?.trim() || (current.site_description || ("description" in current ? current.description : "")) || fallbackDescription}
+                {hero?.description || fallbackDescription}
               </p>
             </div>
           </div>

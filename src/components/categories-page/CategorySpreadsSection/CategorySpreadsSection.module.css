@@ -84,8 +84,8 @@
   width: 18px;
   height: 18px;
   background: var(--color-white);
-  mask: url("/icons/conversation.svg") center / 18px 18px no-repeat;
-  -webkit-mask: url("/icons/conversation.svg") center / 18px 18px no-repeat;
+  mask: var(--spread-icon, url("/icons/conversation.svg")) center / 18px 18px no-repeat;
+  -webkit-mask: var(--spread-icon, url("/icons/conversation.svg")) center / 18px 18px no-repeat;
 }
 
 .card:nth-child(8n + 2) .icon,
