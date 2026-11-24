@@ -194,6 +194,30 @@
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .grid .card .icon {
+    border: 0;
+    background: var(--gradient-pink);
+    box-shadow: var(--shadow-default);
+  }
+
+  .grid .card .iconGlyph {
+    background: var(--color-white);
+  }
+
+  .card:nth-child(6n + 2) .icon,
+  .card:nth-child(6n + 4) .icon,
+  .card:nth-child(6n + 6) .icon {
+    border: 1px solid transparent;
+    background: linear-gradient(var(--color-greyish-blue), var(--color-greyish-blue)) padding-box, var(--gradient-pink) border-box;
+    box-shadow: none;
+  }
+
+  .card:nth-child(6n + 2) .iconGlyph,
+  .card:nth-child(6n + 4) .iconGlyph,
+  .card:nth-child(6n + 6) .iconGlyph {
+    background: var(--gradient-pink);
+  }
 }
 
 @media (max-width: 520px) {
