@@ -31,10 +31,10 @@ export interface RevealCardsStepProps {
 
 type Phase = "preparing" | "dealing" | "flipping" | "focusing" | "ready";
 
-function CardArt({ card, locale, sizes = "(max-width: 768px) 45vw, 226px" }: { card: TarotCard; locale: Locale; sizes?: string }) {
+function CardArt({ card, locale, sizes = "(max-width: 768px) 120px, 240px" }: { card: TarotCard; locale: Locale; sizes?: string }) {
   return <>
     <div className={styles.cardArtWindow} style={{ transform: card.reversed ? "rotate(180deg)" : undefined }}>
-      <Image src={card.missingArt ? card.image : `${card.image}?v=complete`} alt="" fill loading="eager" sizes={sizes} unoptimized
+      <Image src={card.missingArt ? card.image : `${card.image}?v=complete`} alt="" fill loading="eager" quality={100} sizes={sizes}
         className={styles.cardArtImage} />
     </div>
     {card.missingArt && <span className={styles.missingArt}>{readingMessages[locale].noArt}</span>}

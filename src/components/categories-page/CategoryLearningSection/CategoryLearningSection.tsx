@@ -61,7 +61,7 @@ export default function CategoryLearningSection({ locale, currentName, spreads, 
           <header className={`font-instrument-xxs-emphasized ${styles.cardHeader}`}>{content.cardDescriptionLabel}</header>
           <div className={styles.cardBody}>
             <div className={styles.cardImage}>
-              <Image src={card.image} alt={card.name[locale]} fill sizes="(max-width: 768px) 310px, 208px" />
+              <Image src={card.image} alt={card.name[locale]} fill quality={100} sizes="(max-width: 768px) calc(100vw - 96px), 208px" />
               <span className={`font-instrument-xxs-emphasized ${styles.cardLabel}`}>{card.name[locale]}</span>
             </div>
             <div className={styles.readingPart}>
