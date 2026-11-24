@@ -66,7 +66,7 @@ export default function CategoryLearningSection({ locale, currentName, spreads, 
             </div>
             <div className={styles.readingPart}>
               <p className="font-instrument-xxs-emphasized">{content.quickReadLabel}</p>
-              <p className="font-instrument-xxs">{content.quickReadText}</p>
+              <p className="font-instrument-sm">{content.quickReadText}</p>
             </div>
             <div className={`${styles.fullDescription} ${styles.readingPart}`}>
               <p className="font-instrument-xxs-emphasized">{content.fullDescriptionLabel}</p>

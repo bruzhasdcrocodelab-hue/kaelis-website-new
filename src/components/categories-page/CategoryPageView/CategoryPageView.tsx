@@ -172,7 +172,7 @@ function CategoryPageContent({
         </>}
         {!status && current && content.faq.length > 0 && (
           <div className={styles.faqWrap}>
-            <FaqSection heading={faqHeading} items={content.faq} />
+            <FaqSection heading={faqHeading} items={content.faq} responsiveVariant="category" />
           </div>
         )}
         <Footer dictionary={dictionary.footer} locale={locale} />

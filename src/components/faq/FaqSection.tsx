@@ -8,12 +8,13 @@ export interface FaqSectionProps {
   heading: string;
   items: FaqItem[];
   className?: string;
+  responsiveVariant?: "category";
 }
 
-export default function FaqSection({ heading, items, className }: FaqSectionProps) {
+export default function FaqSection({ heading, items, className, responsiveVariant }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const idPrefix = useId();
-  return <section className={`${styles.section} ${className ?? ""}`}>
+  return <section className={`${styles.section} ${className ?? ""}`} data-responsive-variant={responsiveVariant}>
     <h2 className={`font-bona-4xl ${styles.heading}`}>{heading}</h2>
     <div className={styles.items}>
       {items.map((item, index) => {

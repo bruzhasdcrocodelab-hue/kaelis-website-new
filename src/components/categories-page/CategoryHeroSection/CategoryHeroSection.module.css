@@ -50,7 +50,7 @@
 
 .title {
   margin: 0;
-  width: 100%;
+  width: calc(100% + .08em);
   min-width: 0;
   background-image: var(--gradient-pink);
   background-clip: text;
@@ -59,16 +59,23 @@
   text-align: left;
   line-height: var(--leading-heading);
   /* Keep serifs and glyph overhangs inside the gradient's paint area. */
-  padding-inline: 0;
+  padding-inline: .04em;
+  margin-inline: -.04em;
   hyphens: none;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   word-break: normal;
   font-size: clamp(56px, 3.75vw, 72px);
   letter-spacing: -3px;
 }
 
 .titleWord {
-  white-space: nowrap;
+  white-space: normal;
+}
+
+@media (min-width: 769px) and (max-width: 1280px) {
+  .title {
+    font-size: clamp(48px, 1.56vw + 36px, 56px);
+  }
 }
 
 .description {

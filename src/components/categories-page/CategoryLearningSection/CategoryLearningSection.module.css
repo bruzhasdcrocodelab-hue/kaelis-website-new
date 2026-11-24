@@ -238,7 +238,7 @@
 
 .detail p {
   margin: 0;
-  font-size: var(--text-xxs);
+  font-size: var(--text-sm);
   line-height: 1.4;
 }
 
@@ -257,6 +257,18 @@
   .decorativeCardBack,
   .decorativeCardFront {
     display: none;
+  }
+
+  .article h2 {
+    font-size: clamp(36px, 3.5vw, 48px);
+  }
+
+  .copy {
+    font-size: clamp(14px, 1.56vw, 16px);
+  }
+
+  .example h3 {
+    font-size: clamp(28px, 2.67vw, 32px);
   }
 }
 
