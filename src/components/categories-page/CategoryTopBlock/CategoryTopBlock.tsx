@@ -20,7 +20,7 @@ import { useReadingNavigation } from "@/components/reading/ReadingNavigationProv
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
 import { trackEvent } from "@/lib/analytics";
-import { getReadingSession, getReadingUi, setReadingUi } from "@/lib/tarot/readingSession";
+import { getReadingSession, getReadingUi, isLocaleSwitchPending, setReadingUi } from "@/lib/tarot/readingSession";
 import { speakerGuide } from "@/lib/tarot/styleStore";
 import styles from "./CategoryTopBlock.module.css";
 
@@ -38,6 +38,7 @@ export interface CategoryTopBlockProps {
   embedded?: boolean;
   effectsActive?: boolean;
   resumeReading?: boolean;
+  suppressRestoreScroll?: boolean;
   categoryPage?: boolean;
   onRestart?: () => void;
   catalogStatus?: {
@@ -96,7 +97,7 @@ function SessionContent({
   dictionary,
   locale,
   categoryLabel,
-  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus, resumeReading = false, onRestart,
+  categoryId, spreadId, sessionActive: active = true, sessionKey = 0, embedded = false, catalogStatus, resumeReading = false, suppressRestoreScroll = false, onRestart,
   panelRef, onAppearance, initialVisible,
 }: CategoryTopBlockProps & {
   panelRef: RefObject<HTMLDivElement | null>;
@@ -129,6 +130,10 @@ function SessionContent({
   const previousStep = useRef(step);
   useEffect(() => {
     if (!sessionActive) { previousStep.current = step; return; }
+    if (suppressRestoreScroll && isLocaleSwitchPending()) {
+      previousStep.current = step;
+      return;
+    }
     if (previousStep.current === step) return;
     const restarting = previousStep.current === "reveal" && step === "ask";
     previousStep.current = step;
@@ -181,7 +186,7 @@ function SessionContent({
     }
     schedule();
     return cancel;
-  }, [step, embedded, sessionActive, panelRef, locale, categoryId, spreadId]);
+  }, [step, embedded, sessionActive, panelRef, locale, categoryId, spreadId, suppressRestoreScroll]);
   const hasProgress = step !== "ask" || flow.busy || flow.question.trim().length > 0;
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const selectedSpeaker = flow.speakers.find(s => s.id === flow.speakerId);

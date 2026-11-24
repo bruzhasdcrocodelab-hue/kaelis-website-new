@@ -154,7 +154,7 @@ function CategoryPageContent({
               </div>
               {readingActive && resolved?.spread && count !== null && <div id="category-reading" className={styles.readingAnchor}>
                 <div className={styles.readingWrap}>
-                  <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading categoryPage onRestart={() => {
+                  <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading suppressRestoreScroll categoryPage onRestart={() => {
                     requestAnimationFrame(() => {
                       document.getElementById("category-ask-question")?.scrollIntoView({ behavior: "smooth", block: "start" });
                     });
