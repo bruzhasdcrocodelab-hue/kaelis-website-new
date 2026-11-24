@@ -141,8 +141,6 @@
   inset: 0;
   overflow: hidden;
   border-radius: 8px;
-  clip-path: inset(0 round 8px);
-  -webkit-clip-path: inset(0 round 8px);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
@@ -151,16 +149,19 @@
   transform: rotateY(180deg);
 }
 
+.cardArtRaster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5);
+  transform-origin: top left;
+}
+
 .cardBack img,
 .detailBack {
   object-fit: cover;
-}
-
-.cardArtWindow {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
 }
 
 .cardArtImage {

@@ -31,12 +31,11 @@ export interface RevealCardsStepProps {
 
 type Phase = "preparing" | "dealing" | "flipping" | "focusing" | "ready";
 
-function CardArt({ card, locale, sizes = "(max-width: 768px) 120px, 240px" }: { card: TarotCard; locale: Locale; sizes?: string }) {
+function CardArt({ card, locale, sizes = "(max-width: 768px) 120px, 240px", supersample = false }: { card: TarotCard; locale: Locale; sizes?: string; supersample?: boolean }) {
+  const image = <Image src={card.missingArt ? card.image : `${card.image}?v=complete`} alt="" fill loading="eager" quality={100} sizes={sizes}
+    unoptimized={!card.missingArt} className={styles.cardArtImage} style={{ transform: card.reversed ? "rotate(180deg)" : undefined }} />;
   return <>
-    <div className={styles.cardArtWindow} style={{ transform: card.reversed ? "rotate(180deg)" : undefined }}>
-      <Image src={card.missingArt ? card.image : `${card.image}?v=complete`} alt="" fill loading="eager" quality={100} sizes={sizes}
-        className={styles.cardArtImage} />
-    </div>
+    {supersample ? <div className={styles.cardArtRaster}>{image}</div> : image}
     {card.missingArt && <span className={styles.missingArt}>{readingMessages[locale].noArt}</span>}
   </>;
 }
@@ -65,7 +64,7 @@ function RevealCard({ card, locale, isRevealed, isSelected, interactive, moreInf
         onAnimationComplete={() => { if (isRevealed) onFlipComplete(); }}>
         <div className={styles.cardBack}><Image src="/images/cards/default-card.png" alt="" fill sizes="200px" /></div>
         <div className={styles.cardFront}>
-          <CardArt card={card} locale={locale} />
+          <CardArt card={card} locale={locale} supersample />
           {!isSelected && <div className={styles.revealCardHoverOverlay}><p className="font-instrument-xs-emphasized">{moreInfoLabel}</p></div>}
         </div>
       </motion.div>
