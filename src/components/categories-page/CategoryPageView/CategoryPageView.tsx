@@ -20,15 +20,16 @@ import ConstellationPattern from "@/components/categories-page/ConstellationPatt
 import StarField from "@/components/categories-list-page/StarField";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import FaqSection from "@/components/faq/FaqSection";
-import type { FaqItem } from "@/lib/faq/content";
+import type { TarotPageContent } from "@/lib/categories/tarotPage";
 import styles from "./CategoryPageView.module.css";
 
 export interface CategoryPageViewProps {
   dictionary: Dictionary;
   locale: Locale;
   path: string[];
-  faq?: FaqItem[];
+  content: TarotPageContent;
   faqHeading?: string;
+  spreadCards: Record<string, Pick<TarotPageContent["hero"], "shortDescription" | "iconPath">>;
 }
 
 // Keep the mounted reading while its translated catalog is loading (or retrying).
@@ -52,8 +53,9 @@ function CategoryPageContent({
   dictionary,
   locale,
   path,
-  faq = [],
+  content,
   faqHeading = "",
+  spreadCards,
 }: CategoryPageViewProps) {
   const pathKey = path.join("/");
   const categoryRequest = useCategories();
@@ -143,19 +145,21 @@ function CategoryPageContent({
                     path={path}
                     returnHref={returnHref}
                     returnLabel={returnLabel}
-                    description={resolved?.category.site_description || resolved?.spread?.description || current.site_description}
+                    hero={content.hero}
                     exploreLabel={resolved ? locale === "en" ? `Explore ${resolved.category.name} Tarot Spreads` : locale === "ru" ? `Изучить расклады Таро: ${resolved.category.name}` : `Переглянути розклади Таро: ${resolved.category.name}` : undefined}
                     scrollTargetId={hasMultipleSpreads ? "category-spreads" : "category-learning"}
                   />
                 </div>
                 {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onReadingStart={() => setScrollToReading(true)} onPresetQuestions={setPresetQuestions} />}
               </div>
-              {readingActive && resolved?.spread && count !== null && <div id="category-reading" className={styles.readingWrap}>
-                <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading categoryPage onRestart={() => {
-                  requestAnimationFrame(() => {
-                    document.getElementById("category-ask-question")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  });
-                }} />
+              {readingActive && resolved?.spread && count !== null && <div id="category-reading" className={styles.readingAnchor}>
+                <div className={styles.readingWrap}>
+                  <CategoryTopBlock key={`${resolved.category.id}:${resolved.spread.id}`} dictionary={dictionary.categoryPage.topBlock} locale={locale} categoryLabel={resolved.category.name} categoryId={resolved.category.id} spreadId={resolved.spread.id} maxSelectableCards={count} resumeReading suppressRestoreScroll categoryPage onRestart={() => {
+                    requestAnimationFrame(() => {
+                      document.getElementById("category-ask-question")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    });
+                  }} />
+                </div>
               </div>}
             </section>
           </>
@@ -165,12 +169,12 @@ function CategoryPageContent({
         )}
         {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
         {!status && resolved && spreads.state.status === "success" && <>
-          {hasMultipleSpreads && <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={path.length === 2 ? resolved.spread?.slug : undefined} />}
-          <CategoryLearningSection locale={locale} category={resolved.category} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} />
+          {hasMultipleSpreads && <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={path.length === 2 ? resolved.spread?.slug : undefined} section={content.spreadsSection} cards={spreadCards} />}
+          <CategoryLearningSection locale={locale} currentName={path.length === 2 ? resolved.spread?.name ?? resolved.category.name : resolved.category.name} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} learning={content.learning} example={content.example} />
         </>}
-        {!status && current && faq.length > 0 && (
+        {!status && current && content.faq.length > 0 && (
           <div className={styles.faqWrap}>
-            <FaqSection heading={faqHeading} items={faq} />
+            <FaqSection heading={faqHeading} items={content.faq} responsiveVariant="category" />
           </div>
         )}
         <Footer dictionary={dictionary.footer} locale={locale} />

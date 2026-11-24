@@ -7,6 +7,7 @@ import TarotCatalogLinks from "@/components/seo/TarotCatalogLinks";
 import { dictionaries } from "@/lang";
 import { loadPublicTarotCatalog } from "@/lib/categories/server";
 import { pageMetadata, pageTitle } from "@/lib/seo";
+import { getTarotCategoryCards } from "@/lib/categories/tarotPageContent";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,10 +19,13 @@ export default async function Categories({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   if (!isUrlLocale(locale)) notFound();
   const language = toLocale(locale);
-  const catalog = await loadPublicTarotCatalog(language);
+  const [catalog, categoryCards] = await Promise.all([
+    loadPublicTarotCatalog(language),
+    getTarotCategoryCards(language),
+  ]);
   return <CatalogProvider locale={language} initialCatalog={catalog}>
     <RouteAnalytics pathname={`/${locale}/tarot`} pageTitle={pageTitle(language, "/tarot")} />
-    <CategoriesListView dictionary={dictionaries[language]} locale={language}>
+    <CategoriesListView dictionary={dictionaries[language]} locale={language} categoryCards={categoryCards}>
       <TarotCatalogLinks locale={language} {...catalog} />
     </CategoriesListView>
   </CatalogProvider>;

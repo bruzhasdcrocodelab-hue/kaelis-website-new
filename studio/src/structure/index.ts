@@ -10,6 +10,7 @@ export const structure: StructureResolver = (S) =>
 
       langList(S, 'Articles Category', 'blogCategory'),
       langList(S, 'Articles', 'articlesItem'),
+      langList(S, 'Tarot Pages', 'tarotPage'),
 
       S.divider(),
 
@@ -24,6 +25,7 @@ export const structure: StructureResolver = (S) =>
         item.getId() !== 'articlesItem' 
         && item.getId() !== 'blogCategory'
         && item.getId() !== 'policy'
+        && item.getId() !== 'tarotPage'
         && item.getId() !== 'sanity.imageAsset' // Исключаем медиа-ассеты из общего списка
         && item.getId() !== 'sanity.fileAsset'   // Исключаем файловые ассеты из общего списка
       ),

@@ -117,6 +117,17 @@
   }
 }
 
+@media (min-width: 769px) and (max-width: 1200px) {
+  .section[data-responsive-variant="category"] .heading {
+    font-size: clamp(34px, 3.33vw, var(--text-4xl));
+  }
+
+  .section[data-responsive-variant="category"] .question,
+  .section[data-responsive-variant="category"] .answer {
+    font-size: clamp(var(--text-sm), 1.33vw, var(--text-base));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .icon,
   .answerWrap,

@@ -13,18 +13,21 @@ import ConstellationPattern from "@/components/categories-list-page/Constellatio
 import StarField from "@/components/categories-list-page/StarField";
 import CategoriesListSection from "@/components/categories-list-page/CategoriesListSection";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import type { TarotPageContent } from "@/lib/categories/tarotPage";
 import styles from "./CategoriesListView.module.css";
 
 export interface CategoriesListViewProps {
   dictionary: Dictionary;
   locale: Locale;
   children?: ReactNode;
+  categoryCards: Record<string, Pick<TarotPageContent["hero"], "shortDescription">>;
 }
 
 export default function CategoriesListView({
   dictionary,
   locale,
   children,
+  categoryCards,
 }: CategoriesListViewProps) {
   const { state, retry } = useCategories();
   return (
@@ -62,6 +65,7 @@ export default function CategoriesListView({
           dictionary={dictionary.categoriesList}
           locale={locale}
           categories={state.data}
+          categoryCards={categoryCards}
         />}
         {state.status !== "success" && <div className={styles.pending}><CatalogStatus locale={locale} status={state.status} retry={retry} /></div>}
         {state.status === "success" && state.data.length === 0 && <CatalogStatus locale={locale} status="empty" />}

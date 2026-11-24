@@ -5,51 +5,38 @@ import CatalogProvider from "@/components/categories/CatalogProvider";
 import CategoryPageView from "@/components/categories-page/CategoryPageView";
 import { dictionaries } from "@/lang";
 import { defaultSpreadSlug, resolveCatalogPath } from "@/lib/categories/catalog";
-import { loadPublicCategories, loadPublicSpreads, loadPublicTarotCatalog } from "@/lib/categories/server";
-import { pageMetadata, pageTitle, resolveTarotSeo, siteOrigin } from "@/lib/seo";
+import { loadPublicCategories, loadPublicSpreads } from "@/lib/categories/server";
+import { pageMetadataFromEntry, siteOrigin } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
-import { faqPageContent, tarotFaq } from "@/lib/faq/content";
+import { faqPageContent } from "@/lib/faq/content";
+import { getTarotPage, getTarotPageCards, getTarotPageRoutes } from "@/lib/categories/tarotPageContent";
 
 type Props = { params: Promise<{ locale: string; slug: string[] }> };
 
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   if (!isUrlLocale(params.locale)) return [];
   const language = toLocale(params.locale);
-  const [catalog, allSpreads] = await Promise.all([
-    loadPublicTarotCatalog(language),
-    loadPublicSpreads(language, null),
-  ]);
-  const routes: Array<{ slug: string[] }> = [];
-  for (const category of catalog.categories) {
-    const categorySpreads = catalog.spreadsByCategory[category.id] ?? [];
-    const defaultSlug = defaultSpreadSlug(category.slug, categorySpreads);
-    const defaultSpread = allSpreads.find((spread) => spread.slug === defaultSlug);
-    if (resolveCatalogPath(catalog.categories, categorySpreads, [category.slug], defaultSpread) && resolveTarotSeo(language, [category.slug])) {
-      routes.push({ slug: [category.slug] });
-    }
-    for (const spread of categorySpreads) {
-      const slug = [category.slug, spread.slug];
-      if (resolveCatalogPath(catalog.categories, categorySpreads, slug) && resolveTarotSeo(language, slug)) routes.push({ slug });
-    }
-  }
-  return routes;
+  const routes = await getTarotPageRoutes();
+  return routes.filter((route) => route.locale === language).map((route) => ({ slug: route.path.split("/").filter(Boolean).slice(1) }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { locale, slug } = await params;
   if (!isUrlLocale(locale)) return {};
-  const seo = resolveTarotSeo(toLocale(locale), slug);
-  if (!seo) return {};
-  return pageMetadata(toLocale(locale), seo.path);
+  const content = await getTarotPage(toLocale(locale), slug[0], slug[1]);
+  if (!content) return {};
+  return pageMetadataFromEntry(toLocale(locale), `/tarot/${slug.join("/")}`, content.seo);
 }
 
 export default async function Category({ params }: Props) {
   const { locale, slug } = await params;
   if (!isUrlLocale(locale)) notFound();
   const language = toLocale(locale);
-  const seo = resolveTarotSeo(language, slug);
-  if (!seo) notFound();
-  const categories = await loadPublicCategories(language);
+  const [content, categories] = await Promise.all([
+    getTarotPage(language, slug[0], slug[1]),
+    loadPublicCategories(language),
+  ]);
+  if (!content) notFound();
   const category = categories.find((item) => item.slug === slug[0]);
   if (!category) notFound();
   const spreads = await loadPublicSpreads(language, category.id);
@@ -61,12 +48,12 @@ export default async function Category({ params }: Props) {
   const resolved = resolveCatalogPath(categories, spreads, slug, defaultSpread);
   if (!resolved) notFound();
   const current = resolved.spread ?? resolved.category;
-  const faq = tarotFaq(language, seo.entry.h1 ?? current.name, seo.path);
+  const spreadCards = await getTarotPageCards(language, resolved.category.slug);
   const breadcrumbs = [
     { name: dictionaries[language].header.logo, path: "/" },
     { name: dictionaries[language].header.allTarotSpreads, path: "/tarot" },
     ...(slug.length === 2 ? [{ name: resolved.category.name, path: `/tarot/${resolved.category.slug}` }] : []),
-    { name: current.name, path: seo.path },
+    { name: current.name, path: `/tarot/${slug.join("/")}` },
   ];
   return <CatalogProvider locale={language} initialCatalog={{
     categories,
@@ -83,22 +70,23 @@ export default async function Category({ params }: Props) {
         item: new URL(localizedHref(language, item.path), siteOrigin).toString(),
       })),
     }} />
-    {faq.length ? <JsonLd data={{
+    {content.faq.length ? <JsonLd data={{
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faq.map((item) => ({
+      mainEntity: content.faq.map((item) => ({
         "@type": "Question",
         name: item.question,
         acceptedAnswer: { "@type": "Answer", text: item.answer },
       })),
     }} /> : null}
-    <RouteAnalytics pathname={`/${locale}${seo.path}`} pageTitle={pageTitle(language, seo.path)} />
+    <RouteAnalytics pathname={`/${locale}/tarot/${slug.join("/")}`} pageTitle={content.seo.title} />
     <CategoryPageView
       dictionary={dictionaries[language]}
       locale={language}
       path={slug}
-      faq={faq}
+      content={content}
       faqHeading={faqPageContent[language].heading}
+      spreadCards={spreadCards}
     />
   </CatalogProvider>;
 }

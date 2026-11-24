@@ -2,18 +2,21 @@ import type { Dictionary, Locale } from "@/lang";
 import { categoryHref, type TarotCategory } from "@/lib/categories/catalog";
 import CategoryCard from "@/components/categories-list-page/CategoryCard";
 import { getSeo } from "@/lib/seo";
+import type { TarotPageContent } from "@/lib/categories/tarotPage";
 import styles from "./CategoriesListSection.module.css";
 
 export interface CategoriesListSectionProps {
   dictionary: Dictionary["categoriesList"];
   locale: Locale;
   categories: TarotCategory[];
+  categoryCards: Record<string, Pick<TarotPageContent["hero"], "shortDescription">>;
 }
 
 export default function CategoriesListSection({
   dictionary,
   locale,
   categories,
+  categoryCards,
 }: CategoriesListSectionProps) {
   const title = getSeo(locale, "/tarot")?.h1 ?? dictionary.title;
   const formattedTitle = locale === "en"
@@ -48,7 +51,7 @@ export default function CategoriesListSection({
               <CategoryCard
                 href={categoryHref(category.slug, locale)}
                 title={category.name}
-                description={category.site_description}
+                description={categoryCards[category.slug]?.shortDescription || category.site_description}
                 locale={locale}
                 filled={(row + column) % 2 !== 0}
                 mobileFilled={(mobileRow + mobileColumn) % 2 !== 0}

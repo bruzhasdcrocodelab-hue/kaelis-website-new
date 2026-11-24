@@ -31,12 +31,18 @@
 }
 
 .headingRow {
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 16px;
+}
+
+.headingRow > div:first-child {
+  display: contents;
 }
 
 .title {
+  grid-column: 1;
+  grid-row: 1;
   margin: 0;
   color: var(--color-black);
   font-size: 42px;
@@ -44,7 +50,10 @@
 }
 
 .description {
-  max-width: 390px;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+  max-width: none;
   margin: 16px 0 0;
   color: var(--color-black-50);
   line-height: 1.5;
@@ -151,6 +160,11 @@
   display: none;
 }
 
+.triggerDesktop {
+  grid-column: 2;
+  grid-row: 1;
+}
+
 .category {
   display: none;
 }
@@ -173,6 +187,10 @@
 
   .headingRow {
     position: relative;
+    display: block;
+  }
+
+  .headingRow > div:first-child {
     display: block;
   }
 

@@ -94,35 +94,36 @@
   min-width: 0;
 }
 
+.readingAnchor {
+  display: flow-root;
+  width: 100%;
+}
+
 .readingWrap {
   width: min(1320px, calc(100% - 64px));
   margin: 0 auto 38px;
   animation: reading-enter .42s ease-out both;
 }
 
-@media (min-width: 1102px) and (max-width: 1280px) {
+@media (min-width: 769px) and (max-width: 1280px) {
   .heroGrid {
-    grid-template-columns: minmax(0, 1fr) minmax(490px, 1fr);
-    gap: clamp(48px, 6vw, 76px);
+    grid-template-columns: minmax(0, .71fr) minmax(365px, 1fr);
+    gap: clamp(22px, 5vw, 76px);
   }
 }
 
 @media (min-width: 769px) and (max-width: 1101px) {
-  .readingWrap {
+  /* .readingWrap {
     width: min(590px, calc(100% - 64px));
-  }
+  } */
 
   .heroGrid {
-    grid-template-columns: minmax(0, 590px);
-    justify-content: center;
-    width: min(590px, calc(100% - 64px));
-    margin-top: 7px;
-    gap: 32px;
-    padding: 24px 0 40px;
+    padding-top: clamp(24px, 4.5vw, 62px);
+    padding-bottom: clamp(40px, 4.8vw, 66px);
   }
 
   .heroCopy {
-    gap: 32px;
+    gap: clamp(32px, 4.6vw, 64px);
   }
 }
 
@@ -135,6 +136,16 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes reading-enter-mobile {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 
@@ -187,6 +198,7 @@
   .readingWrap {
     width: 100%;
     margin-bottom: 0px;
+    animation: reading-enter-mobile .42s ease-out both;
   }
 }
 
