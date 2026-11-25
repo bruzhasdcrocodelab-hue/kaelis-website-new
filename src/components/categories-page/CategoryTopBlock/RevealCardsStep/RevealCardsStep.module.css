@@ -153,9 +153,9 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 200%;
-  height: 200%;
-  transform: scale(0.5);
+  width: 326.667%;
+  height: 324.98%;
+  transform: scale(0.306122, 0.307711);
   transform-origin: top left;
 }
 
