@@ -44,6 +44,7 @@ export interface TarotPageContent {
   seo: {
     title: string;
     description: string;
+    h1?: string;
     keywords?: string;
     ogType?: "website";
     twitterCard?: "summary" | "summary_large_image";
