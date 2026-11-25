@@ -13,6 +13,8 @@ import { getTarotPage, getTarotPageCards, getTarotPageRoutes } from "@/lib/categ
 
 type Props = { params: Promise<{ locale: string; slug: string[] }> };
 
+export const dynamicParams = false;
+
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   if (!isUrlLocale(params.locale)) return [];
   const language = toLocale(params.locale);

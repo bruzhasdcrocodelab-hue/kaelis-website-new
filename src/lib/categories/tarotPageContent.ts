@@ -75,6 +75,7 @@ function mapTarotPage(page: RawTarotPage | null): TarotPageContent | null {
     seo: {
       title: page.seo.title,
       description: page.seo.description,
+      h1: page.hero.h1,
       keywords: page.seo.keywords,
       ogType: page.seo.ogType,
       twitterCard: page.seo.twitterCard,
