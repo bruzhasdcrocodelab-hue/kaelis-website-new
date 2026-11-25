@@ -95,3 +95,10 @@ test("tarot redirects only complete unique prefixes in their current category", 
   assert.equal(redirects.legacyRedirect("/ru/tarot/money/nope"), undefined);
   assert.equal(redirects.legacyRedirect("/ru/faq"), undefined);
 });
+
+test("the unlocalized job-change URL has one permanent English redirect", () => {
+  assert.deepEqual(redirects.legacyRedirect("/tarot/work/job-change"), {
+    destination: "/en/tarot/work/job-change",
+    status: 308,
+  });
+});

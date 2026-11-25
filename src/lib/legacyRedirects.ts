@@ -17,6 +17,9 @@ const legacyArticleAliases: Readonly<Record<string, string>> = {
   "exploring-the-mystical-connection-between-tarot-and-numerology":
     "numerology-s-role-in-enhancing-your-tarot-readings",
 };
+const exactLegacyRedirects: Readonly<Record<string, Redirect>> = {
+  "/tarot/work/job-change": { destination: "/en/tarot/work/job-change", status: 308 },
+};
 
 function canonicalLocale(value: string | undefined): UrlLocale | undefined {
   if (value === "uk") return "ua";
@@ -100,5 +103,5 @@ function tarotRedirect(pathname: string): Redirect | undefined {
 }
 
 export function legacyRedirect(pathname: string): Redirect | undefined {
-  return articleRedirect(pathname) ?? policyRedirect(pathname) ?? tarotRedirect(pathname);
+  return exactLegacyRedirects[pathname] ?? articleRedirect(pathname) ?? policyRedirect(pathname) ?? tarotRedirect(pathname);
 }
