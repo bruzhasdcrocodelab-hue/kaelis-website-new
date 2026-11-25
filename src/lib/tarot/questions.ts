@@ -8,8 +8,13 @@ export type PresetQuestion = {
   text: string;
 };
 
-export async function loadPresetQuestions(locale: Locale, signal: AbortSignal): Promise<PresetQuestion[]> {
-  const data = await tarotRequest("/tarot/questions", locale, { signal });
+export type PresetQuestionScope = { categoryId: string } | { spreadId: string };
+
+export async function loadPresetQuestions(locale: Locale, scope: PresetQuestionScope, signal: AbortSignal): Promise<PresetQuestion[]> {
+  const query = "categoryId" in scope
+    ? new URLSearchParams({ category_id: apiId(scope.categoryId) })
+    : new URLSearchParams({ tarot_id: apiId(scope.spreadId) });
+  const data = await tarotRequest(`/tarot/questions?${query}`, locale, { signal });
   if (!Array.isArray(data)) throw new TarotError("Invalid preset questions response");
   return data.map((value) => {
     const row = record(value);

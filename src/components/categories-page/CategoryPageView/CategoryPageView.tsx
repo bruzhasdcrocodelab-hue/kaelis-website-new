@@ -150,7 +150,7 @@ function CategoryPageContent({
                     scrollTargetId={hasMultipleSpreads ? "category-spreads" : "category-learning"}
                   />
                 </div>
-                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onReadingStart={() => setScrollToReading(true)} onPresetQuestions={setPresetQuestions} />}
+                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} presetQuestionScope={path.length === 1 ? "categoryId" : "spreadId"} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onReadingStart={() => setScrollToReading(true)} onPresetQuestions={setPresetQuestions} />}
               </div>
               {readingActive && resolved?.spread && count !== null && <div id="category-reading" className={styles.readingAnchor}>
                 <div className={styles.readingWrap}>

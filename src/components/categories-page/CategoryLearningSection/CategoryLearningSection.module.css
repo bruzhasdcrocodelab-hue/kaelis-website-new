@@ -280,7 +280,7 @@
     grid-template-columns: 1fr;
     gap: 40px;
     width: calc(100% - 40px);
-    padding: 40px 0 0;
+    padding: 0;
   }
 
   .detail p {
@@ -355,7 +355,7 @@
   }
 
   .example {
-    margin-bottom: 64px;
+    margin-bottom: 40px;
   }
 
   .card {
