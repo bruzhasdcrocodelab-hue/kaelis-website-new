@@ -18,13 +18,14 @@ export interface CategoryAskBlockProps {
   locale: Locale;
   categoryId: string;
   spreadId: string;
+  presetQuestionScope: "categoryId" | "spreadId";
   categoryLabel: string;
   onReadingStarted: (active: boolean) => void;
   onReadingStart?: () => void;
   onPresetQuestions?: (questions: string[]) => void;
 }
 
-export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, categoryLabel, onReadingStarted, onReadingStart, onPresetQuestions }: CategoryAskBlockProps) {
+export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, presetQuestionScope, categoryLabel, onReadingStarted, onReadingStart, onPresetQuestions }: CategoryAskBlockProps) {
   const flow = useReading(locale, categoryId, spreadId);
   const question = flow.draftQuestion;
   const setQuestion = flow.setDraftQuestion;
@@ -48,7 +49,8 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
     queueMicrotask(() => {
       if (!controller.signal.aborted) setPresetsLoading(true);
     });
-    loadPresetQuestions(locale, controller.signal).then((items) => {
+    const scope = presetQuestionScope === "categoryId" ? { categoryId } : { spreadId };
+    loadPresetQuestions(locale, scope, controller.signal).then((items) => {
       if (!controller.signal.aborted) {
         const nextPresets = items.slice(0, 3);
         setPresets(nextPresets);
@@ -63,7 +65,7 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
       }
     });
     return () => controller.abort();
-  }, [locale, onPresetQuestions, spreadId]);
+  }, [categoryId, locale, onPresetQuestions, presetQuestionScope, spreadId]);
 
   const start = (value: string, clearField: boolean) => {
     const draft = flow.draftQuestion;

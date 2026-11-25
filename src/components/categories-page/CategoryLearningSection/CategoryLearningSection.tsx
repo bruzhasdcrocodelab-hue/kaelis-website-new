@@ -40,7 +40,7 @@ export default function CategoryLearningSection({ locale, currentName, spreads, 
 
   return <section id="category-learning" className={`${styles.section} ${spreads.length <= 1 ? styles.withoutSpreads : ""}`}>
     <div className={styles.decorativeCardBack} aria-hidden>
-      <Image src={card.image} alt="" fill sizes="228px" />
+      {/* <Image src={card.image} alt="" fill sizes="228px" /> */}
     </div>
     <div className={styles.decorativeCardFront} aria-hidden>
       <Image src={card.image} alt="" fill sizes="228px" />
