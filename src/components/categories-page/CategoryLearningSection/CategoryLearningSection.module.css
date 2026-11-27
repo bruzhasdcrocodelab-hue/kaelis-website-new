@@ -191,7 +191,7 @@
 
 .cardImage img {
   object-fit: cover;
-  object-position: center 44%;
+  object-position: center 33%;
 }
 
 .cardLabel {

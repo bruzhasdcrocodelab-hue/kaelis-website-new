@@ -163,35 +163,6 @@ function RevealSession({ dictionary, locale, reading, error, onRetry, onStartOve
     });
   }, [phase, metrics, firstPosition, firstX, firstY, reduced]);
 
-  // Both desktop cards share one scroll anchor, including while only the answer is visible.
-  /*
-  useLayoutEffect(() => {
-    const layer = detailRef.current, panel = areaRef.current?.closest<HTMLElement>('[data-reading-panel]');
-    if (!layer || !panel || !answerVisible) return;
-    let frame = 0;
-    const position = () => {
-      frame = 0;
-      if (getComputedStyle(layer).position !== "absolute") return;
-      const rect = panel.getBoundingClientRect();
-      const style = getComputedStyle(layer);
-      const offset = parseFloat(style.getPropertyValue("--reveal-detail-center-offset"));
-      const inset = parseFloat(style.getPropertyValue("--reveal-detail-scroll-inset"));
-      const base = (rect.height - layer.offsetHeight) / 2 + offset;
-      const top = Math.min(rect.height - layer.offsetHeight - inset, Math.max(base, inset - rect.top));
-      layer.style.setProperty("--detail-top", `${Math.max(inset, top)}px`);
-    };
-    const schedule = () => { if (!frame) frame = requestAnimationFrame(position); };
-    position();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    const observer = new ResizeObserver(schedule); observer.observe(panel); observer.observe(layer);
-    return () => {
-      cancelAnimationFrame(frame); observer.disconnect();
-      window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule);
-    };
-  }, [answerVisible, isMobile]);
-  */
-
   useEffect(() => {
     const keydown = (event: KeyboardEvent) => { if (event.key === "Escape" && !window.matchMedia("(max-width: 768px)").matches) setSelectedPosition(null); };
     document.addEventListener("keydown", keydown);
