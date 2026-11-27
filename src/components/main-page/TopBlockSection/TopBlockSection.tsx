@@ -57,17 +57,6 @@ export default function TopBlockSection({ dictionary, className = "" }: TopBlock
                 href={GOOGLE_PLAY_URL}
                 aria-label="Google Play"
               />
-           
-        {/* <Link href="/" className={styles.actionButton} aria-label="App Store">
-          <span className={styles.actionIconWrap}>
-            <Image src="/icons/apple.svg" alt="" width={24} height={24} />
-          </span>
-        </Link>
-        <Link href="/" className={styles.actionButton} aria-label="Google Play">
-          <span className={styles.actionIconWrapWide}>
-            <Image src="/icons/google-play.svg" alt="" width={24} height={24} />
-          </span>
-        </Link> */}
       </div>
     </section>
   );

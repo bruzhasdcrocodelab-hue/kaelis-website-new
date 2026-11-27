@@ -15,7 +15,8 @@ export interface TarotPageExampleDetail {
 }
 
 export interface TarotPageExample {
-  cardSlug: string;
+  cardSlug?: string;
+  cardTitle?: string;
   heading?: string;
   cardDescriptionLabel?: string;
   quickReadLabel?: string;
@@ -35,6 +36,10 @@ export interface TarotPageContent {
     heading?: string;
     content: PortableTextBlock[];
   };
+  exampleQuestions: Array<{
+    _key: string;
+    text: string;
+  }>;
   example?: TarotPageExample;
   faq: Array<{
     _key: string;
@@ -58,7 +63,7 @@ export interface TarotPageContent {
   };
 }
 
-export const defaultTarotExample: Record<Locale, Required<Omit<TarotPageExample, "details">> & {details: TarotPageExampleDetail[]}> = {
+export const defaultTarotExample: Record<Locale, Required<Omit<TarotPageExample, "details" | "cardTitle">> & {details: TarotPageExampleDetail[]}> = {
   en: {
     cardSlug: "knight-of-wands",
     heading: "Example Reading",

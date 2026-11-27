@@ -36,6 +36,7 @@ const tarotPageProjection = `{
   hero,
   spreadsSection,
   learning,
+  exampleQuestions[]{_key, text},
   example,
   faq[] { _key, question, answer },
   seo {
@@ -70,6 +71,7 @@ function mapTarotPage(page: RawTarotPage | null): TarotPageContent | null {
     hero: page.hero,
     spreadsSection: page.spreadsSection,
     learning: page.learning,
+    exampleQuestions: page.exampleQuestions ?? [],
     example: page.example,
     faq: page.faq ?? [],
     seo: {

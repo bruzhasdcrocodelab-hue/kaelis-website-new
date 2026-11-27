@@ -37,6 +37,7 @@ export default function CategoryLearningSection({ locale, currentName, spreads, 
   const heading = learning.heading || (locale === "en" ? `How a ${currentName} Tarot Reading Works` : locale === "ru" ? `Как работает расклад Таро «${currentName}»` : `Як працює розклад Таро «${currentName}»`);
   const content = mergeTarotExample(locale, example);
   const card = tarotDeck.find((item) => item.slug === content.cardSlug) ?? tarotDeck.find((item) => item.slug === "knight-of-wands")!;
+  const cardTitle = content.cardTitle || card.name[locale];
 
   return <section id="category-learning" className={`${styles.section} ${spreads.length <= 1 ? styles.withoutSpreads : ""}`}>
     <div className={styles.decorativeCardBack} aria-hidden>
@@ -61,8 +62,8 @@ export default function CategoryLearningSection({ locale, currentName, spreads, 
           <header className={`font-instrument-xxs-emphasized ${styles.cardHeader}`}>{content.cardDescriptionLabel}</header>
           <div className={styles.cardBody}>
             <div className={styles.cardImage}>
-              <Image src={card.image} alt={card.name[locale]} fill quality={100} sizes="(max-width: 768px) calc(100vw - 96px), 208px" />
-              <span className={`font-instrument-xxs-emphasized ${styles.cardLabel}`}>{card.name[locale]}</span>
+              <Image src={card.image} alt={cardTitle} fill quality={100} sizes="(max-width: 768px) calc(100vw - 96px), 208px" />
+              <span className={`font-instrument-xxs-emphasized ${styles.cardLabel}`}>{cardTitle}</span>
             </div>
             <div className={styles.readingPart}>
               <p className="font-instrument-xxs-emphasized">{content.quickReadLabel}</p>

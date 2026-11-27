@@ -1,4 +1,5 @@
 import {readFileSync} from 'node:fs'
+import {exampleQuestionsFor} from './tarot-page-questions.mjs'
 
 const localeMap = {en: 'en', ru: 'ru', uk: 'ua'}
 const locale = process.argv[2]
@@ -161,6 +162,7 @@ for (const category of selectedCategories) {
         learning: {
           content: learningContent(locale, category, spreads),
         },
+        exampleQuestions: exampleQuestionsFor(locale, category.slug, spreadSlug),
         example: {
           cardSlug: 'knight-of-wands',
           ...example[locale],

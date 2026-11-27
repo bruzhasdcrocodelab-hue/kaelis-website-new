@@ -7,7 +7,6 @@ import TriggerButton, { GUIDE_ICON } from "@/components/categories-page/TriggerB
 import BottomSheetSelect from "@/components/global/BottomSheetSelect";
 import { useReadingNavigation } from "@/components/reading/ReadingNavigationProvider";
 import type { Dictionary, Locale } from "@/lang";
-import { loadPresetQuestions, type PresetQuestion } from "@/lib/tarot/questions";
 import { useReading } from "@/lib/tarot/useReading";
 import { readingMessages } from "@/lib/tarot/messages";
 import { speakerGuide } from "@/lib/tarot/styleStore";
@@ -18,21 +17,17 @@ export interface CategoryAskBlockProps {
   locale: Locale;
   categoryId: string;
   spreadId: string;
-  presetQuestionScope: "categoryId" | "spreadId";
+  exampleQuestions: Array<{ _key: string; text: string }>;
   categoryLabel: string;
   onReadingStarted: (active: boolean) => void;
   onReadingStart?: () => void;
-  onPresetQuestions?: (questions: string[]) => void;
 }
 
-export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, presetQuestionScope, categoryLabel, onReadingStarted, onReadingStart, onPresetQuestions }: CategoryAskBlockProps) {
+export default function CategoryAskBlock({ dictionary, locale, categoryId, spreadId, exampleQuestions, categoryLabel, onReadingStarted, onReadingStart }: CategoryAskBlockProps) {
   const flow = useReading(locale, categoryId, spreadId);
   const question = flow.draftQuestion;
   const setQuestion = flow.setDraftQuestion;
   const navigation = useReadingNavigation();
-  const [presets, setPresets] = useState<PresetQuestion[]>([]);
-  const [presetsLoading, setPresetsLoading] = useState(true);
-  const [presetError, setPresetError] = useState(false);
   const [guideSheetOpen, setGuideSheetOpen] = useState(false);
   const text = readingMessages[locale];
   const selected = flow.speakers.find((speaker) => speaker.id === flow.speakerId);
@@ -44,29 +39,6 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
 
   useEffect(() => { onReadingStarted(readingStarted); }, [onReadingStarted, readingStarted]);
   useLayoutEffect(() => navigation?.register({ started: hasProgress, reset: flow.reset }), [navigation, hasProgress, flow.reset]);
-  useEffect(() => {
-    const controller = new AbortController();
-    queueMicrotask(() => {
-      if (!controller.signal.aborted) setPresetsLoading(true);
-    });
-    const scope = presetQuestionScope === "categoryId" ? { categoryId } : { spreadId };
-    loadPresetQuestions(locale, scope, controller.signal).then((items) => {
-      if (!controller.signal.aborted) {
-        const nextPresets = items.slice(0, 3);
-        setPresets(nextPresets);
-        onPresetQuestions?.(nextPresets.map((item) => item.text));
-        setPresetError(false);
-        setPresetsLoading(false);
-      }
-    }).catch(() => {
-      if (!controller.signal.aborted) {
-        setPresetError(true);
-        setPresetsLoading(false);
-      }
-    });
-    return () => controller.abort();
-  }, [categoryId, locale, onPresetQuestions, presetQuestionScope, spreadId]);
-
   const start = (value: string, clearField: boolean) => {
     const draft = flow.draftQuestion;
     const submit = () => {
@@ -97,12 +69,10 @@ export default function CategoryAskBlock({ dictionary, locale, categoryId, sprea
         <MainButton variant="gradient" size="small" icon="/icons/right-arrow.svg" onClick={() => start(question, true)} disabled={!question.trim() || flow.busy || !flow.speakerId} aria-busy={flow.busy}>{flow.busy ? text.loading : locale === "en" ? "Get My Reading" : locale === "ru" ? "Получить расклад" : "Отримати розклад"}</MainButton>
       </div>
       <p className={`font-instrument-xs ${styles.tryTitle}`}>{locale === "en" ? "Try a question" : locale === "ru" ? "Попробуйте вопрос" : "Спробуйте питання"}</p>
-      <div className={styles.presets} aria-busy={presetsLoading} aria-label={presetsLoading ? text.loading : undefined}>
-        {presetsLoading
-          ? [0, 1, 2].map((index) => <div className={styles.presetPlaceholder} key={index} aria-hidden />)
-          : presets.map((preset) => <button className={`font-instrument-xs ${styles.preset}`} key={preset.id} type="button" onClick={() => start(preset.text, false)} disabled={flow.busy || !flow.speakerId}><span className={styles.presetIcon} aria-hidden />{preset.text}</button>)}
+      <div className={styles.presets}>
+        {exampleQuestions.slice(0, 3).map((question) => <button className={`font-instrument-xs ${styles.preset}`} key={question._key} type="button" onClick={() => start(question.text, false)} disabled={flow.busy || !flow.speakerId}><span className={styles.presetIcon} aria-hidden />{question.text}</button>)}
       </div>
-      {(flow.error || presetError) && <p className={`font-instrument-xs ${styles.error}`} role="alert">{flow.error || text.error}</p>}
+      {flow.error && <p className={`font-instrument-xs ${styles.error}`} role="alert">{flow.error}</p>}
       <span className={styles.category} aria-hidden>{categoryLabel}</span>
       <BottomSheetSelect
         open={guideSheetOpen}
