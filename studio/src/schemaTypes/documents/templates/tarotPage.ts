@@ -1,5 +1,5 @@
 import {MasterDetailIcon} from '@sanity/icons'
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 
 const slugRule = (label: string) => (value: string | undefined) => {
   if (!value) return `${label} is required.`
@@ -51,6 +51,19 @@ export default defineType({
       hidden: ({document}) => Boolean(document?.spreadSlug),
     }),
     defineField({name: 'learning', type: 'tarotLearning', validation: (Rule) => Rule.required(), group: 'content'}),
+    defineField({
+      name: 'exampleQuestions',
+      title: 'Try a question',
+      description: 'Shown as quick-start questions. Add at least one.',
+      type: 'array',
+      of: [defineArrayMember({
+        type: 'object',
+        fields: [defineField({name: 'text', title: 'Question', type: 'text', rows: 2, validation: (Rule) => Rule.required()})],
+        preview: {select: {title: 'text'}},
+      })],
+      validation: (Rule) => Rule.required().min(1),
+      group: 'content',
+    }),
     defineField({
       name: 'example',
       title: 'Example reading',

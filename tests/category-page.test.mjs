@@ -36,6 +36,13 @@ const spread = (id, slug, count = 4) => ({ id, slug, name: slug, site_descriptio
 const triplet = spread("62", "triplet");
 const familySpreads = [spread("11", "my-family", 14), spread("12", "children", 10)];
 const dictionary = { header: {}, footer: {}, categoryPage: { topBlock: {}, categoryLabel: "Category", getYourReadings: "Read" } };
+const content = {
+  hero: { h1: "Other", shortDescription: "", description: "" },
+  learning: { content: [] },
+  exampleQuestions: [{ _key: "example-question", text: "What should I consider?" }],
+  faq: [],
+  seo: { title: "Other", description: "" },
+};
 
 async function renderPage({ slug = "other", spreads = familySpreads, all = success([triplet]), nested } = {}) {
   let enabled;
@@ -70,7 +77,7 @@ async function renderPage({ slug = "other", spreads = familySpreads, all = succe
     "@/components/faq/FaqSection": marker("faq"),
     "./CategoryPageView.module.css": {},
   })).default;
-  const html = renderToStaticMarkup(createElement(Page, { dictionary, locale: "en", path: nested ? [slug, nested] : [slug] }));
+  const html = renderToStaticMarkup(createElement(Page, { dictionary, locale: "en", path: nested ? [slug, nested] : [slug], content }));
   return { html, enabled, reading, ask, retry, retryAll };
 }
 
@@ -80,6 +87,7 @@ test("multi-spread category reads the global triplet and renders the standalone 
   assert.doesNotMatch(result.html, /data-component="ring"|with-rows/);
   assert.equal(result.ask.spreadId, "62");
   assert.equal(result.ask.categoryId, "4");
+  assert.deepEqual(result.ask.exampleQuestions, content.exampleQuestions);
   assert.equal(result.reading, undefined);
 });
 

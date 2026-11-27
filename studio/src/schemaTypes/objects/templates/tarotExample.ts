@@ -24,8 +24,8 @@ export default defineType({
       options: {
         list: cardSlugs.map((value) => ({title: value, value})),
       },
-      validation: (Rule) => Rule.required(),
     }),
+    defineField({name: 'cardTitle', title: 'Card title', type: 'string'}),
     defineField({name: 'heading', title: 'Section heading', type: 'string'}),
     defineField({name: 'cardDescriptionLabel', title: 'Card description label', type: 'string'}),
     defineField({name: 'quickReadLabel', title: 'Quick read label', type: 'string'}),

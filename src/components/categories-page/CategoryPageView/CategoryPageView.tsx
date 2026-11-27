@@ -86,7 +86,6 @@ function CategoryPageContent({
   const retry = categories.state.status === "error" ? categories.retry : spreads.retry;
   const [readingActive, setReadingActive] = useState(false);
   const [scrollToReading, setScrollToReading] = useState(false);
-  const [presetQuestions, setPresetQuestions] = useState<string[]>([]);
   const [showDesktopStars, setShowDesktopStars] = useState(false);
   useEffect(() => {
     if (!scrollToReading || !readingActive) return;
@@ -150,7 +149,7 @@ function CategoryPageContent({
                     scrollTargetId={hasMultipleSpreads ? "category-spreads" : "category-learning"}
                   />
                 </div>
-                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} presetQuestionScope={path.length === 1 ? "categoryId" : "spreadId"} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onReadingStart={() => setScrollToReading(true)} onPresetQuestions={setPresetQuestions} />}
+                {resolved?.spread && <CategoryAskBlock dictionary={dictionary} locale={locale} categoryId={resolved.category.id} spreadId={resolved.spread.id} exampleQuestions={content.exampleQuestions} categoryLabel={resolved.category.name} onReadingStarted={setReadingActive} onReadingStart={() => setScrollToReading(true)} />}
               </div>
               {readingActive && resolved?.spread && count !== null && <div id="category-reading" className={styles.readingAnchor}>
                 <div className={styles.readingWrap}>
@@ -170,7 +169,7 @@ function CategoryPageContent({
         {!status && !needsDefaultSpread && resolved && !resolved.spread && <CatalogStatus locale={locale} status="empty" />}
         {!status && resolved && spreads.state.status === "success" && <>
           {hasMultipleSpreads && <CategorySpreadsSection locale={locale} categorySlug={resolved.category.slug} categoryName={resolved.category.name} spreads={spreads.state.data} currentSlug={path.length === 2 ? resolved.spread?.slug : undefined} section={content.spreadsSection} cards={spreadCards} />}
-          <CategoryLearningSection locale={locale} currentName={path.length === 2 ? resolved.spread?.name ?? resolved.category.name : resolved.category.name} spreads={spreads.state.data} exampleQuestion={presetQuestions[0]} learning={content.learning} example={content.example} />
+          <CategoryLearningSection locale={locale} currentName={path.length === 2 ? resolved.spread?.name ?? resolved.category.name : resolved.category.name} spreads={spreads.state.data} exampleQuestion={content.exampleQuestions[0]?.text} learning={content.learning} example={content.example} />
         </>}
         {!status && current && content.faq.length > 0 && (
           <div className={styles.faqWrap}>
