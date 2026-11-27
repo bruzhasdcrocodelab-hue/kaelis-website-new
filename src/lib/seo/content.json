@@ -245,11 +245,6 @@
       "description": "Тайное гадание Таро — Ежедневные точные онлайн-расклады карт от 🌑 Kaelis 🌑 Ваш ИИ-проводник в мир Таро",
       "h1": "Тайное гадание Таро"
     },
-    "/tarot/hidden/secret": {
-      "title": "Тайное Таро | Kaelis",
-      "description": "Тайное Таро — Ежедневные точные онлайн-расклады карт от 🌑 Kaelis 🌑 Ваш ИИ-проводник в мир Таро",
-      "h1": "Тайное Таро"
-    },
     "/tarot/love": {
       "title": "Бесплатное любовное гадание Таро | Kaelis",
       "description": "Бесплатное любовное гадание Таро — Ежедневные точные онлайн-расклады карт от 🌑 Kaelis 🌑 Ваш ИИ-проводник в мир Таро",
@@ -643,11 +638,6 @@
       "description": "Таємне ворожіння Таро — Щоденні точні онлайн-розклади карт від 🌑 Kaelis 🌑 Ваш ШІ-провідник у світ Таро",
       "h1": "Таємне ворожіння Таро"
     },
-    "/tarot/hidden/secret": {
-      "title": "Таємне Таро | Kaelis",
-      "description": "Таємне Таро — Щоденні точні онлайн-розклади карт від 🌑 Kaelis 🌑 Ваш ШІ-провідник у світ Таро",
-      "h1": "Таємне Таро"
-    },
     "/tarot/love": {
       "title": "Безкоштовне любовне ворожіння Таро | Kaelis",
       "description": "Безкоштовне любовне ворожіння Таро — Щоденні точні онлайн-розклади карт від 🌑 Kaelis 🌑 Ваш ШІ-провідник у світ Таро",
@@ -1040,11 +1030,6 @@
       "title": "Hidden Tarot Reading | Kaelis",
       "description": "Hidden Tarot Reading — Daily Online Accurate Card Spreads by 🌑 Kaelis 🌑 Your AI Guide to the World of Tarot",
       "h1": "Hidden Tarot Reading"
-    },
-    "/tarot/hidden/secret": {
-      "title": "Secret Tarot | Kaelis",
-      "description": "Secret Tarot — Daily Online Accurate Card Spreads by 🌑 Kaelis 🌑 Your AI Guide to the World of Tarot",
-      "h1": "Secret Tarot"
     },
     "/tarot/love": {
       "title": "Free Love Tarot Reading | Kaelis",

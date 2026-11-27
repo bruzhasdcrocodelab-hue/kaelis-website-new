@@ -24,9 +24,9 @@ export function proxy(request: NextRequest) {
     url.pathname = redirect.destination;
     return NextResponse.redirect(url, redirect.status);
   }
-  if (/^\/(?:en|ru|ua)\/tarot\/dreams\/dream$/.test(pathname)) {
+  if (/^\/(?:en|ru|ua)\/tarot\/(?:dreams\/dream|hidden\/secret)$/.test(pathname)) {
     const url = request.nextUrl.clone();
-    url.pathname = pathname.slice(0, -"/dream".length);
+    url.pathname = pathname.replace(/\/(?:dream|secret)$/, "");
     return NextResponse.redirect(url, 301);
   }
   if (isUnsupportedLocalePrefix(prefix)) {

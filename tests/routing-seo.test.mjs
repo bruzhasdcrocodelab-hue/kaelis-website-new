@@ -128,11 +128,15 @@ test("targeted SEO content is localized and usable without metadata fallback", (
   assert.equal(seo.pageMetadata("ru", "/tarot/work").description, seoContent.ru["/tarot/work"].description);
 });
 
-test("home omits stale card links and the catalog avoids the Dreams redirect", async () => {
+test("home omits stale card links and the catalog avoids single-spread redirects", async () => {
   const [home, catalog] = await Promise.all([
     readFile(new URL("../src/components/main-page/HomePageView.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/seo/TarotCatalogLinks.tsx", import.meta.url), "utf8"),
   ]);
   assert.doesNotMatch(home, /HomeTarotLinks/);
   assert.match(catalog, /category\.slug === "dreams" && spread\.slug === "dream"/);
+  assert.match(catalog, /category\.slug === "hidden" && spread\.slug === "secret"/);
+  for (const locale of ["en", "ru", "uk"]) {
+    assert.equal(seoContent[locale]["/tarot/hidden/secret"], undefined);
+  }
 });
